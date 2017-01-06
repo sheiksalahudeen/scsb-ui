@@ -55,7 +55,7 @@ public class ReportsUtil {
         reportsForm.setIlRequestPulCount(requestItemDetailsRepository.getIlRequestCounts(requestFromDate, requestToDate, RecapConstants.PUL_INST_ID, Arrays.asList(RecapConstants.CUL_INST_ID, RecapConstants.NYPL_INST_ID)));
         reportsForm.setIlRequestCulCount(requestItemDetailsRepository.getIlRequestCounts(requestFromDate, requestToDate, RecapConstants.CUL_INST_ID, Arrays.asList(RecapConstants.PUL_INST_ID, RecapConstants.NYPL_INST_ID)));
         reportsForm.setIlRequestNyplCount(requestItemDetailsRepository.getIlRequestCounts(requestFromDate, requestToDate, RecapConstants.NYPL_INST_ID, Arrays.asList(RecapConstants.PUL_INST_ID, RecapConstants.CUL_INST_ID)));
-        reportsForm.setBdRequestPulCount(requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(requestFromDate, requestToDate,RecapConstants.PUL_INST_ID, RecapConstants.BORROW_DIRECT));
+        reportsForm.setBdRequestPulCount(requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(requestFromDate, requestToDate, RecapConstants.PUL_INST_ID, RecapConstants.BORROW_DIRECT));
         reportsForm.setBdRequestCulCount(requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(requestFromDate, requestToDate, RecapConstants.CUL_INST_ID, RecapConstants.BORROW_DIRECT));
         reportsForm.setBdRequestNyplCount(requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(requestFromDate, requestToDate, RecapConstants.NYPL_INST_ID, RecapConstants.BORROW_DIRECT));
         reportsForm.setShowILBDResults(true);
@@ -214,17 +214,17 @@ public class ReportsUtil {
         }
     }
 
-    public List<DeaccessionItemResultsRow> deaccessionReportFieldsInformation(String requestedFromDate, String requestedToDate, String ownInst) throws Exception {
-        String date = getSolrFormattedDates(requestedFromDate,requestedToDate);
-        SolrQuery query = solrQueryBuilder.buildSolrQueryForDeaccesionReportInformation(date, ownInst, true);
-        QueryResponse queryResponse = null;
-        queryResponse = solrTemplate.getSolrClient().query(query);
+    public List<DeaccessionItemResultsRow> deaccessionReportFieldsInformation(ReportsForm reportsForm) throws Exception {
+        String date = getSolrFormattedDates(reportsForm.getAccessionDeaccessionFromDate(),reportsForm.getAccessionDeaccessionToDate());
+        SolrQuery query = solrQueryBuilder.buildSolrQueryForDeaccesionReportInformation(date, reportsForm.getDeaccessionOwnInst(), true);
+        query.setRows(reportsForm.getPageSize());
+        query.setStart(reportsForm.getPageNumber() * reportsForm.getPageSize());
+        QueryResponse queryResponse = solrTemplate.getSolrClient().query(query);
         SolrDocumentList solrDocuments = queryResponse.getResults();
-        if(solrDocuments.getNumFound() > 10 ) {
-            query.setRows((int) solrDocuments.getNumFound());
-            queryResponse = solrTemplate.getSolrClient().query(query);
-            solrDocuments = queryResponse.getResults();
-        }
+        long numFound = solrDocuments.getNumFound();
+        reportsForm.setTotalRecordsCount(String.valueOf(numFound));
+        int totalPagesCount = (int) Math.ceil((double) numFound / (double) reportsForm.getPageSize());
+        reportsForm.setTotalPageCount(totalPagesCount);
         List<Item> itemList = new ArrayList<>();
         List<Integer> itemIdList = new ArrayList<>();
         for (Iterator<SolrDocument> solrDocumentIterator = solrDocuments.iterator(); solrDocumentIterator.hasNext(); ) {
@@ -247,8 +247,8 @@ public class ReportsUtil {
             deaccessionItemResultsRow.setDeaccessionDate(deaccessionDate);
             deaccessionItemResultsRow.setDeaccessionOwnInst(item.getOwningInstitution());
             deaccessionItemResultsRow.setItemBarcode(item.getBarcode());
-            ItemChangeLogEntity itemChangeLogEntity = itemChangeLogDetailsRepository.findByRecordId(item.getItemId());
-            if(null != itemChangeLogEntity && itemChangeLogEntity.getOperationType().equalsIgnoreCase(RecapConstants.REPORTS_DEACCESSION)) {
+            ItemChangeLogEntity itemChangeLogEntity = itemChangeLogDetailsRepository.findByRecordIdAndOperationType(item.getItemId(), RecapConstants.REPORTS_DEACCESSION);
+            if(null != itemChangeLogEntity) {
                 deaccessionItemResultsRow.setDeaccessionNotes(itemChangeLogEntity.getNotes());
             }
             deaccessionItemResultsRow.setCgd(item.getCollectionGroupDesignation());

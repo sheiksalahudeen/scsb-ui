@@ -21,9 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -145,12 +143,43 @@ public class ReportsControllerUT extends BaseControllerUT {
     public void deaccessionInformation() throws Exception {
         ReportsForm reportsForm = new ReportsForm();
         List<DeaccessionItemResultsRow> deaccessionItemResultsRowList = new ArrayList<>();
-        ModelAndView modelAndView = reportsController.deaccessionInformation(reportsForm.getRequestFromDate(),reportsForm.getRequestToDate(),"PUL",model);
-        when((reportsUtil.deaccessionReportFieldsInformation(reportsForm.getRequestFromDate(), reportsForm.getRequestToDate(), "PUL"))).thenReturn(deaccessionItemResultsRowList);
+        ModelAndView modelAndView = reportsController.deaccessionInformation(reportsForm,model);
+        when((reportsUtil.deaccessionReportFieldsInformation(reportsForm))).thenReturn(deaccessionItemResultsRowList);
         assertNotNull(deaccessionItemResultsRowList);
         assertNotNull(modelAndView);
         assertEquals("reports :: #deaccessionInformation",modelAndView.getViewName());
 
     }
 
+    @Test
+    public void searchPrevious() throws Exception{
+        ReportsForm reportsForm = new ReportsForm();
+        ModelAndView modelAndView = reportsController.searchPrevious(reportsForm,model);
+        assertNotNull(modelAndView);
+        assertEquals("reports :: #deaccessionInformation",modelAndView.getViewName());
+    }
+
+    @Test
+    public void searchNext() throws Exception{
+        ReportsForm reportsForm = new ReportsForm();
+        ModelAndView modelAndView = reportsController.searchNext(reportsForm,model);
+        assertNotNull(modelAndView);
+        assertEquals("reports :: #deaccessionInformation",modelAndView.getViewName());
+    }
+
+    @Test
+    public void searchFirst() throws Exception{
+        ReportsForm reportsForm = new ReportsForm();
+        ModelAndView modelAndView = reportsController.searchFirst(reportsForm,model);
+        assertNotNull(modelAndView);
+        assertEquals("reports :: #deaccessionInformation",modelAndView.getViewName());
+    }
+
+    @Test
+    public void searchLast() throws Exception{
+        ReportsForm reportsForm = new ReportsForm();
+        ModelAndView modelAndView = reportsController.searchLast(reportsForm,model);
+        assertNotNull(modelAndView);
+        assertEquals("reports :: #deaccessionInformation",modelAndView.getViewName());
+    }
 }
