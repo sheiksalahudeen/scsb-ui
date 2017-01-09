@@ -123,7 +123,7 @@ public class RequestControllerUT extends BaseControllerUT {
         when(institutionDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
         when(requestTypeDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
         when(customerCodeDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
-        ModelAndView modelAndView = requestController.loadCreateRequest(model);
+        ModelAndView modelAndView = requestController.loadCreateRequest(model,null);
         assertNotNull(modelAndView);
         assertEquals("request", modelAndView.getViewName());
     }
@@ -131,7 +131,7 @@ public class RequestControllerUT extends BaseControllerUT {
     @Test
     public void populateItem() throws Exception {
         RequestForm requestForm = new RequestForm();
-        String response = requestController.populateItem(requestForm, bindingResult, model);
+        String response = requestController.populateItem(requestForm, bindingResult, model,null);
         assertNotNull(response);
     }
 }

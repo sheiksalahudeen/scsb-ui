@@ -70,7 +70,7 @@ public class CollectionControllerUT extends BaseControllerUT {
         userDetailsForm.setLoginInstitutionId(2);
         userDetailsForm.setRecapUser(false);
         when(marcRecordViewUtil.buildBibliographicMarcForm(collectionForm.getBibId(), collectionForm.getItemId(),userDetailsForm)).thenReturn(new BibliographicMarcForm());
-        ModelAndView modelAndView = collectionController.openMarcView(collectionForm, bindingResult, model);
+        ModelAndView modelAndView = collectionController.openMarcView(collectionForm, bindingResult, model,null);
         assertNotNull(modelAndView);
         assertEquals("collection :: #collectionUpdateModal", modelAndView.getViewName());
     }
