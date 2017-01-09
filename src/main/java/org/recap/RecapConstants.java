@@ -1,5 +1,8 @@
 package org.recap;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
 /**
  * Created by SheikS on 6/20/2016.
  */
@@ -333,8 +336,42 @@ public class RecapConstants {
     public static final String SCSB_UPDATE_CGD_URL = "updateCgdService/updateCgd";
     public static final String SCSB_DEACCESSION_URL = "sharedCollection/deAccession";
 
+    public static final String SCSB_SHIRO_AUTHENTICATE_URL="userAuth/authService";
+    public static final String SCSB_SHIRO_SEARCH_URL="search/auth";
+    public static final String SCSB_SHIRO_REQUEST_URL="request/auth";
+    public static final String SCSB_SHIRO_COLLECTION_URL="collection/auth";
+    public static final String SCSB_SHIRO_REPORT_URL="reports/auth";
+    public static final String SCSB_SHIRO_UI_VALUES="authentication/permissions";
+
     public static final String CGD_UPDATE_ITEM_ID = "itemId";
     public static final String NEW_CGD = "newCollectionGroupDesignation";
     public static final String CGD_CHANGE_NOTES = "cgdChangeNotes";
+
+    public static final String permissionsMap="permissionsMap";
+
+    public static final String USER_AUTHENTICATION="isAuthenticated";
+
+    public static String USER_IsAUTHENTICATED="true";
+
+    public static final String USER_ID="userId";
+
+    public static final String USER_INSTITUTION="userInstitution";
+
+    public static final String REQUEST_PRIVILEGE="isRequestAllowed";
+
+    public static final String COLLECTION_PRIVILEGE="isCollectionAllowed";
+
+    public static final String REPORTS_PRIVILEGE="isReportAllowed";
+
+    public static final String SEARCH_PRIVILEGE = "isSearchAllowed";
+
+    public static final String USER_ROLE_PRIVILEGE="isUserRoleAllowed";
+
+    public static HttpHeaders getHttpHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
+        return headers;
+    }
 
 }

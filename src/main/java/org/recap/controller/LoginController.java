@@ -1,14 +1,10 @@
 package org.recap.controller;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
 import org.recap.model.userManagement.LoginValidator;
 import org.recap.model.userManagement.UserForm;
 import org.recap.security.UserManagement;
-import org.recap.security.UserService;
+import org.recap.util.UserAuthUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.Collections;
 import java.util.Map;
 
 
@@ -36,7 +32,9 @@ public class LoginController {
     private LoginValidator loginValidator=new LoginValidator();
 
     @Autowired
-    private UserService userService;
+    private UserAuthUtil userAuthUtil;
+
+
 
     @RequestMapping(value="/",method= RequestMethod.GET)
     public String loginScreen(HttpServletRequest request, Model model, @ModelAttribute UserForm userForm) {
@@ -49,7 +47,8 @@ public class LoginController {
     public String createSession(@Valid @ModelAttribute UserForm userForm, HttpServletRequest request, Model model, BindingResult error){
         loginValidator.validate(userForm,error);
         final String loginScreen="login";
-        Map<Integer,String> permissionMap=null;
+        boolean authenticated=false;
+        Map<String,Object> resultmap=null;
         if(userForm==null){
             return loginScreen;
         }
@@ -60,45 +59,69 @@ public class LoginController {
                 logger.debug("Login Screen validation failed");
                 return loginScreen(request,model,userForm);
             }
-            UsernamePasswordToken token = new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+userForm.getInstitution(),userForm.getPassword(),false);
-            Subject subject=SecurityUtils.getSubject();
-            subject.login(token);
-            if(!subject.isAuthenticated())
-            {
-                throw new AuthenticationException("Subject Authtentication Failed");
-            }
-            permissionMap=userService.getPermissions();
-            Session session=subject.getSession(true);
-            session.setAttribute("userName",userForm.getUsername());
-            session.setAttribute(UserManagement.USER_INSTITUTION,userForm.getInstitution());
-            session.setAttribute("userForm",userForm);
-            session.setAttribute(UserManagement.USER_ID,subject.getPrincipal());
-            session.setAttribute(UserManagement.permissionsMap, Collections.unmodifiableMap(permissionMap));
+            UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+userForm.getInstitution(),userForm.getPassword(),true);
+            resultmap=(Map<String,Object>)userAuthUtil.doAuthentication(token);
 
-        }
-        catch(AuthenticationException e)
-        {
-            logger.debug("Authentication exception");
-            logger.error("Exception in authentication : "+e.getMessage());
-            error.rejectValue("wrongCredentials","error.invalid.credentials","Invalid Credentials");
-            return loginScreen;
+            if(!(Boolean) resultmap.get("isAuthenticated"))
+            {
+                throw new Exception("Subject Authtentication Failed");
+            }
+            HttpSession session=request.getSession(true);
+            session.setMaxInactiveInterval(1800);
+            session.setAttribute("token",token);
+            session.setAttribute(UserManagement.USER_AUTH,resultmap);
+            setValuesInSession(session,resultmap);
+
         }
         catch(Exception e)
         {
+            e.printStackTrace();
+            error.rejectValue("wrongCredentials","error.invalid.credentials","Invalid Credentials");
             logger.error("Exception occured in authentication : "+e.getLocalizedMessage());
             return loginScreen;
         }
+
 
             return "redirect:/search";
 
     }
 
     @RequestMapping("/logout")
-    public String logoutUser(){
+    public String logoutUser(HttpServletRequest request){
         logger.info("Subject Logged out");
-        SecurityUtils.getSubject().logout();
-        return "redirect:/";
+        HttpSession session=null;
+        try
+        {
+            session=request.getSession();
+        }finally{
+            session.invalidate();
+            return "redirect:/";
+        }
+
     }
+
+    private void setValuesInSession(HttpSession session,Map<String,Object> authMap)
+    {
+        session.setAttribute("userName",(String)authMap.get("userName"));
+        session.setAttribute(UserManagement.USER_INSTITUTION,(Integer)authMap.get(UserManagement.USER_INSTITUTION));
+        session.setAttribute(UserManagement.SUPER_ADMIN_USER,(Boolean)authMap.get(UserManagement.SUPER_ADMIN_USER));
+        session.setAttribute(UserManagement.ReCAP_USER,(Boolean)authMap.get(UserManagement.ReCAP_USER));
+
+        session.setAttribute(UserManagement.REQUEST_PRIVILEGE,(Boolean)authMap.get(UserManagement.REQUEST_PRIVILEGE));
+        session.setAttribute(UserManagement.COLLECTION_PRIVILEGE,(Boolean)authMap.get(UserManagement.COLLECTION_PRIVILEGE));
+        session.setAttribute(UserManagement.REPORTS_PRIVILEGE,(Boolean)authMap.get(UserManagement.REPORTS_PRIVILEGE));
+        session.setAttribute(UserManagement.SEARCH_PRIVILEGE,(Boolean)authMap.get(UserManagement.SEARCH_PRIVILEGE));
+        session.setAttribute(UserManagement.USER_ROLE_PRIVILEGE,(Boolean)authMap.get(UserManagement.USER_ROLE_PRIVILEGE));
+        session.setAttribute(UserManagement.REQUEST_ALL_PRIVILEGE,(Boolean)authMap.get(UserManagement.REQUEST_ALL_PRIVILEGE));
+        session.setAttribute(UserManagement.REQUEST_ITEM_PRIVILEGE,(Boolean)authMap.get(UserManagement.REQUEST_ITEM_PRIVILEGE));
+        session.setAttribute(UserManagement.BARCODE_RESTRICTED_PRIVILEGE,(Boolean)authMap.get(UserManagement.BARCODE_RESTRICTED_PRIVILEGE));
+        session.setAttribute(UserManagement.DEACCESSION_PRIVILEGE,(Boolean)authMap.get(UserManagement.DEACCESSION_PRIVILEGE));
+    }
+
+
+
+
+
 
 
 }

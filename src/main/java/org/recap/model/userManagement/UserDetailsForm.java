@@ -11,6 +11,16 @@ public class UserDetailsForm {
 
     private boolean recapUser;
 
+    private boolean requestAllItems;
+
+    public boolean isRequestAllItems() {
+        return requestAllItems;
+    }
+
+    public void setRequestAllItems(boolean requestAllItems) {
+        this.requestAllItems = requestAllItems;
+    }
+
     public Integer getLoginInstitutionId() {
         return loginInstitutionId;
     }

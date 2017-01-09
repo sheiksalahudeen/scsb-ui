@@ -1,12 +1,11 @@
 package org.recap.controller;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
 import org.recap.model.search.DeaccessionItemResultsRow;
 import org.recap.model.search.ReportsForm;
-import org.recap.security.UserManagement;
 import org.recap.util.ReportsUtil;
+import org.recap.util.UserAuthUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,11 +17,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by rajeshbabuk on 13/10/16.
@@ -36,18 +36,23 @@ public class ReportsController {
     @Autowired
     ReportsUtil reportsUtil;
 
+    @Autowired
+    private UserAuthUtil userAuthUtil;
+
     @RequestMapping("/reports")
-    public String collection(Model model) {
-        Subject subject= SecurityUtils.getSubject();
-        Map<Integer,String> permissions= UserManagement.getPermissions(subject);
-        if(subject.isPermitted(permissions.get(UserManagement.VIEW_PRINT_REPORTS.getPermissionId()))) {
+    public String collection(Model model, HttpServletRequest request) {
+        HttpSession session=request.getSession();
+        boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_REPORT_URL,(UsernamePasswordToken)session.getAttribute("token"));
+        if(authenticated)
+        {
             ReportsForm reportsForm = new ReportsForm();
             model.addAttribute("reportsForm", reportsForm);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
             return "searchRecords";
         }else{
-            return UserManagement.unAuthorized(subject);
+            return "redirect:/";
         }
+
 
     }
 

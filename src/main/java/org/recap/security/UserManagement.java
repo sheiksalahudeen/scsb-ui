@@ -1,12 +1,7 @@
 package org.recap.security;
 
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
 import org.recap.model.jpa.UsersEntity;
-import org.recap.model.userManagement.UserDetailsForm;
 import org.recap.model.userManagement.UserForm;
-
-import java.util.Map;
 
 /**
  * Created by dharmendrag on 15/12/16.
@@ -28,13 +23,37 @@ public enum UserManagement {
     REQUEST_ITEMS(10,"Ability to request items from any institution"),
     REQUEST_CANCEL_ALL(11,"Ability to cancel any request");
 
-    public static final String permissionsMap="permissionsMap";
+    public static final String USER_AUTH="user_auth";
+
+    public static final String ROLE_ID="roleId";
+
+    public static final String USER_AUTHENTICATION="isAuthenticated";
 
     public static final String USER_ID="userId";
 
     public static final String USER_INSTITUTION="userInstitution";
 
-    public static final String ROLE_ID="roleId";
+    public static final String REQUEST_PRIVILEGE="isRequestAllowed";
+
+    public static final String REQUEST_ALL_PRIVILEGE="isRequestAllAllowed";
+
+    public static final String REQUEST_ITEM_PRIVILEGE="isRequestItemAllowed";
+
+    public static final String COLLECTION_PRIVILEGE="isCollectionAllowed";
+
+    public static final String REPORTS_PRIVILEGE="isReportAllowed";
+
+    public static final String SEARCH_PRIVILEGE = "isSearchAllowed";
+
+    public static final String USER_ROLE_PRIVILEGE="isUserRoleAllowed";
+
+    public static final String BARCODE_RESTRICTED_PRIVILEGE="isBarcodeRestricted";
+
+    public static final String DEACCESSION_PRIVILEGE="isDeaccessionAllowed";
+
+    public static final String SUPER_ADMIN_USER="isSuperAdmin";
+
+    public static final String ReCAP_USER="isRecapUser";
 
     private String value;
 
@@ -97,11 +116,7 @@ public enum UserManagement {
         return values;
     }
 
-    public static String unAuthorized(Subject subject)
-    {
-        subject.logout();
-        return "login";
-    }
+
 
 
     public static UserForm toUserForm(UsersEntity userEntity, UserForm userForm)throws Exception
@@ -123,19 +138,7 @@ public enum UserManagement {
         return userForm;
     }
 
-    public static Map<Integer,String> getPermissions(Subject subject){
-        Session session=subject.getSession();
-        return (Map<Integer,String>)session.getAttribute(permissionsMap);
-    }
 
-    public static UserDetailsForm getRequestAccess(Subject subject){
-        UserDetailsForm userDetailsForm=new UserDetailsForm();
-        Session session=subject.getSession();
-        Integer userId=(Integer)session.getAttribute(USER_ID);
-        userDetailsForm.setSuperAdmin(userId.equals(SUPER_ADMIN.getIntegerValues()));
-        userDetailsForm.setLoginInstitutionId((Integer) session.getAttribute(USER_INSTITUTION));
-        return userDetailsForm;
-    }
 
 
 

@@ -2,8 +2,7 @@ package org.recap.controller;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.codehaus.jettison.json.JSONException;
 import org.recap.RecapConstants;
 import org.recap.model.search.*;
@@ -12,6 +11,7 @@ import org.recap.security.UserManagement;
 import org.recap.util.CollectionServiceUtil;
 import org.recap.util.MarcRecordViewUtil;
 import org.recap.util.SearchUtil;
+import org.recap.util.UserAuthUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.*;
 
@@ -45,18 +47,21 @@ public class CollectionController {
     @Autowired
     CollectionServiceUtil collectionServiceUtil;
 
+    @Autowired
+    private UserAuthUtil userAuthUtil;
+
     @RequestMapping("/collection")
-    public String collection(Model model) {
-        Subject subject= SecurityUtils.getSubject();
-        Map<Integer,String> permissions= UserManagement.getPermissions(subject);
-        if(subject.isPermitted(permissions.get(UserManagement.WRITE_GCD.getPermissionId())) ||
-                subject.isPermitted(permissions.get(UserManagement.DEACCESSION.getPermissionId()))) {
+    public String collection(Model model,HttpServletRequest request) {
+        HttpSession session=request.getSession();
+        boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_COLLECTION_URL,(UsernamePasswordToken)session.getAttribute("token"));
+        if(authenticated)
+        {
             CollectionForm collectionForm = new CollectionForm();
             model.addAttribute("collectionForm", collectionForm);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.COLLECTION);
             return "searchRecords";
         }else{
-            return UserManagement.unAuthorized(subject);
+            return "redirect:/";
         }
     }
 
@@ -74,9 +79,9 @@ public class CollectionController {
     @RequestMapping(value = "/collection", method = RequestMethod.POST, params = "action=openMarcView")
     public ModelAndView openMarcView(@Valid @ModelAttribute("collectionForm") CollectionForm collectionForm,
                                      BindingResult result,
-                                     Model model) throws Exception {
-        Subject subject= SecurityUtils.getSubject();
-        UserDetailsForm userDetailsForm=UserManagement.getRequestAccess(subject);
+                                     Model model,HttpServletRequest request) throws Exception {
+
+        UserDetailsForm userDetailsForm=getUserDetails(request);
         BibliographicMarcForm bibliographicMarcForm = marcRecordViewUtil.buildBibliographicMarcForm(collectionForm.getBibId(), collectionForm.getItemId(),userDetailsForm);
         populateCollectionForm(collectionForm, bibliographicMarcForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.COLLECTION);
@@ -209,5 +214,16 @@ public class CollectionController {
         collectionForm.setShowModal(true);
         collectionForm.setShowResults(true);
         collectionForm.setAllowEdit(bibliographicMarcForm.isAllowEdit());
+    }
+
+    private UserDetailsForm getUserDetails(HttpServletRequest request)
+    {
+        UserDetailsForm userDetailsForm=new UserDetailsForm();
+        HttpSession session=request.getSession();
+        userDetailsForm.setSuperAdmin((Boolean)session.getAttribute(UserManagement.SUPER_ADMIN_USER));
+        userDetailsForm.setRecapUser((Boolean)session.getAttribute(UserManagement.REQUEST_ITEM_PRIVILEGE));
+        userDetailsForm.setLoginInstitutionId((Integer)session.getAttribute(UserManagement.USER_INSTITUTION));
+        userDetailsForm.setRequestAllItems((Boolean) session.getAttribute(UserManagement.REQUEST_ALL_PRIVILEGE));
+        return userDetailsForm;
     }
 }

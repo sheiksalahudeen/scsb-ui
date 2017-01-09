@@ -3,17 +3,17 @@ package org.recap.controller;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
 import org.recap.model.search.SearchRecordsRequest;
 import org.recap.model.search.SearchRecordsResponse;
-import org.recap.security.UserManagement;
 import org.recap.util.CsvUtil;
 import org.recap.util.SearchUtil;
+import org.recap.util.UserAuthUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,7 +21,9 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,7 +33,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * Created by rajeshbabuk on 6/7/16.
@@ -42,24 +43,36 @@ public class SearchRecordsController {
 
     Logger logger = LoggerFactory.getLogger(SearchRecordsController.class);
 
+    @Value("${server.protocol}")
+    String serverProtocol;
+
+    @Value("${scsb.shiro}")
+    String scsbShiro;
+
+
     @Autowired
     SearchUtil searchUtil;
 
     @Autowired
     private CsvUtil csvUtil;
 
+    @Autowired
+    private UserAuthUtil userAuthUtil;
+
     @RequestMapping("/search")
-    public String searchRecords(Model model) {
-        Subject subject= SecurityUtils.getSubject();
-        Map<Integer,String> permissions=UserManagement.getPermissions(subject);
-        if(subject.isPermitted(permissions.get(UserManagement.SCSB_SEARCH_EXPORT.getPermissionId()))) {
+    public String searchRecords(Model model, HttpServletRequest request) {
+        HttpSession session=request.getSession();
+        boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_SEARCH_URL,(UsernamePasswordToken)session.getAttribute("token"));
+        if(authenticated)
+        {
             SearchRecordsRequest searchRecordsRequest = new SearchRecordsRequest();
             model.addAttribute("searchRecordsRequest", searchRecordsRequest);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.SEARCH);
             return "searchRecords";
         }else{
-            return UserManagement.unAuthorized(subject);
+            return "redirect:/";
         }
+
     }
 
     @ResponseBody
@@ -246,4 +259,6 @@ public class SearchRecordsController {
     public void initBinder(WebDataBinder binder) {
         binder.setAutoGrowCollectionLimit(1048576);
     }
+
+
 }

@@ -2,9 +2,7 @@ package org.recap.controller;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.codehaus.jettison.json.JSONObject;
 import org.marc4j.marc.Record;
 import org.recap.RecapConstants;
@@ -21,6 +19,7 @@ import org.recap.repository.jpa.RequestTypeDetailsRepository;
 import org.recap.security.UserManagement;
 import org.recap.util.BibJSONUtil;
 import org.recap.util.RequestServiceUtil;
+import org.recap.util.UserAuthUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +37,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.text.NumberFormat;
 import java.util.*;
@@ -57,6 +58,9 @@ public class RequestController {
     @Value("${scsb.url}")
     String scsbUrl;
 
+    @Value("${scsb.shiro}")
+    String scsbShiro;
+
     @Autowired
     RequestServiceUtil requestServiceUtil;
 
@@ -72,31 +76,26 @@ public class RequestController {
     @Autowired
     ItemDetailsRepository itemDetailsRepository;
 
+    @Autowired
+    private UserAuthUtil userAuthUtil;
+
     @RequestMapping("/request")
-    public String collection(Model model) {
-        Subject subject = SecurityUtils.getSubject();
-        Map<Integer, String> permissions = UserManagement.getPermissions(subject);
-        UserDetailsForm userDetailsForm = getPermissions(subject, permissions);
-        if (subject.isPermitted(permissions.get(UserManagement.REQUEST_PLACE.getPermissionId())) || subject.isPermitted(permissions.get(UserManagement.REQUEST_PLACE_ALL.getPermissionId())) ||
-                userDetailsForm.isRecapUser()) {
+    public String collection(Model model,HttpServletRequest request) {
+        HttpSession session=request.getSession();
+        boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_REQUEST_URL,(UsernamePasswordToken)session.getAttribute("token"));
+        if(authenticated)
+        {
+            UserDetailsForm userDetailsForm=getUserDetails(request);
             RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm);
             model.addAttribute("requestForm", requestForm);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
             return "searchRecords";
-        } else {
-            return UserManagement.unAuthorized(subject);
+        }else{
+            return "redirect:/";
         }
+
     }
 
-    private UserDetailsForm getPermissions(Subject subject, Map<Integer, String> permissions) {
-        UserDetailsForm userDetailsForm = new UserDetailsForm();
-        userDetailsForm.setRecapUser(subject.isPermitted(permissions.get(UserManagement.REQUEST_ITEMS.getPermissionId())));
-        Session session = subject.getSession();
-        Integer userId = (Integer) session.getAttribute(UserManagement.USER_ID);
-        userDetailsForm.setSuperAdmin(userId.equals(UserManagement.SUPER_ADMIN.getIntegerValues()));
-        userDetailsForm.setLoginInstitutionId((Integer) session.getAttribute(UserManagement.USER_INSTITUTION));
-        return userDetailsForm;
-    }
 
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=searchRequests")
@@ -153,10 +152,8 @@ public class RequestController {
 
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=loadCreateRequest")
-    public ModelAndView loadCreateRequest(Model model) {
-        Subject subject = SecurityUtils.getSubject();
-        Map<Integer, String> permissions = UserManagement.getPermissions(subject);
-        UserDetailsForm userDetailsForm = getPermissions(subject, permissions);
+    public ModelAndView loadCreateRequest(Model model,HttpServletRequest request) {
+        UserDetailsForm userDetailsForm=getUserDetails(request);
         RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm);
         model.addAttribute("requestForm", requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
@@ -201,24 +198,24 @@ public class RequestController {
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=populateItem")
     public String populateItem(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
                                BindingResult result,
-                               Model model) throws Exception {
+                               Model model,HttpServletRequest request) throws Exception {
         JSONObject jsonObject = new JSONObject();
-        Subject subject = SecurityUtils.getSubject();
-        Map<Integer, String> permissions = UserManagement.getPermissions(subject);
-        UserDetailsForm userDetailsForm = getPermissions(subject, permissions);
+
         if (StringUtils.isNotBlank(requestForm.getItemBarcodeInRequest())) {
             List<String> itemBarcodes = Arrays.asList(requestForm.getItemBarcodeInRequest().split(","));
             List<String> invalidBarcodes = new ArrayList<>();
             Set<String> itemTitles = new HashSet<>();
             Set<String> itemOwningInstitutions = new HashSet<>();
+            UserDetailsForm userDetailsForm=null;
             for (String itemBarcode : itemBarcodes) {
                 String barcode = itemBarcode.trim();
                 if (StringUtils.isNotBlank(barcode)) {
                     ItemEntity itemEntity = itemDetailsRepository.findByBarcode(barcode);
                     if (null != itemEntity) {
                         if (CollectionUtils.isNotEmpty(itemEntity.getBibliographicEntities())) {
-                            if (itemEntity.getCollectionGroupId() == RecapConstants.CGD_PRIVATE && !userDetailsForm.isSuperAdmin() && !userDetailsForm.isRecapUser() && !userDetailsForm.getLoginInstitutionId().equals(itemEntity.getOwningInstitutionId())) {
-                                jsonObject.put("errorMessage", "User is not permitted to request these item(s)");
+                            userDetailsForm = getUserDetails(request);
+                            if (itemEntity.getCollectionGroupId() == RecapConstants.CGD_PRIVATE &&( userDetailsForm.isRecapUser() || userDetailsForm.isSuperAdmin())) {
+                                jsonObject.put("errorMessage", "User is not permitted to request private item(s)");
                             } else {
                                 for (BibliographicEntity bibliographicEntity : itemEntity.getBibliographicEntities()) {
                                     String bibContent = new String(bibliographicEntity.getContent());
@@ -356,4 +353,15 @@ public class RequestController {
         }
         return Collections.EMPTY_LIST;
     }
+
+   private UserDetailsForm getUserDetails(HttpServletRequest request)
+   {
+       UserDetailsForm userDetailsForm=new UserDetailsForm();
+       HttpSession session=request.getSession();
+       userDetailsForm.setSuperAdmin((Boolean)session.getAttribute(UserManagement.SUPER_ADMIN_USER));
+       userDetailsForm.setRecapUser((Boolean)session.getAttribute(UserManagement.REQUEST_ITEM_PRIVILEGE));
+       userDetailsForm.setLoginInstitutionId((Integer)session.getAttribute(UserManagement.USER_INSTITUTION));
+       userDetailsForm.setRequestAllItems((Boolean) session.getAttribute(UserManagement.REQUEST_ALL_PRIVILEGE));
+       return userDetailsForm;
+   }
 }
