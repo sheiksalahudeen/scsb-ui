@@ -1,6 +1,7 @@
 package org.recap.controller;
 
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.recap.RecapConstants;
 import org.recap.model.userManagement.LoginValidator;
 import org.recap.model.userManagement.UserForm;
 import org.recap.security.UserManagement;
@@ -89,14 +90,14 @@ public class LoginController {
     @RequestMapping("/logout")
     public String logoutUser(HttpServletRequest request){
         logger.info("Subject Logged out");
-        HttpSession session=null;
-        try
-        {
-            session=request.getSession();
-        }finally{
+        try{
+            HttpSession session=request.getSession();
+            userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_LOGOUT_URL,(UsernamePasswordToken)session.getAttribute("token"));
             session.invalidate();
+        }finally{
             return "redirect:/";
         }
+
 
     }
 
