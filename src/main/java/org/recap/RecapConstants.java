@@ -337,10 +337,11 @@ public class RecapConstants {
     public static final String SCSB_DEACCESSION_URL = "sharedCollection/deAccession";
 
     public static final String SCSB_SHIRO_AUTHENTICATE_URL="userAuth/authService";
-    public static final String SCSB_SHIRO_SEARCH_URL="search/auth";
-    public static final String SCSB_SHIRO_REQUEST_URL="request/auth";
-    public static final String SCSB_SHIRO_COLLECTION_URL="collection/auth";
-    public static final String SCSB_SHIRO_REPORT_URL="reports/auth";
+    public static final String SCSB_SHIRO_SEARCH_URL="auth/search";
+    public static final String SCSB_SHIRO_REQUEST_URL="auth/request";
+    public static final String SCSB_SHIRO_COLLECTION_URL="auth/collection";
+    public static final String SCSB_SHIRO_REPORT_URL="auth/reports";
+    public static final String SCSB_SHIRO_LOGOUT_URL="userAuth/logout";
     public static final String SCSB_SHIRO_UI_VALUES="authentication/permissions";
 
     public static final String CGD_UPDATE_ITEM_ID = "itemId";
