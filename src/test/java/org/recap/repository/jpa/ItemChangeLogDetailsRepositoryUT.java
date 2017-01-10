@@ -8,8 +8,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Date;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by rajeshbabuk on 18/10/16.
@@ -36,7 +36,7 @@ public class ItemChangeLogDetailsRepositoryUT extends BaseTestCase {
     @Test
     public void checkfindByRecordId() throws Exception{
         ItemChangeLogEntity itemChangeLogEntity = saveDeaccessionNotes();
-        ItemChangeLogEntity byRecordId = itemChangeLogDetailsRepository.findByRecordId(itemChangeLogEntity.getRecordId());
+        ItemChangeLogEntity byRecordId = itemChangeLogDetailsRepository.findByRecordIdAndOperationType(itemChangeLogEntity.getRecordId(),"Deaccession");
         assertNotNull(byRecordId);
         if (itemChangeLogEntity.getOperationType().equalsIgnoreCase("Deaccession")){
             assertEquals("testing",byRecordId.getNotes());

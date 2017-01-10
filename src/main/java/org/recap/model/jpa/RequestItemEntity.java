@@ -63,6 +63,7 @@ public class RequestItemEntity implements Serializable {
 
     @OneToMany(mappedBy = "requestItemEntity", cascade = CascadeType.ALL)
     private List<NotesEntity> notesEntities;
+    private int requestPosition;
 
     public Integer getRequestId() {
         return requestId;
@@ -174,5 +175,9 @@ public class RequestItemEntity implements Serializable {
 
     public void setNotesEntities(List<NotesEntity> notesEntities) {
         this.notesEntities = notesEntities;
+    }
+
+    public void setRequestPosition(int requestPosition) {
+        this.requestPosition = requestPosition;
     }
 }
