@@ -53,7 +53,7 @@ public class CollectionController {
     @RequestMapping("/collection")
     public String collection(Model model,HttpServletRequest request) {
         HttpSession session=request.getSession();
-        boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_COLLECTION_URL,(UsernamePasswordToken)session.getAttribute("token"));
+        boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_COLLECTION_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
         if(authenticated)
         {
             CollectionForm collectionForm = new CollectionForm();

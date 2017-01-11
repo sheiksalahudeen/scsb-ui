@@ -7,6 +7,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
 import org.recap.model.search.SearchRecordsRequest;
 import org.recap.model.search.SearchRecordsResponse;
+import org.recap.security.UserManagement;
 import org.recap.util.CsvUtil;
 import org.recap.util.SearchUtil;
 import org.recap.util.UserAuthUtil;
@@ -62,7 +63,7 @@ public class SearchRecordsController {
     @RequestMapping("/search")
     public String searchRecords(Model model, HttpServletRequest request) {
         HttpSession session=request.getSession();
-        boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_SEARCH_URL,(UsernamePasswordToken)session.getAttribute("token"));
+        boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_SEARCH_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
         if(authenticated)
         {
             SearchRecordsRequest searchRecordsRequest = new SearchRecordsRequest();

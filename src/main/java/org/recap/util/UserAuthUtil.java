@@ -2,7 +2,6 @@ package org.recap.util;
 
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
-import org.recap.model.userManagement.UserForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,15 +27,16 @@ public class UserAuthUtil {
     String scsbShiro;
 
 
-    public Map<String,Object> doAuthentication(UsernamePasswordToken token) {
+    public Map<String,Object> doAuthentication(UsernamePasswordToken token) throws Exception{
         try {
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<UsernamePasswordToken> requestEntity = new HttpEntity<>(token, RecapConstants.getHttpHeaders());
-            Map<String,Object> resultMap = restTemplate.postForObject(serverProtocol + scsbShiro + RecapConstants.SCSB_SHIRO_AUTHENTICATE_URL, requestEntity, HashMap.class);
+            Map<String, Object> resultMap = restTemplate.postForObject(serverProtocol + scsbShiro + RecapConstants.SCSB_SHIRO_AUTHENTICATE_URL, requestEntity, HashMap.class);
             return resultMap;
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return null;
+        }catch(Exception e)
+        {
+            logger.error("Exception in Auth service call :"+e.getMessage());
+            throw new Exception(e);
         }
     }
 
@@ -56,15 +56,4 @@ public class UserAuthUtil {
         return false;
     }
 
-    public Map<String,Object> getValuesForUI(){
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            HttpEntity<UserForm> requestEntity = new HttpEntity<>(RecapConstants.getHttpHeaders());
-            Map<String,Object> resultMap = restTemplate.postForObject(serverProtocol + scsbShiro + RecapConstants.SCSB_SHIRO_UI_VALUES, requestEntity, HashMap.class);
-            return resultMap;
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return null;
-        }
-    }
 }

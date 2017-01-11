@@ -31,6 +31,8 @@ public enum UserManagement {
 
     public static final String USER_ID="userId";
 
+    public static final String USER_TOKEN="token";
+
     public static final String USER_INSTITUTION="userInstitution";
 
     public static final String REQUEST_PRIVILEGE="isRequestAllowed";
