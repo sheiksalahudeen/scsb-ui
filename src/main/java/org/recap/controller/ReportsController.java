@@ -4,6 +4,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
 import org.recap.model.search.DeaccessionItemResultsRow;
 import org.recap.model.search.ReportsForm;
+import org.recap.security.UserManagement;
 import org.recap.util.ReportsUtil;
 import org.recap.util.UserAuthUtil;
 import org.slf4j.Logger;
@@ -42,7 +43,7 @@ public class ReportsController {
     @RequestMapping("/reports")
     public String collection(Model model, HttpServletRequest request) {
         HttpSession session=request.getSession();
-        boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_REPORT_URL,(UsernamePasswordToken)session.getAttribute("token"));
+        boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_REPORT_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
         if(authenticated)
         {
             ReportsForm reportsForm = new ReportsForm();

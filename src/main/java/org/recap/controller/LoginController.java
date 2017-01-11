@@ -15,10 +15,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.client.ResourceAccessException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.net.ConnectException;
 import java.util.Map;
 
 
@@ -68,11 +70,16 @@ public class LoginController {
                 throw new Exception("Subject Authtentication Failed");
             }
             HttpSession session=request.getSession(true);
-            session.setMaxInactiveInterval(1800);
-            session.setAttribute("token",token);
+            session.setAttribute(UserManagement.USER_TOKEN,token);
             session.setAttribute(UserManagement.USER_AUTH,resultmap);
             setValuesInSession(session,resultmap);
 
+        }
+        catch(ConnectException|ResourceAccessException e)
+        {
+            error.rejectValue("wrongCredentials","error.invalid.credentials","Connection Error.Please contact our staff");
+            logger.error("Exception occured in connection : "+e.getLocalizedMessage());
+            return loginScreen;
         }
         catch(Exception e)
         {
@@ -92,7 +99,7 @@ public class LoginController {
         logger.info("Subject Logged out");
         try{
             HttpSession session=request.getSession();
-            userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_LOGOUT_URL,(UsernamePasswordToken)session.getAttribute("token"));
+            userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_LOGOUT_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
             session.invalidate();
         }finally{
             return "redirect:/";
