@@ -332,7 +332,7 @@ public class RequestController {
             List<SearchResultRow> searchResultRows = new ArrayList<>();
             for (RequestItemEntity requestItemEntity : requestItemEntities) {
                 SearchResultRow searchResultRow = new SearchResultRow();
-                searchResultRow.setPatronBarcode(Integer.parseInt(requestItemEntity.getPatronEntity().getInstitutionIdentifier()));
+                searchResultRow.setPatronBarcode(Long.parseLong(requestItemEntity.getPatronEntity().getInstitutionIdentifier()));
                 searchResultRow.setRequestingInstitution(requestItemEntity.getInstitutionEntity().getInstitutionCode());
                 searchResultRow.setBarcode(requestItemEntity.getItemEntity().getBarcode());
                 searchResultRow.setOwningInstitution(requestItemEntity.getItemEntity().getInstitutionEntity().getInstitutionCode());
