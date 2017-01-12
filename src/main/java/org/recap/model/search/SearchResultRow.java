@@ -49,7 +49,7 @@ public class SearchResultRow {
     @ApiModelProperty(name= "itemId", value= "Item Id",position = 17)
     private Integer itemId;
 
-    private Integer patronBarcode;
+    private long patronBarcode;
     private String requestingInstitution;
     private String deliveryLocation;
     private String requestType;
@@ -199,11 +199,11 @@ public class SearchResultRow {
         this.itemId = itemId;
     }
 
-    public Integer getPatronBarcode() {
+    public long getPatronBarcode() {
         return patronBarcode;
     }
 
-    public void setPatronBarcode(Integer patronBarcode) {
+    public void setPatronBarcode(long patronBarcode) {
         this.patronBarcode = patronBarcode;
     }
 
