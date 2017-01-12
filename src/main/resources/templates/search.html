@@ -4,6 +4,7 @@
     <script type="text/javascript" th:src="@{../js/jquery.tablesorter.js}"></script>
     <link rel="stylesheet" th:href="@{../css/search.css}"/>
     <script type="text/javascript" th:src="@{../js/search.js}"></script>
+    <script type="text/javascript" th:src="@{../js/bootstrap-add-clear.min.js}"></script>
     <div id="searchFormDivId" name="searchFormDivName" th:fragment="search-form" xmlns:th="http://www.thymeleaf.org" th:remove="tag">
         <form id="search-form" name="search-form" class="form-horizontal" action="#"
               th:action="@{/search}"
@@ -26,16 +27,13 @@
                                             name="action" value="pageSizeChange"
                                             hidden="hidden"></button>
                                     <div>
-                                        <div class="has-feedback">
-                                            <input id="fieldValue" name="fieldValue" type="text" placeholder="Type Text Here....." th:field="*{fieldValue}" class="form-control">
-                                                <i id="clearSearchText" class="fa fa-times form-control-feedback"
+                                            <input id="fieldValue" name="fieldValue" type="search" placeholder="Type Text Here....." th:field="*{fieldValue}" class="form-control"/>
+                                               <!-- <i id="clearSearchText" class="fa fa-times form-control-feedback"
                                                    aria-hidden="true"
                                                    onclick="clearSearchText()"
                                                    style="cursor: pointer; pointer-events: all; font-size: 20px; margin-top: 5px; margin-right: -10px;"
                                                    th:title="clear">
-                                                </i>
-                                            </input>
-                                        </div>
+                                                </i>-->
                                     </div>
                                     <div class="input-group-btn search-panel">
                                         <select id="fieldName"

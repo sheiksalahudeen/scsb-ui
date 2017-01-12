@@ -375,4 +375,15 @@ public class RecapConstants {
         return headers;
     }
 
+    //ROLES
+    public static final String ROLES = "roles";
+    public static final String INVALID_ROLE_NAME = "Please give one valid role name";
+    public static final String WRONG_PERMISSION = "This permission is not given to this role";
+    public static final String INVALID_PERMISSION = "Please give one valid permission name";
+    public static final String SPECIAL_CHARACTERS_NOT_ALLOWED = "Special characters and spaces are not allowed";
+    public static final String ROLES_SUPER_ADMIN = "SuperAdmin";
+    public static final String ROLES_ADD_SUCCESS_MESSAGE = "Role added successfully";
+    public static final String ROLES_DUPLICATE_MESSAGE = "Roles should not be duplicate";
+    public static final String ROLES_EDIT_SAVE_SUCCESS_MESSAGE = "Role edited and saved successfully";
+
 }
