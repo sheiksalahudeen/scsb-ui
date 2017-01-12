@@ -1,16 +1,18 @@
 package org.recap.controller;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
 import org.recap.model.jpa.InstitutionEntity;
 import org.recap.model.jpa.RoleEntity;
 import org.recap.model.jpa.UsersEntity;
 import org.recap.model.userManagement.UserRoleForm;
+import org.recap.model.userManagement.UserRoleService;
 import org.recap.repository.jpa.InstitutionDetailsRepository;
 import org.recap.repository.jpa.RolesDetailsRepositorty;
 import org.recap.repository.jpa.UserDetailsRepository;
 import org.recap.security.UserManagement;
-import org.recap.model.userManagement.UserRoleService;
+import org.recap.util.UserAuthUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +26,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by dharmendrag on 23/12/16.
@@ -47,12 +53,18 @@ public class UserRoleController {
     @Autowired
     InstitutionDetailsRepository institutionDetailsRepository;
 
-    @RequestMapping(value="/userRoles")
-    public String showUserRoles(Model model)
-    {
-        logger.info("Users Tab Clicked");
-        UserRoleForm userRoleForm=new UserRoleForm();
+    @Autowired
+    private UserAuthUtil userAuthUtil;
 
+    @RequestMapping(value="/userRoles")
+    public String showUserRoles(Model model, HttpServletRequest request)
+    {
+        HttpSession session=request.getSession();
+        boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
+        if(authenticated)
+        {
+            logger.info("Users Tab Clicked");
+            UserRoleForm userRoleForm=new UserRoleForm();
             List<Object> roles=userRoleService.getRoles(UserManagement.SUPER_ADMIN.getIntegerValues());
             List<Object> institutions=userRoleService.getInstitutions(true,1);
             userRoleForm.setRoles(roles);
@@ -61,6 +73,9 @@ public class UserRoleController {
             model.addAttribute("userRoleForm",userRoleForm);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES);
             return "searchRecords";
+        }else{
+            return "redirect:/";
+        }
 
     }
 
