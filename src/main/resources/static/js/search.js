@@ -18,6 +18,11 @@ jQuery(document).ready(function ($) {
     });
 
     toggleFacets();
+
+    $(function(){
+        $("#fieldValue").addClear();
+    });
+
 });
 
 function clearSearchText() {

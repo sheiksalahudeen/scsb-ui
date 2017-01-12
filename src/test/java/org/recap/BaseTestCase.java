@@ -77,7 +77,7 @@ public class BaseTestCase {
     public RolesDetailsRepositorty roleRepository;
 
     @Autowired
-    public PermissionsRepository permissionsRepository;
+    public PermissionsDetailsRepository permissionsRepository;
 
 
     @Test
