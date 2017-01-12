@@ -69,7 +69,7 @@ public class LoginController {
             {
                 throw new Exception("Subject Authtentication Failed");
             }
-            HttpSession session=request.getSession(true);
+            HttpSession session=request.getSession();
             session.setAttribute(UserManagement.USER_TOKEN,token);
             session.setAttribute(UserManagement.USER_AUTH,resultmap);
             setValuesInSession(session,resultmap);
@@ -97,11 +97,12 @@ public class LoginController {
     @RequestMapping("/logout")
     public String logoutUser(HttpServletRequest request){
         logger.info("Subject Logged out");
+        HttpSession session=null;
         try{
-            HttpSession session=request.getSession();
+            session=request.getSession();
             userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_LOGOUT_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
-            session.invalidate();
         }finally{
+            session.invalidate();
             return "redirect:/";
         }
 

@@ -1,5 +1,6 @@
 package org.recap.controller;
 
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
 import org.recap.model.jpa.PermissionEntity;
 import org.recap.model.jpa.RoleEntity;
@@ -7,6 +8,8 @@ import org.recap.model.search.RolesForm;
 import org.recap.model.search.RolesSearchResult;
 import org.recap.repository.jpa.PermissionsDetailsRepository;
 import org.recap.repository.jpa.RolesDetailsRepositorty;
+import org.recap.security.UserManagement;
+import org.recap.util.UserAuthUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.text.NumberFormat;
 import java.util.*;
@@ -42,12 +47,22 @@ public class RolesController {
     @Autowired
     PermissionsDetailsRepository permissionsRepository;
 
+    @Autowired
+    private UserAuthUtil userAuthUtil;
+
     @RequestMapping("/roles")
-    public String collection(Model model) {
-        RolesForm rolesForm = new RolesForm();
-        model.addAttribute("rolesForm", rolesForm);
-        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.ROLES);
-        return "searchRecords";
+    public String collection(Model model, HttpServletRequest request) {
+        HttpSession session=request.getSession();
+        boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
+        if(authenticated)
+        {
+            RolesForm rolesForm = new RolesForm();
+            model.addAttribute("rolesForm", rolesForm);
+            model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.ROLES);
+            return "searchRecords";
+        }else{
+            return "redirect:/";
+        }
     }
 
     @ResponseBody

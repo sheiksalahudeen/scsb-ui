@@ -214,7 +214,7 @@ public class RequestController {
                     if (null != itemEntity) {
                         if (CollectionUtils.isNotEmpty(itemEntity.getBibliographicEntities())) {
                             userDetailsForm = getUserDetails(request);
-                            if (itemEntity.getCollectionGroupId() == RecapConstants.CGD_PRIVATE &&( userDetailsForm.isRecapUser() || userDetailsForm.isSuperAdmin())) {
+                            if (itemEntity.getCollectionGroupId()==RecapConstants.CGD_PRIVATE && !userDetailsForm.isSuperAdmin() && !userDetailsForm.isRecapUser() && !userDetailsForm.getLoginInstitutionId().equals(itemEntity.getOwningInstitutionId())) {
                                 jsonObject.put("errorMessage", "User is not permitted to request private item(s)");
                             } else {
                                 for (BibliographicEntity bibliographicEntity : itemEntity.getBibliographicEntities()) {
