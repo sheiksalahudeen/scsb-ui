@@ -1,30 +1,19 @@
 package org.recap.util;
 
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
 import org.recap.RecapConstants;
-import org.recap.model.jpa.ItemChangeLogEntity;
+import org.recap.model.reports.ReportsResponse;
 import org.recap.model.search.DeaccessionItemResultsRow;
 import org.recap.model.search.ReportsForm;
-import org.recap.model.search.resolver.ItemValueResolver;
-import org.recap.model.search.resolver.impl.item.*;
-import org.recap.model.solr.Bib;
-import org.recap.model.solr.Item;
 import org.recap.repository.jpa.ItemChangeLogDetailsRepository;
 import org.recap.repository.jpa.RequestItemDetailsRepository;
-import org.recap.repository.solr.main.BibSolrCrudRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.solr.core.SolrTemplate;
 import org.springframework.stereotype.Component;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by akulak on 21/12/16.
@@ -35,21 +24,14 @@ public class ReportsUtil {
     private Logger logger = LoggerFactory.getLogger(ReportsUtil.class);
 
     @Autowired
-    SolrTemplate solrTemplate;
+    ReportsServiceUtil reportsServiceUtil;
 
     @Autowired
     RequestItemDetailsRepository requestItemDetailsRepository;
 
     @Autowired
-    SolrQueryBuilder solrQueryBuilder;
-
-    @Autowired
-    BibSolrCrudRepository bibSolrCrudRepository;
-
-    @Autowired
     ItemChangeLogDetailsRepository itemChangeLogDetailsRepository;
 
-    List<ItemValueResolver> itemValueResolvers;
 
     public void populateILBDCountsForRequest(ReportsForm reportsForm, Date requestFromDate, Date requestToDate) {
         reportsForm.setIlRequestPulCount(requestItemDetailsRepository.getIlRequestCounts(requestFromDate, requestToDate, RecapConstants.PUL_INST_ID, Arrays.asList(RecapConstants.CUL_INST_ID, RecapConstants.NYPL_INST_ID)));
@@ -102,240 +84,56 @@ public class ReportsUtil {
         reportsForm.setShowRequestTypeTable(true);
         reportsForm.setShowNoteRequestType(true);
     }
-    public void populateAccessionDeaccessionItemCounts(ReportsForm reportsForm, String requestedFromDate, String requestedToDate) throws Exception {
-        String date = getSolrFormattedDates(requestedFromDate, requestedToDate);
-        for (String owningInstitution : reportsForm.getOwningInstitutions()) {
-            for (String collectionGroupDesignation : reportsForm.getCollectionGroupDesignations()) {
-                SolrQuery query = solrQueryBuilder.buildSolrQueryForAccessionReports(date, owningInstitution, false, collectionGroupDesignation);
-                query.setRows(0);
-                QueryResponse queryResponse = solrTemplate.getSolrClient().query(query);
-                SolrDocumentList results = queryResponse.getResults();
-                long numFound = results.getNumFound();
-                if (owningInstitution.equalsIgnoreCase(RecapConstants.PRINCETON)) {
-                    if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_OPEN)) {
-                        reportsForm.setAccessionOpenPulCount(numFound);
-                    } else if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_SHARED)) {
-                        reportsForm.setAccessionSharedPulCount(numFound);
-                    } else if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_PRIVATE)) {
-                        reportsForm.setAccessionPrivatePulCount(numFound);
-                    }
-                } else if (owningInstitution.equalsIgnoreCase(RecapConstants.COLUMBIA)) {
-                    if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_OPEN)) {
-                        reportsForm.setAccessionOpenCulCount(numFound);
-                    } else if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_SHARED)) {
-                        reportsForm.setAccessionSharedCulCount(numFound);
-                    } else if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_PRIVATE)) {
-                        reportsForm.setAccessionPrivateCulCount(numFound);
-                    }
-                } else if (owningInstitution.equalsIgnoreCase(RecapConstants.NYPL)) {
-                    if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_OPEN)) {
-                        reportsForm.setAccessionOpenNyplCount(numFound);
-                    } else if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_SHARED)) {
-                        reportsForm.setAccessionSharedNyplCount(numFound);
-                    } else if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_PRIVATE)) {
-                        reportsForm.setAccessionPrivateNyplCount(numFound);
-                    }
-                }
-            }
-        }
-        for (String ownInstitution : reportsForm.getOwningInstitutions()) {
-            for (String collectionGroupDesignation : reportsForm.getCollectionGroupDesignations()) {
-                SolrQuery query = solrQueryBuilder.buildSolrQueryForDeaccessionReports(date,ownInstitution,true,collectionGroupDesignation);
-                query.setRows(0);
-                QueryResponse queryResponse = solrTemplate.getSolrClient().query(query);
-                SolrDocumentList results = queryResponse.getResults();
-                long numFound = results.getNumFound();
-                if (ownInstitution.equalsIgnoreCase(RecapConstants.PRINCETON)) {
-                    if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_OPEN)) {
-                        reportsForm.setDeaccessionOpenPulCount(numFound);
-                    } else if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_SHARED)) {
-                        reportsForm.setDeaccessionSharedPulCount(numFound);
-                    } else if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_PRIVATE)) {
-                        reportsForm.setDeaccessionPrivatePulCount(numFound);
-                    }
-                } else if (ownInstitution.equalsIgnoreCase(RecapConstants.COLUMBIA)) {
-                    if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_OPEN)) {
-                        reportsForm.setDeaccessionOpenCulCount(numFound);
-                    } else if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_SHARED)) {
-                        reportsForm.setDeaccessionSharedCulCount(numFound);
-                    } else if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_PRIVATE)) {
-                        reportsForm.setDeaccessionPrivateCulCount(numFound);
-                    }
-                } else if (ownInstitution.equalsIgnoreCase(RecapConstants.NYPL)) {
-                    if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_OPEN)) {
-                        reportsForm.setDeaccessionOpenNyplCount(numFound);
-                    } else if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_SHARED)) {
-                        reportsForm.setDeaccessionSharedNyplCount(numFound);
-                    } else if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_PRIVATE)) {
-                        reportsForm.setDeaccessionPrivateNyplCount(numFound);
-                    }
-                }
-            }
+    public void populateAccessionDeaccessionItemCounts(ReportsForm reportsForm) throws Exception {
+        ReportsResponse reportsResponse = reportsServiceUtil.requestAccessionDeaccessionCounts(reportsForm);
+        reportsForm.setAccessionPrivatePulCount(reportsResponse.getAccessionPrivatePulCount());
+        reportsForm.setAccessionPrivateCulCount(reportsResponse.getAccessionPrivateCulCount());
+        reportsForm.setAccessionPrivateNyplCount(reportsResponse.getAccessionPrivateNyplCount());
 
-        }
+        reportsForm.setAccessionOpenPulCount(reportsResponse.getAccessionOpenPulCount());
+        reportsForm.setAccessionOpenCulCount(reportsResponse.getAccessionOpenCulCount());
+        reportsForm.setAccessionOpenNyplCount(reportsResponse.getAccessionOpenNyplCount());
+
+        reportsForm.setAccessionSharedPulCount(reportsResponse.getAccessionSharedPulCount());
+        reportsForm.setAccessionSharedCulCount(reportsResponse.getAccessionSharedCulCount());
+        reportsForm.setAccessionSharedNyplCount(reportsResponse.getAccessionSharedNyplCount());
+
+        reportsForm.setDeaccessionPrivatePulCount(reportsResponse.getDeaccessionPrivatePulCount());
+        reportsForm.setDeaccessionPrivateCulCount(reportsResponse.getDeaccessionPrivateCulCount());
+        reportsForm.setDeaccessionPrivateNyplCount(reportsResponse.getDeaccessionPrivateNyplCount());
+
+        reportsForm.setDeaccessionOpenPulCount(reportsResponse.getDeaccessionOpenPulCount());
+        reportsForm.setDeaccessionOpenPulCount(reportsResponse.getDeaccessionOpenCulCount());
+        reportsForm.setDeaccessionOpenPulCount(reportsResponse.getDeaccessionOpenNyplCount());
+
+        reportsForm.setDeaccessionSharedPulCount(reportsResponse.getDeaccessionSharedPulCount());
+        reportsForm.setDeaccessionSharedCulCount(reportsResponse.getDeaccessionSharedCulCount());
+        reportsForm.setDeaccessionSharedNyplCount(reportsResponse.getDeaccessionSharedNyplCount());
+
         reportsForm.setShowAccessionDeaccessionTable(true);
     }
 
 
     public void populateCGDItemCounts(ReportsForm reportsForm) throws Exception {
-        for (String owningInstitution : reportsForm.getOwningInstitutions()) {
-            for (String collectionGroupDesignation : reportsForm.getCollectionGroupDesignations()) {
-                SolrQuery query = solrQueryBuilder.buildSolrQueryForCGDReports(owningInstitution, collectionGroupDesignation);
-                query.setStart(0);
-                QueryResponse queryResponse = solrTemplate.getSolrClient().query(query);
-                SolrDocumentList results = queryResponse.getResults();
-                long numFound = results.getNumFound();
-                if (owningInstitution.equalsIgnoreCase(RecapConstants.PRINCETON)) {
-                    if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_OPEN)) {
-                        reportsForm.setOpenPulCgdCount(numFound);
-                    } else if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_SHARED)) {
-                        reportsForm.setSharedPulCgdCount(numFound);
-                    } else if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_PRIVATE)) {
-                        reportsForm.setPrivatePulCgdCount(numFound);
-                    }
-                } else if (owningInstitution.equalsIgnoreCase(RecapConstants.COLUMBIA)) {
-                    if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_OPEN)) {
-                        reportsForm.setOpenCulCgdCount(numFound);
-                    } else if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_SHARED)) {
-                        reportsForm.setSharedCulCgdCount(numFound);
-                    } else if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_PRIVATE)) {
-                        reportsForm.setPrivateCulCgdCount(numFound);
-                    }
-                } else if (owningInstitution.equalsIgnoreCase(RecapConstants.NYPL)) {
-                    if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_OPEN)) {
-                        reportsForm.setOpenNyplCgdCount(numFound);
-                    } else if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_SHARED)) {
-                        reportsForm.setSharedNyplCgdCount(numFound);
-                    } else if (collectionGroupDesignation.equalsIgnoreCase(RecapConstants.REPORTS_PRIVATE)) {
-                        reportsForm.setPrivateNyplCgdCount(numFound);
-                    }
-                }
-            }
-        }
+        ReportsResponse reportsResponse = reportsServiceUtil.requestCgdItemCounts(reportsForm);
+        reportsForm.setOpenPulCgdCount(reportsResponse.getOpenPulCgdCount());
+        reportsForm.setSharedPulCgdCount(reportsResponse.getSharedPulCgdCount());
+        reportsForm.setPrivatePulCgdCount(reportsResponse.getPrivatePulCgdCount());
+
+        reportsForm.setOpenCulCgdCount(reportsResponse.getOpenCulCgdCount());
+        reportsForm.setSharedCulCgdCount(reportsResponse.getSharedCulCgdCount());
+        reportsForm.setPrivateCulCgdCount(reportsResponse.getPrivateCulCgdCount());
+
+        reportsForm.setOpenNyplCgdCount(reportsResponse.getOpenNyplCgdCount());
+        reportsForm.setSharedNyplCgdCount(reportsResponse.getSharedNyplCgdCount());
+        reportsForm.setPrivateNyplCgdCount(reportsResponse.getPrivateNyplCgdCount());
     }
 
     public List<DeaccessionItemResultsRow> deaccessionReportFieldsInformation(ReportsForm reportsForm) throws Exception {
-        String date = getSolrFormattedDates(reportsForm.getAccessionDeaccessionFromDate(),reportsForm.getAccessionDeaccessionToDate());
-        SolrQuery query = solrQueryBuilder.buildSolrQueryForDeaccesionReportInformation(date, reportsForm.getDeaccessionOwnInst(), true);
-        query.setRows(reportsForm.getPageSize());
-        query.setStart(reportsForm.getPageNumber() * reportsForm.getPageSize());
-        QueryResponse queryResponse = solrTemplate.getSolrClient().query(query);
-        SolrDocumentList solrDocuments = queryResponse.getResults();
-        long numFound = solrDocuments.getNumFound();
-        reportsForm.setTotalRecordsCount(String.valueOf(numFound));
-        int totalPagesCount = (int) Math.ceil((double) numFound / (double) reportsForm.getPageSize());
-        reportsForm.setTotalPageCount(totalPagesCount);
-        List<Item> itemList = new ArrayList<>();
-        List<Integer> itemIdList = new ArrayList<>();
-        for (Iterator<SolrDocument> solrDocumentIterator = solrDocuments.iterator(); solrDocumentIterator.hasNext(); ) {
-            SolrDocument solrDocument = solrDocumentIterator.next();
-            boolean isDeletedItem = (boolean) solrDocument.getFieldValue(RecapConstants.IS_DELETED_ITEM);
-            if(isDeletedItem) {
-                Item item = getItem(solrDocument);
-                itemList.add(item);
-                itemIdList.add(item.getItemId());
-            }
-        }
-        SimpleDateFormat simpleDateFormat = getSimpleDateFormatForReports();
-        List<DeaccessionItemResultsRow> deaccessionItemResultsRowList = new ArrayList<>();
-        for(Item item : itemList){
-            DeaccessionItemResultsRow deaccessionItemResultsRow = new DeaccessionItemResultsRow();
-            deaccessionItemResultsRow.setItemId(item.getItemId());
-            String deaccessionDate = simpleDateFormat.format(item.getItemLastUpdatedDate());
-            Bib bib = bibSolrCrudRepository.findByBibId(item.getItemBibIdList().get(0));
-            deaccessionItemResultsRow.setTitle(bib.getTitleDisplay());
-            deaccessionItemResultsRow.setDeaccessionDate(deaccessionDate);
-            deaccessionItemResultsRow.setDeaccessionOwnInst(item.getOwningInstitution());
-            deaccessionItemResultsRow.setItemBarcode(item.getBarcode());
-            ItemChangeLogEntity itemChangeLogEntity = itemChangeLogDetailsRepository.findByRecordIdAndOperationType(item.getItemId(), RecapConstants.REPORTS_DEACCESSION);
-            if(null != itemChangeLogEntity) {
-                deaccessionItemResultsRow.setDeaccessionNotes(itemChangeLogEntity.getNotes());
-            }
-            deaccessionItemResultsRow.setCgd(item.getCollectionGroupDesignation());
-            deaccessionItemResultsRowList.add(deaccessionItemResultsRow);
-        }
-        return deaccessionItemResultsRowList;
-    }
-
-    public Item getItem(SolrDocument itemSolrDocument) {
-        Item item = new Item();
-        Collection<String> fieldNames = itemSolrDocument.getFieldNames();
-        List<ItemValueResolver> itemValueResolvers = getItemValueResolvers();
-        for (Iterator<String> iterator = fieldNames.iterator(); iterator.hasNext(); ) {
-            String fieldName = iterator.next();
-            Object fieldValue = itemSolrDocument.getFieldValue(fieldName);
-            for (Iterator<ItemValueResolver> itemValueResolverIterator = itemValueResolvers.iterator(); itemValueResolverIterator.hasNext(); ) {
-                ItemValueResolver itemValueResolver = itemValueResolverIterator.next();
-                if (itemValueResolver.isInterested(fieldName)) {
-                    itemValueResolver.setValue(item, fieldValue);
-                }
-            }
-        }
-        return item;
-    }
-
-    public List<ItemValueResolver> getItemValueResolvers() {
-        if (null == itemValueResolvers) {
-            itemValueResolvers = new ArrayList<>();
-            itemValueResolvers.add(new BarcodeValueResolver());
-            itemValueResolvers.add(new CollectionGroupDesignationValueResolver());
-            itemValueResolvers.add(new ItemOwningInstitutionValueResolver());
-            itemValueResolvers.add(new ItemIdValueResolver());
-            itemValueResolvers.add(new ItemLastUpdatedDateValueResolver());
-            itemValueResolvers.add(new ItemBibIdValueResolver());
-        }
-        return itemValueResolvers;
-    }
-
-
-
-    public String getFormattedDateString(Date inputDate) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(RecapConstants.DATE_FORMAT_YYYYMMDDHHMM);
-        String utcStr = null;
-        try {
-            String dateString = simpleDateFormat.format(inputDate);
-            Date date = simpleDateFormat.parse(dateString);
-            DateFormat format = new SimpleDateFormat(RecapConstants.UTC_DATE_FORMAT);
-            format.setTimeZone(TimeZone.getTimeZone(RecapConstants.UTC));
-            utcStr = format.format(date);
-        } catch (ParseException e) {
-            logger.error(e.getMessage());
-        }
-        return utcStr;
-    }
-
-
-    public Date getFromDate(Date createdDate) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(createdDate);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        return cal.getTime();
-    }
-
-    public Date getToDate(Date createdDate) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(createdDate);
-        cal.set(Calendar.HOUR_OF_DAY,23);
-        cal.set(Calendar.MINUTE,59);
-        cal.set(Calendar.SECOND,59);
-        return cal.getTime();
-    }
-
-    private String getSolrFormattedDates(String requestedFromDate, String requestedToDate) throws ParseException {
-        SimpleDateFormat simpleDateFormat = getSimpleDateFormatForReports();
-        Date fromDate = simpleDateFormat.parse(requestedFromDate);
-        Date toDate = simpleDateFormat.parse(requestedToDate);
-        Date fromDateTime = getFromDate(fromDate);
-        Date toDateTime = getToDate(toDate);
-        String formattedFromDate = getFormattedDateString(fromDateTime);
-        String formattedToDate = getFormattedDateString(toDateTime);
-        return formattedFromDate + " TO " + formattedToDate;
-    }
-
-    private SimpleDateFormat getSimpleDateFormatForReports() {
-        return new SimpleDateFormat(RecapConstants.SIMPLE_DATE_FORMAT_REPORTS);
+        ReportsResponse reportsResponse = reportsServiceUtil.requestDeaccessionResults(reportsForm);
+        reportsForm.setTotalPageCount(reportsResponse.getTotalPageCount());
+        reportsForm.setTotalRecordsCount(reportsResponse.getTotalRecordsCount());
+        return reportsResponse.getDeaccessionItemResultsRows();
     }
 
 }

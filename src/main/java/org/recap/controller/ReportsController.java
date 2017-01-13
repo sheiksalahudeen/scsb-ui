@@ -73,7 +73,7 @@ public class ReportsController {
                 reportsUtil.populateRequestTypeInformation(reportsForm, requestFromDate, requestToDate);
             }
         } else if (reportsForm.getRequestType().equalsIgnoreCase(RecapConstants.REPORTS_ACCESSION_DEACCESSION)) {
-            reportsUtil.populateAccessionDeaccessionItemCounts(reportsForm, reportsForm.getAccessionDeaccessionFromDate(), reportsForm.getAccessionDeaccessionToDate());
+            reportsUtil.populateAccessionDeaccessionItemCounts(reportsForm);
 
         } else if (reportsForm.getRequestType().equalsIgnoreCase("CollectionGroupDesignation")) {
             reportsUtil.populateCGDItemCounts(reportsForm);

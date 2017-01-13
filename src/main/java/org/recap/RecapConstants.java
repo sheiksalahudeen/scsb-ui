@@ -336,6 +336,10 @@ public class RecapConstants {
     public static final String SCSB_UPDATE_CGD_URL = "updateCgdService/updateCgd";
     public static final String SCSB_DEACCESSION_URL = "sharedCollection/deAccession";
 
+    public static final String SCSB_REPORTS_ACCESSION_DEACCESSION_COUNTS_URL = "reportsService/accessionDeaccessionCounts";
+    public static final String SCSB_REPORTS_CGD_ITEM_COUNTS_URL = "reportsService/cgdItemCounts";
+    public static final String SCSB_REPORTS_DEACCESSION_RESULTS_URL = "reportsService/deaccessionResults";
+
     public static final String SCSB_SHIRO_AUTHENTICATE_URL="userAuth/authService";
     public static final String SCSB_SHIRO_SEARCH_URL="auth/search";
     public static final String SCSB_SHIRO_REQUEST_URL="auth/request";
