@@ -6,6 +6,7 @@ import org.recap.RecapConstants;
 import org.recap.model.jpa.InstitutionEntity;
 import org.recap.model.jpa.RoleEntity;
 import org.recap.model.jpa.UsersEntity;
+import org.recap.model.userManagement.UserDetailsForm;
 import org.recap.model.userManagement.UserRoleForm;
 import org.recap.model.userManagement.UserRoleService;
 import org.recap.repository.jpa.InstitutionDetailsRepository;
@@ -65,8 +66,9 @@ public class UserRoleController {
         {
             logger.info("Users Tab Clicked");
             UserRoleForm userRoleForm=new UserRoleForm();
+            UserDetailsForm userDetailsForm=userAuthUtil.getUserDetails(session,UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
             List<Object> roles=userRoleService.getRoles(UserManagement.SUPER_ADMIN.getIntegerValues());
-            List<Object> institutions=userRoleService.getInstitutions(true,1);
+            List<Object> institutions=userRoleService.getInstitutions(userDetailsForm.isSuperAdmin(),userDetailsForm.getLoginInstitutionId());
             userRoleForm.setRoles(roles);
             userRoleForm.setInstitutions(institutions);
             userRoleForm.setAllowCreateEdit(true);
@@ -81,11 +83,11 @@ public class UserRoleController {
 
     @ResponseBody
     @RequestMapping(value="/userRoles/searchUsers",method = RequestMethod.POST)
-    public ModelAndView searchUserRole(@Valid @ModelAttribute("userRoleForm")UserRoleForm userRoleForm, BindingResult results, Model model)
+    public ModelAndView searchUserRole(@Valid @ModelAttribute("userRoleForm")UserRoleForm userRoleForm, BindingResult results, Model model,HttpServletRequest request)
     {
         logger.info("Users - Search button Clicked");
         try{
-            priorSearch(userRoleForm);
+            priorSearch(userRoleForm,request);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES);
         }catch(Exception e)
         {
@@ -123,60 +125,60 @@ public class UserRoleController {
 
     @ResponseBody
     @RequestMapping(value="/userRoles",method = RequestMethod.POST,params="action=first")
-    public ModelAndView searchFirstPage(@ModelAttribute("userForm")UserRoleForm userRoleForm, BindingResult results, Model model)
+    public ModelAndView searchFirstPage(@ModelAttribute("userForm")UserRoleForm userRoleForm, BindingResult results, Model model,HttpServletRequest request)
     {
         logger.info("Users - Search First Page button Clicked");
         userRoleForm.resetPageNumber();
-        priorSearch(userRoleForm);
+        priorSearch(userRoleForm,request);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES);
         return new ModelAndView("userRolesSearch","userRoleForm",userRoleForm);
     }
 
     @ResponseBody
     @RequestMapping(value="/userRoles",method = RequestMethod.POST,params="action=next")
-    public ModelAndView searchNextPage(@ModelAttribute("userForm")UserRoleForm userRoleForm, BindingResult results, Model model)
+    public ModelAndView searchNextPage(@ModelAttribute("userForm")UserRoleForm userRoleForm, BindingResult results, Model model,HttpServletRequest request)
     {
         logger.info("Users - Search Next Page button Clicked");
-        priorSearch(userRoleForm);
+        priorSearch(userRoleForm,request);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES);
         return new ModelAndView("userRolesSearch","userRoleForm",userRoleForm);
     }
 
     @ResponseBody
     @RequestMapping(value="/userRoles",method = RequestMethod.POST,params="action=previous")
-    public ModelAndView searchPreviousPage(@ModelAttribute("userForm")UserRoleForm userRoleForm, BindingResult results, Model model)
+    public ModelAndView searchPreviousPage(@ModelAttribute("userForm")UserRoleForm userRoleForm, BindingResult results, Model model,HttpServletRequest request)
     {
         logger.info("Users - Search Previous Page button Clicked");
-        priorSearch(userRoleForm);
+        priorSearch(userRoleForm,request);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES);
         return new ModelAndView("userRolesSearch","userRoleForm",userRoleForm);
     }
 
     @ResponseBody
     @RequestMapping(value="/userRoles",method = RequestMethod.POST,params="action=last")
-    public ModelAndView searchLastPage(@ModelAttribute("userForm")UserRoleForm userRoleForm, BindingResult results, Model model)
+    public ModelAndView searchLastPage(@ModelAttribute("userForm")UserRoleForm userRoleForm, BindingResult results, Model model,HttpServletRequest request)
     {
         logger.info("Users - Search Last Page button Clicked");
         userRoleForm.setPageNumber(userRoleForm.getTotalPageCount() - 1);
-        priorSearch(userRoleForm);
+        priorSearch(userRoleForm,request);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES);
         return new ModelAndView("userRolesSearch","userRoleForm",userRoleForm);
     }
 
-    private void priorSearch(UserRoleForm userRoleForm){
-        Integer loginInstitutionId=1;
-        Integer userId=1;
-        boolean superAdminUser=userId.equals(UserManagement.SUPER_ADMIN.getIntegerValues());
+    private void priorSearch(UserRoleForm userRoleForm,HttpServletRequest request){
+        HttpSession session=request.getSession();
+        Integer userId=(Integer)session.getAttribute(UserManagement.USER_ID);
+        UserDetailsForm userDetailsForm=userAuthUtil.getUserDetails(session,UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
         List<Object> roles=userRoleService.getRoles(UserManagement.SUPER_ADMIN.getIntegerValues());
-        List<Object> institutions=userRoleService.getInstitutions(superAdminUser,loginInstitutionId);
+        List<Object> institutions=userRoleService.getInstitutions(userDetailsForm.isSuperAdmin(),userDetailsForm.getLoginInstitutionId());
         userRoleForm.setUserId(userId);
-        userRoleForm.setInstitutionId(loginInstitutionId);
+        userRoleForm.setInstitutionId(userDetailsForm.getLoginInstitutionId());
         userRoleForm.setRoles(roles);
         userRoleForm.setInstitutions(institutions);
         userRoleForm.setAllowCreateEdit(true);
         userRoleForm.setSubmitted(true);
 
-        searchAndSetResult(userRoleForm,superAdminUser,userId);
+        searchAndSetResult(userRoleForm,userDetailsForm.isSuperAdmin(),userId);
     }
 
 
@@ -261,12 +263,12 @@ public class UserRoleController {
 
     @ResponseBody
     @RequestMapping(value="/userRoles/createUser", method= RequestMethod.POST)
-    public ModelAndView createUserRequest(@ModelAttribute("userRoleForm") UserRoleForm userRoleForm, Model model)
+    public ModelAndView createUserRequest(@ModelAttribute("userRoleForm") UserRoleForm userRoleForm, Model model,HttpServletRequest request)
     {
         logger.info("User - Create Request clicked");
-
+        UserDetailsForm userDetailsForm=userAuthUtil.getUserDetails(request.getSession(),UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
         List<Object> roles=userRoleService.getRoles(UserManagement.SUPER_ADMIN.getIntegerValues());
-        List<Object> institutions=userRoleService.getInstitutions(true,1);
+        List<Object> institutions=userRoleService.getInstitutions(userDetailsForm.isSuperAdmin(),userDetailsForm.getLoginInstitutionId());
         UsersEntity usersEntity = userRoleService.saveNewUserToDB(userRoleForm);
         userRoleForm.setAllowCreateEdit(true);
         return new ModelAndView("userRolesSearch :: #users-createview","userRoleForm",userRoleForm);

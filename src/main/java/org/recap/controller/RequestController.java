@@ -85,7 +85,7 @@ public class RequestController {
         boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_REQUEST_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
         if(authenticated)
         {
-            UserDetailsForm userDetailsForm=getUserDetails(request);
+            UserDetailsForm userDetailsForm=userAuthUtil.getUserDetails(session,UserManagement.REQUEST_ITEM_PRIVILEGE);
             RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm);
             model.addAttribute("requestForm", requestForm);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
@@ -153,7 +153,7 @@ public class RequestController {
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=loadCreateRequest")
     public ModelAndView loadCreateRequest(Model model,HttpServletRequest request) {
-        UserDetailsForm userDetailsForm=getUserDetails(request);
+        UserDetailsForm userDetailsForm=userAuthUtil.getUserDetails(request.getSession(),UserManagement.REQUEST_ITEM_PRIVILEGE);
         RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm);
         model.addAttribute("requestForm", requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
@@ -213,7 +213,7 @@ public class RequestController {
                     ItemEntity itemEntity = itemDetailsRepository.findByBarcode(barcode);
                     if (null != itemEntity) {
                         if (CollectionUtils.isNotEmpty(itemEntity.getBibliographicEntities())) {
-                            userDetailsForm = getUserDetails(request);
+                            userDetailsForm = userAuthUtil.getUserDetails(request.getSession(),UserManagement.REQUEST_ITEM_PRIVILEGE);
                             if (itemEntity.getCollectionGroupId()==RecapConstants.CGD_PRIVATE && !userDetailsForm.isSuperAdmin() && !userDetailsForm.isRecapUser() && !userDetailsForm.getLoginInstitutionId().equals(itemEntity.getOwningInstitutionId())) {
                                 jsonObject.put("errorMessage", "User is not permitted to request private item(s)");
                             } else {
@@ -354,14 +354,4 @@ public class RequestController {
         return Collections.EMPTY_LIST;
     }
 
-   private UserDetailsForm getUserDetails(HttpServletRequest request)
-   {
-       UserDetailsForm userDetailsForm=new UserDetailsForm();
-       HttpSession session=request.getSession();
-       userDetailsForm.setSuperAdmin((Boolean)session.getAttribute(UserManagement.SUPER_ADMIN_USER));
-       userDetailsForm.setRecapUser((Boolean)session.getAttribute(UserManagement.REQUEST_ITEM_PRIVILEGE));
-       userDetailsForm.setLoginInstitutionId((Integer)session.getAttribute(UserManagement.USER_INSTITUTION));
-       userDetailsForm.setRequestAllItems((Boolean) session.getAttribute(UserManagement.REQUEST_ALL_PRIVILEGE));
-       return userDetailsForm;
-   }
 }
