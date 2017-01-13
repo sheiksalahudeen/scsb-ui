@@ -81,7 +81,7 @@ public class CollectionController {
                                      BindingResult result,
                                      Model model,HttpServletRequest request) throws Exception {
 
-        UserDetailsForm userDetailsForm=getUserDetails(request);
+        UserDetailsForm userDetailsForm=userAuthUtil.getUserDetails(request.getSession(),UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
         BibliographicMarcForm bibliographicMarcForm = marcRecordViewUtil.buildBibliographicMarcForm(collectionForm.getBibId(), collectionForm.getItemId(),userDetailsForm);
         populateCollectionForm(collectionForm, bibliographicMarcForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.COLLECTION);
@@ -216,14 +216,4 @@ public class CollectionController {
         collectionForm.setAllowEdit(bibliographicMarcForm.isAllowEdit());
     }
 
-    private UserDetailsForm getUserDetails(HttpServletRequest request)
-    {
-        UserDetailsForm userDetailsForm=new UserDetailsForm();
-        HttpSession session=request.getSession();
-        userDetailsForm.setSuperAdmin((Boolean)session.getAttribute(UserManagement.SUPER_ADMIN_USER));
-        userDetailsForm.setRecapUser((Boolean)session.getAttribute(UserManagement.REQUEST_ITEM_PRIVILEGE));
-        userDetailsForm.setLoginInstitutionId((Integer)session.getAttribute(UserManagement.USER_INSTITUTION));
-        userDetailsForm.setRequestAllItems((Boolean) session.getAttribute(UserManagement.REQUEST_ALL_PRIVILEGE));
-        return userDetailsForm;
-    }
 }
