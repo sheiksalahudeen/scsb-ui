@@ -71,6 +71,8 @@ public class Main {
 		urlPatterns.add("/request");
 		urlPatterns.add("/collection");
 		urlPatterns.add("/reports");
+		urlPatterns.add("/roles");
+		urlPatterns.add("/userRoles");
 		filterRegistrationBean.setUrlPatterns(urlPatterns);
 		filterRegistrationBean.setFilter(new SessionFilter());
 		return filterRegistrationBean;
