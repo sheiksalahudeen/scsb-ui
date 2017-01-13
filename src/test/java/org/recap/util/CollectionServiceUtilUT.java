@@ -1,7 +1,6 @@
 package org.recap.util;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.solr.common.SolrInputDocument;
 import org.junit.Before;
 import org.junit.Test;
 import org.recap.BaseTestCase;
@@ -9,9 +8,7 @@ import org.recap.model.jpa.BibliographicEntity;
 import org.recap.model.jpa.HoldingsEntity;
 import org.recap.model.jpa.ItemEntity;
 import org.recap.model.search.BibliographicMarcForm;
-import org.recap.model.solr.Item;
 import org.recap.repository.jpa.BibliographicDetailsRepository;
-import org.recap.repository.solr.main.ItemCrudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -45,9 +42,6 @@ public class CollectionServiceUtilUT extends BaseTestCase {
     private EntityManager entityManager;
 
     @Autowired
-    public ItemCrudRepository itemSolrCrudRepository;
-
-    @Autowired
     CollectionServiceUtil collectionServiceUtil;
 
     @Autowired
@@ -76,17 +70,7 @@ public class CollectionServiceUtilUT extends BaseTestCase {
         assertNotNull(savedBibliographicEntity.getItemEntities().get(0).getItemId());
         assertEquals("Shared", savedBibliographicEntity.getItemEntities().get(0).getCollectionGroupEntity().getCollectionGroupCode());
 
-        BibJSONUtil bibJSONUtil = new BibJSONUtil();
-        SolrInputDocument solrInputDocument = bibJSONUtil.generateBibAndItemsForIndex(savedBibliographicEntity, solrTemplate, bibliographicDetailsRepository, holdingDetailRepository);
-        solrTemplate.saveDocument(solrInputDocument);
-        solrTemplate.commit();
-
         Integer itemId = savedBibliographicEntity.getItemEntities().get(0).getItemId();
-        Item fetchedItemSolr = itemCrudRepository.findByItemId(itemId);
-        assertNotNull(fetchedItemSolr);
-        assertNotNull(fetchedItemSolr.getItemId());
-        assertEquals(itemId, fetchedItemSolr.getItemId());
-        assertEquals("Shared", fetchedItemSolr.getCollectionGroupDesignation());
 
         BibliographicMarcForm bibliographicMarcForm = new BibliographicMarcForm();
         bibliographicMarcForm.setBibId(savedBibliographicEntity.getBibliographicId());
@@ -102,12 +86,6 @@ public class CollectionServiceUtilUT extends BaseTestCase {
         assertNotNull(fetchedItemEntity.getItemId());
         assertEquals(itemId, fetchedItemEntity.getItemId());
         assertEquals("Private", fetchedItemEntity.getCollectionGroupEntity().getCollectionGroupCode());
-
-        Item fetchedItemSolrAfterUpdate = itemCrudRepository.findByItemId(itemId);
-        assertNotNull(fetchedItemSolrAfterUpdate);
-        assertNotNull(fetchedItemSolrAfterUpdate.getItemId());
-        assertEquals(itemId, fetchedItemSolrAfterUpdate.getItemId());
-        assertEquals("Private", fetchedItemSolrAfterUpdate.getCollectionGroupDesignation());
 
         long afterCountForChangeLog = itemChangeLogDetailsRepository.count();
 
@@ -142,18 +120,6 @@ public class CollectionServiceUtilUT extends BaseTestCase {
         assertEquals(itemId, fetchedItemEntity.getItemId());
         assertEquals(Boolean.FALSE, fetchedItemEntity.isDeleted());
 
-        BibJSONUtil bibJSONUtil = new BibJSONUtil();
-        SolrInputDocument solrInputDocument = bibJSONUtil.generateBibAndItemsForIndex(fetchedBibliographicEntity, solrTemplate, bibliographicDetailsRepository, holdingDetailRepository);
-        if (solrInputDocument !=null) {
-            solrTemplate.saveDocument(solrInputDocument);
-            solrTemplate.commit();
-        }
-
-        Item fetchedItemSolr = itemCrudRepository.findByItemId(itemId);
-        assertNotNull(fetchedItemSolr);
-        assertNotNull(fetchedItemSolr.getItemId());
-        assertEquals(itemId, fetchedItemSolr.getItemId());
-
         String barcode = fetchedBibliographicEntity.getItemEntities().get(0).getBarcode();
         BibliographicMarcForm bibliographicMarcForm = new BibliographicMarcForm();
         bibliographicMarcForm.setItemId(itemId);
@@ -168,9 +134,6 @@ public class CollectionServiceUtilUT extends BaseTestCase {
         assertNotNull(fetchedItemEntityAfterDeaccession.getItemId());
         assertEquals(itemId, fetchedItemEntityAfterDeaccession.getItemId());
         assertEquals(Boolean.TRUE, fetchedItemEntityAfterDeaccession.isDeleted());
-
-        Item fetchedItemSolrAfterDeaccession = itemCrudRepository.findByItemId(itemId);
-        assertNull(fetchedItemSolrAfterDeaccession);
     }
 
     public BibliographicEntity getBibEntityWithHoldingsAndItem() throws Exception {

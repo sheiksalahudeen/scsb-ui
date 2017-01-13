@@ -2,19 +2,14 @@ package org.recap.util;
 
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.solr.common.SolrInputDocument;
 import org.junit.Test;
 import org.marc4j.marc.Record;
 import org.recap.BaseTestCase;
-import org.recap.model.jpa.BibliographicEntity;
-import org.recap.model.jpa.HoldingsEntity;
-import org.recap.model.jpa.ItemEntity;
-import org.recap.model.solr.Bib;
 import org.recap.repository.jpa.BibliographicDetailsRepository;
 import org.recap.repository.jpa.HoldingsDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
+import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -144,55 +139,6 @@ public class BibJSONUtilUT extends BaseTestCase{
             "            </datafield>\n" +
             "          </record>\n" +
             "        </collection>";
-    @Test
-    public void generateBibAndItemsForIndex()throws Exception {
-        Random random = new Random();
-
-        List<BibliographicEntity> bibliographicEntities = new ArrayList<>();
-        BibliographicEntity bibliographicEntity = new BibliographicEntity();
-        bibliographicEntity.setContent(bibContent.getBytes());
-        bibliographicEntity.setOwningInstitutionId(1);
-        String owningInstitutionBibId = String.valueOf(random.nextInt());
-        bibliographicEntity.setOwningInstitutionBibId(owningInstitutionBibId);
-        bibliographicEntity.setCreatedDate(new Date());
-        bibliographicEntity.setCreatedBy("tst");
-        bibliographicEntity.setLastUpdatedDate(new Date());
-        bibliographicEntity.setLastUpdatedBy("tst");
-
-        HoldingsEntity holdingsEntity = new HoldingsEntity();
-        holdingsEntity.setContent(holdingContent.getBytes());
-        holdingsEntity.setCreatedDate(new Date());
-        holdingsEntity.setCreatedBy("etl");
-        holdingsEntity.setLastUpdatedDate(new Date());
-        holdingsEntity.setLastUpdatedBy("etl");
-        holdingsEntity.setOwningInstitutionHoldingsId(String.valueOf(random.nextInt()));
-
-        ItemEntity itemEntity = new ItemEntity();
-        itemEntity.setLastUpdatedDate(new Date());
-        itemEntity.setOwningInstitutionItemId(String.valueOf(random.nextInt()));
-        itemEntity.setOwningInstitutionId(1);
-        itemEntity.setCreatedDate(new Date());
-        itemEntity.setCreatedBy("etl");
-        itemEntity.setLastUpdatedDate(new Date());
-        itemEntity.setLastUpdatedBy("etl");
-        String barcode = "1234";
-        itemEntity.setBarcode(barcode);
-        itemEntity.setCallNumber("x.12321");
-        itemEntity.setCollectionGroupId(1);
-        itemEntity.setCallNumberType("1");
-        itemEntity.setCustomerCode("1");
-        itemEntity.setItemAvailabilityStatusId(1);
-        itemEntity.setHoldingsEntities(Arrays.asList(holdingsEntity));
-
-        holdingsEntity.setItemEntities(Arrays.asList(itemEntity));
-        bibliographicEntity.setHoldingsEntities(Arrays.asList(holdingsEntity));
-        bibliographicEntities.add(bibliographicEntity);
-        itemEntity.setBibliographicEntities(bibliographicEntities);
-
-        BibJSONUtil bibJSONUtil = new BibJSONUtil();
-        SolrInputDocument solrInputDocument = bibJSONUtil.generateBibAndItemsForIndex(bibliographicEntity, solrTemplate, bibliographicDetailsRepository, holdingsDetailsRepository);
-        assertNotNull(solrInputDocument);
-    }
 
     @Test
     public void testLccnTrimValue() throws Exception {
