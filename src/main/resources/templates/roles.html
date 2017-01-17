@@ -353,12 +353,11 @@
                                                 <div class="form-group">
                                                     <div class="col-md-4 col-sm-6 text-right margin-top-05"><label for="editPermissionNameId" class="fontcolor-dark">Permission Names <span class="error-color">*</span></label></div>
                                                     <div class="col-md-8 col-sm-6">
-                                                        <div class="select-holder" data-th-if="*{selectedPermissionNames ne null &amp;&amp; message ne ''}">
+                                                        <div class="select-holder" data-th-if="*{selectedPermissionNames ne null}">
                                                             <select id="editPermissionNameId"
                                                                     multiple="multiple"
                                                                     class="form-control themed-input themed-select multiSelectPermissionName"
-                                                                    name="editPermissionNames">
-
+                                                                    name="editPermissionNameId">
                                                                 <option th:each="permission : *{permissionNameList}" th:value="${permission}" th:text="${permission}" th:selected="${rolesForm.selectedPermissionNames.contains(permission)}"></option>
                                                             </select>
 

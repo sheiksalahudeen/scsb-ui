@@ -1,55 +1,55 @@
 
 jQuery(document).ready(function ($) {
-    var showResult=false;
-    var showCreateRequest=false;
+    $('#createRequest').click(function(){
+       $('#networkLoginId').val('');
+       $('#institutionId').val(1);
+        $('#roleId').multiselect('deselectAll', false);
+        $('#roleId').multiselect('refresh');
+        $('#userDescription').val('');
+        $('#successMsg').hide();
+        $('#errormsg').hide();
+    });
 
-    if(showResult==false&&showCreateRequest==false){
-        $('.showEntriesOption').hide();
+
+    $('#editusers-createview').hide();
+    $('#users-createview').hide();
+
+    $('#backLink').click(function(){
+        $('#editusers-createview').hide();
+       $('#request-result-table').hide();
+        $('#userRolePaginationDivId').hide();
+        $('#showEntries').hide();
+        $('#numOfRecordsId').val(10);
+        $('#pageNumber').val(0);
+    });
+
+    $('#editbackLink').click(function(){
+        $('#editusers-createview').hide();
         $('#request-result-table').hide();
-        $('#users-createview').hide();
-    }
-    else if(showResult==true){
-        $('.showEntriesOption').hide();
-        $('#request-result-table').show();
-    }
-    else if(showCreateRequest==true){
-        $('#users-createview').show();
-    }
-
-    $('#roleId').multiselect();
-
-
-
-    // $('#showUserResult').hide();
+        $('#userRolePaginationDivId').hide();
+        $('#showEntries').hide();
+        $('#numOfRecordsId').val(10);
+        $('#pageNumber').val(0);
+    });
 
     /***Role Tab Form Show/Hide ***/
     $("#recaprole a.role-detailtable").click(function (e) {
         $("#role-searchview").hide();
         $("#role-detailtableview").show();
-        e.preventDefault();
     });
     $("#recaprole .rolebacklink a").click(function (e) {
         $("#role-detailtableview").hide();
         $("#role-searchview").show();
-        e.preventDefault();
     });
     /***Users Tab Form Show/Hide ***/
     $("#recapusers .userscreaterequestlink a").click(function (e) {
         $("#users-searchview").hide();
         $("#users-createview").show();
-        e.preventDefault();
     });
     $("#recapusers .usersbacklink a").click(function (e) {
         $("#users-createview").hide();
         $("#users-searchview").show();
-        e.preventDefault();
     });
-    $('#recapusers #userstabaddrole').multiselect();
-
-
-    //\'' + ${userRoleForm.userId} + '\
-    /**/
-
 
     $("#userRoles .users-main-section").show();
     resetDefaults();
@@ -62,7 +62,88 @@ jQuery(document).ready(function ($) {
         $("#userRoles .users-main-section").hide();
         $("#userRoles .user-create-section").show();
     });
+
+
+    /**Multi Select **/
+    $('#roleId').multiselect();
+    $('#recapusers #userstabaddrole').multiselect();
+    $('#editroleId').multiselect();
+
 });
+function userRolesFirstPage() {
+    //searchUserRoles('first','#userRoles .users-main-section','#userRoles .user-create-section');
+    var $form = $('#userRole-form');
+    var url = "/userRoles/first";
+    var request = $.ajax({
+        url: url,
+        type: 'post',
+        data: $form.serialize(),
+        success: function (response) {
+            $('.showEntriesOption').show();
+            $('#request-result-table').html(response);
+            $('#request-result-table').show();
+            $('#userRolePaginationDivId').show();
+
+        }
+    });
+}
+
+function userRolesLastPage() {
+    //searchUserRoles('last','#userRoles .users-main-section','#userRoles .user-create-section');
+    $('#pageNumber').val(parseInt($('#totalPageCount').val()) - 1);
+    var $form = $('#userRole-form');
+    var url = "/userRoles/last";
+    var request = $.ajax({
+        url: url,
+        type: 'post',
+        data: $form.serialize(),
+        success: function (response) {
+            $('#request-result-table').html(response);
+            $('.showEntriesOption').show();
+            $('#request-result-table').show();
+            $('#userRolePaginationDivId').show();
+
+        }
+    });
+}
+
+function userRolesPreviousPage() {
+    $('#pageNumber').val(parseInt($('#pageNumber').val()) - 1);
+    //searchUserRoles('previous','#userRoles .users-main-section','#userRoles .user-create-section');
+    var $form = $('#userRole-form');
+    var url = "/userRoles/previous";
+    var request = $.ajax({
+        url: url,
+        type: 'post',
+        data: $form.serialize(),
+        success: function (response) {
+            $('#request-result-table').html(response);
+            $('.showEntriesOption').show();
+            $('#request-result-table').show();
+            $('#userRolePaginationDivId').show();
+
+        }
+    });
+}
+
+function userRolesNextPage() {
+    $('#pageNumber').val(parseInt($('#pageNumber').val()) + 1);
+    //searchUserRoles('next','#userRoles .users-main-section','#userRoles .user-create-section');
+    var $form = $('#userRole-form');
+    var url = "/userRoles/next";
+    var request = $.ajax({
+        url: url,
+        type: 'post',
+        data: $form.serialize(),
+        success: function (response) {
+            $('#request-result-table').html(response);
+            $('#showEntries').show();
+            $('#request-result-table').show();
+            $('#userRolePaginationDivId').show();
+
+        }
+    });
+}
 
 function deleteUserRole(networkLoginId,userId) {
     console.log('DeleteUserRole');
@@ -82,28 +163,6 @@ function deleteUserRole(networkLoginId,userId) {
     });
 }
 
-
-
-
-function userRolesFirstPage() {
-    searchUserRoles('first','#userRoles .users-main-section','#userRoles .user-create-section');
-}
-
-function userRolesLastPage() {
-    searchUserRoles('last','#userRoles .users-main-section','#userRoles .user-create-section');
-}
-
-function userRolesPreviousPage() {
-    $('#pageNumber').val(parseInt($('#pageNumber').val()) - 1);
-    searchUserRoles('previous','#userRoles .users-main-section','#userRoles .user-create-section');
-}
-
-function userRolesNextPage() {
-    $('#pageNumber').val(parseInt($('#pageNumber').val()) + 1);
-    searchUserRoles('next','#userRoles .users-main-section','#userRoles .user-create-section');
-}
-
-
 //Delete User Id
 function deleteUser(userId){
     console.log('Delete');
@@ -116,14 +175,32 @@ function deleteUser(userId){
         data: {userId:userId},
         success: function (response) {
             console.log("completed");
-            $('#userRolesFormDivId').html(response);
+            $('#request-result-table').html(response);
 
         }
     });
 }
 
 function searchUserRoles() {
-    $('.showEntriesOption').show();
+    var $form = $('#userRole-form');
+    var url = "/userRoles/searchUsers";
+    var request = $.ajax({
+        url: url,
+        type: 'post',
+        data: $form.serialize(),
+        success: function (response) {
+            $('#request-result-table').html(response);
+            $('#showEntries').show();
+            $('#request-result-table').show();
+            $('#userRolePaginationDivId').show();
+        }
+    });
+}
+
+
+
+function showEntriesChange(){
+    $('#pageNumber').val(0);
     var $form = $('#userRole-form');
     var url = "/userRoles/searchUsers";
     var request = $.ajax({
@@ -133,13 +210,16 @@ function searchUserRoles() {
         success: function (response) {
             $('#request-result-table').html(response);
             $('#request-result-table').show();
+            $('#userRolePaginationDivId').show();
 
         }
     });
 }
 
 function submitForm(){
-    validateForm();
+    var formValidation = validateForm();
+    console.log(formValidation);
+    if(formValidation) {
         var $form = $('#userRole-form');
         var url = "/userRoles/createUser";
         var request = $.ajax({
@@ -147,16 +227,18 @@ function submitForm(){
             type: 'post',
             data: $form.serialize(),
             success: function (response) {
-                $('#users-createview').html(response);
+                $('#userRolesContentId').html(response);
+                $('#users-searchview').hide();
                 $('#users-createview').show();
                 $('#successMsg').show();
-
+                $('#roleId').multiselect();
                 $('#networkLoginIdErrMsg').hide();
                 $('#institutionIdErrMsg').hide();
                 $('#roleIdErrMsg').hide();
                 $('#userDescriptionErrMsg').hide();
             }
         });
+    }
 
 }
 function resetDefaults(){
@@ -166,35 +248,101 @@ function resetDefaults(){
 }
 
 function validateForm(){
-    /*resetDefaults();*/
-    var newNetworkLoginId=$('#networkloginid');
-    var institutionId=$('#institutionId');
-    var roleId=$('#roleId');
-    var userDescription=$('#userDescription')
-    if(newNetworkLoginId == null)
-    {
+    var isValid = true;
+    var newNetworkLoginId=$('#networkLoginId').val();
+    var institutionId=$('#institutionId').val();
+    var roleId=$('#roleId').val();
+    var userDescription=$('#userDescription').val();
+    if(isBlankValue(newNetworkLoginId)) {
         $('#networkLoginIdErrMsg').show();
-        return false;
+        isValid=false;
+    }else {
+        $('#networkLoginIdErrMsg').hide();
     }
-
-    if(institutionId == null)
-    {
+    if(isBlankValue(institutionId)) {
         $('#institutionIdErrMsg').show();
-        return false;
+        isValid= false;
+    }else{
+        $('#institutionIdErrMsg').hide();
     }
-
-    if(roleId == null )
-    {
+    if(isBlankValue(roleId)) {
         $('#roleIdErrMsg').show();
-        return false;
+        isValid= false;
+    }else{
+        $('#roleIdErrMsg').hide();
     }
-    if(userDescription == null)
-    {
+    if(isBlankValue(userDescription)){
         $('#userDescriptionErrMsg').show();
-        return false;
+        isValid= false;
+    }else {
+        $('#userDescriptionErrMsg').hide();
     }
-
+    return isValid;
 }
+
+
+function isBlankValue(value) {
+    if (value == null || value == '') {
+        return true;
+    }
+    return false;
+}
+
+function editUser(userId,networkLoginId){
+    console.log("userId"+userId);
+    console.log("log id"+networkLoginId);
+    $('#editsuccessMsg').hide();
+    $('#editerrormsg').hide();
+    $('#editusers-createview').show();
+    $('#users-createview').hide();
+    $('#users-searchview').hide();
+    var url = "/userRoles/editUser";
+    var request = $.ajax({
+        url: url,
+        type: 'post',
+        data: {userId:userId,networkLoginId:networkLoginId},
+        success: function (response) {
+            $('#userRolesContentId').html(response);
+            $('#editusers-createview').show();
+            $('#users-searchview').hide();
+            $('#users-createview').hide();
+            $('#successMsg').show();
+            $('#editroleId').multiselect();
+        }
+    });
+}
+
+function editclear(){
+    editUser(userId,networkLoginId);
+}
+
+
+function editUserDetails(){
+    var userId = $('#editUserIdHidden').val();
+    var networkLoginId = $('#editnetworkLoginId').val();
+    var institutionId = $('#editinstitutionId').val();
+    var roleIds = $('#editroleId').val();
+    var userDescription = $('#edituserDescription').val();
+    $('#editusers-createview').show();
+    $('#users-createview').hide();
+    $('#users-searchview').hide();
+    var $form = $('#userRole-form');
+    var url = "/userRoles/saveEditUserDetails";
+    var request = $.ajax({
+        url: url,
+        type: 'post',
+        data: {userId:userId,networkLoginId:networkLoginId,roleIds:roleIds,userDescription:userDescription,institutionId:institutionId},
+        success: function (response) {
+            $('#userRolesContentId').html(response);
+            $('#editusers-createview').show();
+            $('#users-searchview').hide();
+            $('#users-createview').hide();
+            $('#successMsg').show();
+            $('#editroleId').multiselect();
+        }
+    });
+}
+
 
 
 

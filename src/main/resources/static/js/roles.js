@@ -94,7 +94,6 @@ function editResetDefault() {
             $("#recaprole .create-role-section").hide();
             $("#recaprole .roles-main-section").hide();
             $("#recaprole .delete-role-section").hide();
-            $('#editPermissionNameId').show();
             $('#editPermissionNameId').multiselect();
         }
     });
@@ -129,7 +128,6 @@ function createRole(){
 }
 
 function editRole(roleId,roleNames,roleDescription,permissionNames){
-
     //$('#permissionNameId').multiselect();
     console.log('Role Name  : ' + roleNames);
     console.log('Role Desc  : ' + roleDescription);
@@ -192,8 +190,6 @@ function deleteFromDb(){
 }
 
 function deleteRole(roleId,roleNames,roleDescription,permissionNames) {
-    
-
     console.log('Role Name  : ' + roleNames);
     console.log('Role Desc  : ' + roleDescription);
     console.log('Permission Name  : ' + permissionNames);

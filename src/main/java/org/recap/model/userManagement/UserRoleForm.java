@@ -46,8 +46,6 @@ public class UserRoleForm {
 
     private int[] editRoleId;
 
-    private int editInstitutionId;
-
     private int editUserId;
 
     private boolean isCreatedRequest;
@@ -55,6 +53,57 @@ public class UserRoleForm {
     private String userDescriptionErrMsg;
 
     private String userDescription;
+
+    private boolean showPagination = false;
+
+    private boolean showSearch = false;
+
+    private boolean showErrorMessage = false;
+
+    private boolean showCreateSuccess = false;
+
+    private boolean showCreateError = false;
+
+    private List<Integer> showSelectedForCreate = new ArrayList<>();
+
+    private List<Integer> selectedForCreate = new ArrayList<>();
+
+    private boolean showEditSuccess = false;
+
+    private boolean showEditError = false;
+
+    private String editNetworkLoginId;
+
+    private Integer editInstitutionId;
+
+    private List<Integer> editSelectedForCreate = new ArrayList<>();
+
+    private String editUserDescription;
+
+    public boolean isShowCreateError() {
+        return showCreateError;
+    }
+
+    public void setShowCreateError(boolean showCreateError) {
+        this.showCreateError = showCreateError;
+    }
+
+    public boolean isShowCreateSuccess() {
+        return showCreateSuccess;
+    }
+
+    public void setShowCreateSuccess(boolean showCreateSuccess) {
+        this.showCreateSuccess = showCreateSuccess;
+    }
+
+    public boolean isShowErrorMessage() {
+        return showErrorMessage;
+    }
+
+    public void setShowErrorMessage(boolean showErrorMessage) {
+        this.showErrorMessage = showErrorMessage;
+    }
+
     public boolean isCreatedRequest() {
         return isCreatedRequest;
     }
@@ -87,13 +136,6 @@ public class UserRoleForm {
         this.editRoleId = editRoleId;
     }
 
-    public int getEditInstitutionId() {
-        return editInstitutionId;
-    }
-
-    public void setEditInstitutionId(int editInstitutionId) {
-        this.editInstitutionId = editInstitutionId;
-    }
 
     public List<Object> getRoles() {
         return roles;
@@ -294,5 +336,85 @@ public class UserRoleForm {
 
     public void setUserDescriptionErrMsg(String userDescriptionErrMsg) {
         this.userDescriptionErrMsg = userDescriptionErrMsg;
+    }
+
+    public boolean isShowPagination() {
+        return showPagination;
+    }
+
+    public void setShowPagination(boolean showPagination) {
+        this.showPagination = showPagination;
+    }
+
+    public boolean isShowSearch() {
+        return showSearch;
+    }
+
+    public void setShowSearch(boolean showSearch) {
+        this.showSearch = showSearch;
+    }
+
+    public List<Integer> getShowSelectedForCreate() {
+        return showSelectedForCreate;
+    }
+
+    public void setShowSelectedForCreate(List<Integer> showSelectedForCreate) {
+        this.showSelectedForCreate = showSelectedForCreate;
+    }
+
+    public List<Integer> getSelectedForCreate() {
+        return selectedForCreate;
+    }
+
+    public void setSelectedForCreate(List<Integer> selectedForCreate) {
+        this.selectedForCreate = selectedForCreate;
+    }
+
+    public boolean isShowEditSuccess() {
+        return showEditSuccess;
+    }
+
+    public void setShowEditSuccess(boolean showEditSuccess) {
+        this.showEditSuccess = showEditSuccess;
+    }
+
+    public boolean isShowEditError() {
+        return showEditError;
+    }
+
+    public void setShowEditError(boolean showEditError) {
+        this.showEditError = showEditError;
+    }
+
+    public String getEditNetworkLoginId() {
+        return editNetworkLoginId;
+    }
+
+    public void setEditNetworkLoginId(String editNetworkLoginId) {
+        this.editNetworkLoginId = editNetworkLoginId;
+    }
+
+    public void setEditInstitutionId(Integer editInstitutionId) {
+        this.editInstitutionId = editInstitutionId;
+    }
+
+    public List<Integer> getEditSelectedForCreate() {
+        return editSelectedForCreate;
+    }
+
+    public void setEditSelectedForCreate(List<Integer> editSelectedForCreate) {
+        this.editSelectedForCreate = editSelectedForCreate;
+    }
+
+    public String getEditUserDescription() {
+        return editUserDescription;
+    }
+
+    public void setEditUserDescription(String editUserDescription) {
+        this.editUserDescription = editUserDescription;
+    }
+
+    public Integer getEditInstitutionId() {
+        return editInstitutionId;
     }
 }
