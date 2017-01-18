@@ -42,7 +42,7 @@ public class CollectionServiceUtil {
             HttpEntity requestEntity = new HttpEntity<>(getHttpHeaders());
 
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(serverProtocol + scsbUrl + RecapConstants.SCSB_UPDATE_CGD_URL)
-                    .queryParam(RecapConstants.CGD_UPDATE_ITEM_ID, bibliographicMarcForm.getItemId())
+                    .queryParam(RecapConstants.CGD_UPDATE_ITEM_BARCODE, bibliographicMarcForm.getBarcode())
                     .queryParam(RecapConstants.NEW_CGD, bibliographicMarcForm.getNewCollectionGroupDesignation())
                     .queryParam(RecapConstants.CGD_CHANGE_NOTES, bibliographicMarcForm.getCgdChangeNotes());
 
