@@ -349,7 +349,7 @@ public class RecapConstants {
     public static final String SCSB_SHIRO_LOGOUT_URL="userAuth/logout";
     public static final String SCSB_SHIRO_UI_VALUES="authentication/permissions";
 
-    public static final String CGD_UPDATE_ITEM_ID = "itemId";
+    public static final String CGD_UPDATE_ITEM_BARCODE = "itemBarcode";
     public static final String NEW_CGD = "newCollectionGroupDesignation";
     public static final String CGD_CHANGE_NOTES = "cgdChangeNotes";
 
