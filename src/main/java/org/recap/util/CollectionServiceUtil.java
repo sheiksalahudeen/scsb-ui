@@ -1,11 +1,14 @@
 package org.recap.util;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.recap.RecapConstants;
 import org.recap.model.deAccession.DeAccessionRequest;
 import org.recap.model.jpa.ItemChangeLogEntity;
+import org.recap.model.jpa.ItemEntity;
 import org.recap.model.search.BibliographicMarcForm;
 import org.recap.repository.jpa.ItemChangeLogDetailsRepository;
+import org.recap.repository.jpa.ItemDetailsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by rajeshbabuk on 19/10/16.
@@ -34,6 +38,9 @@ public class CollectionServiceUtil {
 
     @Autowired
     ItemChangeLogDetailsRepository itemChangeLogDetailsRepository;
+
+    @Autowired
+    ItemDetailsRepository itemDetailsRepository;
 
     public void updateCGDForItem(BibliographicMarcForm bibliographicMarcForm) {
         String statusResponse = null;
@@ -72,7 +79,8 @@ public class CollectionServiceUtil {
                 if (resultMessage.contains(RecapConstants.SUCCESS)) {
                     String userName = RecapConstants.GUEST;
                     Date lastUpdatedDate = new Date();
-                    saveItemChangeLogEntity(bibliographicMarcForm.getItemId(), userName, lastUpdatedDate, RecapConstants.DEACCESSION, bibliographicMarcForm.getDeaccessionNotes());
+                    List<ItemEntity> itemEntities = itemDetailsRepository.findByBarcode(itemBarcode);
+                    saveItemChangeLogEntity(itemEntities, userName, lastUpdatedDate, RecapConstants.DEACCESSION, bibliographicMarcForm.getDeaccessionNotes());
                     bibliographicMarcForm.setSubmitted(true);
                     bibliographicMarcForm.setMessage(RecapConstants.DEACCESSION_SUCCESSFUL);
                 } else if (resultMessage.contains(RecapConstants.REQUESTED_ITEM_DEACCESSIONED)) {
@@ -90,14 +98,18 @@ public class CollectionServiceUtil {
         }
     }
 
-    private void saveItemChangeLogEntity(Integer recordId, String userName, Date lastUpdatedDate, String operationType, String notes) {
-        ItemChangeLogEntity itemChangeLogEntity = new ItemChangeLogEntity();
-        itemChangeLogEntity.setUpdatedBy(userName);
-        itemChangeLogEntity.setUpdatedDate(lastUpdatedDate);
-        itemChangeLogEntity.setOperationType(operationType);
-        itemChangeLogEntity.setRecordId(recordId);
-        itemChangeLogEntity.setNotes(notes);
-        itemChangeLogDetailsRepository.save(itemChangeLogEntity);
+    private void saveItemChangeLogEntity(List<ItemEntity> itemEntities, String userName, Date lastUpdatedDate, String operationType, String notes) {
+        if (CollectionUtils.isNotEmpty(itemEntities)) {
+            for (ItemEntity itemEntity : itemEntities) {
+                ItemChangeLogEntity itemChangeLogEntity = new ItemChangeLogEntity();
+                itemChangeLogEntity.setUpdatedBy(userName);
+                itemChangeLogEntity.setUpdatedDate(lastUpdatedDate);
+                itemChangeLogEntity.setOperationType(operationType);
+                itemChangeLogEntity.setRecordId(itemEntity.getItemId());
+                itemChangeLogEntity.setNotes(notes);
+                itemChangeLogDetailsRepository.save(itemChangeLogEntity);
+            }
+        }
     }
 
     private HttpHeaders getHttpHeaders() {
