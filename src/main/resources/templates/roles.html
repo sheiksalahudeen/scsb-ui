@@ -154,8 +154,6 @@
                                                       th:text="${searchResult.permissionName}"></span>
                                             </td>
                                             <td class="text-center">
-                                                <!--<div class="edit-link margin-left-05 margin-right-05 editRole" ><a href="#"><span class="glyphicon glyphicon-pencil" th:onclick="'editRole(\'' + ${searchResult.rolesName} + '\',\'' + ${searchResult.rolesDescription} + '\',\'' + ${searchResult.permissionName} + '\')'"></span></a>
-                                                <a href="#" data-toggle="modal" data-target=".user-delete"><span class="glyphicon glyphicon-trash" onclick="deleteRole()"></span></a></div>-->
                                                 <div class="edit-link margin-left-05 margin-right-05 editRole" ><a href="#" id="editUserLink"><span class="glyphicon glyphicon-pencil" th:onclick="'editRole(\'' + ${searchResult.roleId} + '\',\'' + ${searchResult.rolesName} + '\',\'' + ${searchResult.rolesDescription} + '\',\'' + ${searchResult.permissionName} + '\')'"></span></a>
                                                     <a href="#" data-toggle="modal" data-target=".user-delete"><span class="glyphicon glyphicon-trash" th:onclick="'deleteRole(\'' + ${searchResult.roleId} + '\',\'' + ${searchResult.rolesName} + '\',\'' + ${searchResult.rolesDescription} + '\',\'' + ${searchResult.permissionName} + '\')'"></span></a></div>
                                             </td>
