@@ -162,29 +162,4 @@ public class UserRoleServiceImpl implements UserRoleService{
         return savedUsersEntity;
     }
 
-    /*@Override
-    public UsersEntity saveEditedUserToDB(UserRoleForm userRoleForm) {
-        UsersEntity usersEntity = new UsersEntity();
-        usersEntity.setUserId(userRoleForm.getUserId());
-        usersEntity.setLoginId(userRoleForm.getEditNetworkLoginId());
-        usersEntity.setUserDescription(userRoleForm.getEditUserDescription());
-
-        InstitutionEntity institutionEntity = institutionDetailsRepository.findByInstitutionId(userRoleForm.getEditInstitutionId());
-        InstitutionEntity institutionEntity1 = new InstitutionEntity();
-        institutionEntity1.setInstitutionId(institutionEntity.getInstitutionId());
-        institutionEntity1.setInstitutionCode(institutionEntity.getInstitutionCode());
-        institutionEntity1.setInstitutionName(institutionEntity.getInstitutionName());
-        usersEntity.setInstitutionEntity(institutionEntity1);
-
-        List<RoleEntity> roleEntityList = rolesDetailsRepositorty.findByRoleIdIn(userRoleForm.getEditSelectedForCreate());
-        usersEntity.setUserRole(roleEntityList);
-
-        UsersEntity savedUsersEntity = userDetailsRepository.save(usersEntity);
-
-        return savedUsersEntity;
-
-    }*/
-
-
-
 }

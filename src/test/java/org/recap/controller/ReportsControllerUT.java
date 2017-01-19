@@ -71,8 +71,8 @@ public class ReportsControllerUT extends BaseControllerUT {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(RecapConstants.SIMPLE_DATE_FORMAT_REPORTS);
         String fromDate = reportsForm.getRequestFromDate();
         String toDate = reportsForm.getRequestToDate();
-        Date requestFromDate = reportsUtil.getFromDate(simpleDateFormat.parse(fromDate));
-        Date requestToDate = reportsUtil.getToDate(simpleDateFormat.parse(toDate));
+        Date requestFromDate = simpleDateFormat.parse(fromDate);
+        Date requestToDate = simpleDateFormat.parse(toDate);
         reportsUtil.populateILBDCountsForRequest(reportsForm, requestFromDate, requestToDate);
         assertNotNull(modelAndView);
         assertEquals("searchRecords", modelAndView.getViewName());
@@ -89,8 +89,8 @@ public class ReportsControllerUT extends BaseControllerUT {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(RecapConstants.SIMPLE_DATE_FORMAT_REPORTS);
         String fromDate = reportsForm.getRequestFromDate();
         String toDate = reportsForm.getRequestToDate();
-        Date requestFromDate = reportsUtil.getFromDate(simpleDateFormat.parse(fromDate));
-        Date requestToDate = reportsUtil.getToDate(simpleDateFormat.parse(toDate));
+        Date requestFromDate =simpleDateFormat.parse(fromDate);
+        Date requestToDate = simpleDateFormat.parse(toDate);
         reportsUtil.populatePartnersCountForRequest(reportsForm, requestFromDate, requestToDate);
         assertNotNull(modelAndView);
         assertEquals("searchRecords", modelAndView.getViewName());
@@ -107,8 +107,8 @@ public class ReportsControllerUT extends BaseControllerUT {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(RecapConstants.SIMPLE_DATE_FORMAT_REPORTS);
         String fromDate = reportsForm.getRequestFromDate();
         String toDate = reportsForm.getRequestToDate();
-        Date requestFromDate = reportsUtil.getFromDate(simpleDateFormat.parse(fromDate));
-        Date requestToDate = reportsUtil.getToDate(simpleDateFormat.parse(toDate));
+        Date requestFromDate =simpleDateFormat.parse(fromDate);
+        Date requestToDate = simpleDateFormat.parse(toDate);
         reportsUtil.populateRequestTypeInformation(reportsForm, requestFromDate, requestToDate);
         assertNotNull(modelAndView);
         assertEquals("searchRecords", modelAndView.getViewName());
@@ -124,7 +124,7 @@ public class ReportsControllerUT extends BaseControllerUT {
         String fromDate = reportsForm.getAccessionDeaccessionFromDate();
         String toDate = reportsForm.getAccessionDeaccessionToDate();
         ModelAndView modelAndView = reportsController.reportCounts(reportsForm,model);
-        reportsUtil.populateAccessionDeaccessionItemCounts(reportsForm,fromDate,toDate);
+        reportsUtil.populateAccessionDeaccessionItemCounts(reportsForm);
         assertNotNull(modelAndView);
         assertEquals("searchRecords", modelAndView.getViewName());
     }
