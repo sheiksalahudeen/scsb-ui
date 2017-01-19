@@ -210,20 +210,22 @@ public class RequestController {
             for (String itemBarcode : itemBarcodes) {
                 String barcode = itemBarcode.trim();
                 if (StringUtils.isNotBlank(barcode)) {
-                    ItemEntity itemEntity = itemDetailsRepository.findByBarcode(barcode);
-                    if (null != itemEntity) {
-                        if (CollectionUtils.isNotEmpty(itemEntity.getBibliographicEntities())) {
-                            userDetailsForm = userAuthUtil.getUserDetails(request.getSession(),UserManagement.REQUEST_ITEM_PRIVILEGE);
-                            if (itemEntity.getCollectionGroupId()==RecapConstants.CGD_PRIVATE && !userDetailsForm.isSuperAdmin() && !userDetailsForm.isRecapUser() && !userDetailsForm.getLoginInstitutionId().equals(itemEntity.getOwningInstitutionId())) {
-                                jsonObject.put("errorMessage", "User is not permitted to request private item(s)");
-                            } else {
-                                for (BibliographicEntity bibliographicEntity : itemEntity.getBibliographicEntities()) {
-                                    String bibContent = new String(bibliographicEntity.getContent());
-                                    BibJSONUtil bibJSONUtil = new BibJSONUtil();
-                                    List<Record> records = bibJSONUtil.convertMarcXmlToRecord(bibContent);
-                                    Record marcRecord = records.get(0);
-                                    itemTitles.add(bibJSONUtil.getTitle(marcRecord));
-                                    itemOwningInstitutions.add(itemEntity.getInstitutionEntity().getInstitutionCode());
+                    List<ItemEntity> itemEntities = itemDetailsRepository.findByBarcodeAndIsDeletedFalse(barcode);
+                    if (CollectionUtils.isNotEmpty(itemEntities)) {
+                        for (ItemEntity itemEntity : itemEntities) {
+                            if (null != itemEntity && CollectionUtils.isNotEmpty(itemEntity.getBibliographicEntities())) {
+                                userDetailsForm = userAuthUtil.getUserDetails(request.getSession(),UserManagement.REQUEST_ITEM_PRIVILEGE);
+                                if (itemEntity.getCollectionGroupId()==RecapConstants.CGD_PRIVATE && !userDetailsForm.isSuperAdmin() && !userDetailsForm.isRecapUser() && !userDetailsForm.getLoginInstitutionId().equals(itemEntity.getOwningInstitutionId())) {
+                                    jsonObject.put("errorMessage", "User is not permitted to request private item(s)");
+                                } else {
+                                    for (BibliographicEntity bibliographicEntity : itemEntity.getBibliographicEntities()) {
+                                        String bibContent = new String(bibliographicEntity.getContent());
+                                        BibJSONUtil bibJSONUtil = new BibJSONUtil();
+                                        List<Record> records = bibJSONUtil.convertMarcXmlToRecord(bibContent);
+                                        Record marcRecord = records.get(0);
+                                        itemTitles.add(bibJSONUtil.getTitle(marcRecord));
+                                        itemOwningInstitutions.add(itemEntity.getInstitutionEntity().getInstitutionCode());
+                                    }
                                 }
                             }
                         }
