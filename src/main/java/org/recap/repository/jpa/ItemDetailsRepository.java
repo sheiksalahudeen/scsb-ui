@@ -34,7 +34,9 @@ public interface ItemDetailsRepository extends PagingAndSortingRepository<ItemEn
 
     ItemEntity findByOwningInstitutionItemId(@Param("owningInstitutionItemId") String owningInstitutionItemId);
 
-    ItemEntity findByBarcode(String barcode);
+    List<ItemEntity> findByBarcode(String barcode);
+
+    List<ItemEntity> findByBarcodeAndIsDeletedFalse(String barcode);
 
     @Modifying
     @Transactional
