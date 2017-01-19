@@ -386,9 +386,11 @@ public class RecapConstants {
     public static final String WRONG_PERMISSION = "This permission is not given to this role";
     public static final String INVALID_PERMISSION = "Please give one valid permission name";
     public static final String SPECIAL_CHARACTERS_NOT_ALLOWED = "Special characters and spaces are not allowed";
+    public static final String SPECIAL_CHARACTERS_NOT_ALLOWED_CREATE = "Special characters and spaces are not allowed in Role Name";
     public static final String ROLES_SUPER_ADMIN = "SuperAdmin";
-    public static final String ROLES_ADD_SUCCESS_MESSAGE = "Role added successfully";
-    public static final String ROLES_DUPLICATE_MESSAGE = "Roles should not be duplicate";
-    public static final String ROLES_EDIT_SAVE_SUCCESS_MESSAGE = "Role edited and saved successfully";
+    public static final String ROLES_ADD_SUCCESS_MESSAGE = "  added successfully";
+    public static final String ROLES_DUPLICATE_MESSAGE = " already exists";
+    public static final String ROLES_EDIT_SAVE_SUCCESS_MESSAGE = " edited and added successfully";
+    public static final String ROLES_DELETED_SUCCESS_MESSAGE = " deleted successfully";
 
 }

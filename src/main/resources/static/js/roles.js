@@ -2,30 +2,39 @@
  * Created by hemalathas on 22/12/16.
  */
 jQuery(document).ready(function ($) {
-    resetDefaultsRoles()
 
-    /***Request Tab Create Request Form Show/Hide ***/
-    $("#recaprole .roleCreateNewlink a").click(function (e) {
-        $("#recaprole .create-role-section").show();
-        $("#recaprole .roles-main-section").hide();
-        $("#recaprole .delete-role-section").hide();
-        $("#recaprole .edit-role-section").hide();
+    $('#createRoleLink').click(function(){
         populatePermissionNames();
     });
+
     $("#recaprole .backtext a").click(function () {
-        resetDefaultsRoles()
         $("#recaprole .create-role-section").hide();
         $("#recaprole .roles-main-section").show();
         $("#recaprole .delete-role-section").hide();
         $("#recaprole .edit-role-section").hide();
         $('#errorMessageId').hide();
         $("#recaprole .errorMessage").hide();
-        //loadCreateRole()
     });
 
     $('#permissionNameId').multiselect();
     $('#deletePermissionNameId').multiselect();
     $('#editPermissionNameId').multiselect();
+
+    $('#roleNameErrorMessage').hide();
+    $('#roleDescriptionErrorMessage').hide();
+    $('#permissionNamesErrorMessage').hide();
+    $('#editRoleNameErrorMessage').hide();
+    $('#editRoleDescriptionErrorMessage').hide();
+    $('#editPermissionNamesErrorMessage').hide();
+
+
+    $('#roleNameId , #roleDescriptionId').click(function(){
+       $('.alert').hide();
+    });
+
+    $('#permissionNameId').change(function(){
+        $('.alert').hide();
+    });
 });
 
 function loadCreateRole() {
@@ -65,18 +74,9 @@ function populatePermissionNames(){
 
 }
 
-function resetDefaultsRoles() {
-    $('#roleNameErrorMessage').hide();
-    $('#roleDescriptionErrorMessage').hide();
-    $('#permissionNamesErrorMessage').hide();
-    $('#editRoleNameErrorMessage').hide();
-    $('#editRoleDescriptionErrorMessage').hide();
-    $('#editPermissionNamesErrorMessage').hide();
-}
-
 function editResetDefault() {
     var $form = $('#roles-form');
-    var url = $form.attr('action') + "?action=clearPage";
+    var url = $form.attr('action') + "?action=editClearPage";
     var role = $.ajax({
         url: url,
         type: 'post',
@@ -84,6 +84,7 @@ function editResetDefault() {
         success: function (response) {
             console.log("completed");
             $('#rolesContentId').html(response);
+            $("#recaprole .roles-main-section").hide();
             $('#roleNameErrorMessage').hide();
             $('#roleDescriptionErrorMessage').hide();
             $('#permissionNamesErrorMessage').hide();
@@ -92,9 +93,7 @@ function editResetDefault() {
             $('#editPermissionNamesErrorMessage').hide();
             $("#recaprole .edit-role-section").show();
             $("#recaprole .create-role-section").hide();
-            $("#recaprole .roles-main-section").hide();
             $("#recaprole .delete-role-section").hide();
-            $('#editPermissionNameId').show();
             $('#editPermissionNameId').multiselect();
         }
     });
@@ -110,11 +109,11 @@ function createResetDefault() {
         success: function (response) {
             console.log("completed");
             $('#rolesContentId').html(response);
+            $("#recaprole .create-role-section").show();
             $('#roleNameErrorMessage').hide();
             $('#roleDescriptionErrorMessage').hide();
             $('#permissionNamesErrorMessage').hide();
             $("#recaprole .edit-role-section").hide();
-            $("#recaprole .create-role-section").show();
             $("#recaprole .roles-main-section").hide();
             $("#recaprole .delete-role-section").hide();
 
@@ -129,12 +128,9 @@ function createRole(){
 }
 
 function editRole(roleId,roleNames,roleDescription,permissionNames){
-
-    //$('#permissionNameId').multiselect();
     console.log('Role Name  : ' + roleNames);
     console.log('Role Desc  : ' + roleDescription);
     console.log('Permission Name  : ' + permissionNames);
-
     var $form = $('#roles-form');
     var roleName = $('#recaprole .roleDetails').val();
     var url = $form.attr('action') + "?action=editRole";
@@ -146,31 +142,38 @@ function editRole(roleId,roleNames,roleDescription,permissionNames){
             $('#rolesContentId').html(response);
             console.log(response);
             $("#recaprole .edit-role-section").show();
-            $("#recaprole .create-role-section").hide();
             $("#recaprole .roles-main-section").hide();
+            $("#recaprole .create-role-section").hide();
             $("#recaprole .delete-role-section").hide();
-
         }
     });
     
 }
 
 function saveEditedRole(){
-    var $form = $('#roles-form');
-    var url = $form.attr('action') + "?action=saveEditedRole";
-    var role = $.ajax({
-        url: url,
-        type: 'post',
-        data: $form.serialize(),
-        success: function (response) {
-            console.log("completed");
-            $('#rolesContentId').html(response);
-            $("#recaprole .edit-role-section").show();
-            $("#recaprole .create-role-section").hide();
-            $("#recaprole .roles-main-section").hide();
-            $("#recaprole .delete-role-section").hide();
-        }
-    });
+    var editValidation = isValidEdit();
+    if(editValidation == true){
+        var roleId = $('#roleId').val();
+        var permissionNames = $('#editPermissionNameId').val();
+        var roleName = $('#editRoleName').val();
+        var roleDescription = $('#editRoleDescription').val();
+        var $form = $('#roles-form');
+        var url = $form.attr('action') + "?action=saveEditedRole";
+        var role = $.ajax({
+            url: url,
+            type: 'post',
+            data:{roleId:roleId,permissionNames:permissionNames,roleName:roleName,roleDescription:roleDescription},
+            success: function (response) {
+                console.log("completed");
+                $('#rolesContentId').html(response);
+                $('#roleNameId').val('');
+                $("#recaprole .edit-role-section").show();
+                $("#recaprole .create-role-section").hide();
+                $("#recaprole .roles-main-section").hide();
+                $("#recaprole .delete-role-section").hide();
+            }
+        });
+    }
 }
 
 function deleteFromDb(){
@@ -192,8 +195,6 @@ function deleteFromDb(){
 }
 
 function deleteRole(roleId,roleNames,roleDescription,permissionNames) {
-    
-
     console.log('Role Name  : ' + roleNames);
     console.log('Role Desc  : ' + roleDescription);
     console.log('Permission Name  : ' + permissionNames);
@@ -241,9 +242,35 @@ function isValidRole() {
         $('#permissionNamesErrorMessage').hide();
     }
     return isValid;
-
-   
 }
+
+function isValidEdit(){
+    var isValid = true;
+    var roleName = $('#editRoleName').val();
+    var roleDescription = $('#editRoleDescription').val();
+    var permissionName = $('#editPermissionNameId').val();
+    if (isBlankValue(roleName)) {
+        $('#editRoleNameErrorMessage').show();
+        isValid = false;
+    } else {
+        $('#editRoleNameErrorMessage').hide();
+    }
+    if (isBlankValue(roleDescription)) {
+        $('#editRoleDescriptionErrorMessage').show();
+        isValid = false;
+    } else {
+        $('#editRoleDescriptionErrorMessage').hide();
+    }
+    if (isBlankValue(permissionName)) {
+        $('#editPermissionNamesErrorMessage').show();
+        isValid = false;
+    } else {
+        $('#editPermissionNamesErrorMessage').hide();
+    }
+    return isValid;
+
+}
+
 
 function isBlankValue(value) {
     if (value == null || value == '') {

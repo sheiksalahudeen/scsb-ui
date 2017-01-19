@@ -12,12 +12,12 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by hemalathas on 23/12/16.
@@ -38,6 +38,9 @@ public class RolesControllerUT extends BaseTestCase {
 
     @Autowired
     RolesDetailsRepositorty rolesDetailsRepositorty;
+
+    @Mock
+    HttpServletRequest request;
 
     @Test
     public void testRoles(){
@@ -126,13 +129,14 @@ public class RolesControllerUT extends BaseTestCase {
         RolesForm rolesForm = new RolesForm();
         rolesForm.setRoleId(1);
         rolesForm.setEditRoleName("Admin");
-        rolesForm.setEditPermissionNames("CreateUser");
+        String[] permissionName ={"CreateUser"};
+        when(request.getParameterValues("permissionNames[]")).thenReturn(permissionName);
+        rolesForm.setEditPermissionName(Arrays.asList(permissionName));
         rolesForm.setEditRoleDescription("test desc");
-        ModelAndView modelAndView = rolesController.saveEditedRole(rolesForm,model);
+        ModelAndView modelAndView = rolesController.saveEditedRole(rolesForm.getRoleId(),rolesForm.getEditRoleName(),rolesForm.getEditRoleName(),model,request);
         assertNotNull(modelAndView);
         assertEquals("roles",modelAndView.getViewName());
     }
-
     @Test
     public void deleteRole() throws Exception{
         RolesForm rolesForm = new RolesForm();

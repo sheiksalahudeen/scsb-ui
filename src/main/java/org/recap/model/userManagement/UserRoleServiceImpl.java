@@ -117,7 +117,7 @@ public class UserRoleServiceImpl implements UserRoleService{
         usersEntity.setInstitutionId(institutionEntity.getInstitutionId());
         usersEntity.setInstitutionEntity(institutionEntity);
 
-        List<RoleEntity> roleEntityList = rolesDetailsRepositorty.findByRoleIdIn(userRoleForm.getRoleId());
+        List<RoleEntity> roleEntityList = rolesDetailsRepositorty.findByRoleIdIn(userRoleForm.getSelectedForCreate());
         usersEntity.setUserRole(roleEntityList);
         usersEntity.setUserDescription(userRoleForm.getUserDescription());
 
@@ -133,6 +133,33 @@ public class UserRoleServiceImpl implements UserRoleService{
         }
 
         return saveUsersEntity;
+    }
+
+    @Override
+    public UsersEntity saveEditedUserToDB(Integer userId, String networkLoginId, String userDescription, Integer institutionId, List<Integer> roleIds) {
+        UsersEntity usersEntity = new UsersEntity();
+        UsersEntity savedUsersEntity = null;
+        UsersEntity checkUserId = userDetailsRepository.findByUserId(userId);
+        if(checkUserId != null){
+            usersEntity.setUserId(userId);
+            usersEntity.setLoginId(networkLoginId);
+            usersEntity.setUserDescription(userDescription);
+            usersEntity.setInstitutionId(institutionId);
+            InstitutionEntity institutionEntity = institutionDetailsRepository.findByInstitutionId(institutionId);
+            if(institutionEntity != null){
+                InstitutionEntity institutionEntity1 = new InstitutionEntity();
+                institutionEntity1.setInstitutionId(institutionEntity.getInstitutionId());
+                institutionEntity1.setInstitutionCode(institutionEntity.getInstitutionCode());
+                institutionEntity1.setInstitutionName(institutionEntity.getInstitutionName());
+                usersEntity.setInstitutionEntity(institutionEntity1);
+            }
+            List<RoleEntity> roleEntityList = rolesDetailsRepositorty.findByRoleIdIn(roleIds);
+            if (roleEntityList != null){
+                usersEntity.setUserRole(roleEntityList);
+            }
+            savedUsersEntity= userDetailsRepository.save(usersEntity);
+        }
+        return savedUsersEntity;
     }
 
 }

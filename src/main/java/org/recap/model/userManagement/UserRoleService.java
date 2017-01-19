@@ -2,7 +2,6 @@ package org.recap.model.userManagement;
 
 import org.recap.model.jpa.RoleEntity;
 import org.recap.model.jpa.UsersEntity;
-import org.recap.model.userManagement.UserRoleForm;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -23,4 +22,6 @@ public interface UserRoleService {
     List<Object> getInstitutions(boolean isSuperAdmin, Integer loginInstitutionId);
 
     UsersEntity saveNewUserToDB(UserRoleForm userRoleForm);
+
+    UsersEntity saveEditedUserToDB(Integer userId, String networkLoginId, String userDescription, Integer institutionId, List<Integer> roleIds);
 }

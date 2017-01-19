@@ -1,7 +1,7 @@
 <!-- User Roles Tab-->
 <div id="userRolesContentId" name="userRolesContentName" th:fragment="content" xmlns:th="http://www.thymeleaf.org" role="tabpanel" class="tab-pane active">
     <link rel="stylesheet" th:href="@{../css/request.css}"/>
-    <link rel="stylesheet" th:href="@{../css/styles1.css}"/>
+    <link rel="stylesheet" th:href="@{../css/styles.css}"/>
     <script type="text/javascript" th:src="@{../js/bootstrap-multiselect.js}"></script>
     <script type="text/javascript" th:src="@{../js/select-step.js}"></script>
     <link rel="stylesheet" th:href="@{../css/bootstrap-multiselect.css}"/>
@@ -12,15 +12,12 @@
               th:action="@{/userRoles}"
               th:object="${userRoleForm}" method="post">
             <fieldset>
-                <input id="pageNumber" name="pageNumber" type="text" th:field="*{pageNumber}" hidden="hidden" />
-                <input id="totalPageCount" name="totalPageCount" type="text" th:field="*{totalPageCount}" hidden="hidden" />
-                <input id="totalRecordsCount" name="totalRecordsCount" type="text" th:field="*{totalRecordsCount}" hidden="hidden" />
-                <button id="pageSizeChangeButtonId" type="submit"  name="action" value="pageSizeChange" hidden="hidden"></button>
+                <input type="text" id="editUserIdHidden" th:field="${userRoleForm.userId}" hidden="hidden"/>
                 <div role="tabpanel" class="tab-pane" id="recapusers">
                     <div id="users-searchview">
                         <div class="row margin-btm-10">
                             <div class="col-sm-7 margin-top-05">Provide one or more data to search. Empty search would return all data.</div>
-                            <div class="col-sm-5 text-right userscreaterequestlink"><a href="#"><span class="glyphicon glyphicon-plus-sign"></span> Create Request</a></div>
+                            <div class="col-sm-5 text-right userscreaterequestlink"><a href="#" id="createRequest"><span class="glyphicon glyphicon-plus-sign"></span> Create User</a></div>
                         </div>
                         <div class="search-bar">
                             <div class="row margin-0">
@@ -37,7 +34,7 @@
                                                 <input class="form-control themed-input" name="roleName" id="roleName" th:field="*{roleName}" placeholder="" type="text"/>
                                             </div>
                                             <div class="col-md-4 col-sm-6">
-                                                <button class="btn themed-button themed-button-search" type="button" th:onclick="'javascript:searchUserRoles();'">Search</button>
+                                                <button id="searchButton" class="btn themed-button themed-button-search" type="button" th:onclick="'javascript:searchUserRoles();'">Search</button>
                                                 <button class="btn themed-button themed-button-cancel margin-left-10" type="submit" name="clearSearch">Clear Search</button></div>
                                         </div>
 
@@ -53,25 +50,39 @@
                                 </div>
                             </div>
                             <div>
-                                <div class="row">
-                                    <div class="col-sm-3 col-md-2 col-lg-2 margin-top-05 show-entries-section">
-                                        <div class="showEntriesOption">
-                                            <span class="show-title margin-right-05">Show Entries</span>
-                                            <select id="numOfRecordsId" name="numOfRecordsName" class="themed-input" th:field="*{pageSize}" onchrequest-result-tableange="document.getElementById('pageSizeChangeButtonId').click()">
-                                                <option value="10">10</option>
-                                                <option value="25">25</option>
-                                                <option value="50">50</option>
-                                                <option value="100">100</option></select>
 
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-9 col-md-10 col-lg-7 margin-top-10"></div>
-
-                                </div>
                                 <div class="User-Roles-Permission">
                                     <div class="col-xs-12">
-                                        <table id="request-result-table" class="table table-striped margin-btm-0">
+                                        <div id="request-result-table">
+                                            <div class="row margin-btm-10" id="errorMessageforSearch" data-th-if="${userRoleForm.showErrorMessage}">
+                                                <div class="col-sm-12 text-left">
+                                                    <div class="alert alert-danger" role="alert"><span
+                                                            class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span
+                                                            th:text="${userRoleForm.message}"></span></div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-3 col-md-2 col-lg-2 margin-top-05 show-entries-section">
+                                                    <div class="showEntriesOption" id="showEntries"  data-th-if="${userRoleForm.showResults}">
+                                                        <span class="show-title margin-right-05">Show Entries</span>
+                                                        <select id="numOfRecordsId" name="numOfRecordsName" class="themed-input" th:field="${userRoleForm.pageSize}" onchange="showEntriesChange();">
+                                                            <option value="10">10</option>
+                                                            <option value="25">25</option>
+                                                            <option value="50">50</option>
+                                                            <option value="100">100</option></select>
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-9 col-md-10 col-lg-7 margin-top-10"></div>
+
+                                            </div>
+                                            <input id="pageNumber" name="pageNumber" type="text" th:field="${userRoleForm.pageNumber}" hidden="hidden" />
+                                            <input id="totalPageCount" name="totalPageCount" type="text" th:field="${userRoleForm.totalPageCount}" hidden="hidden" />
+                                            <input id="totalRecordsCount" name="totalRecordsCount" type="text" th:field="${userRoleForm.totalRecordsCount}" hidden="hidden" />
+                                            <button id="pageSizeChangeButtonId" type="submit"  name="action" value="pageSizeChange" hidden="hidden"></button>
+                                            <h4 class="pull-right"  data-th-if="${userRoleForm.showResults}">Total Results Found:<span id="totalResults" th:text="${userRoleForm.totalRecordsCount}"></span> </h4>
                                             <!--<label id="ResultFound"><h4>Search Result Found:<span th:text="${userRoleForm.totalRecordsCount}"></span></h4></label>-->
+                                            <table class="table table-striped margin-btm-0" data-th-if="${userRoleForm.showResults}">
                                             <thead class="tablesorter-headerRow">
                                             <tr>
                                                 <th width="20%">Network Login Id</th>
@@ -83,7 +94,9 @@
                                             <tbody>
                                             <tr th:each="userRolesL:${userRoleForm.userRoleFormList}">
                                                 <!--<input type="hidden" id="userId" name="userId"
-                                                       th:text="*{userRolesL.userId}"/>-->
+                                                       th:text="${userRolesL.userId}"/>
+                                                <input type="hidden" id="userdesc" name="userId"
+                                                       th:text="${userRolesL.userDescription}"/>-->
                                                 <td>
                                                     <span th:text="${userRolesL.networkLoginId}"></span>
                                                 </td>
@@ -93,45 +106,46 @@
                                                 <td>
                                                     <span th:text="${userRolesL.roleName}"></span>
                                                 </td>
-                                                <td class="text-center"><a href="#" class="edit-link margin-left-05 margin-right-05"><span class="glyphicon glyphicon-pencil"></span></a>
+                                                <td class="text-center"><a href="#" class="edit-link margin-left-05 margin-right-05"><span class="glyphicon glyphicon-pencil" th:onclick="'editUser(\'' + ${userRolesL.userId} + '\',\'' + ${userRolesL.networkLoginId} + '\')'"></span></a>
                                                     <a href="#" class="delete-link margin-left-05 margin-right-05" data-toggle="modal" data-target=".user-delete"><span class="glyphicon glyphicon-trash" th:onclick="'deleteUserRole(\'' + ${userRolesL.networkLoginId} + '\',\'' + ${userRolesL.userId} + '\')'"></span></a>
                                                 </td>
 
                                             </tr>
                                             </tbody>
-                                        </table>
-                                    </div>
-
-                                    <div id="userRolePaginationDivId" name="userRolePaginationDivName" class="col-md-12" style="margin-bottom: -20px;">
-                                        <div class="pull-right">
-                                            <div id="userRolePaginationId" name="userRolePaginationName" xmlns:th="http://www.w3.org/1999/xhtml">
-                                                <ul class="pagination">
-                                                    <li th:class="*{pageNumber == 0} ? 'disabled' : ''">
-                                                        <span th:if="*{pageNumber == 0}">First</span>
-                                                        <a th:if="*{pageNumber != 0}" href="#"
-                                                           title="Go to first page"
-                                                           onclick="userRolesFirstPage()">First</a>
-                                                    </li>
-                                                    <li th:class="*{(pageNumber != 0) &amp;&amp; (totalPageCount &gt; 1)}? '' : 'disabled'">
-                                                        <span th:if="*{pageNumber == 0}">Previous</span>
-                                                        <a th:if="*{pageNumber != 0}" href="#"
-                                                           title="Go to previous page"
-                                                           onclick="userRolesPreviousPage()">Previous</a>
-                                                    </li>
-                                                    <li th:class="*{(pageNumber+1 != totalPageCount) &amp;&amp; (totalPageCount &gt; 1)}? '' : 'disabled'">
-                                                        <span th:if="*{pageNumber+1 == totalPageCount}">Next</span>
-                                                        <a th:if="*{pageNumber+1 != totalPageCount}"
-                                                           href="#" title="Go to next page"
-                                                           onclick="userRolesNextPage()">Next</a>
-                                                    </li>
-                                                    <li th:class="*{pageNumber+1 == totalPageCount}? 'disabled' : ''">
-                                                        <span th:if="*{pageNumber+1 == totalPageCount}">Last</span>
-                                                        <a th:if="*{pageNumber+1 != totalPageCount}"
-                                                           href="#"
-                                                           onclick="userRolesLastPage()">Last</a>
-                                                    </li>
-                                                </ul>
+                                            </table>
+                                            <div id="userRolePaginationDivId" name="userRolePaginationDivName" class="col-md-12" style="margin-bottom: -20px; display: none" data-th-if="${userRoleForm.showResults}">
+                                                <div class="pull-right">
+                                                    <div id="userRolePaginationId" name="userRolePaginationName">
+                                                        <ul class="pagination">
+                                                            <li th:class="${userRoleForm.pageNumber == 0} ? 'disabled' : ''">
+                                                                <span th:if="${userRoleForm.pageNumber == 0}">First</span>
+                                                                <a th:if="${userRoleForm.pageNumber != 0}" href="#"
+                                                                   title="Go to first page"
+                                                                   onclick="userRolesFirstPage()">First</a>
+                                                            </li>
+                                                            <li th:class="${(userRoleForm.pageNumber != 0) &amp;&amp; (userRoleForm.totalPageCount &gt; 1)}? '' : 'disabled'">
+                                                                <span th:if="${userRoleForm.pageNumber == 0}">Previous</span>
+                                                                <a th:if="${userRoleForm.pageNumber != 0}" href="#"
+                                                                   title="Go to previous page"
+                                                                   onclick="userRolesPreviousPage()">Previous</a>
+                                                            </li>
+                                                            <li th:class="${(userRoleForm.pageNumber+1 != userRoleForm.totalPageCount) &amp;&amp; (userRoleForm.totalPageCount &gt; 1)}? '' : 'disabled'">
+                                                                <span th:if="${userRoleForm.pageNumber+1 == userRoleForm.totalPageCount}">Next</span>
+                                                                <a th:if="${userRoleForm.pageNumber+1 != userRoleForm.totalPageCount}"
+                                                                   href="#" title="Go to next page"
+                                                                   onclick="userRolesNextPage()">Next</a>
+                                                            </li>
+                                                            <li th:class="${userRoleForm.pageNumber+1 == userRoleForm.totalPageCount}? 'disabled' : ''">
+                                                                <span th:if="${userRoleForm.pageNumber+1 == userRoleForm.totalPageCount}">Last</span>
+                                                                <a th:if="${userRoleForm.pageNumber+1 != userRoleForm.totalPageCount}"
+                                                                   href="#"
+                                                                   onclick="userRolesLastPage()">Last</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
                                             </div>
+
                                         </div>
                                     </div>
 
@@ -161,7 +175,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default themed-button btn-primary padding-left-30 padding-right-30" th:onclick="'javascript:deleteUser('+${userRoleForm.userId}+')'">Yes</button>
+                                    <button type="button" class="btn btn-default themed-button btn-primary padding-left-30 padding-right-30" data-dismiss="modal" th:onclick="'javascript:deleteUser('+${userRoleForm.userId}+')'">Yes</button>
                                     <button class="btn themed-button themed-button-cancel padding-left-30 padding-right-30" data-dismiss="modal" aria-label="Close">No</button>
                                 </div>
                             </div>
@@ -169,19 +183,27 @@
                     </div>
                     <!-- Modal Data End-->
                     <!--User Create Request Add Section-->
-                    <div class="" id="users-createview" style="display:block">
+                    <div class="" id="users-createview">
                         <div class="row margin-top-0">
-                            <div class="col-sm-6 margin-top-0"><h3 class="margin-0">Create Request</h3></div>
+                            <div class="col-sm-6 margin-top-0"><h3 class="margin-0">Create User</h3></div>
                             <div class="col-sm-6 text-right usersbacklink">
-                                <a href="#" class=""><span class="glyphicon glyphicon-menu-left"></span> Go Back</a>
+                                <a href="#" class="" id="backLink"><span class="glyphicon glyphicon-menu-left"></span> Go Back</a>
                             </div>
                         </div>
                         <div class="row margin-btm-10" id="successMsg"
-                             data-th-if="*{message ne null &amp;&amp; message ne ''}">
+                             data-th-if="${userRoleForm.showCreateSuccess}">
                             <div class="col-sm-12 text-left">
                                 <div class="alert alert-success" role="alert"><span
                                         class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span
-                                        th:text="*{message}"></span></div>
+                                        th:text="${userRoleForm.message}"></span></div>
+                            </div>
+                        </div>
+                        <div class="row margin-btm-10" id="errormsg"
+                             data-th-if="${userRoleForm.showCreateError}">
+                            <div class="col-sm-12 text-left">
+                                <div class="alert alert-danger" role="alert"><span
+                                        class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span
+                                        th:text="${userRoleForm.message}"></span></div>
                             </div>
                         </div>
                         <div class="row">
@@ -197,7 +219,7 @@
                                         </div>
                                         <div class="col-md-9 col-sm-8">
                                             <input class="form-control themed-input" name="networkLoginId" id="networkLoginId" th:field="*{networkLoginId}" placeholder="" type="text"/>
-                                            <span id="networkLoginIdErrMsg" style="color: red;">Please provide Network Login id </span>
+                                            <span id="networkLoginIdErrMsg" style="color: red;display: none">Please provide Network Login id </span>
                                         </div>
                                     </div>
                                     <div class="form-group" id="">
@@ -206,8 +228,8 @@
                                         </div>
                                         <div class="col-md-9 col-sm-8">
                                             <div class="select-holder">
-                                                <select class="form-control themed-input themed-select" id="institutionId" name="institutionId"  th:field="*{institutionId}">
-                                                    <option th:each="institutionValues : *{institutions}" th:value="${institutionValues[0]}" th:text="${institutionValues[1]}"></option>
+                                                <select class="form-control themed-input themed-select" id="institutionId" name="institutionId"  th:field="${userRoleForm.institutionId}">
+                                                    <option th:each="institutionValues : ${userRoleForm.institutions}" th:value="${institutionValues[0]}" th:text="${institutionValues[1]}"></option>
                                                 </select>
                                                 <span id="institutionIdErrMsg" style="color: red;">Please provide Network Login id </span>
                                             </div>
@@ -219,10 +241,10 @@
                                         </div>
                                         <div class="col-md-9 col-sm-8">
                                             <div class="select-holder">
-                                                <select class="form-control themed-input themed-select" id="roleId" name="roleId" multiple="multiple">
-                                                    <option th:each="roleValues : *{roles}" th:value="${roleValues[0]}" th:text="${roleValues[1]}" ></option>
+                                                <select class="form-control themed-input themed-select" id="roleId" name="roleId" multiple="multiple" th:field="${userRoleForm.selectedForCreate}">
+                                                    <option th:each="roleValues : ${userRoleForm.roles}" th:value="${roleValues[0]}" th:text="${roleValues[1]}" th:selected="${userRoleForm.showSelectedForCreate.contains(roleValues)}"></option>
                                                 </select>
-                                                <span id="roleIdErrMsg" style="color: red;">Please provide Network Login id </span>
+                                                <span id="roleIdErrMsg" style="color: red;display: none">Please provide Network Login id </span>
                                             </div>
 
                                         </div>
@@ -232,7 +254,7 @@
                                             <label for="userDescription" class="margin-top-10">User Description <span class="error-color">*</span></label>
                                         </div>
                                         <div class="col-md-9 col-sm-8">
-                                            <input class="form-control themed-input" name="networkLoginId" id="userDescription" th:field="*{userDescription}" placeholder="" type="text"/>
+                                            <input class="form-control themed-input" name="networkLoginId" id="userDescription" th:field="${userRoleForm.userDescription}" placeholder="" type="text"/>
                                             <span id="userDescriptionErrMsg" style="color: red;display: none">Please provide User Description </span>
                                         </div>
                                     </div>
@@ -243,7 +265,7 @@
                                         <div class="col-md-9 col-sm-8">
                                             <p class="margin-btm-30 margin-top-less-10">Fields marked with asterik(<span class="error-color">*</span>) are mandatory.</p>
                                             <div class="margin-btm-10 users-createrequest-button">
-                                                <button type="button" onclick="submitForm()" class="btn btn-default themed-button btn-primary">Submit</button>
+                                                <button id="createButton" type="button" onclick="submitForm()" class="btn btn-default themed-button btn-primary">Submit</button>
                                                 <button type="reset" class="btn btn-default themed-button themed-button-cancel margin-left-10">Clear</button>
                                             </div>
                                         </div>
@@ -253,6 +275,102 @@
                             <div class="col-md-3 col-sm-3"></div>
                         </div>
                     </div>
+
+                    <!-- edit tab starts-->
+
+                    <div class="" id="editusers-createview">
+                        <div class="row margin-top-0">
+                            <div class="col-sm-6 margin-top-0"><h3 class="margin-0">Edit User</h3></div>
+                            <div class="col-sm-6 text-right usersbacklink">
+                                <a href="#" class="" id="editbackLink"><span class="glyphicon glyphicon-menu-left"></span> Go Back</a>
+                            </div>
+                        </div>
+                        <div class="row margin-btm-10" id="editsuccessMsg"
+                             data-th-if="${userRoleForm.showEditSuccess}">
+                            <div class="col-sm-12 text-left">
+                                <div class="alert alert-success" role="alert"><span
+                                        class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span
+                                        th:text="${userRoleForm.message}"></span></div>
+                            </div>
+                        </div>
+                        <div class="row margin-btm-10" id="editerrormsg"
+                             data-th-if="${userRoleForm.showEditError}">
+                            <div class="col-sm-12 text-left">
+                                <div class="alert alert-danger" role="alert"><span
+                                        class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span
+                                        th:text="${userRoleForm.message}"></span></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12 divider-horizontal margin-top-10 margin-btm-30"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 col-lg-3 col-sm-2"></div>
+                            <div class="col-md-7 col-lg-6 col-sm-8">
+                                <form class="form-horizontal" id="editusers-createrequest" method="post" th:object="${userRoleForm}">
+                                    <div class="form-group">
+                                        <input type="text" th:field="${userRoleForm.networkLoginId}" hidden="hidden"/>
+                                        <div class="col-md-3 text-right col-sm-4">
+                                            <label for="networkLoginId" class="margin-top-10">Network Login id <span class="error-color">*</span></label>
+                                        </div>
+                                        <div class="col-md-9 col-sm-8">
+                                            <input class="form-control themed-input" name="editnetworkLoginId" id="editnetworkLoginId" th:field="${userRoleForm.editNetworkLoginId}" placeholder="" type="text"/>
+                                            <span id="editnetworkLoginIdErrMsg" style="color: red;display: none">Please provide Network Login id </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="">
+                                        <div class="col-md-3 text-right col-sm-4">
+                                            <label for="institutionId" class="margin-top-10">Institution<span class="error-color">*</span></label>
+                                        </div>
+                                        <div class="col-md-9 col-sm-8">
+                                            <div class="select-holder">
+                                                <select class="form-control themed-input themed-select" id="editinstitutionId" name="editinstitutionId"  th:field="${userRoleForm.editInstitutionId}">
+                                                    <option th:each="institutionValues : ${userRoleForm.institutions}" th:value="${institutionValues[0]}" th:text="${institutionValues[1]}"></option>
+                                                </select>
+                                                <span id="editinstitutionIdErrMsg" style="color: red;display: none">Please provide Network Login id </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" id="">
+                                        <div class="col-md-3 col-sm-4 text-right">
+                                            <label for="roleId" class="margin-top-10">Add Role <span class="error-color">*</span></label>
+                                        </div>
+                                        <div class="col-md-9 col-sm-8">
+                                            <div class="select-holder">
+                                                <select class="form-control themed-input themed-select" id="editroleId" name="editroleId" multiple="multiple" th:field="${userRoleForm.editSelectedForCreate}">
+                                                    <option th:each="roleValues : ${userRoleForm.roles}" th:value="${roleValues[0]}" th:text="${roleValues[1]}" th:selected="${userRoleForm.showSelectedForCreate.contains(roleValues)}"></option>
+                                                </select>
+                                                <span id="editroleIdErrMsg" style="color: red;display: none">Please provide Network Login id </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-3 text-right col-sm-4">
+                                            <label for="userDescription" class="margin-top-10">User Description <span class="error-color">*</span></label>
+                                        </div>
+                                        <div class="col-md-9 col-sm-8">
+                                            <input class="form-control themed-input" name="edituserDescription" id="edituserDescription" th:field="${userRoleForm.editUserDescription}" placeholder="" type="text"/>
+                                            <span id="edituserDescriptionErrMsg" style="color: red;display: none">Please provide User Description </span>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row">
+                                        <div class="col-md-3 text-right col-sm-4"></div>
+                                        <div class="col-md-9 col-sm-8">
+                                            <p class="margin-btm-30 margin-top-less-10">Fields marked with asterik(<span class="error-color">*</span>) are mandatory.</p>
+                                            <div class="margin-btm-10 users-createrequest-button">
+                                                <button id="editcreateButton" type="button" onclick="editUserDetails()" class="btn btn-default themed-button btn-primary">Submit</button>
+                                                <button type="reset" class="btn btn-default themed-button themed-button-cancel margin-left-10" onclick="editclear();">Clear</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
 
 
                 </div>

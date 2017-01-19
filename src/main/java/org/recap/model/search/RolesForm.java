@@ -24,6 +24,7 @@ public class RolesForm {
     private String editRoleName;
     private String editRoleDescription;
     private String editPermissionNames;
+    private List<String> editPermissionName = new ArrayList<>();
     private String roleNameForDelete;
     private String roleDescriptionForDelete;
     private String permissionNamesForDelete;
@@ -223,6 +224,14 @@ public class RolesForm {
 
     public void setPermissionNamesForDelete(String permissionNamesForDelete) {
         this.permissionNamesForDelete = permissionNamesForDelete;
+    }
+
+    public List<String> getEditPermissionName() {
+        return editPermissionName;
+    }
+
+    public void setEditPermissionName(List<String> editPermissionName) {
+        this.editPermissionName = editPermissionName;
     }
 
     public void reset(){

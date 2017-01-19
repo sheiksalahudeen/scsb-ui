@@ -23,7 +23,8 @@
             <fieldset>
                 <div role="tabpanel" class="tab-pane" id="recaprole">
                     <div id="role-searchview" class="roles-main-section">
-                        <div class="col-lg-12 text-right roleCreateNewlink" onclick="populatePermissionNames()"><a href="#"><span
+                        <div class="col-sm-7">Provide one or more data to search. Empty search would return all data.</div>
+                        <div class="col-lg-12 text-right roleCreateNewlink" onclick="populatePermissionNames()" style="margin-top: -20px;"><a href="#" id="createRoleLink"><span
                                 class="glyphicon glyphicon-plus-sign"></span> Create Role</a></div>
                         <div class="search-bar">
                             <div class="row margin-0">
@@ -92,7 +93,7 @@
                             <div data-th-if="*{rolesSearchResults.size() &gt; 0 &amp;&amp; showResults}">
                                 <div id="showEntriesAndNumFoundDiv" name="showEntriesAndNumFoundDiv" class="row">
                                     <div class="col-sm-2 margin-top-05 show-entries-section">
-                                        <div class="">
+                                        <div class="" style="margin-top: -10px;">
                                             <span class="show-title">Show Entries</span>
                                             <select id="numOfRecordsId" name="numOfRecordsName"
                                                     class="themed-input"
@@ -106,21 +107,12 @@
                                         </div>
                                     </div>
                                     <div class="col-sm-9 col-md-10 col-lg-7"></div>
-                                    <div class="row">
-                                        <div class="col-xs-12">
-                                            <div class="pull-left margin-btm-0 margin-right-35" style="margin-top: -45px; margin-bottom: 0px; margin-left: 250px">
-                                                <div th:replace="pagination :: #paginationId"></div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="col-sm-12 col-md-12 col-lg-3 text-right" style="margin-left:1080px;margin-top:-50px;">
+                                    <div class="col-sm-12 col-md-12 col-lg-3 text-right pull-right" style="margin-top:-10px;">
                                         <h4><span>Total Results Found: <span th:text="*{#numbers.formatInteger(totalRecordCount,0,'COMMA')}"></span></span></h4>
                                     </div>
                                 </div>
                                 <div class="row">
-                                <div class="table-wrapper roleDetails" style="margin-top: -5px;">
+                                <div class=" roleDetails" style="margin-top: -5px;">
                                     <table class="table table-striped margin-btm-0" id="">
                                         <thead class="tablesorter-headerRow">
                                         <tr>
@@ -162,9 +154,7 @@
                                                       th:text="${searchResult.permissionName}"></span>
                                             </td>
                                             <td class="text-center">
-                                                <!--<div class="edit-link margin-left-05 margin-right-05 editRole" ><a href="#"><span class="glyphicon glyphicon-pencil" th:onclick="'editRole(\'' + ${searchResult.rolesName} + '\',\'' + ${searchResult.rolesDescription} + '\',\'' + ${searchResult.permissionName} + '\')'"></span></a>
-                                                <a href="#" data-toggle="modal" data-target=".user-delete"><span class="glyphicon glyphicon-trash" onclick="deleteRole()"></span></a></div>-->
-                                                <div class="edit-link margin-left-05 margin-right-05 editRole" ><a href="#"><span class="glyphicon glyphicon-pencil" th:onclick="'editRole(\'' + ${searchResult.roleId} + '\',\'' + ${searchResult.rolesName} + '\',\'' + ${searchResult.rolesDescription} + '\',\'' + ${searchResult.permissionName} + '\')'"></span></a>
+                                                <div class="edit-link margin-left-05 margin-right-05 editRole" ><a href="#" id="editUserLink"><span class="glyphicon glyphicon-pencil" th:onclick="'editRole(\'' + ${searchResult.roleId} + '\',\'' + ${searchResult.rolesName} + '\',\'' + ${searchResult.rolesDescription} + '\',\'' + ${searchResult.permissionName} + '\')'"></span></a>
                                                     <a href="#" data-toggle="modal" data-target=".user-delete"><span class="glyphicon glyphicon-trash" th:onclick="'deleteRole(\'' + ${searchResult.roleId} + '\',\'' + ${searchResult.rolesName} + '\',\'' + ${searchResult.rolesDescription} + '\',\'' + ${searchResult.permissionName} + '\')'"></span></a></div>
                                             </td>
 
@@ -172,6 +162,14 @@
                                         </tbody>
                                     </table>
                                 </div>
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div class="margin-btm-0 pull-right" style="margin-top:-10px; margin-bottom:-30px;">
+                                                <div th:replace="pagination :: #paginationId"></div>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -185,7 +183,7 @@
                         <div class="row margin-btm-10"
                              data-th-if="*{message ne null &amp;&amp; message ne ''}">
                             <div class="col-sm-12 text-left">
-                                <div class="alert alert-success" role="alert"><span
+                                <div class="alert alert-success" role="alert" id="success-alert"><span
                                         class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span
                                         th:text="*{message}"></span></div>
                             </div>
@@ -319,10 +317,10 @@
                                             </div>
                                             <div class="col-md-8 col-sm-6">
                                                 <div class="form-group">
-                                                    <div class="col-sm-3 col-sm-4 text-right margin-top-15"><label for="editRoleNameId" class="fontcolor-dark">Role Name <span class="error-color">*</span></label></div>
+                                                    <div class="col-sm-3 col-sm-4 text-right margin-top-15"><label for="editRoleName" class="fontcolor-dark">Role Name <span class="error-color">*</span></label></div>
                                                     <div class="col-sm-6 col-sm-4">
                                                     <input type="text"
-                                                              id="editRoleNameId"
+                                                              id="editRoleName"
                                                               name="roleName"
                                                               class="form-control themed-input"
                                                               th:field="*{editRoleName}">
@@ -335,10 +333,10 @@
                                         <div class="row">
                                             <div class="col-md-8 col-sm-6">
                                                 <div class="form-group">
-                                                    <div class="col-sm-3 col-sm-4 text-right margin-top-15"><label for="editRoleDescriptionId" class="fontcolor-dark">Role Description <span class="error-color">*</span></label></div>
+                                                    <div class="col-sm-3 col-sm-4 text-right margin-top-15"><label for="editRoleDescription" class="fontcolor-dark">Role Description <span class="error-color">*</span></label></div>
                                                     <div class="col-sm-6 col-sm-4">
                                                     <input type="text"
-                                                              id="editRoleDescriptionId"
+                                                              id="editRoleDescription"
                                                               name="roleName"
                                                               class="form-control themed-input"
                                                               th:field="*{editRoleDescription}">
@@ -353,12 +351,11 @@
                                                 <div class="form-group">
                                                     <div class="col-md-4 col-sm-6 text-right margin-top-05"><label for="editPermissionNameId" class="fontcolor-dark">Permission Names <span class="error-color">*</span></label></div>
                                                     <div class="col-md-8 col-sm-6">
-                                                        <div class="select-holder" data-th-if="*{selectedPermissionNames ne null &amp;&amp; message ne ''}">
+                                                        <div class="select-holder" data-th-if="*{selectedPermissionNames ne null}">
                                                             <select id="editPermissionNameId"
                                                                     multiple="multiple"
                                                                     class="form-control themed-input themed-select multiSelectPermissionName"
-                                                                    name="editPermissionNames">
-
+                                                                    name="editPermissionNameId">
                                                                 <option th:each="permission : *{permissionNameList}" th:value="${permission}" th:text="${permission}" th:selected="${rolesForm.selectedPermissionNames.contains(permission)}"></option>
                                                             </select>
 
@@ -478,46 +475,6 @@
                         </div>
                     </div>
                 </div>
-
-
-                    <!--Report Table Section-->
-                    <!--<div class="" id="role-detailtableview" style="display:none">
-                        <div class="row">
-                            <h3 class="col-sm-9 margin-top-05 margin-btm-0">Details</h3>
-                            <div class="col-sm-3 text-right rolebacklink">
-                                <a href="#" class=""><span class="glyphicon glyphicon-menu-left"></span> Go Back</a>
-                            </div>
-                        </div>
-                        <div class="divider-horizontal margin-top-10 margin-btm-10"></div>
-
-                        <table class="table table-striped margin-btm-0" id="">
-                            <thead class="tablesorter-headerRow">
-                            <tr>
-                                <th width="20%">Role Name</th>
-                                <td>ReCAP Operational Admin</td>
-                            </tr>
-                            </thead>
-                            <tr>
-                                <th>Description</th>
-                                <td>The role allows users associated to carry out functions relating to the
-                                    operations.
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Institution</th>
-                                <td>ReCAP</td>
-                            </tr>
-                            <tr>
-                                <th>Associated Functionality</th>
-                                <td>Edit Collection Group Designation, Deaccession records, Access reports</td>
-                            </tr>
-                            <tr>
-                                <th>Associated Users</th>
-                                <td>Person A</td>
-                            </tr>
-                        </table>
-                    </div>-->
-
             </fieldset>
         </form>
     </div>
