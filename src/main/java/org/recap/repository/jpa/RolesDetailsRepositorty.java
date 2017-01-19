@@ -33,6 +33,6 @@ public interface RolesDetailsRepositorty extends JpaRepository<RoleEntity, Integ
 
     List<RoleEntity> findByRoleIdIn(List<Integer> roleIds);
 
-    List<RoleEntity> findByRoleIdIn(int[] roleId);
+    RoleEntity findByRoleId(Integer roleId);
 
 }

@@ -88,14 +88,21 @@ public class RolesController {
     @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=loadCreateRole")
     public ModelAndView newRole(@Valid @ModelAttribute("rolesForm") RolesForm rolesForm,
                                 Model model) {
-
-        RoleEntity roleEntity = saveNewRoleToDB(rolesForm);
-        if(null != roleEntity){
-            rolesForm.setMessage(RecapConstants.ROLES_ADD_SUCCESS_MESSAGE);
-        }else{
-            rolesForm.setErrorMessage(RecapConstants.ROLES_DUPLICATE_MESSAGE);
+        boolean specialCharacterCheck = isSpecialCharacterCheck(rolesForm.getNewRoleName());
+        if(specialCharacterCheck == false){
+            rolesForm.setErrorMessage(RecapConstants.SPECIAL_CHARACTERS_NOT_ALLOWED_CREATE);
+            rolesForm.setSelectedPermissionNames(getSeletedPermissionNames(rolesForm.getNewPermissionNames()));
         }
-        rolesForm.setSelectedPermissionNames(getSeletedPermissionNames(rolesForm.getNewPermissionNames()));
+        else{
+            RoleEntity roleEntity = saveNewRoleToDB(rolesForm);
+            if(null != roleEntity){
+                rolesForm.setMessage(rolesForm.getNewRoleName()+RecapConstants.ROLES_ADD_SUCCESS_MESSAGE);
+            }else{
+                rolesForm.setErrorMessage(rolesForm.getNewRoleName()+RecapConstants.ROLES_DUPLICATE_MESSAGE);
+            }
+            rolesForm.setNewRoleName("");
+            rolesForm.setNewRoleDescription("");
+        }
         return new ModelAndView("roles", "rolesForm", rolesForm);
     }
 
@@ -113,18 +120,25 @@ public class RolesController {
 
     @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=saveEditedRole")
-    public ModelAndView saveEditedRole(@Valid @ModelAttribute("rolesForm") RolesForm rolesForm,
-                                       Model model) {
-
-
-            RoleEntity roleEntity = saveEditedRoleToDB(rolesForm);
+    public ModelAndView saveEditedRole(@ModelAttribute("roleId") Integer roleId,
+                                       @ModelAttribute("roleName") String roleName,
+                                       @ModelAttribute("roleDescription") String roleDescription,
+                                       Model model,HttpServletRequest request) {
+        RolesForm rolesForm = new RolesForm();
+        rolesForm.setRoleId(roleId);
+        rolesForm.setEditRoleName(roleName);
+        rolesForm.setEditRoleDescription(roleDescription);
+        String[] editPermissionNames = request.getParameterValues("permissionNames[]");
+        rolesForm.setEditPermissionName(Arrays.asList(editPermissionNames));
+        RoleEntity roleEntity = saveEditedRoleToDB(rolesForm);
             if(null != roleEntity){
-                rolesForm.setMessage(RecapConstants.ROLES_EDIT_SAVE_SUCCESS_MESSAGE);
+                rolesForm.setMessage(rolesForm.getEditRoleName()+RecapConstants.ROLES_EDIT_SAVE_SUCCESS_MESSAGE);
             }
             else{
-            rolesForm.setErrorMessage(RecapConstants.ROLES_DUPLICATE_MESSAGE);
+            rolesForm.setErrorMessage(rolesForm.getEditRoleName()+RecapConstants.ROLES_DUPLICATE_MESSAGE);
         }
-        rolesForm.setSelectedPermissionNames(getSeletedPermissionNames(rolesForm.getNewPermissionNames()));
+        rolesForm.setPermissionNameList(getAllPermissionNames().getPermissionNameList());
+        rolesForm.setSelectedPermissionNames(Arrays.asList(editPermissionNames));
         return new ModelAndView("roles", "rolesForm", rolesForm);
     }
 
@@ -149,7 +163,7 @@ public class RolesController {
         roleEntity.setRoleId(rolesForm.getRoleId());
         try {
             rolesDetailsRepositorty.delete(roleEntity);
-            rolesForm.setMessage("Role deleted successfully");
+            rolesForm.setMessage(rolesForm.getRoleNameForDelete()+RecapConstants.ROLES_DELETED_SUCCESS_MESSAGE);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
@@ -217,6 +231,26 @@ public class RolesController {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=editClearPage")
+    public ModelAndView editClearPage(@Valid @ModelAttribute("rolesForm") RolesForm rolesForm,
+                                      Model model) {
+        RoleEntity roleEntity = rolesDetailsRepositorty.findByRoleId(rolesForm.getRoleId());
+        rolesForm.setEditRoleName(roleEntity.getRoleName());
+        rolesForm.setEditRoleDescription(roleEntity.getRoleDescription());
+        rolesForm.setEditPermissionNames("");
+        rolesForm.setPermissionNameList(getAllPermissionNames().getPermissionNameList());
+        rolesForm.setErrorMessage("");
+        rolesForm.setMessage("");
+        List<String> permissionEntityList = new ArrayList<>();
+        Set<PermissionEntity> permissions = roleEntity.getPermissions();
+        for(PermissionEntity permission : permissions){
+            permissionEntityList.add(permission.getPermissionName());
+        }
+        rolesForm.setSelectedPermissionNames(permissionEntityList);
+        return new ModelAndView("roles", "rolesForm", rolesForm);
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=pageSizeChange")
     public ModelAndView onPageSizeChange(@Valid @ModelAttribute("rolesForm") RolesForm rolesForm,
                                          Model model) throws Exception {
@@ -259,6 +293,7 @@ public class RolesController {
             } else {
                 rolesForm.setErrorMessage(RecapConstants.SPECIAL_CHARACTERS_NOT_ALLOWED);
             }
+            rolesForm.setPageSize(10);
         } else if (!StringUtils.isEmpty(rolesForm.getPermissionNames()) && StringUtils.isEmpty(rolesForm.getRoleName())) {
                 if (isSpecialCharacterCheck(rolesForm.getPermissionNames())) {
                     Page<RoleEntity> roleEntity=null;
@@ -300,6 +335,7 @@ public class RolesController {
                 } else {
                     rolesForm.setErrorMessage(RecapConstants.INVALID_ROLE_NAME);
                 }
+            rolesForm.setPageSize(10);
             } else if (StringUtils.isEmpty(rolesForm.getRoleName()) && StringUtils.isEmpty(rolesForm.getPermissionNames())) {
                 Pageable pageable = new PageRequest(rolesForm.getPageNumber(), rolesForm.getPageSize());
                 Page<RoleEntity> rolesEntityListByPagination = rolesDetailsRepositorty.getRolesWithoutSuperAdmin(pageable);
@@ -445,7 +481,7 @@ public class RolesController {
         roleEntity.setRoleId(rolesForm.getRoleId());
         roleEntity.setRoleName(rolesForm.getEditRoleName().trim());
         roleEntity.setRoleDescription(rolesForm.getEditRoleDescription());
-        List<String> permissionNameList = splitStringAndGetList(rolesForm.getEditPermissionNames());
+        List<String> permissionNameList = rolesForm.getEditPermissionName();
         RoleEntity savedRoleEntity = saveRoleEntity(roleEntity, permissionNameList);
         return savedRoleEntity;
     }
