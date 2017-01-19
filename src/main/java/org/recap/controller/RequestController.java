@@ -262,6 +262,7 @@ public class RequestController {
             itemRequestInformation.setRequestingInstitution(requestForm.getRequestingInstitution());
             itemRequestInformation.setEmailAddress(requestForm.getPatronEmailAddress());
             itemRequestInformation.setTitle(requestForm.getItemTitle());
+            itemRequestInformation.setTitleIdentifier(requestForm.getItemTitle());
             itemRequestInformation.setItemOwningInstitution(requestForm.getItemOwningInstitution());
             itemRequestInformation.setRequestType(requestForm.getRequestType());
             itemRequestInformation.setRequestNotes(requestForm.getRequestNotes());
