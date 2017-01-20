@@ -30,19 +30,19 @@
                                     <div class="buscador-principal">
 
                                         <div class="row">
-                                            <div class="col-md-4 col-sm-3">
+                                            <div class="col-md-5 col-sm-3">
                                                 <label class="fontcolor-dark margin-btm-10">Network Login Id</label>
                                                 <input class="form-control themed-input" name="searchNetworkId"
                                                        id="searchNetworkId" th:field="*{searchNetworkId}" placeholder=""
                                                        type="text"/>
                                             </div>
-                                            <div class="col-md-4 col-sm-3">
+                                            <div class="col-md-5 col-sm-3">
                                                 <label class="fontcolor-dark margin-btm-10">User Email Address</label>
                                                 <input class="form-control themed-input" name="userEmailId"
                                                        id="userEmailId"
                                                        th:field="*{userEmailId}" placeholder="" type="text"/>
                                             </div>
-                                            <div class="col-md-4 col-sm-6">
+                                            <div class="col-md-2 col-sm-6">
                                                 <button id="searchButton" class="btn themed-button themed-button-search"
                                                         type="button" th:onclick="'javascript:searchUserRoles();'">
                                                     Search
@@ -208,7 +208,7 @@
                     </div>
 
                     <!--User Create Request Add Section-->
-                    <div class="" id="users-createview">
+                    <div class="user-view" id="users-createview">
                         <div class="row margin-top-0">
                             <div class="col-sm-6 margin-top-0"><h3 class="margin-0">Create User</h3></div>
                             <div class="col-sm-6 text-right usersbacklink">
@@ -235,7 +235,7 @@
                         <div class="row">
                             <div class="col-xs-12 divider-horizontal margin-top-10 margin-btm-30"></div>
                         </div>
-                        <div class="row">
+                        <div class="row buscador-principal">
                             <div class="col-md-8 col-sm-6"></div>
                             <div class="col-md-8 col-sm-6">
                                 <form class="form-horizontal" id="users-createrequest" method="post"
@@ -245,7 +245,7 @@
                                             <label for="networkLoginId" class="margin-top-10">Network Login id <span
                                                     class="error-color">*</span></label>
                                         </div>
-                                        <div class="col-md-9 col-sm-8">
+                                        <div class="col-sm- col-sm-6">
                                             <input class="form-control themed-input" name="networkLoginId"
                                                    id="networkLoginId" th:field="*{networkLoginId}" placeholder=""
                                                    type="text"/>
@@ -257,7 +257,7 @@
                                             <label for="institutionId" class="margin-top-10">Institution<span
                                                     class="error-color">*</span></label>
                                         </div>
-                                        <div class="col-md-9 col-sm-8">
+                                        <div class="col-sm- col-sm-6">
                                             <div class="select-holder">
                                                 <select class="form-control themed-input themed-select"
                                                         id="institutionId" name="institutionId"
@@ -275,7 +275,7 @@
                                             <label for="roleId" class="margin-top-10">Add Role <span
                                                     class="error-color">*</span></label>
                                         </div>
-                                        <div class="col-md-9 col-sm-8">
+                                        <div class="col-sm- col-sm-6">
                                             <div class="select-holder">
                                                 <select class="form-control themed-input themed-select" id="roleId"
                                                         name="roleId" multiple="multiple"
@@ -294,7 +294,7 @@
                                             <label for="userDescription" class="margin-top-10">User Description <span
                                                     class="error-color">*</span></label>
                                         </div>
-                                        <div class="col-md-9 col-sm-8">
+                                        <div class="col-sm- col-sm-6">
                                             <input class="form-control themed-input" name="networkLoginId"
                                                    id="userDescription" th:field="${userRoleForm.userDescription}"
                                                    placeholder="" type="text"/>
@@ -306,7 +306,7 @@
                                             <label for="emailId" class="margin-top-10">Email Id<span
                                                     class="error-color"></span></label>
                                         </div>
-                                        <div class="col-md-9 col-sm-8">
+                                        <div class="col-sm- col-sm-6">
                                             <input class="form-control themed-input" name="emailId"
                                                    id="emailId" th:field="${userRoleForm.emailId}"  onblur="validateEmailAddress()"
                                                    placeholder="" type="email"/>
@@ -339,7 +339,7 @@
 
                     <!-- edit tab starts-->
 
-                    <div class="" id="editusers-createview">
+                    <div class="user-view" id="editusers-createview">
                         <div class="row margin-top-0">
                             <div class="col-sm-6 margin-top-0"><h3 class="margin-0">Edit User</h3></div>
                             <div class="col-sm-6 text-right usersbacklink">
@@ -366,7 +366,7 @@
                         <div class="row">
                             <div class="col-xs-12 divider-horizontal margin-top-10 margin-btm-30"></div>
                         </div>
-                        <div class="row">
+                        <div class="row buscador-principal">
                             <div class="col-md-8 col-sm-6"></div>
                             <div class="col-md-8 col-sm-6">
                                 <form class="form-horizontal" id="editusers-createrequest" method="post"
@@ -377,7 +377,7 @@
                                             <label for="networkLoginId" class="margin-top-10">Network Login id <span
                                                     class="error-color">*</span></label>
                                         </div>
-                                        <div class="col-md-9 col-sm-8">
+                                        <div class="col-sm- col-sm-6">
                                             <input class="form-control themed-input" name="editnetworkLoginId"
                                                    id="editnetworkLoginId" th:field="${userRoleForm.editNetworkLoginId}"
                                                    placeholder="" type="text"/>
@@ -389,7 +389,7 @@
                                             <label for="institutionId" class="margin-top-10">Institution<span
                                                     class="error-color">*</span></label>
                                         </div>
-                                        <div class="col-md-9 col-sm-8">
+                                        <div class="col-sm- col-sm-6">
                                             <div class="select-holder">
                                                 <select class="form-control themed-input themed-select"
                                                         id="editinstitutionId" name="editinstitutionId"
@@ -407,7 +407,7 @@
                                             <label for="roleId" class="margin-top-10">Add Role <span
                                                     class="error-color">*</span></label>
                                         </div>
-                                        <div class="col-md-9 col-sm-8">
+                                        <div class="col-sm- col-sm-6">
                                             <div class="select-holder">
                                                 <select class="form-control themed-input themed-select" id="editroleId"
                                                         name="editroleId" multiple="multiple"
@@ -426,7 +426,7 @@
                                             <label for="userDescription" class="margin-top-10">User Description <span
                                                     class="error-color">*</span></label>
                                         </div>
-                                        <div class="col-md-9 col-sm-8">
+                                        <div class="col-sm- col-sm-6">
                                             <input class="form-control themed-input" name="edituserDescription"
                                                    id="edituserDescription"
                                                    th:field="${userRoleForm.editUserDescription}" placeholder=""
@@ -439,7 +439,7 @@
                                             <label for="editEmailId" class="margin-top-10">Email Id<span
                                                     class="error-color">*</span></label>
                                         </div>
-                                        <div class="col-md-9 col-sm-8">
+                                        <div class="col-sm- col-sm-6">
                                             <input class="form-control themed-input" name="editEmailId"
                                                    id="editEmailId"
                                                    th:field="${userRoleForm.editEmailId}" placeholder=""
@@ -470,7 +470,7 @@
                         </div>
                     </div>
                     <!--Delete User Section-->
-                    <div class="" id="deleteUsers-view">
+                    <div class="user-view" id="deleteUsers-view">
                         <div class="row margin-top-0">
                             <div class="col-sm-6 margin-top-0"><h3 class="margin-0">Delete User</h3></div>
                             <div class="col-sm-6 text-right usersbacklink">

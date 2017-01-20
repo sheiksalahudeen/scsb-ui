@@ -314,6 +314,7 @@ textarea{resize:none;}
 #recapreports .search-bar .buscador-principal .themed-input,
 #recaprole .search-bar .buscador-principal .themed-input,
 #recapusers .search-bar .buscador-principal .themed-input {border:1px solid #888988}
+#recapusers .user-view .buscador-principal .themed-input {border:1px solid #888988}
 #request .search-bar .buscador-principal .themed-button,
 #recapreports .search-bar .buscador-principal .themed-button,
 #recaprole .search-bar .buscador-principal .themed-button,
@@ -386,7 +387,7 @@ textarea{resize:none;}
 .multiselect-native-select {background:#fff;border:1px solid #888988;box-shadow:none;}
 .form-group.has-error .multiselect-native-select,
 .form-group.has-error .input-group.date .input-group-addon {background:#fbe7f2 !important;}
-.multiselect-native-select .btn-group .btn.btn-default{background:none;box-shadow:none;border:0;color:#555;height:34px;}
+.multiselect-native-select .btn-group .btn.btn-default{background:none;box-shadow:none;border:0;color:#555;height:48px;}
 .multiselect-native-select .btn-group .btn.btn-default .caret{border:0 !important;color:#848484;z-index:999}
 .multiselect-native-select .btn-group .btn.btn-default:hover{z-index:0}
 .multiselect-native-select .btn-group .btn.btn-default:hover  .caret{z-index:9999}
