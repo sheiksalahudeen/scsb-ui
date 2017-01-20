@@ -195,12 +195,15 @@ function deleteUserRole(networkLoginId, userId) {
     console.log('DeleteUserRole');
     console.log('NetWorkLoginId : ' + networkLoginId);
     console.log('UserId  : ' + userId);
+    var pagesize = $('#numOfRecordsId').val();
+    var pageNumber = $('#pageNumber').val();
+    var totalPageCount = $('#totalPageCount').val();
     var $form = $('#userRole-form');
     var url = "/userRoles/deleteUser";
     var role = $.ajax({
         url: url,
-        type: 'GET',
-        data: {networkLoginId: networkLoginId, userId: userId},
+        type: 'post',
+        data: {networkLoginId: networkLoginId, userId: userId,pagesize:pagesize,pageNumber:pageNumber,totalPageCount :totalPageCount },
         success: function (response) {
             console.log("completed");
             $('#userRolesContentId').html(response);
@@ -217,20 +220,22 @@ function deleteUserRole(networkLoginId, userId) {
 function deleteUser() {
     console.log('Delete');
     var userId = $('#editUserIdHidden').val();
+    var networkLoginId = $('#deleteNetworkLoginId').val();
+    var pageNumber = $('#afterDelPageNumber').val();
+    var totalPageCount = $('#afterDelTotalPageCount').val();
+    var pageSize = $('#afterDelPageSize').val();
     var $form = $('#userRole-form');
     var url = "/userRoles/delete";
     var role = $.ajax({
         url: url,
-        type: 'GET',
-        data: {userId: userId},
+        type: 'post',
+        data: {userId: userId,networkLoginId:networkLoginId,pageNumber:pageNumber,totalPageCount:totalPageCount,pageSize:pageSize},
         success: function (response) {
             console.log("completed");
             $('#userRolesContentId').html(response);
-            $('#deleteUsers-view').show();
-            $('#users-searchview').hide();
-            $('#users-createview').hide();
-            $('#successMsg').show();
-            $('#deletedRoleId').multiselect();
+            $('#showEntries').show();
+            $('#request-result-table').show();
+            $('#userRolePaginationDivId').show();
         }
     });
 }

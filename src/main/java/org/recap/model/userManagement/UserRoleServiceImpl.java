@@ -94,7 +94,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         UsersEntity byLoginIdAndInstitutionEntity = userDetailsRepository.findByLoginIdAndInstitutionId(networkLoginId, institutionId);
         if (byLoginIdAndInstitutionEntity == null) {
             saveUsersEntity = userDetailsRepository.saveAndFlush(usersEntity);
-            userRoleForm.setMessage("User added successfully");
+            userRoleForm.setMessage("User '" + networkLoginId + "' added successfully");
         } else {
             userRoleForm.setErrorMessage("Users should not be duplicate");
         }

@@ -79,6 +79,7 @@ public class UserRoleController {
 
     }
 
+    //Search
     @ResponseBody
     @RequestMapping(value = "/userRoles/searchUsers", method = RequestMethod.POST)
     public ModelAndView searchUserRole(@Valid @ModelAttribute("userRoleForm") UserRoleForm userRoleForm, BindingResult results, Model model, HttpServletRequest request) {
@@ -96,8 +97,8 @@ public class UserRoleController {
 
     //DeleteUser Screen
     @ResponseBody
-    @RequestMapping(value = "/userRoles/deleteUser", method = RequestMethod.GET)
-    public ModelAndView deleteUserRole(String networkLoginId, Integer userId, HttpServletRequest request) {
+    @RequestMapping(value = "/userRoles/deleteUser", method = RequestMethod.POST)
+    public ModelAndView deleteUserRole(String networkLoginId, Integer userId, HttpServletRequest request,Integer pagesize,Integer pageNumber,Integer totalPageCount) {
         HttpSession session = request.getSession();
         UserDetailsForm userDetailsForm = userAuthUtil.getUserDetails(request.getSession(), UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
         logger.info("User - Delete User clicked");
@@ -105,6 +106,9 @@ public class UserRoleController {
         logger.info("NetworkLoginId  " + networkLoginId);
         UsersEntity usersEntity = userDetailsRepository.findByLoginId(networkLoginId);
         UserRoleForm userRoleForm = new UserRoleForm();
+        userRoleForm.setAfterDelPageSize(pagesize);
+        userRoleForm.setAfterDelPageNumber(pageNumber);
+        userRoleForm.setAfterDelTotalPageCount(totalPageCount);
         List<Object> roles = userRoleService.getRoles(UserManagement.SUPER_ADMIN.getIntegerValues());
         List<Object> institutions = userRoleService.getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId());
         userRoleForm.setEditNetworkLoginId(usersEntity.getLoginId());
@@ -132,15 +136,21 @@ public class UserRoleController {
 
     //DeleteUser On Confirm
     @ResponseBody
-    @RequestMapping(value = "/userRoles/delete", method = RequestMethod.GET)
-    public ModelAndView deleteUser(Integer userId, HttpServletRequest request) {
-        UserRoleForm userRoleForm = new UserRoleForm();
+    @RequestMapping(value = "/userRoles/delete", method = RequestMethod.POST)
+    public ModelAndView deleteUser(@Valid @ModelAttribute("userRoleForm") UserRoleForm userRoleForm,Model model,Integer userId,String networkLoginId,Integer pageNumber,Integer totalPageCount,Integer pageSize, HttpServletRequest request) {
         UsersEntity usersEntity = new UsersEntity();
         usersEntity.setUserId(userId);
         try {
             userDetailsRepository.delete(usersEntity);
             userRoleForm.setDeletedSuccessMsg(true);
-            userRoleForm.setMessage("User deleted successfully");
+            userRoleForm.setMessage("Deleted '"+ networkLoginId + "' successfully");
+            priorSearch(userRoleForm, request);
+            userRoleForm.setAfterDelPageNumber(pageNumber);
+            userRoleForm.setAfterDelTotalPageCount(totalPageCount);
+            userRoleForm.setAfterDelPageSize(pageSize);
+            userRoleForm.setShowPagination(true);
+            userRoleForm.setShowResults(true);
+            model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
@@ -264,7 +274,7 @@ public class UserRoleController {
         UsersEntity usersEntity = userRoleService.saveEditedUserToDB(userId, networkLoginId, userDescription, institutionId, roleIds, userEmailId);
         if (usersEntity != null) {
             userRoleForm.setShowEditSuccess(true);
-            userRoleForm.setMessage("User edited and saved successfully");
+            userRoleForm.setMessage(networkLoginId +" edited and saved successfully");
         } else {
             userRoleForm.setShowEditError(true);
             userRoleForm.setMessage("Error Occurred");

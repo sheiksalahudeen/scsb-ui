@@ -17,6 +17,9 @@ public class RolesForm {
     private Integer pageNumber = 0;
     private Integer pageSize = 10;
     private Integer totalPageCount = 0;
+    private Integer afterDelPageNumber=0;
+    private Integer afterDelPageSize =10;
+    private Integer afterDelTotalPageCount=0;
     private String message;
     private String newRoleName;
     private String newRoleDescription;
@@ -245,5 +248,29 @@ public class RolesForm {
 
     public void resetPageNumber() {
         this.pageNumber = 0;
+    }
+
+    public Integer getAfterDelPageNumber() {
+        return afterDelPageNumber;
+    }
+
+    public void setAfterDelPageNumber(Integer afterDelPageNumber) {
+        this.afterDelPageNumber = afterDelPageNumber;
+    }
+
+    public Integer getAfterDelPageSize() {
+        return afterDelPageSize;
+    }
+
+    public void setAfterDelPageSize(Integer afterDelPageSize) {
+        this.afterDelPageSize = afterDelPageSize;
+    }
+
+    public Integer getAfterDelTotalPageCount() {
+        return afterDelTotalPageCount;
+    }
+
+    public void setAfterDelTotalPageCount(Integer afterDelTotalPageCount) {
+        this.afterDelTotalPageCount = afterDelTotalPageCount;
     }
 }

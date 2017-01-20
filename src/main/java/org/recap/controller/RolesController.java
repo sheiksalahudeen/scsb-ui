@@ -144,13 +144,19 @@ public class RolesController {
 
     @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=deleteRole")
-    public ModelAndView deleteRole(Integer roleId, String roleName, String roleDescription, String permissionName) {
+    public ModelAndView deleteRole(Integer roleId, String roleName, String roleDescription, String permissionName,Integer pageSize,Integer pageNumber,Integer totalPageCount) {
         RolesForm rolesForm = getAllPermissionNames();
+        rolesForm.setAfterDelPageSize(pageSize);
+        rolesForm.setAfterDelPageNumber(pageNumber);
+        rolesForm.setAfterDelTotalPageCount(totalPageCount);
         rolesForm.setRoleId(roleId);
         rolesForm.setRoleNameForDelete(roleName);
         rolesForm.setRoleDescriptionForDelete(roleDescription);
         rolesForm.setPermissionNamesForDelete(permissionName);
         rolesForm.setSelectedPermissionNames(getSeletedPermissionNames(permissionName));
+        rolesForm.setPageSize(pageSize);
+        rolesForm.setPageNumber(pageNumber);
+        rolesForm.setTotalPageCount(totalPageCount);
         return new ModelAndView("roles", "rolesForm", rolesForm);
     }
 
@@ -163,11 +169,16 @@ public class RolesController {
         roleEntity.setRoleId(rolesForm.getRoleId());
         try {
             rolesDetailsRepositorty.delete(roleEntity);
+            rolesForm.setShowResults(true);
+            rolesForm.setPageNumber(rolesForm.getAfterDelPageNumber());
+            rolesForm.setPageSize(rolesForm.getAfterDelPageSize());
+            rolesForm.setTotalPageCount(rolesForm.getAfterDelTotalPageCount());
+            setRolesFormSearchResults(rolesForm);
             rolesForm.setMessage(rolesForm.getRoleNameForDelete()+RecapConstants.ROLES_DELETED_SUCCESS_MESSAGE);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        rolesForm.setSelectedPermissionNames(getSeletedPermissionNames(rolesForm.getNewPermissionNames()));
+        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.ROLES);
         return new ModelAndView("roles", "rolesForm", rolesForm);
     }
 
@@ -264,7 +275,7 @@ public class RolesController {
     public void setRolesFormSearchResults(RolesForm rolesForm) {
         List<RolesSearchResult> rolesSearchResults = new ArrayList<>();
         rolesForm.reset();
-        rolesForm.resetPageNumber();
+       /* rolesForm.resetPageNumber();*/
         if (rolesForm.getRoleName().equalsIgnoreCase(RecapConstants.ROLES_SUPER_ADMIN) || rolesForm.getPermissionNames().equalsIgnoreCase(RecapConstants.ROLES_SUPER_ADMIN)) {
             if (rolesForm.getRoleName().equalsIgnoreCase(RecapConstants.ROLES_SUPER_ADMIN)){
                 rolesForm.setErrorMessage(RecapConstants.INVALID_ROLE_NAME);
