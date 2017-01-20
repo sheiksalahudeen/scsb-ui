@@ -42,4 +42,12 @@ public interface UserDetailsRepository extends JpaRepository<UsersEntity,Integer
 
 
     UsersEntity findByLoginIdAndInstitutionId(String networkLoginId, Integer institutionId);
+
+    Page<UsersEntity> findByEmailId(String userEmailId, Pageable pageable);
+
+    Page<UsersEntity> findByEmailIdAndInstitutionEntity(String userEmailId, InstitutionEntity institutionEntity, Pageable pageable);
+
+    Page<UsersEntity> findByLoginIdAndEmailId(String searchNetworkId, String userEmailId, Pageable pageable);
+
+    Page<UsersEntity> findByLoginIdAndEmailIdAndInstitutionEntity(String searchNetworkId, String userEmailId, InstitutionEntity institutionEntity, Pageable pageable);
 }

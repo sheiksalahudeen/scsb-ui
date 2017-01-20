@@ -1,8 +1,7 @@
-
 jQuery(document).ready(function ($) {
-    $('#createRequest').click(function(){
-       $('#networkLoginId').val('');
-       $('#institutionId').val(1);
+    $('#createRequest').click(function () {
+        $('#networkLoginId').val('');
+        $('#institutionId').val(1);
         $('#roleId').multiselect('deselectAll', false);
         $('#roleId').multiselect('refresh');
         $('#userDescription').val('');
@@ -10,24 +9,47 @@ jQuery(document).ready(function ($) {
         $('#errormsg').hide();
     });
 
+    $('#reset').click(function () {
+        $('#networkLoginId').val('');
+        $('#institutionId').val('');
+        $('#userDescription').val('');
+        $('#roleId').multiselect('deselectAll', false);
+        $('#roleId').multiselect('refresh');
+        $('#emailId').val('');
+
+    })
+
 
     $('#editusers-createview').hide();
+    $('#deleteUsers-view').hide();
     $('#users-createview').hide();
 
-    $('#backLink').click(function(){
-        $('#editusers-createview').hide();
-       $('#request-result-table').hide();
-        $('#userRolePaginationDivId').hide();
-        $('#showEntries').hide();
-        $('#numOfRecordsId').val(10);
-        $('#pageNumber').val(0);
-    });
-
-    $('#editbackLink').click(function(){
+    $('#backLink').click(function () {
         $('#editusers-createview').hide();
         $('#request-result-table').hide();
         $('#userRolePaginationDivId').hide();
         $('#showEntries').hide();
+        $('#deleteUsers-view').hide();
+        $('#numOfRecordsId').val(10);
+        $('#pageNumber').val(0);
+    });
+
+    $('#editbackLink').click(function () {
+        $('#editusers-createview').hide();
+        $('#request-result-table').hide();
+        $('#userRolePaginationDivId').hide();
+        $('#showEntries').hide();
+        $('#deleteUsers-view').hide();
+        $('#numOfRecordsId').val(10);
+        $('#pageNumber').val(0);
+    });
+
+    $('#deletebackLink').click(function () {
+        $('#editusers-createview').hide();
+        $('#request-result-table').hide();
+        $('#userRolePaginationDivId').hide();
+        $('#showEntries').hide();
+        $('#deleteUsers-view').hide();
         $('#numOfRecordsId').val(10);
         $('#pageNumber').val(0);
     });
@@ -36,19 +58,35 @@ jQuery(document).ready(function ($) {
     $("#recaprole a.role-detailtable").click(function (e) {
         $("#role-searchview").hide();
         $("#role-detailtableview").show();
+        $('#networkLoginIdErrMsg').hide();
+        $('#institutionIdErrMsg').hide();
+        $('#roleIdErrMsg').hide();
+        $('#userDescriptionErrMsg').hide();
     });
     $("#recaprole .rolebacklink a").click(function (e) {
         $("#role-detailtableview").hide();
         $("#role-searchview").show();
+        $('#networkLoginIdErrMsg').hide();
+        $('#institutionIdErrMsg').hide();
+        $('#roleIdErrMsg').hide();
+        $('#userDescriptionErrMsg').hide();
     });
     /***Users Tab Form Show/Hide ***/
     $("#recapusers .userscreaterequestlink a").click(function (e) {
         $("#users-searchview").hide();
         $("#users-createview").show();
+        $('#networkLoginIdErrMsg').hide();
+        $('#institutionIdErrMsg').hide();
+        $('#roleIdErrMsg').hide();
+        $('#userDescriptionErrMsg').hide();
     });
     $("#recapusers .usersbacklink a").click(function (e) {
         $("#users-createview").hide();
         $("#users-searchview").show();
+        $('#networkLoginIdErrMsg').hide();
+        $('#institutionIdErrMsg').hide();
+        $('#roleIdErrMsg').hide();
+        $('#userDescriptionErrMsg').hide();
     });
 
     $("#userRoles .users-main-section").show();
@@ -57,10 +95,12 @@ jQuery(document).ready(function ($) {
     $("#userRoles .usersbacklink a").click(function (e) {
         $("#userRoles .users-main-section").show();
         $("#userRoles .user-create-section").hide();
+
     });
     $("#userRoles .user-create a").click(function () {
         $("#userRoles .users-main-section").hide();
         $("#userRoles .user-create-section").show();
+
     });
 
 
@@ -69,6 +109,12 @@ jQuery(document).ready(function ($) {
     $('#recapusers #userstabaddrole').multiselect();
     $('#editroleId').multiselect();
 
+    //Refresh modal data
+    $('.modal').on('show.bs.modal', function (event) {
+        console.log(this.id);
+        refresh:true;
+        $(this).removeData();
+    });
 });
 function userRolesFirstPage() {
     //searchUserRoles('first','#userRoles .users-main-section','#userRoles .user-create-section');
@@ -145,7 +191,7 @@ function userRolesNextPage() {
     });
 }
 
-function deleteUserRole(networkLoginId,userId) {
+function deleteUserRole(networkLoginId, userId) {
     console.log('DeleteUserRole');
     console.log('NetWorkLoginId : ' + networkLoginId);
     console.log('UserId  : ' + userId);
@@ -153,33 +199,107 @@ function deleteUserRole(networkLoginId,userId) {
     var url = "/userRoles/deleteUser";
     var role = $.ajax({
         url: url,
-        type: 'post',
-        data: {networkLoginId:networkLoginId,userId:userId},
+        type: 'GET',
+        data: {networkLoginId: networkLoginId, userId: userId},
         success: function (response) {
             console.log("completed");
-            $('#popUpBox').html(response);
-
+            $('#userRolesContentId').html(response);
+            $('#deleteUsers-view').show();
+            $('#users-searchview').hide();
+            $('#users-createview').hide();
+            $('#successMsg').show();
+            $('#deletedRoleId').multiselect();
         }
     });
 }
 
 //Delete User Id
-function deleteUser(userId){
+function deleteUser() {
     console.log('Delete');
-    console.log('UserId  : ' + userId);
+    var userId = $('#editUserIdHidden').val();
     var $form = $('#userRole-form');
     var url = "/userRoles/delete";
     var role = $.ajax({
         url: url,
-        type: 'post',
-        data: {userId:userId},
+        type: 'GET',
+        data: {userId: userId},
         success: function (response) {
             console.log("completed");
-            $('#request-result-table').html(response);
-
+            $('#userRolesContentId').html(response);
+            $('#deleteUsers-view').show();
+            $('#users-searchview').hide();
+            $('#users-createview').hide();
+            $('#successMsg').show();
+            $('#deletedRoleId').multiselect();
         }
     });
 }
+
+//EditUser
+function editUser(userId, networkLoginId) {
+    console.log("userId" + userId);
+    console.log("log id" + networkLoginId);
+    $('#editsuccessMsg').hide();
+    $('#editerrormsg').hide();
+    $('#editusers-createview').show();
+    $('#users-createview').hide();
+    $('#users-searchview').hide();
+    var url = "/userRoles/editUser";
+    var request = $.ajax({
+        url: url,
+        type: 'post',
+        data: {userId: userId, networkLoginId: networkLoginId},
+        success: function (response) {
+            $('#userRolesContentId').html(response);
+            $('#editusers-createview').show();
+            $('#users-searchview').hide();
+            $('#users-createview').hide();
+            $('#successMsg').show();
+            $('#editroleId').multiselect();
+        }
+    });
+}
+
+function editclear() {
+    editUser(userId, networkLoginId);
+}
+
+
+function editUserDetails() {
+    validateEditEmailAddress();
+    var userId = $('#editUserIdHidden').val();
+    var networkLoginId = $('#editnetworkLoginId').val();
+    var institutionId = $('#editinstitutionId').val();
+    var roleIds = $('#editroleId').val();
+    var userDescription = $('#edituserDescription').val();
+    var userEmailId = $('#editEmailId').val();
+    $('#editusers-createview').show();
+    $('#users-createview').hide();
+    $('#users-searchview').hide();
+    var $form = $('#userRole-form');
+    var url = "/userRoles/saveEditUserDetails";
+    var request = $.ajax({
+        url: url,
+        type: 'post',
+        data: {
+            userId: userId,
+            networkLoginId: networkLoginId,
+            roleIds: roleIds,
+            userDescription: userDescription,
+            institutionId: institutionId,
+            userEmailId: userEmailId
+        },
+        success: function (response) {
+            $('#userRolesContentId').html(response);
+            $('#editusers-createview').show();
+            $('#users-searchview').hide();
+            $('#users-createview').hide();
+            $('#successMsg').show();
+            $('#editroleId').multiselect();
+        }
+    });
+}
+
 
 function searchUserRoles() {
     var $form = $('#userRole-form');
@@ -198,8 +318,7 @@ function searchUserRoles() {
 }
 
 
-
-function showEntriesChange(){
+function showEntriesChange() {
     $('#pageNumber').val(0);
     var $form = $('#userRole-form');
     var url = "/userRoles/searchUsers";
@@ -216,10 +335,11 @@ function showEntriesChange(){
     });
 }
 
-function submitForm(){
+function submitForm() {
     var formValidation = validateForm();
+    var emailAddress = validateEmailAddress();
     console.log(formValidation);
-    if(formValidation) {
+    if (formValidation && emailAddress) {
         var $form = $('#userRole-form');
         var url = "/userRoles/createUser";
         var request = $.ajax({
@@ -238,43 +358,49 @@ function submitForm(){
                 $('#userDescriptionErrMsg').hide();
             }
         });
+        $('#networkLoginIdErrMsg').hide();
+        $('#institutionIdErrMsg').hide();
+        $('#roleIdErrMsg').hide();
+        $('#userDescriptionErrMsg').hide();
     }
 
+
 }
-function resetDefaults(){
+function resetDefaults() {
     $('#networkLoginIdErrMsg').hide();
     $('#institutionIdErrMsg').hide();
     $('#roleIdErrMsg').hide();
+    $('#userDescriptionErrMsg').hide();
 }
 
-function validateForm(){
+function validateForm() {
     var isValid = true;
-    var newNetworkLoginId=$('#networkLoginId').val();
-    var institutionId=$('#institutionId').val();
-    var roleId=$('#roleId').val();
-    var userDescription=$('#userDescription').val();
-    if(isBlankValue(newNetworkLoginId)) {
+    var newNetworkLoginId = $('#networkLoginId').val();
+    var institutionId = $('#institutionId').val();
+    var roleId = $('#roleId').val();
+    var userDescription = $('#userDescription').val();
+    if (isBlankValue(newNetworkLoginId)) {
         $('#networkLoginIdErrMsg').show();
-        isValid=false;
-    }else {
+        isValid = false;
+    } else {
         $('#networkLoginIdErrMsg').hide();
     }
-    if(isBlankValue(institutionId)) {
+    if (isBlankValue(institutionId)) {
         $('#institutionIdErrMsg').show();
-        isValid= false;
-    }else{
+        isValid = false;
+    } else {
         $('#institutionIdErrMsg').hide();
     }
-    if(isBlankValue(roleId)) {
+    if (isBlankValue(roleId)) {
         $('#roleIdErrMsg').show();
-        isValid= false;
-    }else{
+        isValid = false;
+    } else {
         $('#roleIdErrMsg').hide();
     }
-    if(isBlankValue(userDescription)){
+    if (isBlankValue(userDescription)) {
         $('#userDescriptionErrMsg').show();
-        isValid= false;
-    }else {
+        isValid = false;
+    } else {
         $('#userDescriptionErrMsg').hide();
     }
     return isValid;
@@ -288,63 +414,39 @@ function isBlankValue(value) {
     return false;
 }
 
-function editUser(userId,networkLoginId){
-    console.log("userId"+userId);
-    console.log("log id"+networkLoginId);
-    $('#editsuccessMsg').hide();
-    $('#editerrormsg').hide();
-    $('#editusers-createview').show();
-    $('#users-createview').hide();
-    $('#users-searchview').hide();
-    var url = "/userRoles/editUser";
-    var request = $.ajax({
-        url: url,
-        type: 'post',
-        data: {userId:userId,networkLoginId:networkLoginId},
-        success: function (response) {
-            $('#userRolesContentId').html(response);
-            $('#editusers-createview').show();
-            $('#users-searchview').hide();
-            $('#users-createview').hide();
-            $('#successMsg').show();
-            $('#editroleId').multiselect();
-        }
-    });
-}
-
-function editclear(){
-    editUser(userId,networkLoginId);
+function validateEmailAddress() {
+    var isValidEmailAddress = $('#emailId').is(':valid');
+    var blankEmailAddress = $('#emailId').val();
+    var isValid = true;
+    if (blankEmailAddress==null || blankEmailAddress=='') {
+        $('#emailIdErrMsg').hide();
+        isValid=true;
+    } else if(isValidEmailAddress==true){
+        $('#emailIdErrMsg').hide();
+        isValid=true;
+    }
+    else if(isValidEmailAddress==false){
+        $('#emailIdErrMsg').show();
+        isValid=false;
+    }
+    return isValid;
 }
 
 
-function editUserDetails(){
-    var userId = $('#editUserIdHidden').val();
-    var networkLoginId = $('#editnetworkLoginId').val();
-    var institutionId = $('#editinstitutionId').val();
-    var roleIds = $('#editroleId').val();
-    var userDescription = $('#edituserDescription').val();
-    $('#editusers-createview').show();
-    $('#users-createview').hide();
-    $('#users-searchview').hide();
-    var $form = $('#userRole-form');
-    var url = "/userRoles/saveEditUserDetails";
-    var request = $.ajax({
-        url: url,
-        type: 'post',
-        data: {userId:userId,networkLoginId:networkLoginId,roleIds:roleIds,userDescription:userDescription,institutionId:institutionId},
-        success: function (response) {
-            $('#userRolesContentId').html(response);
-            $('#editusers-createview').show();
-            $('#users-searchview').hide();
-            $('#users-createview').hide();
-            $('#successMsg').show();
-            $('#editroleId').multiselect();
-        }
-    });
+function validateEditEmailAddress() {
+    var isValidEmailAddress = $('#editEmailId').is(':valid');
+    var blankEmailAddress = $('#editEmailId').val();
+    var isValid = true;
+    if (blankEmailAddress==null || blankEmailAddress=='') {
+        $('#editEmailIdErrMsg').hide();
+        isValid=true;
+    } else if(isValidEmailAddress==true){
+        $('#editEmailIdErrMsg').hide();
+        isValid=true;
+    }
+    else if(isValidEmailAddress==false){
+        $('#editEmailIdErrMsg').show();
+        isValid=false;
+    }
+    return isValid;
 }
-
-
-
-
-
-
