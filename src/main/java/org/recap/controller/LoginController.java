@@ -112,6 +112,7 @@ public class LoginController {
     private void setValuesInSession(HttpSession session,Map<String,Object> authMap)
     {
         session.setAttribute("userName",(String)authMap.get("userName"));
+        session.setAttribute(UserManagement.USER_ID,(Integer)authMap.get(UserManagement.USER_ID));
         session.setAttribute(UserManagement.USER_INSTITUTION,(Integer)authMap.get(UserManagement.USER_INSTITUTION));
         session.setAttribute(UserManagement.SUPER_ADMIN_USER,(Boolean)authMap.get(UserManagement.SUPER_ADMIN_USER));
         session.setAttribute(UserManagement.ReCAP_USER,(Boolean)authMap.get(UserManagement.ReCAP_USER));

@@ -25,6 +25,8 @@ public class UsersEntity implements Serializable{
     @Column(name="user_description")
     private String userDescription;
 
+    @Column(name="user_emailid")
+    private String emailId;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="user_role_t", joinColumns = {
@@ -85,5 +87,13 @@ public class UsersEntity implements Serializable{
 
     public void setUserDescription(String userDescription) {
         this.userDescription = userDescription;
+    }
+
+    public String getEmailId() {
+        return emailId;
+    }
+
+    public void setEmailId(String emailId) {
+        this.emailId = emailId;
     }
 }

@@ -9,76 +9,55 @@ import java.util.List;
 public class UserRoleForm {
 
     private int userId;
-
-    private String searchNetworkId;
-
-    private String networkLoginId;
-
     private int institutionId;
-
+    private int editUserId;
     private int[] roleId;
-
-    private String roleName;
-
-    private String totalRecordsCount = "0";
-
-    private Integer pageNumber = 0;
-
-    private Integer pageSize = 10;
-
-    private Integer totalPageCount = 0;
-
-    private String institutionName;
-
-    private String message;
-
-    private boolean allowCreateEdit;
-
-    private List<Object> roles=new ArrayList<Object>();
-
-    private List<Object> institutions=new ArrayList<Object>();
-
-    private String sectionName;
-
-    private String buttonName;
-
-    private String editNetworkId;
-
     private int[] editRoleId;
 
-    private int editUserId;
-
-    private boolean isCreatedRequest;
-    private String errorMessage;
-    private String userDescriptionErrMsg;
-
-    private String userDescription;
-
-    private boolean showPagination = false;
-
-    private boolean showSearch = false;
-
-    private boolean showErrorMessage = false;
-
-    private boolean showCreateSuccess = false;
-
-    private boolean showCreateError = false;
-
-    private List<Integer> showSelectedForCreate = new ArrayList<>();
-
-    private List<Integer> selectedForCreate = new ArrayList<>();
-
-    private boolean showEditSuccess = false;
-
-    private boolean showEditError = false;
-
-    private String editNetworkLoginId;
-
+    private Integer pageNumber = 0;
+    private Integer pageSize = 10;
+    private Integer totalPageCount = 0;
     private Integer editInstitutionId;
 
-    private List<Integer> editSelectedForCreate = new ArrayList<>();
-
+    private String searchNetworkId;
+    private String networkLoginId;
+    private String roleName;
+    private String totalRecordsCount = "0";
+    private String institutionName;
+    private String message;
+    private String errorMessage;
+    private String sectionName;
+    private String buttonName;
+    private String editNetworkId;
+    private String userDescriptionErrMsg;
+    private String userDescription;
+    private String editNetworkLoginId;
     private String editUserDescription;
+    private String userEmailId;
+    private String emailId;
+    private String editEmailId;
+
+    private boolean allowCreateEdit;
+    private boolean isCreatedRequest;
+    private boolean showPagination = false;
+    private boolean showSearch = false;
+    private boolean showErrorMessage = false;
+    private boolean showCreateSuccess = false;
+    private boolean showCreateError = false;
+    private boolean showEditSuccess = false;
+    private boolean showEditError = false;
+    private boolean deleteSuccessMsg = false;
+    private boolean selected;
+    private boolean submitted;
+    private boolean showResults = false;
+    private boolean deletedSuccessMsg = false;
+    private boolean deleteErrorMsg= false;
+
+    private List<Object> roles = new ArrayList<Object>();
+    private List<Object> institutions = new ArrayList<Object>();
+    private List<Integer> showSelectedForCreate = new ArrayList<>();
+    private List<Integer> selectedForCreate = new ArrayList<>();
+    private List<Integer> editSelectedForCreate = new ArrayList<>();
 
     public boolean isShowCreateError() {
         return showCreateError;
@@ -185,10 +164,6 @@ public class UserRoleForm {
         this.selected = selected;
     }
 
-    private boolean selected;
-
-    private boolean submitted ;
-    private boolean showResults=false ;
 
     public boolean isSubmitted() {
         return submitted;
@@ -222,7 +197,7 @@ public class UserRoleForm {
         this.institutionName = institutionName;
     }
 
-    private List<UserRoleForm> userRoleFormList=new ArrayList<UserRoleForm>();
+    private List<UserRoleForm> userRoleFormList = new ArrayList<UserRoleForm>();
 
     public List<UserRoleForm> getUserRoleFormList() {
         return userRoleFormList;
@@ -312,7 +287,9 @@ public class UserRoleForm {
         this.totalPageCount = totalPageCount;
     }
 
-    public void resetPageNumber(){this.pageNumber=0;}
+    public void resetPageNumber() {
+        this.pageNumber = 0;
+    }
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
@@ -416,5 +393,53 @@ public class UserRoleForm {
 
     public Integer getEditInstitutionId() {
         return editInstitutionId;
+    }
+
+    public String getUserEmailId() {
+        return userEmailId;
+    }
+
+    public void setUserEmailId(String userEmailId) {
+        this.userEmailId = userEmailId;
+    }
+
+    public String getEmailId() {
+        return emailId;
+    }
+
+    public void setEmailId(String emailId) {
+        this.emailId = emailId;
+    }
+
+    public String getEditEmailId() {
+        return editEmailId;
+    }
+
+    public void setEditEmailId(String editEmailId) {
+        this.editEmailId = editEmailId;
+    }
+
+    public boolean isDeleteSuccessMsg() {
+        return deleteSuccessMsg;
+    }
+
+    public void setDeleteSuccessMsg(boolean deleteSuccessMsg) {
+        this.deleteSuccessMsg = deleteSuccessMsg;
+    }
+
+    public boolean isDeletedSuccessMsg() {
+        return deletedSuccessMsg;
+    }
+
+    public void setDeletedSuccessMsg(boolean deletedSuccessMsg) {
+        this.deletedSuccessMsg = deletedSuccessMsg;
+    }
+
+    public boolean isDeleteErrorMsg() {
+        return deleteErrorMsg;
+    }
+
+    public void setDeleteErrorMsg(boolean deleteErrorMsg) {
+        this.deleteErrorMsg = deleteErrorMsg;
     }
 }
