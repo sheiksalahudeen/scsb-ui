@@ -11,6 +11,8 @@
                 <input id="totalPageCount" name="totalPageCount" type="text" th:field="*{totalPageCount}" hidden="hidden"/>
                 <input id="totalRecordsCount" name="totalRecordsCount" type="text" th:field="*{totalRecordsCount}" hidden="hidden"/>
                 <input id="patronBarcodeInRequestHdn" name="patronBarcodeInRequestHdn" type="text" value="" hidden="hidden"/>
+                <input id="patronEmailIdHdn" name="patronEmailIdHdn" type="text" value="" hidden="hidden"/>
+                <input id="requestingInstitutionHdn" name="requestingInstitutionHdn" type="text" value="" hidden="hidden"/>
                 <div role="tabpanel" class="tab-pane" id="request">
                     <div id="searchRequestsSection" class="request-main-section" style="display:none;">
                         <div class="search-bar">
@@ -516,7 +518,7 @@
                             </div>
                             <div class="divider-horizontal margin-top-10 margin-btm-10"></div>
                             <div class="modal-footer">
-                                <button id="anotherRequestButtonId" class="btn btn-default themed-button btn-primary padding-left-30 padding-right-30" onclick="createRequestSamePatron()" type="button">Create another Request to same Patron</button>
+                                <button id="anotherRequestButtonId" class="btn btn-default themed-button btn-primary padding-left-30 padding-right-30" onclick="createRequestSamePatron()" type="button">Create Another Request for Same Patron</button>
                                 <button id="modalCancelButtonId" class="btn themed-button themed-button-cancel padding-left-30 padding-right-30" data-dismiss="modal" aria-label="Close" type="button">Cancel</button>
                             </div>
                         </div>

@@ -235,6 +235,8 @@ function createRequest() {
                     $('#deliveryLocationInRequest').html(jsonResponse['deliveryLocation']);
                     $('#requestNotes').html(jsonResponse['requestNotes']);
                     $('#patronBarcodeInRequestHdn').html(jsonResponse['patronBarcode']);
+                    $('#patronEmailIdHdn').html(jsonResponse['patronEmailAddress']);
+                    $('#requestingInstitutionHdn').html(jsonResponse['requestingInstitution']);
                     $('#createrequestclear').click();
                     $('#createRequestModal').modal('show');
                 }
@@ -339,4 +341,6 @@ function validateEmailAddress() {
 function createRequestSamePatron() {
     $('#createRequestModal').modal('hide');
     $('#patronBarcodeId').val($('#patronBarcodeInRequestHdn').html());
+    $('#patronEmailId').val($('#patronEmailIdHdn').html());
+    $('#requestingInstitutionId').val($('#requestingInstitutionHdn').html());
 }
