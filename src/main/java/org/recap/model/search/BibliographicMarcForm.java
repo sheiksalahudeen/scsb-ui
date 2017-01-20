@@ -2,6 +2,7 @@ package org.recap.model.search;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by rajeshbabuk on 22/7/16.
@@ -93,6 +94,9 @@ public class BibliographicMarcForm {
     }
 
     public String getOwningInstitution() {
+        if (StringUtils.isNotBlank(this.owningInstitution)) {
+            this.owningInstitution = this.owningInstitution.replaceAll(",", "");
+        }
         return owningInstitution;
     }
 

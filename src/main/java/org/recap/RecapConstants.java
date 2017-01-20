@@ -22,7 +22,7 @@ public class RecapConstants {
     public static final String BIB_OWNING_INSTITUTION = "BibOwningInstitution";
     public static final String HOLDINGS_OWNING_INSTITUTION = "HoldingsOwningInstitution";
     public static final String ITEM_OWNING_INSTITUTION = "ItemOwningInstitution";
-    public static final String OWNING_INSTITUTION = "OwningInstitution";
+    public static final String OWNING_INSTITUTION = "owningInstitution";
     public static final String COLLECTION_GROUP_DESIGNATION = "CollectionGroupDesignation";
     public static final String AVAILABILITY = "Availability_search";
     public static final String TITLE_SEARCH = "Title_search";
@@ -350,6 +350,7 @@ public class RecapConstants {
     public static final String SCSB_SHIRO_UI_VALUES="authentication/permissions";
 
     public static final String CGD_UPDATE_ITEM_BARCODE = "itemBarcode";
+    public static final String OLD_CGD = "oldCollectionGroupDesignation";
     public static final String NEW_CGD = "newCollectionGroupDesignation";
     public static final String CGD_CHANGE_NOTES = "cgdChangeNotes";
 
