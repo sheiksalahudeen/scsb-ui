@@ -72,6 +72,14 @@
                         </div>
                         <div class="search-results-container" data-th-if="*{showResults}">
                             <div class="row">
+                                <div class="row margin-btm-10"
+                                     data-th-if="*{message ne null &amp;&amp; message ne ''}">
+                                    <div class="col-sm-12 text-left">
+                                        <div class="alert alert-success" role="alert"><span
+                                                class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span
+                                                th:text="*{message}"></span></div>
+                                    </div>
+                                </div>
                                 <div class="col-xs-12">
                                     <div class="row margin-top-0">
                                         <div class="col-sm-6 margin-top-0"><h3 class="margin-0">Search Results</h3>
@@ -90,6 +98,7 @@
                                             th:text="*{errorMessage}"></span></div>
                                 </div>
                             </div>
+
                             <div data-th-if="*{rolesSearchResults.size() &gt; 0 &amp;&amp; showResults}">
                                 <div id="showEntriesAndNumFoundDiv" name="showEntriesAndNumFoundDiv" class="row">
                                     <div class="col-sm-2 margin-top-05 show-entries-section">
@@ -385,6 +394,12 @@
                             <div class="col-sm-6 text-right backtext"><a href="#"><span
                                     class="glyphicon glyphicon-menu-left"></span> Go Back</a></div>
                         </div>
+                        <input id="afterDelPageNumber" name="afterDelPageNumber" type="text"
+                               th:field="${rolesForm.afterDelPageNumber}" hidden="hidden"/>
+                        <input id="afterDelTotalPageCount" name="afterDelTotalPageCount" type="text"
+                               th:field="${rolesForm.afterDelTotalPageCount}" hidden="hidden"/>
+                        <input id="afterDelPageSize" name="afterDelPageSize" type="text"
+                               th:field="${rolesForm.afterDelPageSize}" hidden="hidden"/>
                         <div class="row margin-btm-10"
                              data-th-if="*{message ne null &amp;&amp; message ne ''}">
                             <div class="col-sm-12 text-left">

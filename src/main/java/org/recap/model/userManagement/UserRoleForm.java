@@ -18,6 +18,9 @@ public class UserRoleForm {
     private Integer pageSize = 10;
     private Integer totalPageCount = 0;
     private Integer editInstitutionId;
+    private Integer afterDelPageNumber=0;
+    private Integer afterDelPageSize =10;
+    private Integer afterDelTotalPageCount=0;
 
     private String searchNetworkId;
     private String networkLoginId;
@@ -441,5 +444,29 @@ public class UserRoleForm {
 
     public void setDeleteErrorMsg(boolean deleteErrorMsg) {
         this.deleteErrorMsg = deleteErrorMsg;
+    }
+
+    public Integer getAfterDelPageNumber() {
+        return afterDelPageNumber;
+    }
+
+    public void setAfterDelPageNumber(Integer afterDelPageNumber) {
+        this.afterDelPageNumber = afterDelPageNumber;
+    }
+
+    public Integer getAfterDelPageSize() {
+        return afterDelPageSize;
+    }
+
+    public void setAfterDelPageSize(Integer afterDelPageSize) {
+        this.afterDelPageSize = afterDelPageSize;
+    }
+
+    public Integer getAfterDelTotalPageCount() {
+        return afterDelTotalPageCount;
+    }
+
+    public void setAfterDelTotalPageCount(Integer afterDelTotalPageCount) {
+        this.afterDelTotalPageCount = afterDelTotalPageCount;
     }
 }

@@ -177,6 +177,9 @@ function saveEditedRole(){
 }
 
 function deleteFromDb(){
+    var pageNumber = $('#afterDelPageNumber').val();
+    var totalPageCount = $('#afterDelTotalPageCount').val();
+    var pageSize = $('#afterDelPageSize').val();
     var $form = $('#roles-form');
     var url = $form.attr('action') + "?action=delete";
     var role = $.ajax({
@@ -188,8 +191,9 @@ function deleteFromDb(){
             $('#rolesContentId').html(response);
             $("#recaprole .edit-role-section").hide();
             $("#recaprole .create-role-section").hide();
-            $("#recaprole .roles-main-section").hide();
-            $("#recaprole .delete-role-section").show();
+            $("#recaprole .roles-main-section").show();
+            $("#recaprole .search-results-container").show();
+            $("#recaprole .delete-role-section").hide();
         }
     });
 }
@@ -198,13 +202,18 @@ function deleteRole(roleId,roleNames,roleDescription,permissionNames) {
     console.log('Role Name  : ' + roleNames);
     console.log('Role Desc  : ' + roleDescription);
     console.log('Permission Name  : ' + permissionNames);
+
+    var pageSize = $('#numOfRecordsId').val();
+    var pageNumber = $('#pageNumber').val();
+    var totalPageCount = $('#totalPageCount').val();
+
     var $form = $('#roles-form');
     var roleName = $('#recaprole .roleDetails').val();
     var url = $form.attr('action') + "?action=deleteRole";
     var role = $.ajax({
         url: url,
         type: 'post',
-        data: {roleId:roleId,roleName:roleNames,roleDescription:roleDescription,permissionName:permissionNames},
+        data: {roleId:roleId,roleName:roleNames,roleDescription:roleDescription,permissionName:permissionNames,pageSize:pageSize,pageNumber:pageNumber,totalPageCount:totalPageCount},
         success: function (response) {
             $('#rolesContentId').html(response);
             $("#recaprole .delete-role-section").show();
