@@ -22,6 +22,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -70,22 +71,28 @@ public class CollectionServiceUtilUT extends BaseTestCase {
         assertNotNull(savedBibliographicEntity.getItemEntities().get(0).getItemId());
         assertEquals("Shared", savedBibliographicEntity.getItemEntities().get(0).getCollectionGroupEntity().getCollectionGroupCode());
 
-        Integer itemId = savedBibliographicEntity.getItemEntities().get(0).getItemId();
+        String itemBarcode = savedBibliographicEntity.getItemEntities().get(0).getBarcode();
 
         BibliographicMarcForm bibliographicMarcForm = new BibliographicMarcForm();
         bibliographicMarcForm.setBibId(savedBibliographicEntity.getBibliographicId());
-        bibliographicMarcForm.setItemId(itemId);
+        bibliographicMarcForm.setBarcode(itemBarcode);
+        bibliographicMarcForm.setOwningInstitution("PUL");
+        bibliographicMarcForm.setCollectionGroupDesignation("Shared");
         bibliographicMarcForm.setNewCollectionGroupDesignation("Private");
         bibliographicMarcForm.setCgdChangeNotes("Notes for updating CGD");
 
         collectionServiceUtil.updateCGDForItem(bibliographicMarcForm);
 
-        ItemEntity fetchedItemEntity = itemDetailsRepository.findByItemId(itemId);
-        entityManager.refresh(fetchedItemEntity);
-        assertNotNull(fetchedItemEntity);
-        assertNotNull(fetchedItemEntity.getItemId());
-        assertEquals(itemId, fetchedItemEntity.getItemId());
-        assertEquals("Private", fetchedItemEntity.getCollectionGroupEntity().getCollectionGroupCode());
+        List<ItemEntity> fetchedItemEntities = itemDetailsRepository.findByBarcode(itemBarcode);
+        assertNotNull(fetchedItemEntities);
+        assertTrue(fetchedItemEntities.size() > 0);
+        for (ItemEntity fetchedItemEntity : fetchedItemEntities) {
+            entityManager.refresh(fetchedItemEntity);
+            assertNotNull(fetchedItemEntity);
+            assertNotNull(fetchedItemEntity.getItemId());
+            assertEquals(itemBarcode, fetchedItemEntity.getBarcode());
+            assertEquals("Private", fetchedItemEntity.getCollectionGroupEntity().getCollectionGroupCode());
+        }
 
         long afterCountForChangeLog = itemChangeLogDetailsRepository.count();
 
