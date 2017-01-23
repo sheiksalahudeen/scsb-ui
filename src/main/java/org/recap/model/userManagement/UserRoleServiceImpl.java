@@ -93,8 +93,13 @@ public class UserRoleServiceImpl implements UserRoleService {
         Integer institutionId = institutionEntity.getInstitutionId();
         UsersEntity byLoginIdAndInstitutionEntity = userDetailsRepository.findByLoginIdAndInstitutionId(networkLoginId, institutionId);
         if (byLoginIdAndInstitutionEntity == null) {
-            saveUsersEntity = userDetailsRepository.saveAndFlush(usersEntity);
-            userRoleForm.setMessage("User '" + networkLoginId + "' added successfully");
+            try {
+                saveUsersEntity = userDetailsRepository.saveAndFlush(usersEntity);
+                userRoleForm.setMessage("User '" + networkLoginId + "' added successfully");
+            }
+            catch (Exception e){
+                userRoleForm.setErrorMessage("Email Id should not be duplicated");
+            }
         } else {
             userRoleForm.setErrorMessage("Users should not be duplicate");
         }
@@ -124,7 +129,13 @@ public class UserRoleServiceImpl implements UserRoleService {
             if (roleEntityList != null) {
                 usersEntity.setUserRole(roleEntityList);
             }
+            try {
+
             savedUsersEntity = userDetailsRepository.save(usersEntity);
+            }
+            catch (Exception e){
+                return savedUsersEntity;
+            }
         }
         return savedUsersEntity;
     }

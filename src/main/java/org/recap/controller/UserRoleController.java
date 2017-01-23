@@ -271,33 +271,41 @@ public class UserRoleController {
         for (String parameterValue : parameterValues) {
             roleIds.add(Integer.valueOf(parameterValue));
         }
+        userRoleForm.setMessage(networkLoginId +" edited and saved successfully");
+        List<Object> roles = userRoleService.getRoles(UserManagement.SUPER_ADMIN.getIntegerValues());
+        List<Object> institutions = userRoleService.getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId());
+        userRoleForm.setInstitutions(institutions);
+        userRoleForm.setRoles(roles);
+        userRoleForm.setUserId(userId);
         UsersEntity usersEntity = userRoleService.saveEditedUserToDB(userId, networkLoginId, userDescription, institutionId, roleIds, userEmailId);
         if (usersEntity != null) {
             userRoleForm.setShowEditSuccess(true);
-            userRoleForm.setMessage(networkLoginId +" edited and saved successfully");
+            userRoleForm.setEditNetworkLoginId(usersEntity.getLoginId());
+            userRoleForm.setEditUserDescription(usersEntity.getUserDescription());
+            userRoleForm.setUserId(userRoleForm.getUserId());
+            userRoleForm.setEditUserId(userRoleForm.getUserId());
+            List<RoleEntity> roleEntityList = usersEntity.getUserRole();
+            List<Integer> roleIdss = new ArrayList<>();
+            if (roleEntityList != null) {
+                for (RoleEntity roleEntity : roleEntityList) {
+                    roleIdss.add(roleEntity.getRoleId());
+                }
+            }
+            userRoleForm.setEditSelectedForCreate(roleIdss);
+            userRoleForm.setShowSelectedForCreate(userRoleForm.getEditSelectedForCreate());
+            userRoleForm.setEditInstitutionId(usersEntity.getInstitutionId());
+            userRoleForm.setEditEmailId(usersEntity.getEmailId());
         } else {
             userRoleForm.setShowEditError(true);
-            userRoleForm.setMessage("Error Occurred");
+            userRoleForm.setEditErromessage("Email Id already Exists");
+            userRoleForm.setEditNetworkLoginId(networkLoginId);
+            userRoleForm.setEditUserDescription(userDescription);
+            userRoleForm.setEditSelectedForCreate(roleIds);
+            userRoleForm.setShowSelectedForCreate(userRoleForm.getEditSelectedForCreate());
+            userRoleForm.setEditInstitutionId(institutionId);
+            userRoleForm.setEditEmailId(userEmailId);
         }
-        List<Object> roles = userRoleService.getRoles(UserManagement.SUPER_ADMIN.getIntegerValues());
-        List<Object> institutions = userRoleService.getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId());
-        userRoleForm.setEditNetworkLoginId(usersEntity.getLoginId());
-        userRoleForm.setInstitutions(institutions);
-        userRoleForm.setRoles(roles);
-        userRoleForm.setEditUserDescription(usersEntity.getUserDescription());
-        userRoleForm.setUserId(userRoleForm.getUserId());
-        userRoleForm.setEditUserId(userRoleForm.getUserId());
-        List<RoleEntity> roleEntityList = usersEntity.getUserRole();
-        List<Integer> roleIdss = new ArrayList<>();
-        if (roleEntityList != null) {
-            for (RoleEntity roleEntity : roleEntityList) {
-                roleIdss.add(roleEntity.getRoleId());
-            }
-        }
-        userRoleForm.setEditSelectedForCreate(roleIdss);
-        userRoleForm.setShowSelectedForCreate(userRoleForm.getEditSelectedForCreate());
-        userRoleForm.setEditInstitutionId(usersEntity.getInstitutionId());
-        userRoleForm.setEditEmailId(usersEntity.getEmailId());
+
         return new ModelAndView("userRolesSearch", "userRoleForm", userRoleForm);
     }
 
