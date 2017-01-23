@@ -29,6 +29,7 @@ public class UserRoleForm {
     private String institutionName;
     private String message;
     private String errorMessage;
+    private String editErromessage;
     private String sectionName;
     private String buttonName;
     private String editNetworkId;
@@ -468,5 +469,13 @@ public class UserRoleForm {
 
     public void setAfterDelTotalPageCount(Integer afterDelTotalPageCount) {
         this.afterDelTotalPageCount = afterDelTotalPageCount;
+    }
+
+    public String getEditErromessage() {
+        return editErromessage;
+    }
+
+    public void setEditErromessage(String editErromessage) {
+        this.editErromessage = editErromessage;
     }
 }

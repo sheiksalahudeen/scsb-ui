@@ -271,38 +271,41 @@ function editclear() {
 
 
 function editUserDetails() {
-    validateEditEmailAddress();
-    var userId = $('#editUserIdHidden').val();
-    var networkLoginId = $('#editnetworkLoginId').val();
-    var institutionId = $('#editinstitutionId').val();
-    var roleIds = $('#editroleId').val();
-    var userDescription = $('#edituserDescription').val();
-    var userEmailId = $('#editEmailId').val();
-    $('#editusers-createview').show();
-    $('#users-createview').hide();
-    $('#users-searchview').hide();
-    var $form = $('#userRole-form');
-    var url = "/userRoles/saveEditUserDetails";
-    var request = $.ajax({
-        url: url,
-        type: 'post',
-        data: {
-            userId: userId,
-            networkLoginId: networkLoginId,
-            roleIds: roleIds,
-            userDescription: userDescription,
-            institutionId: institutionId,
-            userEmailId: userEmailId
-        },
-        success: function (response) {
-            $('#userRolesContentId').html(response);
-            $('#editusers-createview').show();
-            $('#users-searchview').hide();
-            $('#users-createview').hide();
-            $('#successMsg').show();
-            $('#editroleId').multiselect();
-        }
-    });
+    var emailAddress = validateEditEmailAddress();
+    if(emailAddress==true) {
+        var userId = $('#editUserId').val();
+        var networkLoginId = $('#editnetworkLoginId').val();
+        var institutionId = $('#editinstitutionId').val();
+        var roleIds = $('#editroleId').val();
+        var userDescription = $('#edituserDescription').val();
+        var userEmailId = $('#editEmailId').val();
+        $('#editusers-createview').show();
+        $('#users-createview').hide();
+        $('#users-searchview').hide();
+        var $form = $('#userRole-form');
+        var url = "/userRoles/saveEditUserDetails";
+        var request = $.ajax({
+            url: url,
+            type: 'post',
+            data: {
+                userId: userId,
+                networkLoginId: networkLoginId,
+                roleIds: roleIds,
+                userDescription: userDescription,
+                institutionId: institutionId,
+                userEmailId: userEmailId
+            },
+            success: function (response) {
+                $('#userRolesContentId').html(response);
+                $('#editusers-createview').show();
+                $('#users-searchview').hide();
+                $('#users-createview').hide();
+                $('#successMsg').show();
+                $('#editroleId').multiselect();
+            }
+        });
+    }
+
 }
 
 
@@ -384,6 +387,7 @@ function validateForm() {
     var institutionId = $('#institutionId').val();
     var roleId = $('#roleId').val();
     var userDescription = $('#userDescription').val();
+    var emailId=$('#emailId').val();
     if (isBlankValue(newNetworkLoginId)) {
         $('#networkLoginIdErrMsg').show();
         isValid = false;
@@ -408,6 +412,12 @@ function validateForm() {
     } else {
         $('#userDescriptionErrMsg').hide();
     }
+    if (isBlankValue(emailId)) {
+        $('#emailIdErrMsg').show();
+        isValid = false;
+    } else {
+        $('#emailIdErrMsg').hide();
+    }
     return isValid;
 }
 
@@ -424,8 +434,8 @@ function validateEmailAddress() {
     var blankEmailAddress = $('#emailId').val();
     var isValid = true;
     if (blankEmailAddress==null || blankEmailAddress=='') {
-        $('#emailIdErrMsg').hide();
-        isValid=true;
+        $('#emailIdErrMsg').show();
+        isValid=false;
     } else if(isValidEmailAddress==true){
         $('#emailIdErrMsg').hide();
         isValid=true;
@@ -443,8 +453,8 @@ function validateEditEmailAddress() {
     var blankEmailAddress = $('#editEmailId').val();
     var isValid = true;
     if (blankEmailAddress==null || blankEmailAddress=='') {
-        $('#editEmailIdErrMsg').hide();
-        isValid=true;
+        $('#editEmailIdErrMsg').show();
+        isValid=false;
     } else if(isValidEmailAddress==true){
         $('#editEmailIdErrMsg').hide();
         isValid=true;
