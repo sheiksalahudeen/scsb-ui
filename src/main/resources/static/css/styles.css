@@ -101,16 +101,16 @@ select::-ms-expand{display:none;}
 .content-bottom ul{margin:0 0 0 -15px;padding:5px 0;line-height:28px;font-size:16px;}
 .content-bottom ul li{margin-left:30px;}
 .content-bottom ul li a{color:#677171}
-.recap-logo{width:200px;height:65px;}
+.recap-logo{width:146px;height:50px;}
 .recap-logo-container{text-align:center;padding:20px 0 0;color:#ffffff;}
-.recap-logo-container h3{color:#717271;}
+.recap-logo-container h3{color:#717271; font-size:20px; margin-top:10px;}
 .recap-members{height:36%;background:#ffffff;}
 .twitter-block{background:#fff;font-family:arial}
 .twitter-block h3{border-bottom:1px solid #58595b;padding-bottom:10px}
 .twitterfeed-wrapper{border-radius:10px;border:1px solid #58595b;margin-bottom:15px}
 .twitterfeed-container{max-height:238px;overflow:hidden;overflow-y:auto;}
 .twitterfeed-title h5{margin:5px 0 0}
-.login-wrapper{background:#ffffff;margin-top:70px;}
+.login-wrapper{background:#ffffff;margin-top:40px;}
 .login-wrapper .heading{color:#79A1A2;}
 .login-wrapper form{padding:20px 30px}
 .login-wrapper h2{margin:5px 0 25px;}
@@ -457,6 +457,8 @@ tr.shown td.details-control {background:url('../images/hide-icon.png') no-repeat
 
 /*******Media Query******/
 @media screen and (min-width:1580px){#search-filter .allfacet span.facet-text{margin-top:15px}}
+@media screen and (max-width:1280px){.recap-logo-container{padding: 30px 0 25px;} .content-bottom{margin-top:60px !important;}}
+
 @media screen and (min-width:768px) and (max-width:1200px){
     .recap-logo-container{ padding:0 0;}
     .login-wrapper form {padding: 20px;}
