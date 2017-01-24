@@ -394,4 +394,14 @@ public class RecapConstants {
     public static final String ROLES_EDIT_SAVE_SUCCESS_MESSAGE = " edited and added successfully";
     public static final String ROLES_DELETED_SUCCESS_MESSAGE = " deleted successfully";
 
+    //USERS
+    public static final String EMAILID_EXISTS = " Email Id already Exists";
+    public static final String EDITED_AND_SAVED = " edited and saved successfully";
+    public static final String NETWORK_LOGIN_ID_DOES_NOT_EXIST = "Network Login Id does not exist";
+    public static final String EMAILID_ID_DOES_NOT_EXIST = "User emailId does not exist";
+    public static final String NETWORK_LOGIN_ID_AND_EMAILID_ID_DOES_NOT_EXIST = "NetworkId and emailId does not exist";
+    public static final String USER_ALREADY_EXISTS = "User already exist";
+    public static final String USER_DELETED_SUCCESS_MESSAGE = "Deleted successfully";
+    public static final String USER_ADDED_SUCCESSFULLY = " Added Successfully";
+    public static final String EMAILID_SHOULD_NOT_DUPLICATE = "Email Id should not be duplicated";
 }

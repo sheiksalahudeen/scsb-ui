@@ -30,19 +30,19 @@
                                     <div class="buscador-principal">
 
                                         <div class="row">
-                                            <div class="col-md-5 col-sm-3">
+                                            <div class="col-lg-4 .col-md-4 .col-sm-3">
                                                 <label class="fontcolor-dark margin-btm-10">Network Login Id</label>
                                                 <input class="form-control themed-input" name="searchNetworkId"
                                                        id="searchNetworkId" th:field="*{searchNetworkId}" placeholder=""
                                                        type="text"/>
                                             </div>
-                                            <div class="col-md-5 col-sm-3">
+                                            <div class="col-lg-4 .col-md-4 .col-sm-3">
                                                 <label class="fontcolor-dark margin-btm-10">User Email Address</label>
                                                 <input class="form-control themed-input" name="userEmailId"
                                                        id="userEmailId"
                                                        th:field="*{userEmailId}" placeholder="" type="text"/>
                                             </div>
-                                            <div class="col-md-2 col-sm-6">
+                                            <div class="col-lg-3 col-lg-offset-1 .col-md-4 .col-sm-6">
                                                 <button id="searchButton" class="btn themed-button themed-button-search"
                                                         type="button" th:onclick="'javascript:searchUserRoles();'">
                                                     Search
@@ -224,6 +224,22 @@
                                         th:text="${userRoleForm.message}"></span></div>
                             </div>
                         </div>
+                        <div class="row margin-btm-10" id="failureMsg"
+                             data-th-if="${userRoleForm.showCreateError}">
+                            <div class="col-sm-12 text-left">
+                                <div class="alert alert-danger" role="alert"><span
+                                        class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span
+                                        th:text="${userRoleForm.errorMessage}"></span></div>
+                            </div>
+                        </div>
+                        <div class="row margin-btm-10" id="emailIdfailureMsg"
+                             data-th-if="${userRoleForm.showCreateEmailError}">
+                            <div class="col-sm-12 text-left">
+                                <div class="alert alert-danger" role="alert"><span
+                                        class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span
+                                        th:text="${userRoleForm.errorMessageForEmail}"></span></div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-xs-12 divider-horizontal margin-top-10 margin-btm-30"></div>
                         </div>
@@ -287,7 +303,7 @@
                                                     class="error-color">*</span></label>
                                         </div>
                                         <div class="col-sm- col-sm-6">
-                                            <input class="form-control themed-input" name="networkLoginId"
+                                            <input class="form-control themed-input" name="userDescription"
                                                    id="userDescription" th:field="${userRoleForm.userDescription}"
                                                    placeholder="" type="text"/>
                                             <span id="userDescriptionErrMsg" style="color: red;display: none">Please provide User Description </span>
@@ -296,7 +312,7 @@
                                     <div class="form-group">
                                         <div class="col-md-3 text-right col-sm-4">
                                             <label for="emailId" class="margin-top-10">Email Id<span
-                                                    class="error-color"></span></label>
+                                                    class="error-color">*</span></label>
                                         </div>
                                         <div class="col-sm- col-sm-6">
                                             <input class="form-control themed-input" name="emailId"
@@ -370,7 +386,7 @@
                                                     class="error-color">*</span></label>
                                         </div>
                                         <div class="col-sm- col-sm-6">
-                                            <input class="form-control themed-input" name="editnetworkLoginId"
+                                            <input class="form-control themed-input" name="editnetworkLoginId" readonly="readonly"
                                                    id="editnetworkLoginId" th:field="${userRoleForm.editNetworkLoginId}"
                                                    placeholder="" type="text"/>
                                             <span id="editnetworkLoginIdErrMsg" style="color: red;display: none">Please provide Network Login id </span>

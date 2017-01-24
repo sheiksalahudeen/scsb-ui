@@ -1,5 +1,6 @@
 package org.recap.model.userManagement;
 
+import org.recap.RecapConstants;
 import org.recap.model.jpa.InstitutionEntity;
 import org.recap.model.jpa.RoleEntity;
 import org.recap.model.jpa.UsersEntity;
@@ -95,13 +96,15 @@ public class UserRoleServiceImpl implements UserRoleService {
         if (byLoginIdAndInstitutionEntity == null) {
             try {
                 saveUsersEntity = userDetailsRepository.saveAndFlush(usersEntity);
-                userRoleForm.setMessage("User '" + networkLoginId + "' added successfully");
+                userRoleForm.setMessage(networkLoginId + RecapConstants.USER_ADDED_SUCCESSFULLY);
             }
             catch (Exception e){
-                userRoleForm.setErrorMessage("Email Id should not be duplicated");
+                userRoleForm.setShowCreateEmailError(true);
+                userRoleForm.setErrorMessageForEmail(RecapConstants.EMAILID_SHOULD_NOT_DUPLICATE);
             }
         } else {
-            userRoleForm.setErrorMessage("Users should not be duplicate");
+            userRoleForm.setShowCreateError(true);
+            userRoleForm.setErrorMessage(RecapConstants.USER_ALREADY_EXISTS);
         }
         return saveUsersEntity;
     }

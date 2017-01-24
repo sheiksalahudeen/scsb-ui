@@ -29,6 +29,7 @@ public class UserRoleForm {
     private String institutionName;
     private String message;
     private String errorMessage;
+    private String errorMessageForEmail;
     private String editErromessage;
     private String sectionName;
     private String buttonName;
@@ -50,6 +51,7 @@ public class UserRoleForm {
     private boolean showCreateError = false;
     private boolean showEditSuccess = false;
     private boolean showEditError = false;
+    private boolean showCreateEmailError = false;
     private boolean deleteSuccessMsg = false;
     private boolean selected;
     private boolean submitted;
@@ -477,5 +479,21 @@ public class UserRoleForm {
 
     public void setEditErromessage(String editErromessage) {
         this.editErromessage = editErromessage;
+    }
+
+    public String getErrorMessageForEmail() {
+        return errorMessageForEmail;
+    }
+
+    public void setErrorMessageForEmail(String errorMessageForEmail) {
+        this.errorMessageForEmail = errorMessageForEmail;
+    }
+
+    public boolean isShowCreateEmailError() {
+        return showCreateEmailError;
+    }
+
+    public void setShowCreateEmailError(boolean showCreateEmailError) {
+        this.showCreateEmailError = showCreateEmailError;
     }
 }
