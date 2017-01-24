@@ -306,7 +306,7 @@
                             </div>
                                 <div id="searchResultRowsDiv" name="searchResultRowsDiv" class="row">
                                 <div class="col-xs-12">
-                                    <table id="search-result-table" class="table table-striped">
+                                    <table th:with="barcodeRestricted=${session.isBarcodeRestricted}" id="search-result-table" class="table table-striped">
                                         <thead class="tablesorter-headerRow">
                                             <tr id="mainRow" class="parentRow">
                                                 <th width="7%" align="center" class="text-center" data-sorter="false">
@@ -330,7 +330,7 @@
                                                 <th data-sorter="false" style="text-align: left;" th:title="'Customer Code'">CC</th>
                                                 <th data-sorter="false" style="text-align: left;" th:title="'Collection Group Designation'">CGD</th>
                                                 <th data-sorter="false" style="text-align: left;" th:title="'Use Restriction'">Use Restriction</th>
-                                                <th th:if="${!session.isBarcodeRestricted}" data-sorter="false" style="text-align: left;" th:title="'Barcode'">Barcode</th>
+                                                <th th:if="${!barcodeRestricted}" data-sorter="false" style="text-align: left;" th:title="'Barcode'">Barcode</th>
                                                 <th data-sorter="false" style="text-align: left;" th:title="'Summary Holdings'">SH</th>
                                             </tr>
                                         </thead>
@@ -390,7 +390,7 @@
                                                 <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].useRestriction}"/>
                                                 <span data-th-id="'searchResultsDataURS-'+ ${searchResultStat.index}" th:text="${searchResult.useRestriction == 'No Restrictions'} ? '' : ${searchResult.useRestriction}"></span>
                                             </td>
-                                            <td th:if="${!session.isBarcodeRestricted}" data-th-id="'searchResultsDataBar-'+ ${searchResultStat.index}">
+                                            <td th:if="${!barcodeRestricted}" data-th-id="'searchResultsDataBar-'+ ${searchResultStat.index}">
                                                 <input data-th-id="'showItemsInput-'+ ${searchResultStat.index}" name="showItemsInput" type="hidden" th:value="false"/>
                                                 <a class="btn" th:if="${searchResult.showItems}" data-toggle="collapse" th:attr="data-target='.row' + ${searchResultStat.index}" th:onclick="'javascript:showItems('+${searchResultStat.index}+')'">
                                                     <i data-th-id="'showItemsIcon-'+ ${searchResultStat.index}" name="showItemsIcon" class="fa fa-plus-circle" aria-hidden="true" style="font-size: 25px;"></i>
