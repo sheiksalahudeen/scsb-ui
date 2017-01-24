@@ -25,6 +25,9 @@ jQuery(document).ready(function ($) {
     $('#users-createview').hide();
 
     $('#backLink').click(function () {
+        $('#successMsg').hide();
+        $('#failureMsg').hide();
+        $('#emailIdfailureMsg').hide();
         $('#editusers-createview').hide();
         $('#request-result-table').hide();
         $('#userRolePaginationDivId').hide();
@@ -35,6 +38,9 @@ jQuery(document).ready(function ($) {
     });
 
     $('#editbackLink').click(function () {
+        $('#successMsg').hide();
+        $('#failureMsg').hide();
+        $('#emailIdfailureMsg').hide();
         $('#editusers-createview').hide();
         $('#request-result-table').hide();
         $('#userRolePaginationDivId').hide();
@@ -45,6 +51,9 @@ jQuery(document).ready(function ($) {
     });
 
     $('#deletebackLink').click(function () {
+        $('#successMsg').hide();
+        $('#failureMsg').hide();
+        $('#emailIdfailureMsg').hide();
         $('#editusers-createview').hide();
         $('#request-result-table').hide();
         $('#userRolePaginationDivId').hide();
