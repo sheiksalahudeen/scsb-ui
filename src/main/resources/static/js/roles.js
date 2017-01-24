@@ -220,6 +220,7 @@ function deleteRole(roleId,roleNames,roleDescription,permissionNames) {
             $("#recaprole .create-role-section").hide();
             $("#recaprole .roles-main-section").hide();
             $("#recaprole .edit-role-section").hide();
+            scrollTo(0,0);
         }
     });
     
