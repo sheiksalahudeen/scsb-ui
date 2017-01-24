@@ -184,7 +184,9 @@ public class RequestController {
         Iterable<CustomerCodeEntity> customerCodeEntities = customerCodeDetailsRepository.findAll();
         for (Iterator iterator = customerCodeEntities.iterator(); iterator.hasNext(); ) {
             CustomerCodeEntity customerCodeEntity = (CustomerCodeEntity) iterator.next();
-            deliveryLocations.add(customerCodeEntity.getDescription());
+            if (userDetailsForm.getLoginInstitutionId() == customerCodeEntity.getOwningInstitutionId() || userDetailsForm.isRecapUser() || userDetailsForm.isSuperAdmin()) {
+                deliveryLocations.add(customerCodeEntity.getDescription());
+            }
         }
 
         requestForm.setRequestingInstitutions(requestingInstitutions);
