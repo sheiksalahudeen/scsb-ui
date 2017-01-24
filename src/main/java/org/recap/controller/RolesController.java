@@ -332,6 +332,8 @@ public class RolesController {
                             }
                             rolesForm.setTotalPageCount(1);
                             rolesForm.setTotalRecordCount(String.valueOf(1));
+                            rolesForm.setPageSize(10);
+                            rolesSearchResult.setRoleId(roleEntity.getRoleId());
                             rolesSearchResult.setPermissionName(allPermissions.toString());
                             rolesSearchResult.setRolesName(roleEntity.getRoleName());
                             rolesSearchResult.setRolesDescription(roleEntity.getRoleDescription());

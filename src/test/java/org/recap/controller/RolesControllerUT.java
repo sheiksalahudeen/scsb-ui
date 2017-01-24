@@ -144,7 +144,7 @@ public class RolesControllerUT extends BaseTestCase {
         rolesForm.setRoleNameForDelete("Admin");
         rolesForm.setRoleDescriptionForDelete("test desc");
         rolesForm.setPermissionNamesForDelete("CreateUser");
-        ModelAndView modelAndView = rolesController.deleteRole(rolesForm.getRoleId(),rolesForm.getRoleName(),rolesForm.getRoleDescription(),rolesForm.getPermissionNames());
+        ModelAndView modelAndView = rolesController.deleteRole(rolesForm.getRoleId(),rolesForm.getRoleName(),rolesForm.getRoleDescription(),rolesForm.getPermissionNames(),10,1,2);
         assertNotNull(modelAndView);
         assertEquals("roles",modelAndView.getViewName());
     }
