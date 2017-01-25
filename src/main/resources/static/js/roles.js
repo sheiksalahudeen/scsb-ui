@@ -27,14 +27,6 @@ jQuery(document).ready(function ($) {
     $('#editRoleDescriptionErrorMessage').hide();
     $('#editPermissionNamesErrorMessage').hide();
 
-
-    $('#roleNameId , #roleDescriptionId').click(function(){
-       $('.alert').hide();
-    });
-
-    $('#permissionNameId').change(function(){
-        $('.alert').hide();
-    });
 });
 
 function loadCreateRole() {
@@ -289,3 +281,30 @@ function isBlankValue(value) {
     return false;
 }
 
+
+function toggleRoleNameValidation() {
+    var roleNameId = $('#roleNameId').val();
+    if (isBlankValue(roleNameId)) {
+        $('#roleNameErrorMessage').show();
+    } else {
+        $('#roleNameErrorMessage').hide();
+    }
+}
+
+function toggleRoleDescriptionValidation() {
+    var roleDescriptionId = $('#roleDescriptionId').val();
+    if (isBlankValue(roleDescriptionId)) {
+        $('#roleDescriptionErrorMessage').show();
+    } else {
+        $('#roleDescriptionErrorMessage').hide();
+    }
+}
+
+function togglePermissionValidation() {
+    var permissionNameId = $('#permissionNameId').val();
+    if (isBlankValue(permissionNameId)) {
+        $('#permissionNamesErrorMessage').show();
+    } else {
+        $('#permissionNamesErrorMessage').hide();
+    }
+}

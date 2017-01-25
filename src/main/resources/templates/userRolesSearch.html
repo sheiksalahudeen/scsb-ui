@@ -254,7 +254,7 @@
                                                     class="error-color">*</span></label>
                                         </div>
                                         <div class="col-sm- col-sm-6">
-                                            <input class="form-control themed-input" name="networkLoginId"
+                                            <input class="form-control themed-input" name="networkLoginId" th:onkeyup="'javascript:toggleUserNetworkLoginIdValidation()'"
                                                    id="networkLoginId" th:field="*{networkLoginId}" placeholder=""
                                                    type="text"/>
                                             <span id="networkLoginIdErrMsg" style="color: red;display: none">Please provide Network Login id </span>
@@ -267,14 +267,14 @@
                                         </div>
                                         <div class="col-sm- col-sm-6">
                                             <div class="select-holder">
-                                                <select class="form-control themed-input themed-select"
+                                                <select class="form-control themed-input themed-select" th:onchange="'javascript:toggleUserInstitutionValidation()'"
                                                         id="institutionId" name="institutionId"
                                                         th:field="${userRoleForm.institutionId}">
                                                     <option th:each="institutionValues : ${userRoleForm.institutions}"
                                                             th:value="${institutionValues[0]}"
                                                             th:text="${institutionValues[1]}"></option>
                                                 </select>
-                                                <span id="institutionIdErrMsg" style="color: red;">Please provide Network Login id </span>
+                                                <span id="institutionIdErrMsg" style="color: red;">Please select institution </span>
                                             </div>
                                         </div>
                                     </div>
@@ -285,7 +285,7 @@
                                         </div>
                                         <div class="col-sm- col-sm-6">
                                             <div class="select-holder">
-                                                <select class="form-control themed-input themed-select" id="roleId"
+                                                <select class="form-control themed-input themed-select" id="roleId" th:onchange="'javascript:toggleUserRolesValidation()'"
                                                         name="roleId" multiple="multiple"
                                                         th:field="${userRoleForm.selectedForCreate}">
                                                     <option th:each="roleValues : ${userRoleForm.roles}"
@@ -305,14 +305,14 @@
                                         <div class="col-sm- col-sm-6">
                                             <input class="form-control themed-input" name="userDescription"
                                                    id="userDescription" th:field="${userRoleForm.userDescription}"
-                                                   placeholder="" type="text"/>
+                                                   placeholder="" type="text" th:onkeyup="'javascript:toggleUserDescriptionValidation()'"/>
                                             <span id="userDescriptionErrMsg" style="color: red;display: none">Please provide User Description </span>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="col-md-3 text-right col-sm-4">
                                             <label for="emailId" class="margin-top-10">Email Id<span
-                                                    class="error-color">*</span></label>
+                                                    class="error-color"> </span></label>
                                         </div>
                                         <div class="col-sm- col-sm-6">
                                             <input class="form-control themed-input" name="emailId"
@@ -400,13 +400,13 @@
                                         <div class="col-sm- col-sm-6">
                                             <div class="select-holder">
                                                 <select class="form-control themed-input themed-select"
-                                                        id="editinstitutionId" name="editinstitutionId"
+                                                        id="editinstitutionId" name="editinstitutionId" th:onchange="'javascript:toggleEditInstitutionIdValidation()'"
                                                         th:field="${userRoleForm.editInstitutionId}">
                                                     <option th:each="institutionValues : ${userRoleForm.institutions}"
                                                             th:value="${institutionValues[0]}"
                                                             th:text="${institutionValues[1]}"></option>
                                                 </select>
-                                                <span id="editinstitutionIdErrMsg" style="color: red;display: none">Please provide Network Login id </span>
+                                                <span id="editinstitutionIdErrMsg" style="color: red;display: none">Please select Institution </span>
                                             </div>
                                         </div>
                                     </div>
@@ -417,7 +417,7 @@
                                         </div>
                                         <div class="col-sm- col-sm-6">
                                             <div class="select-holder">
-                                                <select class="form-control themed-input themed-select" id="editroleId"
+                                                <select class="form-control themed-input themed-select" id="editroleId" th:onchange="'javascript:toggleEditRoleValidation()'"
                                                         name="editroleId" multiple="multiple"
                                                         th:field="${userRoleForm.editSelectedForCreate}">
                                                     <option th:each="roleValues : ${userRoleForm.roles}"
@@ -435,7 +435,7 @@
                                                     class="error-color">*</span></label>
                                         </div>
                                         <div class="col-sm- col-sm-6">
-                                            <input class="form-control themed-input" name="edituserDescription"
+                                            <input class="form-control themed-input" name="edituserDescription" th:onkeyup="'javascript:toggleEditUserDescriptionValidation()'"
                                                    id="edituserDescription"
                                                    th:field="${userRoleForm.editUserDescription}" placeholder=""
                                                    type="text"/>
@@ -445,7 +445,7 @@
                                     <div class="form-group">
                                         <div class="col-md-3 text-right col-sm-4">
                                             <label for="editEmailId" class="margin-top-10">Email Id<span
-                                                    class="error-color">*</span></label>
+                                                    class="error-color"> </span></label>
                                         </div>
                                         <div class="col-sm- col-sm-6">
                                             <input class="form-control themed-input" name="editEmailId"

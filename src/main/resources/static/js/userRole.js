@@ -16,9 +16,13 @@ jQuery(document).ready(function ($) {
         $('#roleId').multiselect('deselectAll', false);
         $('#roleId').multiselect('refresh');
         $('#emailId').val('');
+        $('#networkLoginIdErrMsg').hide();
+        $('#institutionIdErrMsg').hide();
+        $('#roleIdErrMsg').hide();
+        $('#userDescriptionErrMsg').hide();
+        $('#successMsg').hide();
 
-    })
-
+    });
 
     $('#editusers-createview').hide();
     $('#deleteUsers-view').hide();
@@ -82,6 +86,12 @@ jQuery(document).ready(function ($) {
     });
     /***Users Tab Form Show/Hide ***/
     $("#recapusers .userscreaterequestlink a").click(function (e) {
+        $('#networkLoginId').val('');
+        $('#institutionId').val('');
+        $('#userDescription').val('');
+        $('#roleId').multiselect('deselectAll', false);
+        $('#roleId').multiselect('refresh');
+        $('#emailId').val('');
         $("#users-searchview").hide();
         $("#users-createview").show();
         $('#networkLoginIdErrMsg').hide();
@@ -275,13 +285,12 @@ function editUser(userId, networkLoginId) {
 }
 
 function editclear() {
+    $('#editsuccessMsg').hide();
     editUser(userId, networkLoginId);
 }
 
 
 function editUserDetails() {
-    var emailAddress = validateEditEmailAddress();
-    if(emailAddress==true) {
         var userId = $('#editUserId').val();
         var networkLoginId = $('#editnetworkLoginId').val();
         var institutionId = $('#editinstitutionId').val();
@@ -313,8 +322,6 @@ function editUserDetails() {
                 $('#editroleId').multiselect();
             }
         });
-    }
-
 }
 
 
@@ -356,7 +363,7 @@ function submitForm() {
     var formValidation = validateForm();
     var emailAddress = validateEmailAddress();
     console.log(formValidation);
-    if (formValidation && emailAddress) {
+    if (formValidation) {
         var $form = $('#userRole-form');
         var url = "/userRoles/createUser";
         var request = $.ajax({
@@ -396,7 +403,7 @@ function validateForm() {
     var institutionId = $('#institutionId').val();
     var roleId = $('#roleId').val();
     var userDescription = $('#userDescription').val();
-    var emailId=$('#emailId').val();
+
     if (isBlankValue(newNetworkLoginId)) {
         $('#networkLoginIdErrMsg').show();
         isValid = false;
@@ -421,12 +428,6 @@ function validateForm() {
     } else {
         $('#userDescriptionErrMsg').hide();
     }
-    if (isBlankValue(emailId)) {
-        $('#emailIdErrMsg').show();
-        isValid = false;
-    } else {
-        $('#emailIdErrMsg').hide();
-    }
     return isValid;
 }
 
@@ -443,8 +444,8 @@ function validateEmailAddress() {
     var blankEmailAddress = $('#emailId').val();
     var isValid = true;
     if (blankEmailAddress==null || blankEmailAddress=='') {
-        $('#emailIdErrMsg').show();
-        isValid=false;
+        $('#emailIdErrMsg').hide();
+        isValid=true;
     } else if(isValidEmailAddress==true){
         $('#emailIdErrMsg').hide();
         isValid=true;
@@ -462,8 +463,8 @@ function validateEditEmailAddress() {
     var blankEmailAddress = $('#editEmailId').val();
     var isValid = true;
     if (blankEmailAddress==null || blankEmailAddress=='') {
-        $('#editEmailIdErrMsg').show();
-        isValid=false;
+        $('#editEmailIdErrMsg').hide();
+        isValid=true;
     } else if(isValidEmailAddress==true){
         $('#editEmailIdErrMsg').hide();
         isValid=true;
@@ -473,4 +474,67 @@ function validateEditEmailAddress() {
         isValid=false;
     }
     return isValid;
+}
+
+function toggleUserNetworkLoginIdValidation() {
+    var networkLoginId = $('#networkLoginId').val();
+    if (isBlankValue(networkLoginId)) {
+        $('#networkLoginIdErrMsg').show();
+    } else {
+        $('#networkLoginIdErrMsg').hide();
+    }
+}
+
+function toggleUserDescriptionValidation() {
+    var userDescription = $('#userDescription').val();
+    if (isBlankValue(userDescription)) {
+        $('#userDescriptionErrMsg').show();
+    } else {
+        $('#userDescriptionErrMsg').hide();
+    }
+}
+
+function toggleUserInstitutionValidation() {
+    var institutionId = $('#institutionId').val();
+    if (isBlankValue(institutionId)) {
+        $('#institutionIdErrMsg').show();
+    } else {
+        $('#institutionIdErrMsg').hide();
+    }
+}
+
+function toggleUserRolesValidation() {
+    var roleId = $('#roleId').val();
+    if (isBlankValue(roleId)) {
+        $('#roleIdErrMsg').show();
+    } else {
+        $('#roleIdErrMsg').hide();
+    }
+}
+
+function toggleEditInstitutionIdValidation() {
+    var editinstitutionId = $('#editinstitutionId').val();
+    if (isBlankValue(editinstitutionId)) {
+        $('#editinstitutionIdErrMsg').show();
+    } else {
+        $('#editinstitutionIdErrMsg').hide();
+    }
+}
+
+function toggleEditRoleValidation() {
+    var editroleId = $('#editroleId').val();
+    if (isBlankValue(editroleId)) {
+        $('#editroleIdErrMsg').show();
+    } else {
+        $('#editroleIdErrMsg').hide();
+    }
+}
+
+function toggleEditUserDescriptionValidation() {
+    var edituserDescription = $('#edituserDescription').val();
+    if (isBlankValue(edituserDescription)) {
+        $('#edituserDescriptionErrMsg').show();
+    } else {
+        $('#edituserDescriptionErrMsg').hide();
+    }
 }

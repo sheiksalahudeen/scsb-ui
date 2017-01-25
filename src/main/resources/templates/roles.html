@@ -219,7 +219,7 @@
                                                         <div class="col-sm-3 col-sm-4 text-right margin-top-15"><label for="roleNameId" class="fontcolor-dark">Role Name <span class="error-color">*</span></label></div>
                                                         <div class="col-sm- col-sm-6">
                                                     <input type="text"
-                                                              id="roleNameId"
+                                                              id="roleNameId" th:onkeyup="'javascript:toggleRoleNameValidation()'"
                                                               name="roleName"
                                                               class="form-control themed-input"
                                                               th:field="*{newRoleName}">
@@ -235,7 +235,7 @@
                                                         <div class="col-sm-3 col-sm-4 text-right margin-top-15"><label for="roleDescriptionId" class="fontcolor-dark">Role Description <span class="error-color">*</span></label></div>
                                                         <div class="col-sm- col-sm-6">
                                                     <input type="text"
-                                                              id="roleDescriptionId"
+                                                              id="roleDescriptionId" th:onkeyup="'javascript:toggleRoleDescriptionValidation()'"
                                                               name="roleName"
                                                               class="form-control themed-input"
                                                               th:field="*{newRoleDescription}">
@@ -251,7 +251,7 @@
                                                     <div class="col-md-4 col-sm-6 text-right margin-top-05"><label for="permissionNameId" class="fontcolor-dark">Permission Names <span class="error-color">*</span></label></div>
                                                     <div class="col-md-8 col-sm-6">
                                                         <div class="select-holder" data-th-if="*{selectedPermissionNames ne null}">
-                                                            <select id="permissionNameId"
+                                                            <select id="permissionNameId" th:onchange="'javascript:togglePermissionValidation()'"
                                                                     multiple="multiple"
                                                                     class="form-control themed-input themed-select multiSelectPermissionName"
                                                                     name="newPermissionNames">
