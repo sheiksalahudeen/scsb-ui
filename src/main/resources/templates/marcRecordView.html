@@ -25,9 +25,10 @@
                         <div id="marcRecordFormDivId" name="marcRecordFormDivName" th:fragment="marcRecord-form"
                              xmlns:th="http://www.thymeleaf.org"
                              th:remove="tag">
-                            <form id="marcRecord-form" name="marcRecord-form" class="form-horizontal" action="#"
+                            <form id="marcRecord-form" name="marcRecord-form" class="form-horizontal"
                                   th:action="@{/openMarcRecord}"
                                   th:object="${bibliographicMarcForm}" method="post">
+                                <input type="hidden"  th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>
                                 <fieldset>
                                     <div class="row">
                                         <div class="col-sm-12">

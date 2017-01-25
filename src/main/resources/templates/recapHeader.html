@@ -42,7 +42,12 @@
                                 <div class="row margin-top-15 text-right" style="margin-bottom: 15px;">
                                     <div class="col-xs-12">
                                         <div class="pull-right  margin-left-30">
-                                            <a href="/logout" class="logout-login logout"><span></span>Logout</a>
+                                            <form action="#" th:action="@{/logout}" method="post">
+                                                <input type="hidden"
+                                                       th:name="${_csrf.parameterName}"
+                                                       th:value="${_csrf.token}" />
+                                                <input type="submit" value="Logout" class="logout-login logout" />
+                                            </form>
                                         </div>
                                         <div class="pull-right">
                                             <a href="#" class="settings"><span></span>Settings</a>

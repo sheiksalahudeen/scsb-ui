@@ -46,6 +46,27 @@ dependencies {
 	compile('io.springfox:springfox-swagger2:2.5.0')
 	compile('org.codehaus.jackson:jackson-mapper-asl:1.9.13')
 	compile('org.apache.shiro:shiro-core:1.4.0-RC2')
+
+	compile('org.apache.shiro:shiro-spring:1.4.0-RC2')
+	compile('org.apache.shiro:shiro-web:1.4.0-RC2')
+
+	compile('org.springframework.boot:spring-boot-starter-security:1.2.1.RELEASE')
+			{exclude module: 'spring-security-config'; exclude module:'spring-security-web'}
+
+	compile('org.springframework.security:spring-security-config:3.2.5.RELEASE')
+	compile('org.springframework.security:spring-security-web:3.2.5.RELEASE')
+
+
+	compile('org.springframework.boot:spring-boot-starter-actuator')
+	compile('org.springframework.security:spring-security-cas:3.2.5.RELEASE')
+			{exclude module: 'spring-security-core'; exclude module:'cas-client-core'}
+
+	compile('org.springframework.security:spring-security-core:3.2.5.RELEASE')
+
+	compile('org.jasig.cas.client:cas-client-core:3.3.3')
+
+	compile('org.thymeleaf.extras:thymeleaf-extras-springsecurity4:2.1.2.RELEASE')
+
 	runtime('mysql:mysql-connector-java')
 
 	testCompile('org.springframework.boot:spring-boot-starter-test')

@@ -3,9 +3,10 @@
     <link rel="stylesheet" th:href="@{../css/request.css}"/>
     <script type="text/javascript" th:src="@{../js/request.js}"></script>
     <div id="requestFormDivId" name="requestFormDivName" th:fragment="request-form" xmlns:th="http://www.thymeleaf.org" th:remove="tag">
-        <form id="request-form" name="request-form" class="form-horizontal" action="#"
+        <form id="request-form" name="request-form" class="form-horizontal"
               th:action="@{/request}"
               th:object="${requestForm}" method="post">
+            <input type="hidden"  th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>
             <fieldset>
                 <input id="pageNumber" name="pageNumber" type="text" th:field="*{pageNumber}" hidden="hidden"/>
                 <input id="totalPageCount" name="totalPageCount" type="text" th:field="*{totalPageCount}" hidden="hidden"/>
