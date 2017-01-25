@@ -9,6 +9,8 @@ import org.recap.util.UserAuthUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -45,6 +47,44 @@ public class LoginController {
         return "login";
     }
 
+    @RequestMapping(value = "/login-scsb", method = RequestMethod.GET)
+    public String loginNypl(@Valid @ModelAttribute UserForm userForm, HttpServletRequest request, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String user = auth.getName();
+        String credentials = String.valueOf(auth.getCredentials());
+        logger.info("passing in /");
+        model.addAttribute("user", user);
+        final String loginScreen="login";
+        boolean authenticated=false;
+        Map<String,Object> resultmap=null;
+        userForm.setUsername(user);
+        userForm.setPassword(credentials);
+        try
+        {
+            UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+userForm.getInstitution(),userForm.getPassword(),true);
+            resultmap=(Map<String,Object>)userAuthUtil.doAuthentication(token);
+
+            if(!(Boolean) resultmap.get("isAuthenticated"))
+            {
+                throw new Exception("Subject Authtentication Failed");
+            }
+            HttpSession session=request.getSession(true);
+            session.setMaxInactiveInterval(1800);
+            session.setAttribute("token",token);
+            session.setAttribute(UserManagement.USER_AUTH,resultmap);
+            setValuesInSession(session,resultmap);
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            logger.error("Exception occured in authentication : "+e.getLocalizedMessage());
+            return loginScreen;
+        }
+
+
+        return "redirect:/search";
+    }
 
     @RequestMapping(value="/",method= RequestMethod.POST)
     public String createSession(@Valid @ModelAttribute UserForm userForm, HttpServletRequest request, Model model, BindingResult error){
