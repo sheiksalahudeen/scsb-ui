@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,15 +93,9 @@ public class UserRoleServiceImpl implements UserRoleService {
         Integer institutionId = institutionEntity.getInstitutionId();
         UsersEntity byLoginIdAndInstitutionEntity = userDetailsRepository.findByLoginIdAndInstitutionId(networkLoginId, institutionId);
         if (byLoginIdAndInstitutionEntity == null) {
-            try {
                 saveUsersEntity = userDetailsRepository.saveAndFlush(usersEntity);
                 userRoleForm.setMessage(networkLoginId + RecapConstants.USER_ADDED_SUCCESSFULLY);
-            }
-            catch (Exception e){
-                userRoleForm.setShowCreateEmailError(true);
-                userRoleForm.setErrorMessageForEmail(RecapConstants.EMAILID_SHOULD_NOT_DUPLICATE);
-            }
-        } else {
+            } else {
             userRoleForm.setShowCreateError(true);
             userRoleForm.setErrorMessage(RecapConstants.USER_ALREADY_EXISTS);
         }
@@ -132,13 +125,7 @@ public class UserRoleServiceImpl implements UserRoleService {
             if (roleEntityList != null) {
                 usersEntity.setUserRole(roleEntityList);
             }
-            try {
-
             savedUsersEntity = userDetailsRepository.save(usersEntity);
-            }
-            catch (Exception e){
-                return savedUsersEntity;
-            }
         }
         return savedUsersEntity;
     }

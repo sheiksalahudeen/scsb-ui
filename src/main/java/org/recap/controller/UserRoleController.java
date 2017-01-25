@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -82,7 +81,7 @@ public class UserRoleController {
     //Search
     @ResponseBody
     @RequestMapping(value = "/userRoles/searchUsers", method = RequestMethod.POST)
-    public ModelAndView searchUserRole(@Valid @ModelAttribute("userRoleForm") UserRoleForm userRoleForm,Model model, HttpServletRequest request) {
+    public ModelAndView searchUserRole(@Valid @ModelAttribute("userRoleForm") UserRoleForm userRoleForm, Model model, HttpServletRequest request) {
         logger.info("Users - Search button Clicked");
         HttpSession session = request.getSession();
         boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
@@ -148,7 +147,7 @@ public class UserRoleController {
     //DeleteUser On Confirm
     @ResponseBody
     @RequestMapping(value = "/userRoles/delete", method = RequestMethod.POST)
-    public ModelAndView deleteUser(@Valid @ModelAttribute("userRoleForm") UserRoleForm userRoleForm,Model model,Integer userId,String networkLoginId,Integer pageNumber,Integer totalPageCount,Integer pageSize, HttpServletRequest request) {
+    public ModelAndView deleteUser(@Valid @ModelAttribute("userRoleForm") UserRoleForm userRoleForm, Model model, Integer userId, String networkLoginId, Integer pageNumber, Integer totalPageCount, Integer pageSize, HttpServletRequest request) {
         HttpSession session = request.getSession();
         boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
         if (authenticated) {
@@ -222,7 +221,7 @@ public class UserRoleController {
 
     @ResponseBody
     @RequestMapping(value = "/userRoles/last", method = RequestMethod.POST)
-    public ModelAndView searchLastPage(@ModelAttribute("userForm") UserRoleForm userRoleForm,Model model, HttpServletRequest request) {
+    public ModelAndView searchLastPage(@ModelAttribute("userForm") UserRoleForm userRoleForm, Model model, HttpServletRequest request) {
         logger.info("Users - Search Last Page button Clicked");
         HttpSession session = request.getSession();
         boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
@@ -255,15 +254,11 @@ public class UserRoleController {
             userRoleForm.setUserDescription(userRoleForm.getUserDescription());
             userRoleForm.setInstitutionId(userRoleForm.getInstitutionId());
             userRoleForm.setShowSelectedForCreate(userRoleForm.getSelectedForCreate());
-        } else {
-            userRoleForm.setMessage(RecapConstants.USER_ALREADY_EXISTS);
-            userRoleForm.setErrorMessage(RecapConstants.EMAILID_SHOULD_NOT_DUPLICATE);
         }
-
         return new ModelAndView("userRolesSearch", "userRoleForm", userRoleForm);
-    } else {
+        } else {
         return new ModelAndView("login");
-    }
+        }
     }
 
     //Edit User
