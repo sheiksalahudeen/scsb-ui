@@ -64,7 +64,6 @@ function searchRequests(action) {
 function clearRequests() {
     $("#patronBarcode").val('');
     $("#itemBarcode").val('');
-    $("#deliveryLocation").val('');
     $(".search-results-container").css('display', 'none');
 }
 

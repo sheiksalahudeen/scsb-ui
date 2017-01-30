@@ -54,6 +54,8 @@ public class SearchResultRow {
     private String deliveryLocation;
     private String requestType;
     private String requestNotes;
+    private String requestCreatedBy;
+    private String patronEmailId;
 
     public Integer getBibId() {
         return bibId;
@@ -237,5 +239,21 @@ public class SearchResultRow {
 
     public void setRequestNotes(String requestNotes) {
         this.requestNotes = requestNotes;
+    }
+
+    public String getRequestCreatedBy() {
+        return requestCreatedBy;
+    }
+
+    public void setRequestCreatedBy(String requestCreatedBy) {
+        this.requestCreatedBy = requestCreatedBy;
+    }
+
+    public String getPatronEmailId() {
+        return patronEmailId;
+    }
+
+    public void setPatronEmailId(String patronEmailId) {
+        this.patronEmailId = patronEmailId;
     }
 }
