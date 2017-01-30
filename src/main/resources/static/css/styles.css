@@ -165,7 +165,7 @@ footer{background:#5B5C5D;width:100%;color:#fff;}
 .out-recap{background-color:#BE1F2E;}
 .recap-status{display:inline-block;font-size:13px;}
 .status,.search-results-container span.status1{border-radius:50%;width:15px;height:15px;display:inline-block;vertical-align:middle;}
-.search-results-container span.status1{width:15px;height:15px;}
+.search-results-container span.status1{width:20px;height:25px;}
 .search-results-container .table-header-checkbox span,
 .search-results-container .table-body-checkbox.checkbox span{float:none;height:1em;width:1em}
 .search-results-container .table-header-checkbox.checkbox .cr .cr-icon,

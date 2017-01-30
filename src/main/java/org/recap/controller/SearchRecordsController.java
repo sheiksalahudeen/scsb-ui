@@ -241,6 +241,7 @@ public class SearchRecordsController {
         searchRecordsRequest.setTotalBibRecordsCount(searchRecordsResponse.getTotalBibRecordsCount());
         searchRecordsRequest.setTotalItemRecordsCount(searchRecordsResponse.getTotalItemRecordsCount());
         searchRecordsRequest.setTotalPageCount(searchRecordsResponse.getTotalPageCount());
+        searchRecordsRequest.setShowTotalCount(searchRecordsResponse.isShowTotalCount());
         searchRecordsRequest.setErrorMessage(searchRecordsResponse.getErrorMessage());
 
         if(CollectionUtils.isEmpty(searchRecordsRequest.getSearchResultRows())) {

@@ -16,6 +16,19 @@ jQuery(document).ready(function ($) {
     });
 });
 
+$(function() {
+    $("#searchRequestsSection input").keypress(function (e) {
+        if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+            $("#searchRequestsButton").click();
+            $("#request .request-main-section").show();
+            $("#request .create-request-section").hide();
+            return false;
+        } else {
+            return true;
+        }
+    });
+});
+
 function loadCreateRequest() {
     var $form = $('#request-form');
     var url = $form.attr('action') + "?action=loadCreateRequest";
@@ -46,6 +59,13 @@ function searchRequests(action) {
             $("#request .create-request-section").hide();
         }
     });
+}
+
+function clearRequests() {
+    $("#patronBarcode").val('');
+    $("#itemBarcode").val('');
+    $("#deliveryLocation").val('');
+    $(".search-results-container").css('display', 'none');
 }
 
 function requestsFirstPage() {
@@ -343,4 +363,6 @@ function createRequestSamePatron() {
     $('#patronBarcodeId').val($('#patronBarcodeInRequestHdn').html());
     $('#patronEmailId').val($('#patronEmailIdHdn').html());
     $('#requestingInstitutionId').val($('#requestingInstitutionHdn').html());
+    $('.EDDdetails-section').hide();
+    $('#deliverylocation_request').show();
 }

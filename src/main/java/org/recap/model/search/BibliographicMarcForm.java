@@ -94,9 +94,6 @@ public class BibliographicMarcForm {
     }
 
     public String getOwningInstitution() {
-        if (StringUtils.isNotBlank(this.owningInstitution)) {
-            this.owningInstitution = this.owningInstitution.replaceAll(",", "");
-        }
         return owningInstitution;
     }
 
