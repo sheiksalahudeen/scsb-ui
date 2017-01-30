@@ -343,6 +343,8 @@ public class RequestController {
                 searchResultRow.setOwningInstitution(requestItemEntity.getItemEntity().getInstitutionEntity().getInstitutionCode());
                 searchResultRow.setDeliveryLocation(requestItemEntity.getStopCode());
                 searchResultRow.setRequestType(requestItemEntity.getRequestTypeEntity().getRequestTypeCode());
+                searchResultRow.setRequestCreatedBy(requestItemEntity.getCreatedBy());
+                searchResultRow.setPatronEmailId(requestItemEntity.getEmailId());
                 if (CollectionUtils.isNotEmpty(requestItemEntity.getNotesEntities())) {
                     searchResultRow.setRequestNotes(requestItemEntity.getNotesEntities().get(0).getNotes());
                 }

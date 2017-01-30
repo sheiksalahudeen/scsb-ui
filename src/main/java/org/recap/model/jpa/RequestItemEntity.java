@@ -34,6 +34,9 @@ public class RequestItemEntity implements Serializable {
     @Column(name = "REQ_EXP_DATE")
     private Date requestExpirationDate;
 
+    @Column(name = "CREATED_BY")
+    private String createdBy;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATED_DATE")
     private Date createdDate;
@@ -44,6 +47,9 @@ public class RequestItemEntity implements Serializable {
 
     @Column(name = "STOP_CODE")
     private String stopCode;
+
+    @Column(name = "EMAIL_ID")
+    private String emailId;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "REQUESTING_INST_ID", insertable = false, updatable = false)
@@ -112,6 +118,14 @@ public class RequestItemEntity implements Serializable {
         this.requestExpirationDate = requestExpirationDate;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
     public Date getCreatedDate() {
         return createdDate;
     }
@@ -134,6 +148,14 @@ public class RequestItemEntity implements Serializable {
 
     public void setStopCode(String stopCode) {
         this.stopCode = stopCode;
+    }
+
+    public String getEmailId() {
+        return emailId;
+    }
+
+    public void setEmailId(String emailId) {
+        this.emailId = emailId;
     }
 
     public InstitutionEntity getInstitutionEntity() {
