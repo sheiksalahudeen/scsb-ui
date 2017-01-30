@@ -3,6 +3,7 @@ package org.recap.security;
 import org.recap.filter.CsrfCookieGeneratorFilter;
 import org.recap.filter.ReCAPInstitutionFilter;
 import org.recap.service.CustomUserDetailsService;
+import org.recap.util.UserAuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
@@ -43,6 +44,9 @@ public class MultiCASAndOAuthSecurityConfiguration extends WebSecurityConfigurer
     @Autowired
     private CASPropertyProvider casPropertyProvider;
 
+    @Autowired
+    private UserAuthUtil userAuthUtil;
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -73,7 +77,7 @@ public class MultiCASAndOAuthSecurityConfiguration extends WebSecurityConfigurer
     public LogoutFilter requestCasGlobalLogoutFilter() {
         String logoutSuccessUrl = casServiceLogout + "?service=" + appServiceLogout;
 
-        ReCAPSimpleUrlLogoutSuccessHandler reCAPSimpleUrlLogoutSuccessHandler = new ReCAPSimpleUrlLogoutSuccessHandler();
+        ReCAPSimpleUrlLogoutSuccessHandler reCAPSimpleUrlLogoutSuccessHandler = new ReCAPSimpleUrlLogoutSuccessHandler(userAuthUtil);
         reCAPSimpleUrlLogoutSuccessHandler.setDefaultTargetUrl(logoutSuccessUrl);
 
         LogoutFilter logoutFilter = new LogoutFilter(reCAPSimpleUrlLogoutSuccessHandler, new SecurityContextLogoutHandler());
