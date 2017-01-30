@@ -374,6 +374,12 @@ public class RecapConstants {
 
     public static final String USER_ROLE_PRIVILEGE="isUserRoleAllowed";
 
+    public static final String ADMIN = "ROLE_ADMIN";
+
+    public static final String USER = "ROLE_USER";
+
+    public static final String ANONYMOUS = "ROLE_ANONYMOUS";
+
     public static HttpHeaders getHttpHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -404,4 +410,11 @@ public class RecapConstants {
     public static final String USER_DELETED_SUCCESS_MESSAGE = "Deleted successfully";
     public static final String USER_ADDED_SUCCESSFULLY = " Added Successfully";
     public static final String EMAILID_SHOULD_NOT_DUPLICATE = "Email Id should not be duplicated";
+
+    public static final String RECAP_INSTITUTION_ID = "RECAP_INSTITUTION_ID";
+    public static final String CAS = "cas.";
+    public static final String SERVICE_LOGIN = ".service.login";
+    public static final String SERVICE_LOGOUT = ".service.logout";
+    public static final String URL_PREFIX = ".url.prefix";
+    public static final String REDIRECT_URI = "logout.redirect.uri";
 }

@@ -44,7 +44,7 @@
                 <div class="col-sm-6 col-md-7 col-lg-6">
                     <!-- Login Section-->
                     <div class="login-wrapper">
-                        <form class="form-horizontal" id="home_login" method="post" action=""
+                        <form class="form-horizontal"  method="get" th:action="@{/login}" action="#" id="home_login"
                               th:object="${userForm}">
                             <h2 class="heading">Login</h2>
                             <div class="form-group">
@@ -54,20 +54,6 @@
                                     <p id="wrongCredentialsError" th:if="${#fields.hasErrors('wrongCredentials')}"
                                        class="label label-danger" th:errors="*{wrongCredentials}"><span
                                             id="errorMessageSpanId" th:text="${e.message}"></span></p>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-3 text-right">
-                                    <label for="networkloginid" class="margin-top-10">Network Login id</label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input type="text" class="form-control themed-input" id="networkloginid"
-                                           th:field="*{username}"
-                                           th:onkeyup="'javascript:toggleUsernameValidation()'"/>
-                                    <p id="userNameError" th:if="${#fields.hasErrors('username')}"
-                                       class="label label-danger" th:errors="*{username}"><span
-                                            id="errorMessageSpanId" th:text="${e.message}"></span></p>
-                                    <span id="networkloginidError" style="color: red; display : none;">Network Login id is required.</span>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -89,20 +75,6 @@
                                        class="label label-danger" th:errors="*{institution}"><span
                                             id="errorMessageSpanId" th:text="${e.message}"></span></p>
                                     <span id="institutionErrorId" style="color: red; display : none ;">Institution is required.</span>
-                                </div>
-                            </div>
-                            <div class="form-group" id="homelogin_password">
-                                <div class="col-md-3 text-right">
-                                    <label for="loginpassword" class="margin-top-10">Password</label>
-                                </div>
-                                <div class="col-md-9">
-                                    <input type="password" class="form-control themed-input" id="loginpassword"
-                                           th:field="*{password}"
-                                           th:onkeyup="'javascript:togglePasswordValidation()'"/>
-                                    <p id="passwordError" th:if="${#fields.hasErrors('password')}"
-                                       class="label label-danger" th:errors="*{password}"><span
-                                            id="errorMessageSpanId" th:text="${e.message}"></span></p>
-                                    <span id="loginpasswordError" style="color: red; display : none;">Password is required.</span>
                                 </div>
                             </div>
                             <div class="row">
