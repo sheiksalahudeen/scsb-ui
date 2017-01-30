@@ -4,6 +4,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
 import org.recap.model.jpa.PermissionEntity;
 import org.recap.model.jpa.RoleEntity;
+import org.recap.model.jpa.UsersEntity;
 import org.recap.model.search.RolesForm;
 import org.recap.model.search.RolesSearchResult;
 import org.recap.repository.jpa.PermissionsDetailsRepository;
@@ -123,14 +124,18 @@ public class RolesController {
     public ModelAndView saveEditedRole(@ModelAttribute("roleId") Integer roleId,
                                        @ModelAttribute("roleName") String roleName,
                                        @ModelAttribute("roleDescription") String roleDescription,
-                                       Model model,HttpServletRequest request) {
+                                      HttpServletRequest request) {
         RolesForm rolesForm = new RolesForm();
         rolesForm.setRoleId(roleId);
         rolesForm.setEditRoleName(roleName);
         rolesForm.setEditRoleDescription(roleDescription);
         String[] editPermissionNames = request.getParameterValues("permissionNames[]");
         rolesForm.setEditPermissionName(Arrays.asList(editPermissionNames));
-        RoleEntity roleEntity = saveEditedRoleToDB(rolesForm);
+        RoleEntity roleEntityByRoleId = rolesDetailsRepositorty.findByRoleId(roleId);
+        roleEntityByRoleId.setRoleId(roleId);
+        roleEntityByRoleId.setRoleName(roleName);
+        roleEntityByRoleId.setRoleDescription(roleDescription);
+        RoleEntity roleEntity = saveRoleEntity(roleEntityByRoleId, Arrays.asList(editPermissionNames));
             if(null != roleEntity){
                 rolesForm.setMessage(rolesForm.getEditRoleName()+RecapConstants.ROLES_EDIT_SAVE_SUCCESS_MESSAGE);
             }
@@ -487,16 +492,6 @@ public class RolesController {
             logger.error(e.getMessage());
         }
         return roleEntity;
-    }
-
-    public RoleEntity saveEditedRoleToDB(RolesForm rolesForm){
-        RoleEntity roleEntity = new RoleEntity();
-        roleEntity.setRoleId(rolesForm.getRoleId());
-        roleEntity.setRoleName(rolesForm.getEditRoleName().trim());
-        roleEntity.setRoleDescription(rolesForm.getEditRoleDescription());
-        List<String> permissionNameList = rolesForm.getEditPermissionName();
-        RoleEntity savedRoleEntity = saveRoleEntity(roleEntity, permissionNameList);
-        return savedRoleEntity;
     }
 
     private List<String> splitStringAndGetList(String inputString) {
