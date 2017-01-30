@@ -34,6 +34,8 @@ import java.io.IOException;
  */
 public class ReCAPExceptionTranslationFilter extends GenericFilterBean {
 
+    private CASPropertyProvider casPropertyProvider;
+
     // ~ Instance fields
     // ================================================================================================
 
@@ -44,8 +46,9 @@ public class ReCAPExceptionTranslationFilter extends GenericFilterBean {
 
     private RequestCache requestCache = new HttpSessionRequestCache();
 
-    public ReCAPExceptionTranslationFilter(AuthenticationEntryPoint authenticationEntryPoint) {
+    public ReCAPExceptionTranslationFilter(CASPropertyProvider casPropertyProvider, AuthenticationEntryPoint authenticationEntryPoint) {
         this(authenticationEntryPoint, new HttpSessionRequestCache());
+        this.casPropertyProvider = casPropertyProvider;
     }
 
     public ReCAPExceptionTranslationFilter(AuthenticationEntryPoint authenticationEntryPoint,
@@ -162,9 +165,8 @@ public class ReCAPExceptionTranslationFilter extends GenericFilterBean {
         requestCache.saveRequest(request, response);
         logger.debug("Calling Authentication entry point.");
         String institution = HelperUtil.getAttributeValueFromRequest(request, RecapConstants.RECAP_INSTITUTION_ID);
-        CasAuthenticationEntryPoint originalEntryPoint = (CasAuthenticationEntryPoint) this.authenticationEntryPoint;
-        if(StringUtils.isBlank(institution)) {
-            originalEntryPoint.commence(request,response,reason);
+        if(StringUtils.equals(institution, "3")) {
+            this.authenticationEntryPoint.commence(request,response,reason);
         } else {
             String urlProperty = RecapConstants.CAS + institution + RecapConstants.SERVICE_LOGIN;
             String url = HelperUtil.getBean(PropertyValueProvider.class).getProperty(urlProperty);
@@ -172,7 +174,7 @@ public class ReCAPExceptionTranslationFilter extends GenericFilterBean {
             //Calling cas entry point based on institution type.
             CasAuthenticationEntryPoint casAuthenticationEntryPoint = new CasAuthenticationEntryPoint();
             casAuthenticationEntryPoint.setLoginUrl(url);
-            casAuthenticationEntryPoint.setServiceProperties(originalEntryPoint.getServiceProperties());
+            casAuthenticationEntryPoint.setServiceProperties(casPropertyProvider.getServiceProperties());
             casAuthenticationEntryPoint.commence(request, response, reason);
         }
 

@@ -49,7 +49,7 @@ public class LoginController {
 
 
 
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    @RequestMapping(value = "/login-scsb", method = RequestMethod.GET)
     public String login(@Valid @ModelAttribute UserForm userForm, HttpServletRequest request, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String user = auth.getName();
