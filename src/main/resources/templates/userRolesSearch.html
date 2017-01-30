@@ -10,9 +10,10 @@
     <script type="text/javascript" th:src="@{../js/userRole.js}"></script>
     <div id="userRolesFormDivId" name="userRolesFormDivName" th:fragment="userRole-form"
          xmlns:th="http://www.thymeleaf.org" th:remove="tag">
-        <form id="userRole-form" name="userRole-form" class="form-horizontal" action="#"
+        <form id="userRole-form" name="userRole-form" class="form-horizontal"
               th:action="@{/userRoles}"
               th:object="${userRoleForm}" method="post">
+            <input type="hidden"  th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>
             <fieldset>
                 <input type="text" id="editUserIdHidden" th:field="${userRoleForm.userId}" hidden="hidden"/>
                 <div role="tabpanel" class="tab-pane" id="recapusers">
