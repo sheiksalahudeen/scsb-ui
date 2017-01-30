@@ -73,7 +73,7 @@ public class UserRoleController {
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES);
             return "searchRecords";
         } else {
-            return "redirect:/";
+            return UserManagement.unAuthorizedUser(session,"Users",logger);
         }
 
     }

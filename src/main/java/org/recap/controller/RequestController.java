@@ -91,7 +91,7 @@ public class RequestController {
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
             return "searchRecords";
         }else{
-            return "redirect:/";
+            return UserManagement.unAuthorizedUser(session,"Request",logger);
         }
 
     }

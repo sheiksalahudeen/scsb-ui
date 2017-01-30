@@ -1,7 +1,9 @@
 package org.recap.security;
 
-import org.recap.model.jpa.UsersEntity;
-import org.recap.model.userManagement.UserForm;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.slf4j.Logger;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * Created by dharmendrag on 15/12/16.
@@ -56,6 +58,10 @@ public enum UserManagement {
     public static final String SUPER_ADMIN_USER="isSuperAdmin";
 
     public static final String ReCAP_USER="isRecapUser";
+
+
+    public static final String USER_AUTH_ERRORMSG="authErrorMsg";
+
 
     private String value;
 
@@ -118,27 +124,16 @@ public enum UserManagement {
         return values;
     }
 
-
-
-
-    public static UserForm toUserForm(UsersEntity userEntity, UserForm userForm)throws Exception
+    public static String unAuthorizedUser(HttpSession session, String moduleName, Logger logger)
     {
-        try
-        {
-            if(userForm==null)
-            {
-                userForm=new UserForm();
-            }
-            userForm.setUserId(userEntity.getUserId());
-            userForm.setUsername(userEntity.getLoginId());
-            userForm.setInstitution(userEntity.getInstitutionEntity().getInstitutionId());
-
-        }catch (Exception e)
-        {
-            throw new Exception(e);
+        final String loginScreen="redirect:/";
+        logger.debug(moduleName+" authorization Rejected for :"+(UsernamePasswordToken)session.getAttribute(USER_TOKEN));
+        if(session!=null){
+            session.invalidate();
         }
-        return userForm;
+        return loginScreen;
     }
+
 
 
 

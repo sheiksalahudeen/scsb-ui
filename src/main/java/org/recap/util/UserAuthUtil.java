@@ -31,16 +31,10 @@ public class UserAuthUtil {
 
 
     public Map<String,Object> doAuthentication(UsernamePasswordToken token) throws Exception{
-        try {
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<UsernamePasswordToken> requestEntity = new HttpEntity<>(token, RecapConstants.getHttpHeaders());
             Map<String, Object> resultMap = restTemplate.postForObject(serverProtocol + scsbShiro + RecapConstants.SCSB_SHIRO_AUTHENTICATE_URL, requestEntity, HashMap.class);
             return resultMap;
-        }catch(Exception e)
-        {
-            logger.error("Exception in Auth service call :"+e.getMessage());
-            throw new Exception(e);
-        }
     }
 
     public boolean authorizedUser(String serviceURL,UsernamePasswordToken token)
@@ -52,11 +46,10 @@ public class UserAuthUtil {
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<UsernamePasswordToken> requestEntity = new HttpEntity<>(token, RecapConstants.getHttpHeaders());
             statusResponse = restTemplate.postForObject(serverProtocol + scsbShiro + serviceURL, requestEntity, Boolean.class);
-            return  statusResponse;
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        return false;
+        return statusResponse;
     }
 
     public UserDetailsForm getUserDetails(HttpSession session,String recapPermission)

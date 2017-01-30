@@ -71,7 +71,7 @@ public class SearchRecordsController {
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.SEARCH);
             return "searchRecords";
         }else{
-            return "redirect:/";
+            return UserManagement.unAuthorizedUser(session,"Search",logger);
         }
 
     }

@@ -51,7 +51,7 @@ public class ReportsController {
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
             return "searchRecords";
         }else{
-            return "redirect:/";
+            return UserManagement.unAuthorizedUser(session,"Reports",logger);
         }
 
 

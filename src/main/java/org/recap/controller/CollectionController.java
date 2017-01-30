@@ -61,7 +61,7 @@ public class CollectionController {
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.COLLECTION);
             return "searchRecords";
         }else{
-            return "redirect:/";
+            return UserManagement.unAuthorizedUser(session,"Collection",logger);
         }
     }
 
