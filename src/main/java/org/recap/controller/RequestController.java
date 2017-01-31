@@ -102,9 +102,17 @@ public class RequestController {
     public ModelAndView searchRequests(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
                                        BindingResult result,
                                        Model model) throws Exception {
-        requestForm.resetPageNumber();
-        searchAndSetResults(requestForm);
-        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
+        try{
+            requestForm.resetPageNumber();
+            searchAndSetResults(requestForm);
+            model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
+
+        }
+        catch (Exception exception){
+            exception.printStackTrace();
+            logger.error(""+exception);
+            logger.debug(exception.getMessage());
+        }
         return new ModelAndView("request", "requestForm", requestForm);
     }
 
