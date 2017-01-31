@@ -1,6 +1,7 @@
 package org.recap.model.jpa;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -19,6 +20,20 @@ public class RoleEntity {
 
     @Column(name="role_description")
     private String roleDescription;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "CREATED_DATE")
+    private Date createdDate;
+
+    @Column(name = "CREATED_BY")
+    private String createdBy;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "LAST_UPDATED_DATE")
+    private Date lastUpdatedDate;
+
+    @Column(name = "LAST_UPDATED_BY")
+    private String lastUpdatedBy;
 
     @ElementCollection(targetClass = PermissionEntity.class)
     @JoinTable(name="role_permission_t",joinColumns = {
@@ -73,5 +88,37 @@ public class RoleEntity {
 
     public void setPermissions(Set<PermissionEntity> permissions) {
         this.permissions = permissions;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getLastUpdatedDate() {
+        return lastUpdatedDate;
+    }
+
+    public void setLastUpdatedDate(Date lastUpdatedDate) {
+        this.lastUpdatedDate = lastUpdatedDate;
+    }
+
+    public String getLastUpdatedBy() {
+        return lastUpdatedBy;
+    }
+
+    public void setLastUpdatedBy(String lastUpdatedBy) {
+        this.lastUpdatedBy = lastUpdatedBy;
     }
 }

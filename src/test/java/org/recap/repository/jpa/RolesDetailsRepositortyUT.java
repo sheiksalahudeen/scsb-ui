@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,6 +45,10 @@ public class RolesDetailsRepositortyUT extends BaseTestCase {
        RoleEntity roleEntity = new RoleEntity();
        roleEntity.setRoleName("roleut");
        roleEntity.setRoleDescription("role desc test");
+       roleEntity.setCreatedDate(new Date());
+       roleEntity.setCreatedBy("test");
+       roleEntity.setLastUpdatedDate(new Date());
+       roleEntity.setLastUpdatedBy("test");
 
        PermissionEntity permissionEntity = new PermissionEntity();
        permissionEntity.setPermissionName("CreateUser");
@@ -65,6 +70,10 @@ public class RolesDetailsRepositortyUT extends BaseTestCase {
         RoleEntity roleEntity = new RoleEntity();
         roleEntity.setRoleName("role ut");
         roleEntity.setRoleDescription("role desc test");
+        roleEntity.setCreatedDate(new Date());
+        roleEntity.setCreatedBy("test");
+        roleEntity.setLastUpdatedDate(new Date());
+        roleEntity.setLastUpdatedBy("test");
 
         PermissionEntity permissionEntity = new PermissionEntity();
         permissionEntity.setPermissionName("CreateUser");
@@ -102,6 +111,10 @@ public class RolesDetailsRepositortyUT extends BaseTestCase {
         RoleEntity roleEntity = new RoleEntity();
         roleEntity.setRoleName("role ut");
         roleEntity.setRoleDescription("role desc test");
+        roleEntity.setCreatedDate(new Date());
+        roleEntity.setCreatedBy("test");
+        roleEntity.setLastUpdatedDate(new Date());
+        roleEntity.setLastUpdatedBy("test");
 
         PermissionEntity permissionEntity = new PermissionEntity();
         permissionEntity.setPermissionName("CreateUser");
@@ -121,6 +134,10 @@ public class RolesDetailsRepositortyUT extends BaseTestCase {
         RoleEntity roleEntity = new RoleEntity();
         roleEntity.setRoleName("role ut");
         roleEntity.setRoleDescription("role desc test");
+        roleEntity.setCreatedDate(new Date());
+        roleEntity.setCreatedBy("test");
+        roleEntity.setLastUpdatedDate(new Date());
+        roleEntity.setLastUpdatedBy("test");
 
         PermissionEntity permissionEntity = new PermissionEntity();
         permissionEntity.setPermissionName("SuperAdmin");
@@ -144,6 +161,10 @@ public class RolesDetailsRepositortyUT extends BaseTestCase {
         RoleEntity roleEntity = new RoleEntity();
         roleEntity.setRoleName("role ut");
         roleEntity.setRoleDescription("role desc test");
+        roleEntity.setCreatedDate(new Date());
+        roleEntity.setCreatedBy("test");
+        roleEntity.setLastUpdatedDate(new Date());
+        roleEntity.setLastUpdatedBy("test");
 
         PermissionEntity permissionEntity = new PermissionEntity();
         permissionEntity.setPermissionName("SuperAdmin");
