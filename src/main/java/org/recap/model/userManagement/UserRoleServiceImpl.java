@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -83,6 +84,10 @@ public class UserRoleServiceImpl implements UserRoleService {
         UsersEntity saveUsersEntity = null;
         usersEntity.setLoginId(userRoleForm.getNetworkLoginId());
         usersEntity.setEmailId(userRoleForm.getEmailId());
+        usersEntity.setCreatedDate(new Date());
+        usersEntity.setCreatedBy(userRoleForm.getCreatedBy());
+        usersEntity.setLastUpdatedDate(new Date());
+        usersEntity.setLastUpdatedBy(userRoleForm.getCreatedBy());
         InstitutionEntity institutionEntity = institutionDetailsRepository.findByInstitutionId(userRoleForm.getInstitutionId());
         usersEntity.setInstitutionId(institutionEntity.getInstitutionId());
         usersEntity.setInstitutionEntity(institutionEntity);
@@ -103,7 +108,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public UsersEntity saveEditedUserToDB(Integer userId, String networkLoginId, String userDescription, Integer institutionId, List<Integer> roleIds, String userEmailId) {
+    public UsersEntity saveEditedUserToDB(Integer userId, String networkLoginId, String userDescription, Integer institutionId, List<Integer> roleIds, String userEmailId,UserRoleForm userRoleForm) {
         UsersEntity usersEntity = new UsersEntity();
         UsersEntity savedUsersEntity = null;
         UsersEntity checkUserId = userDetailsRepository.findByUserId(userId);
@@ -113,6 +118,10 @@ public class UserRoleServiceImpl implements UserRoleService {
             usersEntity.setUserDescription(userDescription);
             usersEntity.setInstitutionId(institutionId);
             usersEntity.setEmailId(userEmailId);
+            usersEntity.setCreatedDate(checkUserId.getCreatedDate());
+            usersEntity.setCreatedBy(checkUserId.getCreatedBy());
+            usersEntity.setLastUpdatedDate(new Date());
+            usersEntity.setLastUpdatedBy(userRoleForm.getLastUpdatedBy());
             InstitutionEntity institutionEntity = institutionDetailsRepository.findByInstitutionId(institutionId);
             if (institutionEntity != null) {
                 InstitutionEntity institutionEntity1 = new InstitutionEntity();

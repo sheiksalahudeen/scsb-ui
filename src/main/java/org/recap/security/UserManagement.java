@@ -62,6 +62,8 @@ public enum UserManagement {
 
     public static final String USER_AUTH_ERRORMSG="authErrorMsg";
 
+    public static final String USER_NAME="userName";
+
 
     private String value;
 

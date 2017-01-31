@@ -1,6 +1,7 @@
 package org.recap.model.userManagement;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -64,6 +65,9 @@ public class UserRoleForm {
     private List<Integer> showSelectedForCreate = new ArrayList<>();
     private List<Integer> selectedForCreate = new ArrayList<>();
     private List<Integer> editSelectedForCreate = new ArrayList<>();
+
+    private String createdBy;
+    private String lastUpdatedBy;
 
     public boolean isShowCreateError() {
         return showCreateError;
@@ -495,5 +499,21 @@ public class UserRoleForm {
 
     public void setShowCreateEmailError(boolean showCreateEmailError) {
         this.showCreateEmailError = showCreateEmailError;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getLastUpdatedBy() {
+        return lastUpdatedBy;
+    }
+
+    public void setLastUpdatedBy(String lastUpdatedBy) {
+        this.lastUpdatedBy = lastUpdatedBy;
     }
 }
