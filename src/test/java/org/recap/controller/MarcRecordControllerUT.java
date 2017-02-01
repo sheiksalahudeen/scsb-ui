@@ -4,23 +4,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.recap.BaseTestCase;
 import org.recap.model.jpa.BibliographicEntity;
-import org.recap.model.jpa.InstitutionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.http.MockHttpInputMessage;
-import org.springframework.test.web.servlet.MvcResult;
+
 import org.springframework.ui.Model;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.io.IOException;
 import java.util.Date;
 import java.util.Random;
 
 import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Created by hemalathas on 1/8/16.
@@ -141,11 +135,6 @@ public class MarcRecordControllerUT extends BaseControllerUT {
         bibliographicEntity.setLastUpdatedBy("tst");
         bibliographicEntity.setOwningInstitutionBibId(String.valueOf(random));
         bibliographicEntity.setOwningInstitutionId(3);
-        InstitutionEntity institutionEntity = new InstitutionEntity();
-        institutionEntity.setInstitutionId(1);
-        institutionEntity.setInstitutionCode("NYPL");
-        institutionEntity.setInstitutionName("New York Public Library");
-        bibliographicEntity.setInstitutionEntity(institutionEntity);
         BibliographicEntity savedBibliographicEntity = bibliographicDetailsRepository.saveAndFlush(bibliographicEntity);
         entityManager.refresh(savedBibliographicEntity);
         assertNotNull(savedBibliographicEntity);

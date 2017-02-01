@@ -1,5 +1,6 @@
 package org.recap.controller;
 
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -8,14 +9,20 @@ import org.mockito.MockitoAnnotations;
 import org.recap.RecapConstants;
 import org.recap.model.search.DeaccessionItemResultsRow;
 import org.recap.model.search.ReportsForm;
+import org.recap.model.userManagement.UserForm;
 import org.recap.repository.jpa.RequestItemDetailsRepository;
+import org.recap.security.UserManagement;
 import org.recap.util.ReportsUtil;
+import org.recap.util.UserAuthUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,7 +30,6 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 /**
  * Created by rajeshbabuk on 21/10/16.
@@ -39,25 +45,38 @@ public class ReportsControllerUT extends BaseControllerUT {
     @InjectMocks
     ReportsController reportsController;
 
+    @Autowired
+    ReportsController getReportsController;
+
     @Mock
     RequestItemDetailsRepository requestItemDetailsRepository;
 
     @Mock
     ReportsUtil reportsUtil;
 
+    @Mock
+    HttpSession session;
+
+    @Mock
+    HttpServletRequest request;
+
+    @Autowired
+    private UserAuthUtil userAuthUtil;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(reportsController).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(getReportsController).build();
     }
 
+
     @Test
-    public void reports() throws Exception {
-        MvcResult mvcResult = this.mockMvc.perform(post("/reports")
-                .param("model", String.valueOf(model)))
-                .andReturn();
-        int status = mvcResult.getResponse().getStatus();
-        assertTrue(status == 200);
+    public void reports() throws Exception{
+        when(request.getSession()).thenReturn(session);
+        usersSessionAttributes();
+        String response = getReportsController.collection(model,request);
+        assertNotNull(response);
+        assertEquals("searchRecords",response);
     }
 
     @Test
@@ -71,8 +90,8 @@ public class ReportsControllerUT extends BaseControllerUT {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(RecapConstants.SIMPLE_DATE_FORMAT_REPORTS);
         String fromDate = reportsForm.getRequestFromDate();
         String toDate = reportsForm.getRequestToDate();
-        Date requestFromDate = simpleDateFormat.parse(fromDate);
-        Date requestToDate = simpleDateFormat.parse(toDate);
+        Date requestFromDate = new Date();
+        Date requestToDate = new Date();
         reportsUtil.populateILBDCountsForRequest(reportsForm, requestFromDate, requestToDate);
         assertNotNull(modelAndView);
         assertEquals("searchRecords", modelAndView.getViewName());
@@ -89,8 +108,8 @@ public class ReportsControllerUT extends BaseControllerUT {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(RecapConstants.SIMPLE_DATE_FORMAT_REPORTS);
         String fromDate = reportsForm.getRequestFromDate();
         String toDate = reportsForm.getRequestToDate();
-        Date requestFromDate =simpleDateFormat.parse(fromDate);
-        Date requestToDate = simpleDateFormat.parse(toDate);
+        Date requestFromDate = new Date();
+        Date requestToDate =new Date();
         reportsUtil.populatePartnersCountForRequest(reportsForm, requestFromDate, requestToDate);
         assertNotNull(modelAndView);
         assertEquals("searchRecords", modelAndView.getViewName());
@@ -107,8 +126,8 @@ public class ReportsControllerUT extends BaseControllerUT {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(RecapConstants.SIMPLE_DATE_FORMAT_REPORTS);
         String fromDate = reportsForm.getRequestFromDate();
         String toDate = reportsForm.getRequestToDate();
-        Date requestFromDate =simpleDateFormat.parse(fromDate);
-        Date requestToDate = simpleDateFormat.parse(toDate);
+        Date requestFromDate = new Date();
+        Date requestToDate = new Date();
         reportsUtil.populateRequestTypeInformation(reportsForm, requestFromDate, requestToDate);
         assertNotNull(modelAndView);
         assertEquals("searchRecords", modelAndView.getViewName());
@@ -181,5 +200,16 @@ public class ReportsControllerUT extends BaseControllerUT {
         ModelAndView modelAndView = reportsController.searchLast(reportsForm,model);
         assertNotNull(modelAndView);
         assertEquals("reports :: #deaccessionInformation",modelAndView.getViewName());
+    }
+
+    private void usersSessionAttributes() throws Exception {
+        when(request.getSession()).thenReturn(session);
+        UserForm userForm = new UserForm();
+        userForm.setUsername("SuperAdmin");
+        userForm.setInstitution(1);
+        userForm.setPassword("12345");
+        UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+userForm.getInstitution(),userForm.getPassword(),true);
+        userAuthUtil.doAuthentication(token);
+        when(session.getAttribute(UserManagement.USER_TOKEN)).thenReturn(token);
     }
 }

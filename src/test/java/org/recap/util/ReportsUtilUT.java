@@ -43,34 +43,34 @@ public class ReportsUtilUT extends BaseTestCase {
 
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity( 1, 1,false);
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        savePatronEntity(2,2);
-        saveRequestEntity(itemEntity.getItemId(),4,2,2);
+        PatronEntity patronEntity = savePatronEntity(2,2);
+        saveRequestEntity(itemEntity.getItemId(),4,2,patronEntity.getPatronId());
 
         BibliographicEntity bibliographicEntity1 = saveBibHoldingItemEntity( 2, 1,false);
         ItemEntity itemEntity1 = bibliographicEntity1.getItemEntities().get(0);
-        savePatronEntity(3,3);
-        saveRequestEntity(itemEntity1.getItemId(),3,3,3);
+        patronEntity = savePatronEntity(3,3);
+        saveRequestEntity(itemEntity1.getItemId(),4,3,patronEntity.getPatronId());
 
         BibliographicEntity bibliographicEntity2 = saveBibHoldingItemEntity(3, 1,false);
         ItemEntity itemEntity2 = bibliographicEntity2.getItemEntities().get(0);
-        savePatronEntity(2,2);
-        saveRequestEntity(itemEntity2.getItemId(),2,2,2);
+        patronEntity = savePatronEntity(2,2);
+        saveRequestEntity(itemEntity2.getItemId(),4,2,patronEntity.getPatronId());
 
 
         BibliographicEntity bibliographicEntity3 = saveBibHoldingItemEntity(1, 1,false);
         ItemEntity itemEntity3 = bibliographicEntity3.getItemEntities().get(0);
-        savePatronEntity(2,2);
-        saveRequestEntity(itemEntity3.getItemId(),5,2,2);
+        patronEntity = savePatronEntity(2,2);
+        saveRequestEntity(itemEntity3.getItemId(),3,2,patronEntity.getPatronId());
 
         BibliographicEntity bibliographicEntity4 = saveBibHoldingItemEntity( 2, 1,false);
         ItemEntity itemEntity4 = bibliographicEntity4.getItemEntities().get(0);
-        savePatronEntity(3,3);
-        saveRequestEntity(itemEntity4.getItemId(),5,3,3);
+        patronEntity = savePatronEntity(3,3);
+        saveRequestEntity(itemEntity4.getItemId(),3,3,patronEntity.getPatronId());
 
         BibliographicEntity bibliographicEntity5 = saveBibHoldingItemEntity( 3, 1,false);
         ItemEntity itemEntity5 = bibliographicEntity5.getItemEntities().get(0);
-        savePatronEntity(1,1);
-        saveRequestEntity(itemEntity5.getItemId(),5,1,1);
+        patronEntity = savePatronEntity(1,1);
+        saveRequestEntity(itemEntity5.getItemId(),3,1,patronEntity.getPatronId());
 
 
         reportsUtil.populateILBDCountsForRequest(reportsForm,fromDate,toDate);
@@ -91,63 +91,63 @@ public class ReportsUtilUT extends BaseTestCase {
 
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(1, 3,false);
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        savePatronEntity(2,2);
-        saveRequestEntity(itemEntity.getItemId(),5,2,2);
+        PatronEntity patronEntity = savePatronEntity(2,2);
+        saveRequestEntity(itemEntity.getItemId(),1,2,patronEntity.getPatronId());
 
         BibliographicEntity bibliographicEntity1 = saveBibHoldingItemEntity( 1, 1,false);
         ItemEntity itemEntity1 = bibliographicEntity1.getItemEntities().get(0);
-        savePatronEntity(2,2);
-        saveRequestEntity(itemEntity1.getItemId(),5,2,2);
+        patronEntity = savePatronEntity(2,2);
+        saveRequestEntity(itemEntity1.getItemId(),1,2,patronEntity.getPatronId());
 
         BibliographicEntity bibliographicEntity2 = saveBibHoldingItemEntity( 2, 3,false);
         ItemEntity itemEntity2 = bibliographicEntity2.getItemEntities().get(0);
-        savePatronEntity(3,3);
-        saveRequestEntity(itemEntity2.getItemId(),5,3,3);
+        patronEntity = savePatronEntity(3,3);
+        saveRequestEntity(itemEntity2.getItemId(),1,3,patronEntity.getPatronId());
 
         BibliographicEntity bibliographicEntity3 = saveBibHoldingItemEntity( 2, 1,false);
         ItemEntity itemEntity3 = bibliographicEntity3.getItemEntities().get(0);
-        savePatronEntity(3,3);
-        saveRequestEntity(itemEntity3.getItemId(),5,3,3);
+        patronEntity = savePatronEntity(3,3);
+        saveRequestEntity(itemEntity3.getItemId(),1,3,patronEntity.getPatronId());
 
         BibliographicEntity bibliographicEntity4 = saveBibHoldingItemEntity(3, 3,false);
         ItemEntity itemEntity4 = bibliographicEntity4.getItemEntities().get(0);
-        savePatronEntity(1,1);
-        saveRequestEntity(itemEntity4.getItemId(),5,1,1);
+        patronEntity = savePatronEntity(1,1);
+        saveRequestEntity(itemEntity4.getItemId(),1,1,patronEntity.getPatronId());
 
         BibliographicEntity bibliographicEntity5 = saveBibHoldingItemEntity( 3, 1,false);
         ItemEntity itemEntity5 = bibliographicEntity5.getItemEntities().get(0);
-        savePatronEntity(1,1);
-        saveRequestEntity(itemEntity5.getItemId(),5,1,1);
+        patronEntity = savePatronEntity(1,1);
+        saveRequestEntity(itemEntity5.getItemId(),1,1,patronEntity.getPatronId());
 
         BibliographicEntity bibliographicEntity6 = saveBibHoldingItemEntity(1, 3,false);
         ItemEntity itemEntity6 = bibliographicEntity6.getItemEntities().get(0);
-        savePatronEntity(2,2);
-        saveRequestEntity(itemEntity6.getItemId(),4,2,2);
+        patronEntity = savePatronEntity(2,2);
+        saveRequestEntity(itemEntity6.getItemId(),3,2,patronEntity.getPatronId());
 
         BibliographicEntity bibliographicEntity7 = saveBibHoldingItemEntity(1, 1,false);
         ItemEntity itemEntity7 = bibliographicEntity7.getItemEntities().get(0);
-        savePatronEntity(2,2);
-        saveRequestEntity(itemEntity7.getItemId(),4,2,2);
+        patronEntity = savePatronEntity(2,2);
+        saveRequestEntity(itemEntity7.getItemId(),3,2,patronEntity.getPatronId());
 
         BibliographicEntity bibliographicEntity8 = saveBibHoldingItemEntity( 2, 3,false);
         ItemEntity itemEntity8 = bibliographicEntity8.getItemEntities().get(0);
-        savePatronEntity(3,3);
-        saveRequestEntity(itemEntity8.getItemId(),4,3,3);
+        patronEntity = savePatronEntity(3,3);
+        saveRequestEntity(itemEntity8.getItemId(),3,3,patronEntity.getPatronId());
 
         BibliographicEntity bibliographicEntity9 = saveBibHoldingItemEntity(2, 1,false);
         ItemEntity itemEntity9 = bibliographicEntity9.getItemEntities().get(0);
-        savePatronEntity(3,3);
-        saveRequestEntity(itemEntity9.getItemId(),4,3,3);
+        patronEntity = savePatronEntity(3,3);
+        saveRequestEntity(itemEntity9.getItemId(),3,3,patronEntity.getPatronId());
 
         BibliographicEntity bibliographicEntity10 = saveBibHoldingItemEntity(3, 3,false);
         ItemEntity itemEntity10 = bibliographicEntity10.getItemEntities().get(0);
-        savePatronEntity(1,1);
-        saveRequestEntity(itemEntity10.getItemId(),4,1,1);
+        patronEntity = savePatronEntity(1,1);
+        saveRequestEntity(itemEntity10.getItemId(),3,1,patronEntity.getPatronId());
 
         BibliographicEntity bibliographicEntity11 = saveBibHoldingItemEntity( 3, 1,false);
         ItemEntity itemEntity11 = bibliographicEntity11.getItemEntities().get(0);
-        savePatronEntity(1,1);
-        saveRequestEntity(itemEntity11.getItemId(),4,1,1);
+        patronEntity = savePatronEntity(1,1);
+        saveRequestEntity(itemEntity11.getItemId(),3,1,patronEntity.getPatronId());
 
         reportsUtil.populatePartnersCountForRequest(reportsForm,fromDate,toDate);
         assertEquals(1,reportsForm.getPhysicalPrivatePulCount());
@@ -174,18 +174,18 @@ public class ReportsUtilUT extends BaseTestCase {
         reportsForm.setReportRequestType(Arrays.asList("Retrieval"));
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity( 1, 1,false);
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        savePatronEntity(3, 3);
-        saveRequestEntity(itemEntity.getItemId(), 2, 3, 3);
+        PatronEntity patronEntity = savePatronEntity(3, 3);
+        saveRequestEntity(itemEntity.getItemId(), 1, 3, patronEntity.getPatronId());
 
         BibliographicEntity bibliographicEntity1 = saveBibHoldingItemEntity( 2, 1,false);
         ItemEntity itemEntity1 = bibliographicEntity1.getItemEntities().get(0);
-        savePatronEntity(1, 1);
-        saveRequestEntity(itemEntity1.getItemId(), 2, 1, 1);
+        patronEntity = savePatronEntity(1, 1);
+        saveRequestEntity(itemEntity1.getItemId(), 1, 1, patronEntity.getPatronId());
 
         BibliographicEntity bibliographicEntity2 = saveBibHoldingItemEntity( 3, 1,false);
         ItemEntity itemEntity2 = bibliographicEntity2.getItemEntities().get(0);
-        savePatronEntity(2, 2);
-        saveRequestEntity(itemEntity2.getItemId(), 2, 2, 2);
+        patronEntity = savePatronEntity(2, 2);
+        saveRequestEntity(itemEntity2.getItemId(), 1, 2, patronEntity.getPatronId());
 
         reportsUtil.populateRequestTypeInformation(reportsForm, fromDate, toDate);
         assertEquals(1, reportsForm.getRetrievalRequestPulCount());
@@ -195,18 +195,18 @@ public class ReportsUtilUT extends BaseTestCase {
         reportsForm.setReportRequestType(Arrays.asList("Recall"));
         BibliographicEntity bibliographicEntity3 = saveBibHoldingItemEntity(1, 1,false);
         ItemEntity itemEntity3 = bibliographicEntity3.getItemEntities().get(0);
-        savePatronEntity(2, 2);
-        saveRequestEntity(itemEntity3.getItemId(), 3, 2, 2);
+        patronEntity = savePatronEntity(2, 2);
+        saveRequestEntity(itemEntity3.getItemId(), 2, 2, patronEntity.getPatronId());
 
         BibliographicEntity bibliographicEntity4 = saveBibHoldingItemEntity(2, 1,false);
         ItemEntity itemEntity4 = bibliographicEntity4.getItemEntities().get(0);
-        savePatronEntity(1, 1);
-        saveRequestEntity(itemEntity4.getItemId(), 3, 1, 1);
+        patronEntity = savePatronEntity(1, 1);
+        saveRequestEntity(itemEntity4.getItemId(), 2, 1,patronEntity.getPatronId());
 
         BibliographicEntity bibliographicEntity5 = saveBibHoldingItemEntity(3, 1,false);
         ItemEntity itemEntity5 = bibliographicEntity5.getItemEntities().get(0);
-        savePatronEntity(2, 2);
-        saveRequestEntity(itemEntity5.getItemId(), 3, 2, 2);
+        patronEntity=savePatronEntity(2, 2);
+        saveRequestEntity(itemEntity5.getItemId(), 2, 2, patronEntity.getPatronId());
         reportsUtil.populateRequestTypeInformation(reportsForm, fromDate, toDate);
 
         assertEquals(1, reportsForm.getRecallRequestPulCount());
@@ -332,13 +332,13 @@ public class ReportsUtilUT extends BaseTestCase {
         return savedBibliographicEntity;
     }
 
-    private void savePatronEntity(Integer patronId, Integer patronInstitutionID) throws Exception {
+    private PatronEntity savePatronEntity(Integer patronId, Integer patronInstitutionID) throws Exception {
         PatronEntity patronEntity = new PatronEntity();
         patronEntity.setPatronId(patronId);
         patronEntity.setInstitutionId(patronInstitutionID);
         patronEntity.setInstitutionIdentifier("test");
         patronEntity.setEmailId("testmail");
-        patronDetailsRepository.save(patronEntity);
+        return patronDetailsRepository.save(patronEntity);
     }
 
     private void saveRequestEntity(Integer itemId, Integer requestTypeId, Integer requestingInstID, Integer patronID) throws Exception {
@@ -351,6 +351,9 @@ public class ReportsUtilUT extends BaseTestCase {
         requestItemEntity.setLastUpdatedDate(new Date());
         requestItemEntity.setPatronId(patronID);
         requestItemEntity.setStopCode("s1");
+        requestItemEntity.setRequestStatusId(4);
+        requestItemEntity.setCreatedBy("test");
+        requestItemEntity.setEmailId("test@gmail.com");
         requestItemDetailsRepository.save(requestItemEntity);
     }
 

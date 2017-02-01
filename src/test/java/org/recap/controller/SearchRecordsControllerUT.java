@@ -1,5 +1,6 @@
 package org.recap.controller;
 
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -8,7 +9,10 @@ import org.mockito.MockitoAnnotations;
 import org.recap.model.search.SearchItemResultRow;
 import org.recap.model.search.SearchRecordsRequest;
 import org.recap.model.search.SearchResultRow;
+import org.recap.model.userManagement.UserForm;
+import org.recap.security.UserManagement;
 import org.recap.util.CsvUtil;
+import org.recap.util.UserAuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -16,7 +20,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,56 +55,66 @@ public class SearchRecordsControllerUT extends BaseControllerUT{
     @Mock
     private CsvUtil csvUtil;
 
+    @Mock
+    HttpSession session;
+
+    @Mock
+    HttpServletRequest request;
+
+    @Autowired
+    private UserAuthUtil userAuthUtil;
+
     SearchRecordsRequest searchRecordsRequest = new SearchRecordsRequest();
     @Before
-    public void setUp() {
-
+    public void setUp() throws Exception {
+        when(request.getSession()).thenReturn(session);
+        usersSessionAttributes();
         MockitoAnnotations.initMocks(this);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(searchRecordsController).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(recordsController).build();
         Map searchRecordsMap = new HashMap();
     }
 
 
     @Test
     public void searchRecords() throws Exception{
-        MvcResult mvcResult = this.mockMvc.perform(post("/search")
-                .param("model",String.valueOf(model)))
-                .andReturn();
-        int status = mvcResult.getResponse().getStatus();
-        assertTrue(status == 200);
+        when(request.getSession()).thenReturn(session);
+        usersSessionAttributes();
+        String response = recordsController.searchRecords(model,request);
+        assertNotNull(response);
+        assertEquals("searchRecords",response);
     }
 
     @Test
     public void search() throws Exception{
-        ModelAndView modelAndView = searchRecordsController.search(getSearchRecordsRequest(),bindingResult,model);
+        ModelAndView modelAndView = recordsController.search(getSearchRecordsRequest(),bindingResult,model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
     }
 
     @Test
     public void searchPrevious() throws Exception{
-        ModelAndView modelAndView = searchRecordsController.searchPrevious(getSearchRecordsRequest(),bindingResult,model);
+        ModelAndView modelAndView = recordsController.searchPrevious(getSearchRecordsRequest(),bindingResult,model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
     }
 
     @Test
     public void searchNext() throws Exception{
-        ModelAndView modelAndView = searchRecordsController.searchNext(getSearchRecordsRequest(),bindingResult,model);
+        ModelAndView modelAndView = recordsController.searchNext(getSearchRecordsRequest(),bindingResult,model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
     }
 
     @Test
     public void searchFirst() throws Exception{
-        ModelAndView modelAndView = searchRecordsController.searchFirst(getSearchRecordsRequest(),bindingResult,model);
+        ModelAndView modelAndView = recordsController.searchFirst(getSearchRecordsRequest(),bindingResult,model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
     }
 
     @Test
     public void searchLast() throws Exception{
-        ModelAndView modelAndView = searchRecordsController.searchLast(getSearchRecordsRequest(),bindingResult,model);
+        ModelAndView modelAndView = recordsController.searchLast(getSearchRecordsRequest(),bindingResult,model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
     }
@@ -132,7 +148,7 @@ public class SearchRecordsControllerUT extends BaseControllerUT{
 
     @Test
     public void onPageSizeChange() throws Exception{
-        ModelAndView modelAndView = searchRecordsController.onPageSizeChange(getSearchRecordsRequest(),bindingResult,model);
+        ModelAndView modelAndView = recordsController.onPageSizeChange(getSearchRecordsRequest(),bindingResult,model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
     }
@@ -205,6 +221,17 @@ public class SearchRecordsControllerUT extends BaseControllerUT{
         searchResultRows.add(searchResultRow2);
         searchRecordsRequest.setSearchResultRows(searchResultRows);
         return searchRecordsRequest;
+    }
+
+    private void usersSessionAttributes() throws Exception {
+        when(request.getSession()).thenReturn(session);
+        UserForm userForm = new UserForm();
+        userForm.setUsername("SuperAdmin");
+        userForm.setInstitution(1);
+        userForm.setPassword("12345");
+        UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+userForm.getInstitution(),userForm.getPassword(),true);
+        userAuthUtil.doAuthentication(token);
+        when(session.getAttribute(UserManagement.USER_TOKEN)).thenReturn(token);
     }
 
 }

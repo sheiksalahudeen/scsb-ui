@@ -50,11 +50,6 @@ public class BibliographicEntityUT extends BaseTestCase {
         bibliographicEntity.setLastUpdatedBy("tst");
         bibliographicEntity.setOwningInstitutionBibId(String.valueOf(random));
         bibliographicEntity.setOwningInstitutionId(3);
-        InstitutionEntity institutionEntity = new InstitutionEntity();
-        institutionEntity.setInstitutionId(1);
-        institutionEntity.setInstitutionCode("NYPL");
-        institutionEntity.setInstitutionName("New York Public Library");
-        bibliographicEntity.setInstitutionEntity(institutionEntity);
         BibliographicEntity entity = bibliographicDetailsRepository.saveAndFlush(bibliographicEntity);
         entityManager.refresh(entity);
         assertNotNull(entity);

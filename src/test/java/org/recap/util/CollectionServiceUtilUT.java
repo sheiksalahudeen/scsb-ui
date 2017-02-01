@@ -105,8 +105,8 @@ public class CollectionServiceUtilUT extends BaseTestCase {
 
         BibliographicEntity savedBibliographicEntity = bibliographicDetailsRepository.saveAndFlush(bibliographicEntity);
         entityManager.refresh(savedBibliographicEntity);
-        assertNotNull(bibliographicEntity);
-        Integer bibliographicId = bibliographicEntity.getBibliographicId();
+        assertNotNull(savedBibliographicEntity);
+        Integer bibliographicId = savedBibliographicEntity.getBibliographicId();
         assertNotNull(bibliographicId);
 
         BibliographicEntity fetchedBibliographicEntity = bibliographicDetailsRepository.findByBibliographicId(bibliographicId);
@@ -174,7 +174,7 @@ public class CollectionServiceUtilUT extends BaseTestCase {
         itemEntity.setLastUpdatedDate(new Date());
         itemEntity.setOwningInstitutionItemId(String.valueOf(random.nextInt()));
         itemEntity.setOwningInstitutionId(1);
-        itemEntity.setBarcode(String.valueOf(random.nextInt()));
+        itemEntity.setBarcode("12345");
         itemEntity.setCallNumber("x.12321");
         itemEntity.setCollectionGroupId(1);
         itemEntity.setCallNumberType("1");

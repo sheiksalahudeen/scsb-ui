@@ -56,7 +56,7 @@ public class MarcRecordViewUtilUT extends BaseTestCase {
         assertNotNull(bibliographicMarcForm.getItemId());
         assertEquals(bibId, bibliographicMarcForm.getBibId());
         assertEquals(itemId, bibliographicMarcForm.getItemId());
-        assertEquals("al-Ḥuṭayʼah : fī sīratihi wa-nafsīyatihi wa-shiʻrihi /", bibliographicMarcForm.getTitle());
+        assertEquals("al-Ḥuṭayʼah : fī sīratihi wa-nafsīyatihi wa-shiʻrihi / bi-qalam Īlīyā Ḥāwī.", bibliographicMarcForm.getTitle());
         assertEquals("Ḥāwī, Īlīyā Salīm.   ", bibliographicMarcForm.getAuthor());
         assertEquals("Dār al-Thaqāfah,", bibliographicMarcForm.getPublisher());
         assertEquals("1970.", bibliographicMarcForm.getPublishedDate());
