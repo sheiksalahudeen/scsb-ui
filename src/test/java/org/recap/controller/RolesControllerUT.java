@@ -19,6 +19,7 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -106,8 +107,9 @@ public class RolesControllerUT extends BaseTestCase {
         rolesForm.setRoleId(1);
         rolesForm.setEditRoleName("Admin");
         String[] permissionName ={"CreateUser"};
+        when(request.getSession()).thenReturn(session);
         when(request.getParameterValues("permissionNames[]")).thenReturn(permissionName);
-        when(session.getAttribute(UserManagement.USER_NAME)).thenReturn("superadmin");
+        when(session.getAttribute(UserManagement.USER_NAME)).thenReturn("SuperAdmin");
         rolesForm.setEditPermissionName(Arrays.asList(permissionName));
         rolesForm.setEditRoleDescription("test desc");
         ModelAndView modelAndView = rolesController.saveEditedRole(rolesForm.getRoleId(),rolesForm.getEditRoleName(),rolesForm.getEditRoleName(),request);

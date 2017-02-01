@@ -51,6 +51,9 @@ public class RequestItemEntity implements Serializable {
     @Column(name = "EMAIL_ID")
     private String emailId;
 
+    @Column(name = "REQUEST_STATUS_ID")
+    private Integer requestStatusId;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "REQUESTING_INST_ID", insertable = false, updatable = false)
     private InstitutionEntity institutionEntity;
@@ -198,4 +201,11 @@ public class RequestItemEntity implements Serializable {
         this.notesEntities = notesEntities;
     }
 
+    public Integer getRequestStatusId() {
+        return requestStatusId;
+    }
+
+    public void setRequestStatusId(Integer requestStatusId) {
+        this.requestStatusId = requestStatusId;
+    }
 }
