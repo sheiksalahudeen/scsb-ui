@@ -2,7 +2,7 @@ jQuery(document).ready(function ($) {
     $('#users-searchview').show();
     $('#createRequest').click(function () {
         $('#networkLoginId').val('');
-        $('#institutionId').val(1);
+        $('#institutionId').val('');
         $('#roleId').multiselect('deselectAll', false);
         $('#roleId').multiselect('refresh');
         $('#userDescription').val('');
