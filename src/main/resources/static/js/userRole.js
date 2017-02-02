@@ -1,7 +1,8 @@
 jQuery(document).ready(function ($) {
+    $('#users-searchview').show();
     $('#createRequest').click(function () {
         $('#networkLoginId').val('');
-        $('#institutionId').val(1);
+        $('#institutionId').val('');
         $('#roleId').multiselect('deselectAll', false);
         $('#roleId').multiselect('refresh');
         $('#userDescription').val('');
@@ -122,6 +123,14 @@ jQuery(document).ready(function ($) {
 
     });
 
+    $('#searchNetworkId,#userEmailId').bind('keypress', function(e) {
+        if(e.keyCode==13){
+            $('#searchButton').trigger('click');
+            return false;
+        }else {
+            return true;
+        }
+    });
 
     /**Multi Select **/
     $('#roleId').multiselect();
