@@ -316,7 +316,7 @@
                                         </div>
                                         <div class="col-sm- col-sm-6">
                                             <input class="form-control themed-input" name="emailId"
-                                                   id="emailId" th:field="${userRoleForm.emailId}"  onblur="validateEmailAddress()"
+                                                   id="emailId" th:field="${userRoleForm.emailId}"  onblur="validateEmailAddress()" th:onkeyup="'javascript:toggleUserEmailValidation()'"
                                                    placeholder="" type="email"/>
                                             <span id="emailIdErrMsg" style="color: red;display: none">Please provide valid email address </span>
                                         </div>
@@ -448,7 +448,7 @@
                                                     class="error-color"> </span></label>
                                         </div>
                                         <div class="col-sm- col-sm-6">
-                                            <input class="form-control themed-input" name="editEmailId"
+                                            <input class="form-control themed-input" name="editEmailId" th:onkeyup="'javascript:toggleEditUserDescriptionValidation()'"
                                                    id="editEmailId"
                                                    th:field="${userRoleForm.editEmailId}" placeholder=""
                                                    type="email" onblur="validateEditEmailAddress()"/>

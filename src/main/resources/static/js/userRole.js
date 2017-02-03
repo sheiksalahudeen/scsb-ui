@@ -21,6 +21,7 @@ jQuery(document).ready(function ($) {
         $('#institutionIdErrMsg').hide();
         $('#roleIdErrMsg').hide();
         $('#userDescriptionErrMsg').hide();
+        $('#emailIdErrMsg').hide();
         $('#successMsg').hide();
 
     });
@@ -76,6 +77,7 @@ jQuery(document).ready(function ($) {
         $('#institutionIdErrMsg').hide();
         $('#roleIdErrMsg').hide();
         $('#userDescriptionErrMsg').hide();
+        $('#emailIdErrMsg').hide();
     });
     $("#recaprole .rolebacklink a").click(function (e) {
         $("#role-detailtableview").hide();
@@ -84,6 +86,7 @@ jQuery(document).ready(function ($) {
         $('#institutionIdErrMsg').hide();
         $('#roleIdErrMsg').hide();
         $('#userDescriptionErrMsg').hide();
+        $('#emailIdErrMsg').hide();
     });
     /***Users Tab Form Show/Hide ***/
     $("#recapusers .userscreaterequestlink a").click(function (e) {
@@ -99,6 +102,7 @@ jQuery(document).ready(function ($) {
         $('#institutionIdErrMsg').hide();
         $('#roleIdErrMsg').hide();
         $('#userDescriptionErrMsg').hide();
+        $('#emailIdErrMsg').hide();
     });
     $("#recapusers .usersbacklink a").click(function (e) {
         $("#users-createview").hide();
@@ -277,6 +281,7 @@ function editUser(userId, networkLoginId) {
     $('#editusers-createview').show();
     $('#users-createview').hide();
     $('#users-searchview').hide();
+    $('#editEmailIdErrMsg').hide();
     var url = "/userRoles/editUser";
     var request = $.ajax({
         url: url,
@@ -300,37 +305,39 @@ function editclear() {
 
 
 function editUserDetails() {
-        var userId = $('#editUserId').val();
-        var networkLoginId = $('#editnetworkLoginId').val();
-        var institutionId = $('#editinstitutionId').val();
-        var roleIds = $('#editroleId').val();
-        var userDescription = $('#edituserDescription').val();
-        var userEmailId = $('#editEmailId').val();
-        $('#editusers-createview').show();
-        $('#users-createview').hide();
-        $('#users-searchview').hide();
-        var $form = $('#userRole-form');
-        var url = "/userRoles/saveEditUserDetails";
-        var request = $.ajax({
-            url: url,
-            type: 'post',
-            data: {
-                userId: userId,
-                networkLoginId: networkLoginId,
-                roleIds: roleIds,
-                userDescription: userDescription,
-                institutionId: institutionId,
-                userEmailId: userEmailId
-            },
-            success: function (response) {
-                $('#userRolesContentId').html(response);
-                $('#editusers-createview').show();
-                $('#users-searchview').hide();
-                $('#users-createview').hide();
-                $('#successMsg').show();
-                $('#editroleId').multiselect();
-            }
-        });
+        if(validateEditEmailAddress()==true) {
+            var userId = $('#editUserId').val();
+            var networkLoginId = $('#editnetworkLoginId').val();
+            var institutionId = $('#editinstitutionId').val();
+            var roleIds = $('#editroleId').val();
+            var userDescription = $('#edituserDescription').val();
+            var userEmailId = $('#editEmailId').val();
+            $('#editusers-createview').show();
+            $('#users-createview').hide();
+            $('#users-searchview').hide();
+            var $form = $('#userRole-form');
+            var url = "/userRoles/saveEditUserDetails";
+            var request = $.ajax({
+                url: url,
+                type: 'post',
+                data: {
+                    userId: userId,
+                    networkLoginId: networkLoginId,
+                    roleIds: roleIds,
+                    userDescription: userDescription,
+                    institutionId: institutionId,
+                    userEmailId: userEmailId
+                },
+                success: function (response) {
+                    $('#userRolesContentId').html(response);
+                    $('#editusers-createview').show();
+                    $('#users-searchview').hide();
+                    $('#users-createview').hide();
+                    $('#successMsg').show();
+                    $('#editroleId').multiselect();
+                }
+            });
+        }
 }
 
 
@@ -372,7 +379,7 @@ function submitForm() {
     var formValidation = validateForm();
     var emailAddress = validateEmailAddress();
     console.log(formValidation);
-    if (formValidation) {
+    if (formValidation && (emailAddress==true)) {
         var $form = $('#userRole-form');
         var url = "/userRoles/createUser";
         var request = $.ajax({
@@ -521,6 +528,15 @@ function toggleUserRolesValidation() {
     }
 }
 
+function toggleUserEmailValidation() {
+    var isValidEmailAddress = $('#emailId').is(':valid');
+    if (isBlankValue(isValidEmailAddress)) {
+        $('#emailIdErrMsg').show();
+    } else {
+        $('#emailIdErrMsg').hide();
+    }
+}
+
 function toggleEditInstitutionIdValidation() {
     var editinstitutionId = $('#editinstitutionId').val();
     if (isBlankValue(editinstitutionId)) {
@@ -545,5 +561,14 @@ function toggleEditUserDescriptionValidation() {
         $('#edituserDescriptionErrMsg').show();
     } else {
         $('#edituserDescriptionErrMsg').hide();
+    }
+}
+
+function toggleEditUserDescriptionValidation() {
+    var editEmailId = $('#editEmailId').is(':valid');
+    if (isBlankValue(editEmailId)) {
+        $('#editEmailIdErrMsg').show();
+    } else {
+        $('#editEmailIdErrMsg').hide();
     }
 }
