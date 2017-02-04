@@ -20,7 +20,7 @@ public interface UserRoleService {
 
     UsersEntity saveNewUserToDB(UserRoleForm userRoleForm);
 
-    UsersEntity saveEditedUserToDB(Integer userId, String networkLoginId, String userDescription, Integer institutionId, List<Integer> roleIds, String userEmailId);
+    UsersEntity saveEditedUserToDB(Integer userId, String networkLoginId, String userDescription, Integer institutionId, List<Integer> roleIds, String userEmailId,UserRoleForm userRoleForm);
 
     Page<UsersEntity> searchByUserEmailId(UserRoleForm userRoleForm, boolean superAdmin);
 

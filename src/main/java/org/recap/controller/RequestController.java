@@ -91,7 +91,7 @@ public class RequestController {
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
             return "searchRecords";
         }else{
-            return "redirect:/";
+            return UserManagement.unAuthorizedUser(session,"Request",logger);
         }
 
     }
@@ -102,9 +102,17 @@ public class RequestController {
     public ModelAndView searchRequests(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
                                        BindingResult result,
                                        Model model) throws Exception {
-        requestForm.resetPageNumber();
-        searchAndSetResults(requestForm);
-        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
+        try{
+            requestForm.resetPageNumber();
+            searchAndSetResults(requestForm);
+            model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
+
+        }
+        catch (Exception exception){
+            exception.printStackTrace();
+            logger.error(""+exception);
+            logger.debug(exception.getMessage());
+        }
         return new ModelAndView("request", "requestForm", requestForm);
     }
 
@@ -337,12 +345,14 @@ public class RequestController {
             List<SearchResultRow> searchResultRows = new ArrayList<>();
             for (RequestItemEntity requestItemEntity : requestItemEntities) {
                 SearchResultRow searchResultRow = new SearchResultRow();
-                searchResultRow.setPatronBarcode(Long.parseLong(requestItemEntity.getPatronEntity().getInstitutionIdentifier()));
+                searchResultRow.setPatronBarcode(requestItemEntity.getPatronEntity().getInstitutionIdentifier());
                 searchResultRow.setRequestingInstitution(requestItemEntity.getInstitutionEntity().getInstitutionCode());
                 searchResultRow.setBarcode(requestItemEntity.getItemEntity().getBarcode());
                 searchResultRow.setOwningInstitution(requestItemEntity.getItemEntity().getInstitutionEntity().getInstitutionCode());
                 searchResultRow.setDeliveryLocation(requestItemEntity.getStopCode());
                 searchResultRow.setRequestType(requestItemEntity.getRequestTypeEntity().getRequestTypeCode());
+                searchResultRow.setRequestCreatedBy(requestItemEntity.getCreatedBy());
+                searchResultRow.setPatronEmailId(requestItemEntity.getEmailId());
                 if (CollectionUtils.isNotEmpty(requestItemEntity.getNotesEntities())) {
                     searchResultRow.setRequestNotes(requestItemEntity.getNotesEntities().get(0).getNotes());
                 }

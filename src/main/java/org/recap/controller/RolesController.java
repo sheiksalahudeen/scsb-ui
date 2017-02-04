@@ -50,6 +50,9 @@ public class RolesController {
     @Autowired
     private UserAuthUtil userAuthUtil;
 
+    @Autowired
+    HttpServletRequest request;
+
     @RequestMapping("/roles")
     public String collection(Model model, HttpServletRequest request) {
         HttpSession session=request.getSession();
@@ -61,7 +64,7 @@ public class RolesController {
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.ROLES);
             return "searchRecords";
         }else{
-            return "redirect:/";
+            return UserManagement.unAuthorizedUser(session,"Roles",logger);
         }
     }
 
@@ -123,14 +126,21 @@ public class RolesController {
     public ModelAndView saveEditedRole(@ModelAttribute("roleId") Integer roleId,
                                        @ModelAttribute("roleName") String roleName,
                                        @ModelAttribute("roleDescription") String roleDescription,
-                                       Model model,HttpServletRequest request) {
+                                      HttpServletRequest request) {
         RolesForm rolesForm = new RolesForm();
+        HttpSession session = request.getSession();
         rolesForm.setRoleId(roleId);
         rolesForm.setEditRoleName(roleName);
         rolesForm.setEditRoleDescription(roleDescription);
         String[] editPermissionNames = request.getParameterValues("permissionNames[]");
         rolesForm.setEditPermissionName(Arrays.asList(editPermissionNames));
-        RoleEntity roleEntity = saveEditedRoleToDB(rolesForm);
+        RoleEntity roleEntityByRoleId = rolesDetailsRepositorty.findByRoleId(roleId);
+        roleEntityByRoleId.setRoleId(roleId);
+        roleEntityByRoleId.setRoleName(roleName);
+        roleEntityByRoleId.setRoleDescription(roleDescription);
+        roleEntityByRoleId.setLastUpdatedDate(new Date());
+        roleEntityByRoleId.setLastUpdatedBy(String.valueOf(session.getAttribute(UserManagement.USER_NAME)));
+        RoleEntity roleEntity = saveRoleEntity(roleEntityByRoleId, Arrays.asList(editPermissionNames));
             if(null != roleEntity){
                 rolesForm.setMessage(rolesForm.getEditRoleName()+RecapConstants.ROLES_EDIT_SAVE_SUCCESS_MESSAGE);
             }
@@ -464,8 +474,13 @@ public class RolesController {
 
     public RoleEntity saveNewRoleToDB(RolesForm rolesForm){
         RoleEntity roleEntity = new RoleEntity();
+        HttpSession session = request.getSession();
         roleEntity.setRoleName(rolesForm.getNewRoleName().trim());
         roleEntity.setRoleDescription(rolesForm.getNewRoleDescription());
+        roleEntity.setCreatedDate(new Date());
+        roleEntity.setCreatedBy(String.valueOf(session.getAttribute(UserManagement.USER_NAME)));
+        roleEntity.setLastUpdatedDate(new Date());
+        roleEntity.setLastUpdatedBy(String.valueOf(session.getAttribute(UserManagement.USER_NAME)));
         List<String> permissionNameList = splitStringAndGetList(rolesForm.getNewPermissionNames());
         RoleEntity savedRoleEntity = saveRoleEntity(roleEntity, permissionNameList);
         return savedRoleEntity;
@@ -487,16 +502,6 @@ public class RolesController {
             logger.error(e.getMessage());
         }
         return roleEntity;
-    }
-
-    public RoleEntity saveEditedRoleToDB(RolesForm rolesForm){
-        RoleEntity roleEntity = new RoleEntity();
-        roleEntity.setRoleId(rolesForm.getRoleId());
-        roleEntity.setRoleName(rolesForm.getEditRoleName().trim());
-        roleEntity.setRoleDescription(rolesForm.getEditRoleDescription());
-        List<String> permissionNameList = rolesForm.getEditPermissionName();
-        RoleEntity savedRoleEntity = saveRoleEntity(roleEntity, permissionNameList);
-        return savedRoleEntity;
     }
 
     private List<String> splitStringAndGetList(String inputString) {

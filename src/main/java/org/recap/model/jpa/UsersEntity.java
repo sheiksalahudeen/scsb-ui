@@ -2,6 +2,7 @@ package org.recap.model.jpa;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,6 +28,21 @@ public class UsersEntity implements Serializable{
 
     @Column(name="user_emailid")
     private String emailId;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "CREATED_DATE")
+    private Date createdDate;
+
+    @Column(name = "CREATED_BY")
+    private String createdBy;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "LAST_UPDATED_DATE")
+    private Date lastUpdatedDate;
+
+    @Column(name = "LAST_UPDATED_BY")
+    private String lastUpdatedBy;
+
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="user_role_t", joinColumns = {
@@ -95,5 +111,37 @@ public class UsersEntity implements Serializable{
 
     public void setEmailId(String emailId) {
         this.emailId = emailId;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Date getLastUpdatedDate() {
+        return lastUpdatedDate;
+    }
+
+    public void setLastUpdatedDate(Date lastUpdatedDate) {
+        this.lastUpdatedDate = lastUpdatedDate;
+    }
+
+    public String getLastUpdatedBy() {
+        return lastUpdatedBy;
+    }
+
+    public void setLastUpdatedBy(String lastUpdatedBy) {
+        this.lastUpdatedBy = lastUpdatedBy;
     }
 }

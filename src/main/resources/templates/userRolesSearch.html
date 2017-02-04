@@ -17,7 +17,7 @@
             <fieldset>
                 <input type="text" id="editUserIdHidden" th:field="${userRoleForm.userId}" hidden="hidden"/>
                 <div role="tabpanel" class="tab-pane" id="recapusers">
-                    <div id="users-searchview">
+                    <div id="users-searchview" style="display: none">
                         <div class="row margin-btm-10">
                             <div class="col-sm-7 margin-top-05">Provide one or more data to search. Empty search would
                                 return all data.
@@ -209,7 +209,7 @@
                     </div>
 
                     <!--User Create Request Add Section-->
-                    <div class="user-view" id="users-createview">
+                    <div class="user-view" id="users-createview" style="display: none">
                         <div class="row margin-top-0">
                             <div class="col-sm-6 margin-top-0"><h3 class="margin-0">Create User</h3></div>
                             <div class="col-sm-6 text-right usersbacklink">
@@ -317,7 +317,7 @@
                                         </div>
                                         <div class="col-sm- col-sm-6">
                                             <input class="form-control themed-input" name="emailId"
-                                                   id="emailId" th:field="${userRoleForm.emailId}"  onblur="validateEmailAddress()"
+                                                   id="emailId" th:field="${userRoleForm.emailId}"  onblur="validateEmailAddress()" th:onkeyup="'javascript:toggleUserEmailValidation()'"
                                                    placeholder="" type="email"/>
                                             <span id="emailIdErrMsg" style="color: red;display: none">Please provide valid email address </span>
                                         </div>
@@ -348,7 +348,7 @@
 
                     <!-- edit tab starts-->
 
-                    <div class="user-view" id="editusers-createview">
+                    <div class="user-view" id="editusers-createview" style="display:none;">
                         <div class="row margin-top-0">
                             <div class="col-sm-6 margin-top-0"><h3 class="margin-0">Edit User</h3></div>
                             <div class="col-sm-6 text-right usersbacklink">
@@ -449,7 +449,7 @@
                                                     class="error-color"> </span></label>
                                         </div>
                                         <div class="col-sm- col-sm-6">
-                                            <input class="form-control themed-input" name="editEmailId"
+                                            <input class="form-control themed-input" name="editEmailId" th:onkeyup="'javascript:toggleEditUserDescriptionValidation()'"
                                                    id="editEmailId"
                                                    th:field="${userRoleForm.editEmailId}" placeholder=""
                                                    type="email" onblur="validateEditEmailAddress()"/>
@@ -479,7 +479,7 @@
                         </div>
                     </div>
                     <!--Delete User Section-->
-                    <div class="user-view" id="deleteUsers-view">
+                    <div class="user-view" id="deleteUsers-view" style="display: none">
                         <div class="row margin-top-0">
                             <div class="col-sm-6 margin-top-0"><h3 class="margin-0">Delete User</h3></div>
                             <div class="col-sm-6 text-right usersbacklink">

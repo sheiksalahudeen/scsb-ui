@@ -73,15 +73,15 @@
                         </div>
                         <div class="search-results-container" data-th-if="*{showResults}">
                             <div class="row">
-                                <div class="row margin-btm-10"
-                                     data-th-if="*{message ne null &amp;&amp; message ne ''}">
-                                    <div class="col-sm-12 text-left">
-                                        <div class="alert alert-success" role="alert"><span
-                                                class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span
-                                                th:text="*{message}"></span></div>
-                                    </div>
-                                </div>
                                 <div class="col-xs-12">
+                                    <div class="row margin-btm-10"
+                                         data-th-if="*{message ne null &amp;&amp; message ne ''}">
+                                        <div class="col-sm-12 text-left">
+                                            <div class="alert alert-success" role="alert" style="margin-top: 10px;margin-bottom: -5px;"><span
+                                                    class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span
+                                                    th:text="*{message}"></span></div>
+                                        </div>
+                                    </div>
                                     <div class="row margin-top-0">
                                         <div class="col-sm-6 margin-top-0"><h3 class="margin-0">Search Results</h3>
                                         </div>

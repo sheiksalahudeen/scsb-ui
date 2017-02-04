@@ -90,7 +90,6 @@ public class LoginController {
     public String createSession(@Valid @ModelAttribute UserForm userForm, HttpServletRequest request, Model model, BindingResult error){
         loginValidator.validate(userForm,error);
         final String loginScreen="login";
-        boolean authenticated=false;
         Map<String,Object> resultmap=null;
         if(userForm==null){
             return loginScreen;
@@ -123,9 +122,9 @@ public class LoginController {
         }
         catch(Exception e)
         {
-            e.printStackTrace();
             error.rejectValue("wrongCredentials","error.invalid.credentials","Invalid Credentials");
-            logger.error("Exception occured in authentication : "+e.getLocalizedMessage());
+            logger.debug("Exception occured in authentication Process : "+resultmap.get(UserManagement.USER_AUTH_ERRORMSG));
+            logger.error(e.getLocalizedMessage()+":"+resultmap.get(UserManagement.USER_AUTH_ERRORMSG));
             return loginScreen;
         }
 

@@ -24,23 +24,19 @@
                                 <div class="col-xs-12  padding-0">
                                     <form>
                                         <div class="input-group buscador-principal">
-                                            <div class="col-md-3 col-sm-4 padding-right-20 padding-left-0">
+                                            <div class="col-md-6 col-sm-6 padding-right-20 padding-left-0">
                                                 <label class="fontcolor-dark margin-btm-10">Patron Barcode</label>
                                                 <input id="patronBarcode" name="patronBarcode" type="text" th:field="*{patronBarcode}" class="form-control themed-input"/>
                                             </div>
-                                            <div class="col-md-6 col-sm-4 padding-right-50 padding-left-50">
+                                            <div class="col-md-6 col-sm-6 padding-right-50 padding-left-50">
                                                 <label class="fontcolor-dark margin-btm-10">Item Barcode</label>
                                                 <input id="itemBarcode" name="itemBarcode" type="text" th:field="*{itemBarcode}" class="form-control themed-input"/>
-                                            </div>
-                                            <div class="col-md-3 col-sm-4 padding-left-20 padding-right-0">
-                                                <label class="fontcolor-dark margin-btm-10">Delivery Location</label>
-                                                <input id="deliveryLocation" name="deliveryLocation" type="text" th:field="*{deliveryLocation}" class="form-control themed-input"/>
                                             </div>
                                             <div class="input-group-btn search-panel padding-left-70 padding-right-10">
                                                 <button id="searchRequestsButton" class="btn themed-button themed-button-search" type="button" name="searchRequestsButton" onclick="searchRequests('searchRequests')">Search</button>
                                             </div>
                                             <div class="input-group-btn">
-                                                <button id="clearRequestForm" class="btn themed-button themed-button-cancel" type="submit" name="action" value="clear">Clear Search</button>
+                                                <button id="clearRequestForm" class="btn themed-button themed-button-cancel" type="button" name="action" onclick="clearRequests()">Clear Search</button>
                                             </div>
                                         </div>
                                     </form>
@@ -96,6 +92,8 @@
                                                 <th th:title="'ITEM Owning Institution'">ITEM OI</th>
                                                 <th>DELIVERY LOCATION</th>
                                                 <th th:title="'Request Type'">RT</th>
+                                                <th>REQUEST CREATED BY</th>
+                                                <th>PATRON EMAIL ADDRESS</th>
                                                 <th>REQUEST NOTES</th>
                                             </tr>
                                             </thead>
@@ -138,6 +136,14 @@
                                                     <td>
                                                         <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].requestType}"/>
                                                         <span th:text="${searchResult.requestType}"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].requestCreatedBy}"/>
+                                                        <span th:text="${searchResult.requestCreatedBy}"></span>
+                                                    </td>
+                                                    <td>
+                                                        <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].patronEmailId}"/>
+                                                        <span th:text="${searchResult.patronEmailId}"></span>
                                                     </td>
                                                     <td width="">
                                                         <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].requestNotes}"/>

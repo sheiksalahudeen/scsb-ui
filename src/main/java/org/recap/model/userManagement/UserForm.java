@@ -1,12 +1,13 @@
 package org.recap.model.userManagement;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Created by dharmendrag on 29/11/16.
  */
-public class UserForm {
+public class UserForm implements Serializable {
 
     private Integer userId;
 

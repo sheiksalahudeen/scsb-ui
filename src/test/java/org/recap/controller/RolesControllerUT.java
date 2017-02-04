@@ -7,16 +7,19 @@ import org.recap.model.jpa.RoleEntity;
 import org.recap.model.search.RolesForm;
 import org.recap.repository.jpa.PermissionsDetailsRepository;
 import org.recap.repository.jpa.RolesDetailsRepositorty;
+import org.recap.security.UserManagement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -42,6 +45,9 @@ public class RolesControllerUT extends BaseTestCase {
     @Mock
     HttpServletRequest request;
 
+    @Mock
+    HttpSession session;
+
     @Test
     public void testRoles(){
         RolesForm rolesForm = new RolesForm();
@@ -51,36 +57,7 @@ public class RolesControllerUT extends BaseTestCase {
         Map rolesMap = new HashMap();
         rolesMap = modelAndView.getModel();
         rolesForm = (RolesForm) rolesMap.get("rolesForm");
-        assertEquals(rolesForm.getRolesSearchResults().get(0).getRolesDescription(),"Admin for all the institutions");
-    }
-
-    @Test
-    public void testCreateAndDeleteRole(){
-        RolesForm rolesForm = new RolesForm();
-        rolesForm.setNewRoleName("NewSearch");
-        rolesForm.setNewRoleDescription("Ability to search SCSB and export results");
-        rolesForm.setNewPermissionNames("CreateUser");
-        ModelAndView modelAndView = rolesController.newRole(rolesForm, model);
-        assertNotNull(modelAndView);
-        Map rolesMap = new HashMap();
-        rolesMap = modelAndView.getModel();
-        rolesForm = (RolesForm) rolesMap.get("rolesForm");
-        System.out.println(rolesForm.toString());
-        assertEquals(rolesForm.getMessage(),"Role added successfully");
-
-        RoleEntity roleEntity = rolesDetailsRepositorty.findByRoleName("NewSearch");
-        assertNotNull(roleEntity);
-        assertNotNull(roleEntity.getRoleId());
-
-        RolesForm rolesForm1 = new RolesForm();
-        rolesForm1.setRoleId(roleEntity.getRoleId());
-        ModelAndView modelAndView1 = rolesController.delete(rolesForm1, model);
-        assertNotNull(modelAndView1);
-        rolesMap.clear();
-        rolesMap = modelAndView1.getModel();
-        rolesForm1 = (RolesForm) rolesMap.get("rolesForm");
-        assertEquals(rolesForm1.getMessage(),"Role deleted successfully");
-
+        assertEquals(rolesForm.getRolesSearchResults().size(),0);
     }
 
     @Test
@@ -130,10 +107,12 @@ public class RolesControllerUT extends BaseTestCase {
         rolesForm.setRoleId(1);
         rolesForm.setEditRoleName("Admin");
         String[] permissionName ={"CreateUser"};
+        when(request.getSession()).thenReturn(session);
         when(request.getParameterValues("permissionNames[]")).thenReturn(permissionName);
+        when(session.getAttribute(UserManagement.USER_NAME)).thenReturn("SuperAdmin");
         rolesForm.setEditPermissionName(Arrays.asList(permissionName));
         rolesForm.setEditRoleDescription("test desc");
-        ModelAndView modelAndView = rolesController.saveEditedRole(rolesForm.getRoleId(),rolesForm.getEditRoleName(),rolesForm.getEditRoleName(),model,request);
+        ModelAndView modelAndView = rolesController.saveEditedRole(rolesForm.getRoleId(),rolesForm.getEditRoleName(),rolesForm.getEditRoleName(),request);
         assertNotNull(modelAndView);
         assertEquals("roles",modelAndView.getViewName());
     }
@@ -203,7 +182,8 @@ public class RolesControllerUT extends BaseTestCase {
         rolesForm.setRoleName("Admin");
         rolesForm.setPermissionNames("CreateUser");
         rolesForm.setPageNumber(2);
-        rolesForm.setPageSize(25);
+        rolesForm.setPageSize(10);
+        rolesForm.setTotalPageCount(3);
         ModelAndView modelAndView = rolesController.searchLast(rolesForm,model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());

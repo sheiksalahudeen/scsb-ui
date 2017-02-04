@@ -26,26 +26,17 @@ public class RequestServiceUtil {
     RequestItemDetailsRepository requestItemDetailsRepository;
 
     public Page<RequestItemEntity> searchRequests(RequestForm requestForm) {
-        String patronBarcode = requestForm.getPatronBarcode();
-        String itemBarcode = requestForm.getItemBarcode();
-        String deliveryLocation = requestForm.getDeliveryLocation();
+        String patronBarcode = StringUtils.isNotBlank(requestForm.getPatronBarcode()) ? requestForm.getPatronBarcode().trim() : requestForm.getPatronBarcode();
+        String itemBarcode = StringUtils.isNotBlank(requestForm.getItemBarcode()) ? requestForm.getItemBarcode().trim() : requestForm.getItemBarcode();
         Pageable pageable = new PageRequest(requestForm.getPageNumber(), requestForm.getPageSize(), Sort.Direction.ASC, RecapConstants.REQUEST_ID);
 
         Page<RequestItemEntity> requestItemEntities;
-        if (StringUtils.isNotBlank(patronBarcode) && StringUtils.isNotBlank(itemBarcode) && StringUtils.isNotBlank(deliveryLocation)) {
-            requestItemEntities = requestItemDetailsRepository.findByPatronBarcodeAndItemBarcodeAndDeliveryLocation(pageable, patronBarcode, itemBarcode, deliveryLocation);
-        } else if (StringUtils.isNotBlank(patronBarcode) && StringUtils.isNotBlank(itemBarcode) && StringUtils.isBlank(deliveryLocation)) {
+        if (StringUtils.isNotBlank(patronBarcode) && StringUtils.isNotBlank(itemBarcode)) {
             requestItemEntities = requestItemDetailsRepository.findByPatronBarcodeAndItemBarcode(pageable, patronBarcode, itemBarcode);
-        } else if (StringUtils.isNotBlank(patronBarcode) && StringUtils.isBlank(itemBarcode) && StringUtils.isNotBlank(deliveryLocation)) {
-            requestItemEntities = requestItemDetailsRepository.findByPatronBarcodeAndDeliveryLocation(pageable, patronBarcode, deliveryLocation);
-        } else if (StringUtils.isBlank(patronBarcode) && StringUtils.isNotBlank(itemBarcode) && StringUtils.isNotBlank(deliveryLocation)) {
-            requestItemEntities = requestItemDetailsRepository.findByItemBarcodeAndDeliveryLocation(pageable, itemBarcode, deliveryLocation);
-        } else if (StringUtils.isNotBlank(patronBarcode) && StringUtils.isBlank(itemBarcode) && StringUtils.isBlank(deliveryLocation)) {
+        } else if (StringUtils.isNotBlank(patronBarcode) && StringUtils.isBlank(itemBarcode)) {
             requestItemEntities = requestItemDetailsRepository.findByPatronBarcode(pageable, patronBarcode);
-        } else if (StringUtils.isBlank(patronBarcode) && StringUtils.isNotBlank(itemBarcode) && StringUtils.isBlank(deliveryLocation)) {
+        } else if (StringUtils.isBlank(patronBarcode) && StringUtils.isNotBlank(itemBarcode)) {
             requestItemEntities = requestItemDetailsRepository.findByItemBarcode(pageable, itemBarcode);
-        } else if (StringUtils.isBlank(patronBarcode) && StringUtils.isBlank(itemBarcode) && StringUtils.isNotBlank(deliveryLocation)) {
-            requestItemEntities = requestItemDetailsRepository.findByStopCode(pageable, deliveryLocation);
         } else {
             requestItemEntities = requestItemDetailsRepository.findAll(pageable);
         }

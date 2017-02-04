@@ -73,7 +73,7 @@ public class UserRoleController {
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES);
             return "searchRecords";
         } else {
-            return "redirect:/";
+            return UserManagement.unAuthorizedUser(session,"Users",logger);
         }
 
     }
@@ -246,6 +246,8 @@ public class UserRoleController {
         List<Object> institutions = userRoleService.getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId());
         userRoleForm.setRoles(roles);
         userRoleForm.setInstitutions(institutions);
+        Object userName = session.getAttribute(UserManagement.USER_NAME);
+        userRoleForm.setCreatedBy(String.valueOf(userName));
         UsersEntity usersEntity = userRoleService.saveNewUserToDB(userRoleForm);
         if (usersEntity != null) {
             userRoleForm.setUserDescription(userRoleForm.getUserDescription());
@@ -325,7 +327,9 @@ public class UserRoleController {
         userRoleForm.setInstitutions(institutions);
         userRoleForm.setRoles(roles);
         userRoleForm.setUserId(userId);
-        UsersEntity usersEntity = userRoleService.saveEditedUserToDB(userId, networkLoginId, userDescription, institutionId, roleIds, userEmailId);
+        Object userName = session.getAttribute(UserManagement.USER_NAME);
+        userRoleForm.setLastUpdatedBy(String.valueOf(userName));
+        UsersEntity usersEntity = userRoleService.saveEditedUserToDB(userId, networkLoginId, userDescription, institutionId, roleIds, userEmailId,userRoleForm);
         if (usersEntity != null) {
             userRoleForm.setShowEditSuccess(true);
             userRoleForm.setEditNetworkLoginId(usersEntity.getLoginId());
@@ -382,7 +386,11 @@ public class UserRoleController {
             Page<UsersEntity> usersEntities = userRoleService.searchUsers(userRoleForm, superAdmin);
             userRoleForm.setUserRoleFormList(setFormValues(usersEntities.getContent(), userId));
             userRoleForm.setShowResults(true);
-            userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements() - 1));
+            if(superAdmin){
+                userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements()));
+            }else{
+                userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements() - 1));
+            }
             userRoleForm.setTotalPageCount(usersEntities.getTotalPages());
         } else if (StringUtils.isNotBlank(userRoleForm.getSearchNetworkId()) && StringUtils.isBlank(userRoleForm.getUserEmailId())) {
             logger.debug("Search Users By NetworkId :" + userRoleForm.getSearchNetworkId());
@@ -391,7 +399,11 @@ public class UserRoleController {
             if (userEntity != null && userEntity.size() > 0) {
                 userRoleForm.setUserRoleFormList(setFormValues(usersEntities.getContent(), userId));
                 userRoleForm.setShowResults(true);
-                userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements() - 1));
+                if(superAdmin){
+                    userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements()));
+                }else{
+                    userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements() - 1));
+                }
                 userRoleForm.setTotalPageCount(usersEntities.getTotalPages());
             } else {
                 userRoleForm.setMessage(RecapConstants.NETWORK_LOGIN_ID_DOES_NOT_EXIST);
@@ -405,7 +417,11 @@ public class UserRoleController {
             if (userEntity != null && userEntity.size() > 0) {
                 userRoleForm.setUserRoleFormList(setFormValues(usersEntities.getContent(), userId));
                 userRoleForm.setShowResults(true);
-                userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements() - 1));
+                if(superAdmin){
+                    userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements()));
+                }else{
+                    userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements() - 1));
+                }
                 userRoleForm.setTotalPageCount(usersEntities.getTotalPages());
             } else {
                 userRoleForm.setMessage(RecapConstants.EMAILID_ID_DOES_NOT_EXIST);
@@ -419,7 +435,11 @@ public class UserRoleController {
             if (userEntity != null && userEntity.size() > 0) {
                 userRoleForm.setUserRoleFormList(setFormValues(usersEntities.getContent(), userId));
                 userRoleForm.setShowResults(true);
-                userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements() - 1));
+                if(superAdmin){
+                    userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements()));
+                }else{
+                    userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements() - 1));
+                }
                 userRoleForm.setTotalPageCount(usersEntities.getTotalPages());
             } else {
                 userRoleForm.setMessage(RecapConstants.NETWORK_LOGIN_ID_AND_EMAILID_ID_DOES_NOT_EXIST);
