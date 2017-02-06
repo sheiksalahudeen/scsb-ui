@@ -103,8 +103,8 @@ public class ReportsUtil {
         reportsForm.setDeaccessionPrivateNyplCount(reportsResponse.getDeaccessionPrivateNyplCount());
 
         reportsForm.setDeaccessionOpenPulCount(reportsResponse.getDeaccessionOpenPulCount());
-        reportsForm.setDeaccessionOpenPulCount(reportsResponse.getDeaccessionOpenCulCount());
-        reportsForm.setDeaccessionOpenPulCount(reportsResponse.getDeaccessionOpenNyplCount());
+        reportsForm.setDeaccessionOpenCulCount(reportsResponse.getDeaccessionOpenCulCount());
+        reportsForm.setDeaccessionOpenNyplCount(reportsResponse.getDeaccessionOpenNyplCount());
 
         reportsForm.setDeaccessionSharedPulCount(reportsResponse.getDeaccessionSharedPulCount());
         reportsForm.setDeaccessionSharedCulCount(reportsResponse.getDeaccessionSharedCulCount());

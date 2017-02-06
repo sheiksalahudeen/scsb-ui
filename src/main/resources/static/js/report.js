@@ -288,6 +288,7 @@ jQuery(document).ready(function ($) {
 
 
     $('#numOfRecordsId').change(function (){
+        $('#reportsPageNumber').val(0);
         var $form = $('#reports-form');
         var url = "/reports/deaccessionInformation";
         $.ajax({
