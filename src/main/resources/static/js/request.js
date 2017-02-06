@@ -14,6 +14,21 @@ jQuery(document).ready(function ($) {
         $("#request .create-request-section").show();
         loadCreateRequest();
     });
+
+    $('#goBackLink').click(function(e){
+        $('#errorMessageId').hide();
+        $('#itemBarcodeErrorMessage').hide();
+        $('#patronBarcodeErrorMessage').hide();
+        $('#requestTypeErrorMessage').hide();
+        $('#deliveryLocationErrorMessage').hide();
+        $('#requestingInstitutionErrorMessage').hide();
+        $('#startPageErrorMessage').hide();
+        $('#endPageErrorMessage').hide();
+        $('#articleTitleErrorMessage').hide();
+        $('#patronEmailIdErrorMessage').hide();
+    });
+
+
 });
 
 $(function() {
