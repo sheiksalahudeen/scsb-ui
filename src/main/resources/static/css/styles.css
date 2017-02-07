@@ -397,7 +397,7 @@ textarea{resize:none;}
 .multiselect-container.dropdown-menu > .active > a:hover,
 .multiselect-container.dropdown-menu > .active > a:focus{background:none;color:#848484}
 .multiselect-container.dropdown-menu .checkbox .cr{border:1px solid #888988;}
-.multiselect-container.dropdown-menu .checkbox{margin:5px 0;padding:0;color:#555;min-height:auto}
+.multiselect-container.dropdown-menu .checkbox{margin:4px 0;padding:4px;color:#555;min-height:auto}
 /********Bootstrap Styles Overrides Ends ***********/
 
 /***********Custom Check Box Styles Starts ***************/

@@ -286,9 +286,9 @@
                                         <div class="col-sm- col-sm-6">
                                             <div class="select-holder">
                                                 <select class="form-control themed-input themed-select" id="roleId" th:onchange="'javascript:toggleUserRolesValidation()'"
-                                                        name="roleId" multiple="multiple"
+                                                        name="roleId" multiple="multiple" data-actions-box="true" data-placement="right" data-toggle="tooltip"
                                                         th:field="${userRoleForm.selectedForCreate}">
-                                                    <option th:each="roleValues : ${userRoleForm.roles}"
+                                                    <option id="rolesOption" th:each="roleValues : ${userRoleForm.roles}" data-toggle="tooltip" th:title="${roleValues[2]}"
                                                             th:value="${roleValues[0]}" th:text="${roleValues[1]}"
                                                             th:selected="${userRoleForm.showSelectedForCreate.contains(roleValues)}"></option>
                                                 </select>
