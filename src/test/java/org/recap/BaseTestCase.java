@@ -59,6 +59,9 @@ public class BaseTestCase {
     @Autowired
     public PermissionsDetailsRepository permissionsRepository;
 
+    @Autowired
+    public RequestTypeDetailsRepository requestTypeDetailsRepository;
+
 
     @Test
     public void loadContexts() {
