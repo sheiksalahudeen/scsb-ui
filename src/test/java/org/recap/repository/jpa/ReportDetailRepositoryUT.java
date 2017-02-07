@@ -1,9 +1,10 @@
-package org.recap.model.jpa;
+package org.recap.repository.jpa;
 
 import org.junit.Test;
 import org.recap.BaseTestCase;
 import org.recap.RecapConstants;
-import org.recap.repository.jpa.ReportDetailRepository;
+import org.recap.model.jpa.ReportDataEntity;
+import org.recap.model.jpa.ReportEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
