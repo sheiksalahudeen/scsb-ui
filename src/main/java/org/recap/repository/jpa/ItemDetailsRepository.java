@@ -20,10 +20,6 @@ import java.util.List;
 @RepositoryRestResource(collectionResourceRel = "item", path = "item")
 public interface ItemDetailsRepository extends PagingAndSortingRepository<ItemEntity, ItemPK> {
 
-    Long countByIsDeletedFalse();
-
-    Page<ItemEntity> findAllByIsDeletedFalse(Pageable pageable);
-
     ItemEntity findByItemId(Integer itemId);
 
     Long countByOwningInstitutionIdAndIsDeletedFalse(Integer institutionId);
@@ -42,13 +38,6 @@ public interface ItemDetailsRepository extends PagingAndSortingRepository<ItemEn
     @Transactional
     @Query("update ItemEntity item set item.collectionGroupId = :collectionGroupId, item.lastUpdatedBy = :lastUpdatedBy, item.lastUpdatedDate = :lastUpdatedDate where item.itemId = :itemId")
     int updateCollectionGroupIdByItemId(@Param("collectionGroupId") Integer collectionGroupId, @Param("itemId") Integer itemId, @Param("lastUpdatedBy") String lastUpdatedBy, @Param("lastUpdatedDate") Date lastUpdatedDate);
-
-    List<ItemEntity> findByBarcodeIn(@Param("barcodes") List<String> barcodes);
-
-    @Modifying(clearAutomatically = true)
-    @Transactional
-    @Query("UPDATE ItemEntity item SET item.isDeleted = true, item.lastUpdatedBy = :lastUpdatedBy, item.lastUpdatedDate = :lastUpdatedDate WHERE item.itemId = :itemId")
-    int markItemAsDeleted(@Param("itemId") Integer itemId, @Param("lastUpdatedBy") String lastUpdatedBy, @Param("lastUpdatedDate") Date lastUpdatedDate);
 
     @Query(value = "select itemStatus.statusCode from ItemEntity item, ItemStatusEntity itemStatus where item.itemAvailabilityStatusId = itemStatus.itemStatusId and item.barcode = :barcode and item.isDeleted = 0")
     String getItemStatusByBarcodeAndIsDeletedFalse(@Param("barcode") String barcode);

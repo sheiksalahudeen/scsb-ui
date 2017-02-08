@@ -54,16 +54,32 @@ public class SearchRecordsController {
     @Autowired
     SearchUtil searchUtil;
 
+    public SearchUtil getSearchUtil() {
+        return searchUtil;
+    }
+
+    public void setSearchUtil(SearchUtil searchUtil) {
+        this.searchUtil = searchUtil;
+    }
+
     @Autowired
     private CsvUtil csvUtil;
 
     @Autowired
     private UserAuthUtil userAuthUtil;
 
+    public UserAuthUtil getUserAuthUtil() {
+        return userAuthUtil;
+    }
+
+    public void setUserAuthUtil(UserAuthUtil userAuthUtil) {
+        this.userAuthUtil = userAuthUtil;
+    }
+
     @RequestMapping("/search")
     public String searchRecords(Model model, HttpServletRequest request) {
         HttpSession session=request.getSession();
-        boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_SEARCH_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
+        boolean authenticated=getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_SEARCH_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
         if(authenticated)
         {
             SearchRecordsRequest searchRecordsRequest = new SearchRecordsRequest();
@@ -235,7 +251,7 @@ public class SearchRecordsController {
         searchRecordsRequest.setShowResults(true);
         searchRecordsRequest.setSelectAll(false);
 
-        SearchRecordsResponse searchRecordsResponse = searchUtil.requestSearchResults(searchRecordsRequest);
+        SearchRecordsResponse searchRecordsResponse = getSearchUtil().requestSearchResults(searchRecordsRequest);
         searchRecordsRequest.setSearchResultRows(searchRecordsResponse.getSearchResultRows());
         searchRecordsRequest.setTotalRecordsCount(searchRecordsResponse.getTotalRecordsCount());
         searchRecordsRequest.setTotalBibRecordsCount(searchRecordsResponse.getTotalBibRecordsCount());
