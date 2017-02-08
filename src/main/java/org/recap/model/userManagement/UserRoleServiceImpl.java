@@ -2,6 +2,7 @@ package org.recap.model.userManagement;
 
 import org.recap.RecapConstants;
 import org.recap.model.jpa.InstitutionEntity;
+import org.recap.model.jpa.PermissionEntity;
 import org.recap.model.jpa.RoleEntity;
 import org.recap.model.jpa.UsersEntity;
 import org.recap.repository.jpa.InstitutionDetailsRepository;
@@ -34,6 +35,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Autowired
     private InstitutionDetailsRepository institutionDetailsRepository;
 
+    @Override
     public Page<UsersEntity> searchUsers(UserRoleForm userRoleForm, boolean superAdmin) {
         Pageable pageable = new PageRequest(userRoleForm.getPageNumber(), userRoleForm.getPageSize(), Sort.Direction.ASC, UserManagement.USER_ID);
         if (superAdmin) {
@@ -46,6 +48,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     }
 
+    @Override
     public Page<UsersEntity> searchByNetworkId(UserRoleForm userRoleForm, boolean superAdmin) {
         Pageable pageable = new PageRequest(userRoleForm.getPageNumber(), userRoleForm.getPageSize(), Sort.Direction.ASC, UserManagement.USER_ID);
         if (superAdmin) {
@@ -57,6 +60,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         }
     }
 
+    @Override
     public Page<UsersEntity> searchByUserEmailId(UserRoleForm userRoleForm, boolean superAdmin) {
         Pageable pageable = new PageRequest(userRoleForm.getPageNumber(), userRoleForm.getPageSize(), Sort.Direction.ASC, UserManagement.USER_ID);
         if (superAdmin) {
@@ -68,6 +72,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         }
     }
 
+    @Override
     public Page<UsersEntity> searchByNetworkIdAndUserEmailId(UserRoleForm userRoleForm, boolean superAdmin) {
         Pageable pageable = new PageRequest(userRoleForm.getPageNumber(), userRoleForm.getPageSize(), Sort.Direction.ASC, UserManagement.USER_ID);
         if (superAdmin) {
@@ -79,6 +84,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         }
     }
 
+    @Override
     public UsersEntity saveNewUserToDB(UserRoleForm userRoleForm) {
         UsersEntity usersEntity = new UsersEntity();
         UsersEntity saveUsersEntity = null;
@@ -139,22 +145,30 @@ public class UserRoleServiceImpl implements UserRoleService {
         return savedUsersEntity;
     }
 
+    @Override
     public List<Object> getRoles(Integer superAdminRole) {
-        List<Object> rolesList = new ArrayList<Object>();
+        List<Object> rolesList = new ArrayList<>();
         List<RoleEntity> roleEntities = rolesDetailsRepositorty.findAll();
         for (RoleEntity roleEntity : roleEntities) {
             if (!superAdminRole.equals(roleEntity.getRoleId())) {
-                Object[] role = new Object[2];
+                Object[] role = new Object[4];
                 role[0] = roleEntity.getRoleId();
                 role[1] = roleEntity.getRoleName();
+                role[2] = roleEntity.getRoleDescription();
+                List<String> permissionNames=new ArrayList<>();
+                for (PermissionEntity permissionEntity : roleEntity.getPermissions()) {
+                    permissionNames.add(permissionEntity.getPermissionName());
+                }
+                role[3] = permissionNames;
                 rolesList.add(role);
             }
         }
         return rolesList;
     }
 
+    @Override
     public List<Object> getInstitutions(boolean isSuperAdmin, Integer loginInstitutionId) {
-        List<Object> institutions = new ArrayList<Object>();
+        List<Object> institutions = new ArrayList<>();
         Iterable<InstitutionEntity> institutionsList = institutionDetailsRepository.findAll();
         for (InstitutionEntity institutionEntity : institutionsList) {
             if (isSuperAdmin || loginInstitutionId.equals(institutionEntity.getInstitutionId())) {
