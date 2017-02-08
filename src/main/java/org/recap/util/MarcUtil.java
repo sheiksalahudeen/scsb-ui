@@ -8,11 +8,6 @@ import org.marc4j.MarcWriter;
 import org.marc4j.MarcXmlReader;
 import org.marc4j.MarcXmlWriter;
 import org.marc4j.marc.*;
-import org.recap.model.jaxb.BibRecord;
-import org.recap.model.jaxb.Holding;
-import org.recap.model.jaxb.Items;
-import org.recap.model.jaxb.marc.CollectionType;
-import org.recap.model.jaxb.marc.ContentType;
 import org.recap.model.marc.BibMarcRecord;
 import org.recap.model.marc.HoldingsMarcRecord;
 import org.recap.model.marc.ItemMarcRecord;
@@ -304,38 +299,6 @@ public class MarcUtil {
             }
             bibMarcRecord.setHoldingsMarcRecords(holdingsMarcRecordList);
         }
-        return bibMarcRecord;
-    }
-
-    public BibMarcRecord buildBibMarcRecord(BibRecord bibRecord) {
-        BibMarcRecord bibMarcRecord = new BibMarcRecord();
-        List<HoldingsMarcRecord> holdingsMarcRecordList = new ArrayList<>();
-        ContentType bibContent = bibRecord.getBib().getContent();
-        CollectionType bibContentCollection = bibContent.getCollection();
-        String bibXmlContent = bibContentCollection.serialize(bibContentCollection);
-        Record bibContentRecord = getRecordFromContent(bibXmlContent.getBytes());
-        bibMarcRecord.setBibRecord(bibContentRecord);
-        for(Holding holding : bibRecord.getHoldings().get(0).getHolding()){
-            HoldingsMarcRecord holdingsMarcRecord = new HoldingsMarcRecord();
-            List<ItemMarcRecord> itemMarcRecords = new ArrayList<>();
-            ContentType holdingContent = holding.getContent();
-            CollectionType holdingContentCollection = holdingContent.getCollection();
-            String holdingXmlContent = holdingContentCollection.serialize(holdingContentCollection);
-            Record holdingContentRecord = getRecordFromContent(holdingXmlContent.getBytes());
-            holdingsMarcRecord.setHoldingsRecord(holdingContentRecord);
-            for(Items item : holding.getItems()){
-                ItemMarcRecord itemMarcRecord = new ItemMarcRecord();
-                ContentType itemContent = item.getContent();
-                CollectionType itemContentCollection = itemContent.getCollection();
-                String itemXmlContent = itemContentCollection.serialize(itemContentCollection);
-                Record itemContentRecord = getRecordFromContent(itemXmlContent.getBytes());
-                itemMarcRecord.setItemRecord(itemContentRecord);
-                itemMarcRecords.add(itemMarcRecord);
-            }
-            holdingsMarcRecord.setItemMarcRecordList(itemMarcRecords);
-            holdingsMarcRecordList.add(holdingsMarcRecord);
-        }
-        bibMarcRecord.setHoldingsMarcRecords(holdingsMarcRecordList);
         return bibMarcRecord;
     }
 

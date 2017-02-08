@@ -44,16 +44,32 @@ public class CollectionController {
     @Autowired
     MarcRecordViewUtil marcRecordViewUtil;
 
+    public MarcRecordViewUtil getMarcRecordViewUtil() {
+        return marcRecordViewUtil;
+    }
+
+    public void setMarcRecordViewUtil(MarcRecordViewUtil marcRecordViewUtil) {
+        this.marcRecordViewUtil = marcRecordViewUtil;
+    }
+
     @Autowired
     CollectionServiceUtil collectionServiceUtil;
 
     @Autowired
     private UserAuthUtil userAuthUtil;
 
+    public UserAuthUtil getUserAuthUtil() {
+        return userAuthUtil;
+    }
+
+    public void setUserAuthUtil(UserAuthUtil userAuthUtil) {
+        this.userAuthUtil = userAuthUtil;
+    }
+
     @RequestMapping("/collection")
     public String collection(Model model,HttpServletRequest request) {
         HttpSession session=request.getSession();
-        boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_COLLECTION_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
+        boolean authenticated=getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_COLLECTION_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
         if(authenticated)
         {
             CollectionForm collectionForm = new CollectionForm();
@@ -81,8 +97,8 @@ public class CollectionController {
                                      BindingResult result,
                                      Model model,HttpServletRequest request) throws Exception {
 
-        UserDetailsForm userDetailsForm=userAuthUtil.getUserDetails(request.getSession(),UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
-        BibliographicMarcForm bibliographicMarcForm = marcRecordViewUtil.buildBibliographicMarcForm(collectionForm.getBibId(), collectionForm.getItemId(),userDetailsForm);
+        UserDetailsForm userDetailsForm=getUserAuthUtil().getUserDetails(request.getSession(),UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
+        BibliographicMarcForm bibliographicMarcForm = getMarcRecordViewUtil().buildBibliographicMarcForm(collectionForm.getBibId(), collectionForm.getItemId(),userDetailsForm);
         populateCollectionForm(collectionForm, bibliographicMarcForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.COLLECTION);
         return new ModelAndView("collection :: #collectionUpdateModal", "collectionForm", collectionForm);

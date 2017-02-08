@@ -65,6 +65,7 @@ public class NotesDetailsRepositoryUT extends BaseTestCase {
         institutionEntity.setInstitutionCode("UOC");
         institutionEntity.setInstitutionName("University of Chicago");
         InstitutionEntity entity = institutionDetailRepository.save(institutionEntity);
+        entityManager.refresh(entity);
         assertNotNull(entity);
 
         PatronEntity patronEntity = new PatronEntity();
@@ -72,6 +73,7 @@ public class NotesDetailsRepositoryUT extends BaseTestCase {
         patronEntity.setInstitutionId(entity.getInstitutionId());
         patronEntity.setEmailId("hamalatha.s@htcindia.com");
         PatronEntity savedPatronEntity = patronDetailsRepository.save(patronEntity);
+        entityManager.refresh(savedPatronEntity);
         assertNotNull(savedPatronEntity);
 
 
@@ -79,6 +81,7 @@ public class NotesDetailsRepositoryUT extends BaseTestCase {
         requestTypeEntity.setRequestTypeCode("Recallhold");
         requestTypeEntity.setRequestTypeDesc("Recallhold");
         RequestTypeEntity savedRequestTypeEntity = requestTypeDetailsRepository.save(requestTypeEntity);
+        entityManager.refresh(savedRequestTypeEntity);
         assertNotNull(savedRequestTypeEntity);
 
         RequestItemEntity requestItemEntity = new RequestItemEntity();
@@ -89,8 +92,8 @@ public class NotesDetailsRepositoryUT extends BaseTestCase {
         requestItemEntity.setStopCode("test");
         requestItemEntity.setCreatedDate(new Date());
         requestItemEntity.setRequestExpirationDate(new Date());
-        requestItemEntity.setRequestExpirationDate(new Date());
         requestItemEntity.setCreatedBy("test");
+        requestItemEntity.setLastUpdatedDate(new Date());
         requestItemEntity.setEmailId("test@gmail.com");
         requestItemEntity.setRequestStatusId(4);
         RequestItemEntity savedRequestItemEntity = requestItemDetailsRepository.save(requestItemEntity);

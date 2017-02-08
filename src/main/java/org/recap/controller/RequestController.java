@@ -79,13 +79,61 @@ public class RequestController {
     @Autowired
     private UserAuthUtil userAuthUtil;
 
+    public RequestServiceUtil getRequestServiceUtil() {
+        return requestServiceUtil;
+    }
+
+    public void setRequestServiceUtil(RequestServiceUtil requestServiceUtil) {
+        this.requestServiceUtil = requestServiceUtil;
+    }
+
+    public UserAuthUtil getUserAuthUtil() {
+        return userAuthUtil;
+    }
+
+    public void setUserAuthUtil(UserAuthUtil userAuthUtil) {
+        this.userAuthUtil = userAuthUtil;
+    }
+
+    public InstitutionDetailsRepository getInstitutionDetailsRepository() {
+        return institutionDetailsRepository;
+    }
+
+    public void setInstitutionDetailsRepository(InstitutionDetailsRepository institutionDetailsRepository) {
+        this.institutionDetailsRepository = institutionDetailsRepository;
+    }
+
+    public RequestTypeDetailsRepository getRequestTypeDetailsRepository() {
+        return requestTypeDetailsRepository;
+    }
+
+    public void setRequestTypeDetailsRepository(RequestTypeDetailsRepository requestTypeDetailsRepository) {
+        this.requestTypeDetailsRepository = requestTypeDetailsRepository;
+    }
+
+    public CustomerCodeDetailsRepository getCustomerCodeDetailsRepository() {
+        return customerCodeDetailsRepository;
+    }
+
+    public void setCustomerCodeDetailsRepository(CustomerCodeDetailsRepository customerCodeDetailsRepository) {
+        this.customerCodeDetailsRepository = customerCodeDetailsRepository;
+    }
+
+    public ItemDetailsRepository getItemDetailsRepository() {
+        return itemDetailsRepository;
+    }
+
+    public void setItemDetailsRepository(ItemDetailsRepository itemDetailsRepository) {
+        this.itemDetailsRepository = itemDetailsRepository;
+    }
+
     @RequestMapping("/request")
     public String collection(Model model,HttpServletRequest request) {
         HttpSession session=request.getSession();
-        boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_REQUEST_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
+        boolean authenticated=getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REQUEST_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
         if(authenticated)
         {
-            UserDetailsForm userDetailsForm=userAuthUtil.getUserDetails(session,UserManagement.REQUEST_ITEM_PRIVILEGE);
+            UserDetailsForm userDetailsForm=getUserAuthUtil().getUserDetails(session,UserManagement.REQUEST_ITEM_PRIVILEGE);
             RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm);
             model.addAttribute("requestForm", requestForm);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
@@ -161,7 +209,7 @@ public class RequestController {
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=loadCreateRequest")
     public ModelAndView loadCreateRequest(Model model,HttpServletRequest request) {
-        UserDetailsForm userDetailsForm=userAuthUtil.getUserDetails(request.getSession(),UserManagement.REQUEST_ITEM_PRIVILEGE);
+        UserDetailsForm userDetailsForm=getUserAuthUtil().getUserDetails(request.getSession(),UserManagement.REQUEST_ITEM_PRIVILEGE);
         RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm);
         model.addAttribute("requestForm", requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
@@ -175,7 +223,7 @@ public class RequestController {
         List<String> requestTypes = new ArrayList<>();
         List<String> deliveryLocations = new ArrayList<>();
 
-        Iterable<InstitutionEntity> institutionEntities = institutionDetailsRepository.findAll();
+        Iterable<InstitutionEntity> institutionEntities = getInstitutionDetailsRepository().findAll();
         for (Iterator iterator = institutionEntities.iterator(); iterator.hasNext(); ) {
             InstitutionEntity institutionEntity = (InstitutionEntity) iterator.next();
             if (userDetailsForm.getLoginInstitutionId() == institutionEntity.getInstitutionId() || userDetailsForm.isRecapUser() || userDetailsForm.isSuperAdmin()) {
@@ -183,13 +231,13 @@ public class RequestController {
             }
         }
 
-        Iterable<RequestTypeEntity> requestTypeEntities = requestTypeDetailsRepository.findAll();
+        Iterable<RequestTypeEntity> requestTypeEntities = getRequestTypeDetailsRepository().findAll();
         for (Iterator iterator = requestTypeEntities.iterator(); iterator.hasNext(); ) {
             RequestTypeEntity requestTypeEntity = (RequestTypeEntity) iterator.next();
             requestTypes.add(requestTypeEntity.getRequestTypeCode());
         }
 
-        Iterable<CustomerCodeEntity> customerCodeEntities = customerCodeDetailsRepository.findAll();
+        Iterable<CustomerCodeEntity> customerCodeEntities = getCustomerCodeDetailsRepository().findAll();
         for (Iterator iterator = customerCodeEntities.iterator(); iterator.hasNext(); ) {
             CustomerCodeEntity customerCodeEntity = (CustomerCodeEntity) iterator.next();
             if (userDetailsForm.getLoginInstitutionId() == customerCodeEntity.getOwningInstitutionId() || userDetailsForm.isRecapUser() || userDetailsForm.isSuperAdmin()) {
@@ -220,11 +268,11 @@ public class RequestController {
             for (String itemBarcode : itemBarcodes) {
                 String barcode = itemBarcode.trim();
                 if (StringUtils.isNotBlank(barcode)) {
-                    List<ItemEntity> itemEntities = itemDetailsRepository.findByBarcodeAndIsDeletedFalse(barcode);
+                    List<ItemEntity> itemEntities = getItemDetailsRepository().findByBarcodeAndIsDeletedFalse(barcode);
                     if (CollectionUtils.isNotEmpty(itemEntities)) {
                         for (ItemEntity itemEntity : itemEntities) {
                             if (null != itemEntity && CollectionUtils.isNotEmpty(itemEntity.getBibliographicEntities())) {
-                                userDetailsForm = userAuthUtil.getUserDetails(request.getSession(),UserManagement.REQUEST_ITEM_PRIVILEGE);
+                                userDetailsForm = getUserAuthUtil().getUserDetails(request.getSession(),UserManagement.REQUEST_ITEM_PRIVILEGE);
                                 if (itemEntity.getCollectionGroupId()==RecapConstants.CGD_PRIVATE && !userDetailsForm.isSuperAdmin() && !userDetailsForm.isRecapUser() && !userDetailsForm.getLoginInstitutionId().equals(itemEntity.getOwningInstitutionId())) {
                                     jsonObject.put("errorMessage", "User is not permitted to request private item(s)");
                                 } else {
@@ -327,7 +375,7 @@ public class RequestController {
     }
 
     private void searchAndSetResults(RequestForm requestForm) {
-        Page<RequestItemEntity> requestItemEntities = requestServiceUtil.searchRequests(requestForm);
+        Page<RequestItemEntity> requestItemEntities = getRequestServiceUtil().searchRequests(requestForm);
         List<SearchResultRow> searchResultRows = buildSearchResultRows(requestItemEntities.getContent());
         if (CollectionUtils.isNotEmpty(searchResultRows)) {
             requestForm.setSearchResultRows(searchResultRows);

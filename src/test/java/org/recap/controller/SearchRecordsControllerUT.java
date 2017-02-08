@@ -3,18 +3,18 @@ package org.recap.controller;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.recap.RecapConstants;
 import org.recap.model.search.SearchItemResultRow;
 import org.recap.model.search.SearchRecordsRequest;
+import org.recap.model.search.SearchRecordsResponse;
 import org.recap.model.search.SearchResultRow;
-import org.recap.model.userManagement.UserForm;
 import org.recap.security.UserManagement;
 import org.recap.util.CsvUtil;
+import org.recap.util.SearchUtil;
 import org.recap.util.UserAuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,9 +28,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 /**
  * Created by premkb on 2/8/16.
@@ -46,11 +46,11 @@ public class SearchRecordsControllerUT extends BaseControllerUT{
     @Mock
     HttpServletResponse httpServletResponse;
 
-    @InjectMocks
-    SearchRecordsController searchRecordsController = new SearchRecordsController();
+    @Mock
+    SearchRecordsController searchRecordsController;
 
     @Autowired
-    private SearchRecordsController recordsController;
+    SearchRecordsController searchRecordsControllerWired;
 
     @Mock
     private CsvUtil csvUtil;
@@ -61,16 +61,20 @@ public class SearchRecordsControllerUT extends BaseControllerUT{
     @Mock
     HttpServletRequest request;
 
-    @Autowired
-    private UserAuthUtil userAuthUtil;
+    @Mock
+    public UserAuthUtil userAuthUtil;
 
-    SearchRecordsRequest searchRecordsRequest = new SearchRecordsRequest();
+    @Mock
+    SearchUtil searchUtil;
+
+    @Mock
+    SearchRecordsRequest searchRecordsRequest;
+
     @Before
     public void setUp() throws Exception {
         when(request.getSession()).thenReturn(session);
-        usersSessionAttributes();
         MockitoAnnotations.initMocks(this);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(recordsController).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(searchRecordsController).build();
         Map searchRecordsMap = new HashMap();
     }
 
@@ -78,112 +82,120 @@ public class SearchRecordsControllerUT extends BaseControllerUT{
     @Test
     public void searchRecords() throws Exception{
         when(request.getSession()).thenReturn(session);
-        usersSessionAttributes();
-        String response = recordsController.searchRecords(model,request);
+        SearchRecordsResponse searchRecordsResponse=new SearchRecordsResponse();
+        when(userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_SEARCH_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN))).thenReturn(true);
+        when(searchUtil.requestSearchResults(searchRecordsRequest)).thenReturn(searchRecordsResponse);
+        when(searchRecordsController.getUserAuthUtil()).thenReturn(userAuthUtil);
+        when(searchRecordsController.getSearchUtil()).thenReturn(searchUtil);
+        when(searchRecordsController.searchRecords(model,request)).thenCallRealMethod();
+        String response = searchRecordsController.searchRecords(model,request);
         assertNotNull(response);
         assertEquals("searchRecords",response);
     }
 
     @Test
     public void search() throws Exception{
-        ModelAndView modelAndView = recordsController.search(getSearchRecordsRequest(),bindingResult,model);
+        SearchRecordsResponse searchRecordsResponse=new SearchRecordsResponse();
+        searchRecordsRequest = new SearchRecordsRequest();
+        when(searchUtil.requestSearchResults(searchRecordsRequest)).thenReturn(searchRecordsResponse);
+        when(searchRecordsController.getSearchUtil()).thenReturn(searchUtil);
+        when(searchRecordsController.search(searchRecordsRequest,bindingResult,model)).thenCallRealMethod();
+        ModelAndView modelAndView = searchRecordsController.search(searchRecordsRequest,bindingResult,model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
     }
 
     @Test
     public void searchPrevious() throws Exception{
-        ModelAndView modelAndView = recordsController.searchPrevious(getSearchRecordsRequest(),bindingResult,model);
+        SearchRecordsResponse searchRecordsResponse=new SearchRecordsResponse();
+        searchRecordsRequest = new SearchRecordsRequest();
+        when(searchUtil.requestSearchResults(searchRecordsRequest)).thenReturn(searchRecordsResponse);
+        when(searchRecordsController.getSearchUtil()).thenReturn(searchUtil);
+        when(searchRecordsController.searchPrevious(searchRecordsRequest,bindingResult,model)).thenCallRealMethod();
+        ModelAndView modelAndView = searchRecordsController.searchPrevious(searchRecordsRequest,bindingResult,model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
     }
 
     @Test
     public void searchNext() throws Exception{
-        ModelAndView modelAndView = recordsController.searchNext(getSearchRecordsRequest(),bindingResult,model);
+        SearchRecordsResponse searchRecordsResponse=new SearchRecordsResponse();
+        searchRecordsRequest = new SearchRecordsRequest();
+        when(searchUtil.requestSearchResults(searchRecordsRequest)).thenReturn(searchRecordsResponse);
+        when(searchRecordsController.getSearchUtil()).thenReturn(searchUtil);
+        when(searchRecordsController.searchNext(searchRecordsRequest,bindingResult,model)).thenCallRealMethod();
+        ModelAndView modelAndView = searchRecordsController.searchNext(searchRecordsRequest,bindingResult,model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
     }
 
     @Test
     public void searchFirst() throws Exception{
-        ModelAndView modelAndView = recordsController.searchFirst(getSearchRecordsRequest(),bindingResult,model);
+        SearchRecordsResponse searchRecordsResponse=new SearchRecordsResponse();
+        searchRecordsRequest = new SearchRecordsRequest();
+        when(searchUtil.requestSearchResults(searchRecordsRequest)).thenReturn(searchRecordsResponse);
+        when(searchRecordsController.getSearchUtil()).thenReturn(searchUtil);
+        when(searchRecordsController.searchFirst(searchRecordsRequest,bindingResult,model)).thenCallRealMethod();
+        ModelAndView modelAndView = searchRecordsController.searchFirst(searchRecordsRequest,bindingResult,model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
     }
 
     @Test
     public void searchLast() throws Exception{
-        ModelAndView modelAndView = recordsController.searchLast(getSearchRecordsRequest(),bindingResult,model);
+        SearchRecordsResponse searchRecordsResponse=new SearchRecordsResponse();
+        searchRecordsRequest = new SearchRecordsRequest();
+        when(searchUtil.requestSearchResults(searchRecordsRequest)).thenReturn(searchRecordsResponse);
+        when(searchRecordsController.getSearchUtil()).thenReturn(searchUtil);
+        when(searchRecordsController.searchLast(searchRecordsRequest,bindingResult,model)).thenCallRealMethod();
+        ModelAndView modelAndView = searchRecordsController.searchLast(searchRecordsRequest,bindingResult,model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
     }
 
     @Test
     public void clear() throws Exception{
-        ModelAndView modelAndView = searchRecordsController.clear(getSearchRecordsRequest(),bindingResult,model);
+        searchRecordsRequest = new SearchRecordsRequest();
+        when(searchRecordsController.clear(searchRecordsRequest,bindingResult,model)).thenCallRealMethod();
+        ModelAndView modelAndView = searchRecordsController.clear(searchRecordsRequest,bindingResult,model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
     }
 
     @Test
     public void newSearch() throws Exception{
-        ModelAndView modelAndView = searchRecordsController.newSearch(getSearchRecordsRequest(),bindingResult,model);
+        searchRecordsRequest = new SearchRecordsRequest();
+        when(searchRecordsController.newSearch(searchRecordsRequest,bindingResult,model)).thenCallRealMethod();
+        ModelAndView modelAndView = searchRecordsController.newSearch(searchRecordsRequest,bindingResult,model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
     }
 
     @Test
     public void requestRecords() throws Exception{
-        ModelAndView modelAndView = searchRecordsController.requestRecords(getSearchRecordsRequest(),bindingResult,model);
+        searchRecordsRequest = new SearchRecordsRequest();
+        when(searchRecordsController.requestRecords(searchRecordsRequest,bindingResult,model)).thenCallRealMethod();
+        ModelAndView modelAndView = searchRecordsController.requestRecords(searchRecordsRequest,bindingResult,model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
     }
 
     @Test
     public void exportRecords() throws Exception {
-        byte[] fileContent = recordsController.exportRecords(buildRequestWithResultRows(), httpServletResponse, bindingResult, model);
+        byte[] fileContent = searchRecordsControllerWired.exportRecords(buildRequestWithResultRows(), httpServletResponse, bindingResult, model);
         assertNotNull(fileContent);
     }
 
     @Test
     public void onPageSizeChange() throws Exception{
-        ModelAndView modelAndView = recordsController.onPageSizeChange(getSearchRecordsRequest(),bindingResult,model);
+        SearchRecordsResponse searchRecordsResponse=new SearchRecordsResponse();
+        searchRecordsRequest = new SearchRecordsRequest();
+        when(searchUtil.requestSearchResults(searchRecordsRequest)).thenReturn(searchRecordsResponse);
+        when(searchRecordsController.getSearchUtil()).thenReturn(searchUtil);
+        when(searchRecordsController.onPageSizeChange(searchRecordsRequest,bindingResult,model)).thenCallRealMethod();
+        ModelAndView modelAndView = searchRecordsController.onPageSizeChange(searchRecordsRequest,bindingResult,model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
-    }
-
-    private SearchRecordsRequest getSearchRecordsRequest(){
-        searchRecordsRequest = new SearchRecordsRequest();
-        searchRecordsRequest.setShowResults(true);
-        List<SearchResultRow> searchResultRows = new ArrayList<>();
-        SearchResultRow searchResultRow = new SearchResultRow();
-        searchResultRow.setTitle("Title1");
-        searchResultRow.setBibId(1);
-        searchResultRows.add(searchResultRow);
-        searchRecordsRequest.setSearchResultRows(searchResultRows);
-        List<String> availability = new ArrayList<>();
-        availability.add("Available");
-        searchRecordsRequest.setAvailability(availability);
-        searchRecordsRequest.setFieldName("Title_search");
-        searchRecordsRequest.setFieldValue("Stay Hungry");
-        List<String> owningInstitutions = new ArrayList<>();
-        owningInstitutions.add("NYPL");
-        searchRecordsRequest.setOwningInstitutions(owningInstitutions);
-        List<String> collectionGroupDesignations = new ArrayList<>();
-        collectionGroupDesignations.add("Shared");
-        searchRecordsRequest.setCollectionGroupDesignations(collectionGroupDesignations);
-        List<String> materialTypes = new ArrayList<>();
-        materialTypes.add("Monograph");
-        searchRecordsRequest.setMaterialTypes(materialTypes);
-        searchRecordsRequest.setTotalPageCount(1);
-        searchRecordsRequest.setTotalBibRecordsCount("1");
-        searchRecordsRequest.setTotalItemRecordsCount("1");
-        searchRecordsRequest.setSelectAll(false);
-        searchRecordsRequest.setIndex(1);
-        searchRecordsRequest.setPageNumber(1);
-        searchRecordsRequest.setPageSize(1);
-        return searchRecordsRequest;
     }
 
     private SearchRecordsRequest buildRequestWithResultRows() {
@@ -221,17 +233,6 @@ public class SearchRecordsControllerUT extends BaseControllerUT{
         searchResultRows.add(searchResultRow2);
         searchRecordsRequest.setSearchResultRows(searchResultRows);
         return searchRecordsRequest;
-    }
-
-    private void usersSessionAttributes() throws Exception {
-        when(request.getSession()).thenReturn(session);
-        UserForm userForm = new UserForm();
-        userForm.setUsername("SuperAdmin");
-        userForm.setInstitution(1);
-        userForm.setPassword("12345");
-        UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+userForm.getInstitution(),userForm.getPassword(),true);
-        userAuthUtil.doAuthentication(token);
-        when(session.getAttribute(UserManagement.USER_TOKEN)).thenReturn(token);
     }
 
 }

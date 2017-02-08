@@ -3,19 +3,16 @@ package org.recap.controller;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.recap.RecapConstants;
 import org.recap.model.search.DeaccessionItemResultsRow;
 import org.recap.model.search.ReportsForm;
-import org.recap.model.userManagement.UserForm;
 import org.recap.repository.jpa.RequestItemDetailsRepository;
 import org.recap.security.UserManagement;
 import org.recap.util.ReportsUtil;
 import org.recap.util.UserAuthUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,7 +25,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 /**
@@ -42,11 +40,8 @@ public class ReportsControllerUT extends BaseControllerUT {
     @Mock
     BindingResult bindingResult;
 
-    @InjectMocks
+    @Mock
     ReportsController reportsController;
-
-    @Autowired
-    ReportsController getReportsController;
 
     @Mock
     RequestItemDetailsRepository requestItemDetailsRepository;
@@ -60,21 +55,31 @@ public class ReportsControllerUT extends BaseControllerUT {
     @Mock
     HttpServletRequest request;
 
-    @Autowired
-    private UserAuthUtil userAuthUtil;
+    @Mock
+    public UserAuthUtil userAuthUtil;
+
+    public UserAuthUtil getUserAuthUtil() {
+        return userAuthUtil;
+    }
+
+    public void setUserAuthUtil(UserAuthUtil userAuthUtil) {
+        this.userAuthUtil = userAuthUtil;
+    }
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(getReportsController).build();
+        this.mockMvc = MockMvcBuilders.standaloneSetup(reportsController).build();
     }
 
 
     @Test
     public void reports() throws Exception{
         when(request.getSession()).thenReturn(session);
-        usersSessionAttributes();
-        String response = getReportsController.collection(model,request);
+        Mockito.when(getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REPORT_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN))).thenReturn(true);
+        Mockito.when(reportsController.getUserAuthUtil()).thenReturn(userAuthUtil);
+        Mockito.when(reportsController.collection(model,request)).thenCallRealMethod();
+        String response = reportsController.collection(model,request);
         assertNotNull(response);
         assertEquals("searchRecords",response);
     }
@@ -200,16 +205,5 @@ public class ReportsControllerUT extends BaseControllerUT {
         ModelAndView modelAndView = reportsController.searchLast(reportsForm,model);
         assertNotNull(modelAndView);
         assertEquals("reports :: #deaccessionInformation",modelAndView.getViewName());
-    }
-
-    private void usersSessionAttributes() throws Exception {
-        when(request.getSession()).thenReturn(session);
-        UserForm userForm = new UserForm();
-        userForm.setUsername("SuperAdmin");
-        userForm.setInstitution(1);
-        userForm.setPassword("12345");
-        UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+userForm.getInstitution(),userForm.getPassword(),true);
-        userAuthUtil.doAuthentication(token);
-        when(session.getAttribute(UserManagement.USER_TOKEN)).thenReturn(token);
     }
 }

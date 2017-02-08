@@ -40,10 +40,18 @@ public class ReportsController {
     @Autowired
     private UserAuthUtil userAuthUtil;
 
+    public UserAuthUtil getUserAuthUtil() {
+        return userAuthUtil;
+    }
+
+    public void setUserAuthUtil(UserAuthUtil userAuthUtil) {
+        this.userAuthUtil = userAuthUtil;
+    }
+
     @RequestMapping("/reports")
     public String collection(Model model, HttpServletRequest request) {
         HttpSession session=request.getSession();
-        boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_REPORT_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
+        boolean authenticated=getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REPORT_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
         if(authenticated)
         {
             ReportsForm reportsForm = new ReportsForm();

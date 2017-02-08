@@ -17,35 +17,14 @@ import java.util.List;
  */
 public interface RequestItemDetailsRepository extends JpaRepository<RequestItemEntity, Integer>, JpaSpecificationExecutor {
 
-    RequestItemEntity findByRequestId(@Param("requestId") Integer requestId);
-
-    List<RequestItemEntity> findByItemId(@Param("itemId") Integer itemId);
-
-    List<RequestItemEntity> findByItemIdIn(@Param("itemIds") List<Integer> itemIds);
-
-    Page<RequestItemEntity> findByStopCode(Pageable pageable, @Param("stopCode") String stopCode);
-
     @Query(value = "select request from RequestItemEntity request where request.itemId = (select itemId from ItemEntity item where item.barcode = :itemBarcode)")
     Page<RequestItemEntity> findByItemBarcode(Pageable pageable, @Param("itemBarcode") String itemBarcode);
 
     @Query(value = "select request from RequestItemEntity request where request.patronId = (select patronId from PatronEntity patron where patron.institutionIdentifier = :patronBarcode)")
     Page<RequestItemEntity> findByPatronBarcode(Pageable pageable, @Param("patronBarcode") String patronBarcode);
 
-    @Query(value = "select request from RequestItemEntity request where request.patronId = (select patronId from PatronEntity patron where patron.institutionIdentifier = :patronBarcode) and request.itemId = (select itemId from ItemEntity item where item.barcode = :itemBarcode) and request.stopCode = :deliveryLocation")
-    Page<RequestItemEntity> findByPatronBarcodeAndItemBarcodeAndDeliveryLocation(Pageable pageable, @Param("patronBarcode") String patronBarcode, @Param("itemBarcode") String itemBarcode, @Param("deliveryLocation") String deliveryLocation);
-
     @Query(value = "select request from RequestItemEntity request where request.patronId = (select patronId from PatronEntity patron where patron.institutionIdentifier = :patronBarcode) and request.itemId = (select itemId from ItemEntity item where item.barcode = :itemBarcode)")
     Page<RequestItemEntity> findByPatronBarcodeAndItemBarcode(Pageable pageable, @Param("patronBarcode") String patronBarcode, @Param("itemBarcode") String itemBarcode);
-
-    @Query(value = "select request from RequestItemEntity request where request.patronId = (select patronId from PatronEntity patron where patron.institutionIdentifier = :patronBarcode) and request.stopCode = :deliveryLocation")
-    Page<RequestItemEntity> findByPatronBarcodeAndDeliveryLocation(Pageable pageable, @Param("patronBarcode") String patronBarcode, @Param("deliveryLocation") String deliveryLocation);
-
-    @Query(value = "select request from RequestItemEntity request where request.itemId = (select itemId from ItemEntity item where item.barcode = :itemBarcode) and request.stopCode = :deliveryLocation")
-    Page<RequestItemEntity> findByItemBarcodeAndDeliveryLocation(Pageable pageable, @Param("itemBarcode") String itemBarcode, @Param("deliveryLocation") String deliveryLocation);
-
-    @Transactional
-    int deleteByItemIdIn(@Param("itemIds") List<Integer> itemIds);
-
 
     @Query(value = "SELECT COUNT(*) FROM REQUEST_ITEM_T , REQUEST_TYPE_T,ITEM_T WHERE REQUEST_ITEM_T.REQUEST_TYPE_ID=REQUEST_TYPE_T.REQUEST_TYPE_ID " +
             "AND REQUEST_ITEM_T.ITEM_ID=ITEM_T.ITEM_ID " +
