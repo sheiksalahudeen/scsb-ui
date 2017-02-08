@@ -29,10 +29,10 @@
                     <li th:if="${session.isSearchAllowed}"  role="presentation" class="tab-search-holder" th:classappend="${#httpServletRequest.getRequestURI() == '/search' ? 'active':''}">
                         <a href="/search" aria-controls="search" class="tab-search"><span class="icons"></span><span>Search</span></a>
                     </li>
-                    <li th:if="${session.isCollectionAllowed}" role="presentation" class="tab-collection-holder" th:classappend="${#httpServletRequest.getRequestURI() == '/collection' ? 'active':''}">
+                    <li th:if="${session.isCollectionAllowed || session.isDeaccessionAllowed}" role="presentation" class="tab-collection-holder" th:classappend="${#httpServletRequest.getRequestURI() == '/collection' ? 'active':''}">
                         <a href="/collection" aria-controls="collection" class="tab-collection"><span class="icons"></span><span>Collection</span></a>
                     </li>
-                    <li th:if="${session.isRequestAllowed}" role="presentation" class="tab-request-holder" th:classappend="${#httpServletRequest.getRequestURI() == '/request' ? 'active':''}">
+                    <li th:if="${session.isRequestAllowed || session.isRequestAllAllowed || session.isRequestItemAllowed}" role="presentation" class="tab-request-holder" th:classappend="${#httpServletRequest.getRequestURI() == '/request' ? 'active':''}">
                         <a href="/request" aria-controls="request" class="tab-request"><span class="icons"></span><span>Request</span></a>
                     </li>
                     <li th:if="${session.isReportAllowed}" role="presentation" class="tab-reports-holder" th:classappend="${#httpServletRequest.getRequestURI() == '/reports' ? 'active':''}">
