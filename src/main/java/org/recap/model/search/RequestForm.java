@@ -8,7 +8,7 @@ import java.util.List;
  */
 public class RequestForm {
 
-    private String requestId;
+    private Integer requestId;
     private String patronBarcode;
     private String itemBarcode;
     private String status;
@@ -42,11 +42,11 @@ public class RequestForm {
     private List<SearchResultRow> searchResultRows = new ArrayList<>();
     private List<String> requestStatuses = new ArrayList<>();
 
-    public String getRequestId() {
+    public Integer getRequestId() {
         return requestId;
     }
 
-    public void setRequestId(String requestId) {
+    public void setRequestId(Integer requestId) {
         this.requestId = requestId;
     }
 

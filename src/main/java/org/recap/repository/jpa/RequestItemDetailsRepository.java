@@ -17,6 +17,8 @@ import java.util.List;
  */
 public interface RequestItemDetailsRepository extends JpaRepository<RequestItemEntity, Integer>, JpaSpecificationExecutor {
 
+    RequestItemEntity findByRequestId(@Param("requestId") Integer requestId);
+
     @Query(value = "select request from RequestItemEntity request where request.requestStatusId = (select requestStatusId from RequestStatusEntity requestStatus where requestStatus.requestStatusDescription = :status)")
     Page<RequestItemEntity> findByStatus(Pageable pageable, @Param("status") String status);
 

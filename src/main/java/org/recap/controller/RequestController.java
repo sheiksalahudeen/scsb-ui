@@ -80,6 +80,9 @@ public class RequestController {
     RequestStatusDetailsRepository requestStatusDetailsRepository;
 
     @Autowired
+    RequestItemDetailsRepository requestItemDetailsRepository;
+
+    @Autowired
     private UserAuthUtil userAuthUtil;
 
     public RequestServiceUtil getRequestServiceUtil() {
@@ -403,6 +406,7 @@ public class RequestController {
                                       Model model) throws Exception {
         RestTemplate restTemplate = new RestTemplate();
         JSONObject jsonObject = new JSONObject();
+        String requestStatus = null;
         try {
             HttpEntity requestEntity = new HttpEntity<>(getHttpHeaders());
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(serverProtocol + scsbUrl + RecapConstants.URL_REQUEST_CANCEL).queryParam(RecapConstants.REQUEST_ID, requestForm.getRequestId());
@@ -410,6 +414,11 @@ public class RequestController {
             CancelRequestResponse cancelRequestResponse = responseEntity.getBody();
             jsonObject.put(RecapConstants.MESSAGE, cancelRequestResponse.getScreenMessage());
             jsonObject.put(RecapConstants.STATUS, cancelRequestResponse.isSuccess());
+            RequestItemEntity requestItemEntity = requestItemDetailsRepository.findByRequestId(requestForm.getRequestId());
+            if (null != requestItemEntity) {
+                requestStatus = requestItemEntity.getRequestStatusEntity().getRequestStatusDescription();
+            }
+            jsonObject.put(RecapConstants.REQUEST_STATUS, requestStatus);
         } catch (Exception exception) {
             exception.printStackTrace();
             logger.error("" + exception);
