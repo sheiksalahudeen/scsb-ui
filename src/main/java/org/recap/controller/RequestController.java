@@ -132,12 +132,11 @@ public class RequestController {
     }
 
     @RequestMapping("/request")
-    public String collection(Model model,HttpServletRequest request) {
-        HttpSession session=request.getSession();
-        boolean authenticated=getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REQUEST_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
-        if(authenticated)
-        {
-            UserDetailsForm userDetailsForm=getUserAuthUtil().getUserDetails(session,UserManagement.REQUEST_ITEM_PRIVILEGE);
+    public String collection(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REQUEST_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
+        if (authenticated) {
+            UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(session, UserManagement.REQUEST_ITEM_PRIVILEGE);
             RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm);
             Object requestedBarcode = ((BindingAwareModelMap) model).get("requestedBarcode");
             if(requestedBarcode != null){
@@ -146,12 +145,10 @@ public class RequestController {
             model.addAttribute("requestForm", requestForm);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
             return "searchRecords";
-        }else{
-            return UserManagement.unAuthorizedUser(session,"Request",logger);
+        } else {
+            return UserManagement.unAuthorizedUser(session, "Request", logger);
         }
-
     }
-
 
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=searchRequests")
@@ -207,6 +204,17 @@ public class RequestController {
     public ModelAndView searchNext(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
                                    BindingResult result,
                                    Model model) {
+        searchAndSetResults(requestForm);
+        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
+        return new ModelAndView("request", "requestForm", requestForm);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=requestPageSizeChange")
+    public ModelAndView onRequestPageSizeChange(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
+                                         BindingResult result,
+                                         Model model) {
+        requestForm.setPageNumber(getPageNumberOnPageSizeChange(requestForm));
         searchAndSetResults(requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
         return new ModelAndView("request", "requestForm", requestForm);
@@ -465,6 +473,21 @@ public class RequestController {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
         return headers;
+    }
+
+    public Integer getPageNumberOnPageSizeChange(RequestForm requestForm) {
+        int totalRecordsCount;
+        Integer pageNumber = requestForm.getPageNumber();
+        try {
+            totalRecordsCount = NumberFormat.getNumberInstance().parse(requestForm.getTotalRecordsCount()).intValue();
+            int totalPagesCount = (int) Math.ceil((double) totalRecordsCount / (double) requestForm.getPageSize());
+            if (totalPagesCount > 0 && pageNumber >= totalPagesCount) {
+                pageNumber = totalPagesCount - 1;
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return pageNumber;
     }
 
 }
