@@ -515,7 +515,6 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         requestItemEntity.setStopCode("s1");
         requestItemEntity.setCreatedBy("test");
         requestItemEntity.setCreatedBy("test");
-        requestItemEntity.setEmailId("test@gmail.com");
         requestItemEntity.setRequestStatusId(4);
         return requestItemDetailsRepository.save(requestItemEntity);
     }
