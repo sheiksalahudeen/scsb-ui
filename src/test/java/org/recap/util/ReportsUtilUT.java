@@ -353,7 +353,6 @@ public class ReportsUtilUT extends BaseTestCase {
         requestItemEntity.setStopCode("s1");
         requestItemEntity.setRequestStatusId(4);
         requestItemEntity.setCreatedBy("test");
-        requestItemEntity.setEmailId("test@gmail.com");
         requestItemDetailsRepository.save(requestItemEntity);
     }
 
