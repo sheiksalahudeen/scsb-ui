@@ -71,8 +71,11 @@ function enableExportSelectedRecordButton(){
     var innerselectAll = $(".innerSelectAllCBClass").is(":checked");
     if (outerCheckBox || innerCheckBox || outerselectAll || innerselectAll){
         document.getElementById("export").disabled = false;
+        document.getElementById("requestButton").disabled = false;
+
     }else{
         document.getElementById("export").disabled = true;
+        document.getElementById("requestButton").disabled = true;
     }
 }
 
@@ -91,6 +94,7 @@ jQuery(document).keypress(function (e) {
     if (e.which == 13) {
         $("#search").click();
     }
+
 });
 
 function selectOrDeselectFacets() {

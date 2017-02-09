@@ -66,7 +66,7 @@ public class ReportsController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/reports", method = RequestMethod.POST, params = "action=submit")
+    @RequestMapping(value = "/reports/submit", method = RequestMethod.POST)
     public ModelAndView reportCounts(@Valid @ModelAttribute("reportsForm") ReportsForm reportsForm,
                                      Model model) throws Exception {
         if (reportsForm.getRequestType().equalsIgnoreCase(RecapConstants.REPORTS_REQUEST)) {
@@ -87,7 +87,7 @@ public class ReportsController {
             reportsUtil.populateCGDItemCounts(reportsForm);
         }
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
-        return new ModelAndView("searchRecords", "reportsForm", reportsForm);
+        return new ModelAndView("reports", "reportsForm", reportsForm);
 
     }
 
