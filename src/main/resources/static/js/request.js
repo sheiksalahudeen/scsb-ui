@@ -114,6 +114,10 @@ function requestsNextPage() {
     searchRequests('next');
 }
 
+function requestsOnPageSizeChange() {
+    searchRequests('requestPageSizeChange');
+}
+
 function populateItemDetails() {
     var itemBarcode = $('#itemBarcodeId').val();
     if (!isBlankValue(itemBarcode)) {
