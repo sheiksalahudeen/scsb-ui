@@ -272,6 +272,7 @@ public class RecapConstants {
     public static final String ITEMBARCODE = "itemBarcode";
     public static final String VALIDATE_REQUEST_ITEM_URL = "requestItem/validateItemRequestInformations";
     public static final String REQUEST_ITEM_URL = "requestItem/requestItem";
+    public static final String URL_REQUEST_CANCEL = "requestItem/cancelRequest";
     public static final String VALID_REQUEST = "All request parameters are valid.Patron is eligible to raise a request";
 
     public static final String ITEM_TITLE = "itemTitle";
@@ -403,4 +404,6 @@ public class RecapConstants {
     public static final String USER_DELETED_SUCCESS_MESSAGE = "Deleted successfully";
     public static final String USER_ADDED_SUCCESSFULLY = " Added Successfully";
     public static final String EMAILID_SHOULD_NOT_DUPLICATE = "Email Id should not be duplicated";
+
+    public static final String MESSAGE = "Message";
 }

@@ -6,12 +6,9 @@ jQuery(document).ready(function ($) {
     resetDefaults();
     /***Request Tab Create Request Form Show/Hide ***/
     $("#request .search-request a").click(function (e) {
-        $("#request .request-main-section").show();
-        $("#request .create-request-section").hide();
+        loadSearchRequest();
     });
     $("#request .backtext a").click(function () {
-        $("#request .request-main-section").hide();
-        $("#request .create-request-section").show();
         loadCreateRequest();
     });
 
@@ -60,6 +57,22 @@ function loadCreateRequest() {
     });
 }
 
+function loadSearchRequest() {
+    var $form = $('#request-form');
+    var url = $form.attr('action') + "?action=loadSearchRequest";
+    var request = $.ajax({
+        url: url,
+        type: 'post',
+        data: $form.serialize(),
+        success: function (response) {
+            console.log("completed");
+            $('#requestContentId').html(response);
+            $("#request .request-main-section").show();
+            $("#request .create-request-section").hide();
+        }
+    });
+}
+
 function searchRequests(action) {
     var $form = $('#request-form');
     var url = $form.attr('action') + "?action=" + action;
@@ -79,6 +92,7 @@ function searchRequests(action) {
 function clearRequests() {
     $("#patronBarcode").val('');
     $("#itemBarcode").val('');
+    $("#requestStatus").val('');
     $(".search-results-container").css('display', 'none');
 }
 
@@ -98,26 +112,6 @@ function requestsPreviousPage() {
 function requestsNextPage() {
     $('#pageNumber').val(parseInt($('#pageNumber').val()) + 1);
     searchRequests('next');
-}
-
-
-function selectAllRows() {
-    var selectAllFlag = $('#requestSelectAll').is(":checked");
-    if (selectAllFlag) {
-        $("tr.requestRow #requestSelected").prop('checked', true);
-    } else {
-        $("tr.requestRow #requestSelected").prop('checked', false);
-    }
-}
-
-function enableRequestButtons() {
-    var selectAllCheckBox = $('#requestSelectAll').is(":checked");
-    var resultsCheckBox = $('tr.requestRow #requestSelected').is(":checked");
-    if (selectAllCheckBox || resultsCheckBox) {
-        document.getElementById("cancelRequestsButtonId").disabled = false;
-    } else {
-        document.getElementById("cancelRequestsButtonId").disabled = true;
-    }
 }
 
 function populateItemDetails() {
@@ -379,4 +373,47 @@ function createRequestSamePatron() {
     $('#requestingInstitutionId').val($('#requestingInstitutionHdn').html());
     $('.EDDdetails-section').hide();
     $('#deliverylocation_request').show();
+}
+
+function cancelRequest(index) {
+    var requestId = $("#requestRowRequestId-" + index).val();
+    $("#requestIdHdn").val(requestId);
+    console.log(requestId);
+    cancelRequestItem(index);
+}
+
+function cancelRequestItem(index) {
+    var $form = $('#request-form');
+    var url = $form.attr('action') + "?action=cancelRequest";
+    var request = $.ajax({
+        url: url,
+        type: 'post',
+        data: $form.serialize(),
+        beforeSend: function () {
+            $('#searchRequestsSection').block({
+                message: '<h1>Processing...</h1>'
+            });
+        },
+        success: function (response) {
+            $('#searchRequestsSection').unblock();
+            console.log("completed");
+            var jsonResponse = JSON.parse(response);
+            var message = jsonResponse['Message'];
+            var status = jsonResponse['Status'];
+            if (status) {
+                $("#cancelStatus").html("Request cancelled successfully");
+                $("#status-" + index).html("CANCELED");
+                $("#cancelButton-" + index).hide();
+            } else {
+                $("#cancelStatus").html("Request cancellation failed. " + message);
+            }
+            $('#cancelRequestModal').modal('show');
+        }
+    });
+}
+
+function showNotesPopup(index) {
+    var notes = $("#notes-" + index).val();
+    $("#requestNotesData").html(notes);
+    $('#requestNotesModal').modal('show');
 }

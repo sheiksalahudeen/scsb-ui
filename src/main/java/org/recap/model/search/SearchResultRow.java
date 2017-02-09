@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,6 +50,7 @@ public class SearchResultRow {
     @ApiModelProperty(name= "itemId", value= "Item Id",position = 17)
     private Integer itemId;
 
+    private Integer requestId;
     private String patronBarcode;
     private String requestingInstitution;
     private String deliveryLocation;
@@ -56,6 +58,8 @@ public class SearchResultRow {
     private String requestNotes;
     private String requestCreatedBy;
     private String patronEmailId;
+    private Date createdDate;
+    private String status;
 
     public Integer getBibId() {
         return bibId;
@@ -255,5 +259,29 @@ public class SearchResultRow {
 
     public void setPatronEmailId(String patronEmailId) {
         this.patronEmailId = patronEmailId;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Integer getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(Integer requestId) {
+        this.requestId = requestId;
     }
 }
