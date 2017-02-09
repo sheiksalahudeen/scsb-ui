@@ -572,14 +572,3 @@ function toggleEditUserDescriptionValidation() {
         $('#editEmailIdErrMsg').hide();
     }
 }
-
-$(function() {
-    $("#users-searchview input").keypress(function (e) {
-        if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
-            $("#searchButton").click();
-            return false;
-        } else {
-            return true;
-        }
-    });
-});

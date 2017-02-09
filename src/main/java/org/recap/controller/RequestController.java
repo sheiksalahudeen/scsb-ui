@@ -7,15 +7,13 @@ import org.codehaus.jettison.json.JSONObject;
 import org.marc4j.marc.Record;
 import org.recap.RecapConstants;
 import org.recap.model.jpa.*;
+import org.recap.model.request.CancelRequestResponse;
 import org.recap.model.request.ItemRequestInformation;
 import org.recap.model.request.ItemResponseInformation;
 import org.recap.model.search.RequestForm;
 import org.recap.model.search.SearchResultRow;
 import org.recap.model.userManagement.UserDetailsForm;
-import org.recap.repository.jpa.CustomerCodeDetailsRepository;
-import org.recap.repository.jpa.InstitutionDetailsRepository;
-import org.recap.repository.jpa.ItemDetailsRepository;
-import org.recap.repository.jpa.RequestTypeDetailsRepository;
+import org.recap.repository.jpa.*;
 import org.recap.security.UserManagement;
 import org.recap.util.BibJSONUtil;
 import org.recap.util.RequestServiceUtil;
@@ -36,11 +34,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -75,6 +75,9 @@ public class RequestController {
 
     @Autowired
     ItemDetailsRepository itemDetailsRepository;
+
+    @Autowired
+    RequestStatusDetailsRepository requestStatusDetailsRepository;
 
     @Autowired
     private UserAuthUtil userAuthUtil;
@@ -150,15 +153,13 @@ public class RequestController {
     public ModelAndView searchRequests(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
                                        BindingResult result,
                                        Model model) throws Exception {
-        try{
+        try {
             requestForm.resetPageNumber();
             searchAndSetResults(requestForm);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
-
-        }
-        catch (Exception exception){
+        } catch (Exception exception) {
             exception.printStackTrace();
-            logger.error(""+exception);
+            logger.error("" + exception);
             logger.debug(exception.getMessage());
         }
         return new ModelAndView("request", "requestForm", requestForm);
@@ -211,6 +212,22 @@ public class RequestController {
     public ModelAndView loadCreateRequest(Model model,HttpServletRequest request) {
         UserDetailsForm userDetailsForm=getUserAuthUtil().getUserDetails(request.getSession(),UserManagement.REQUEST_ITEM_PRIVILEGE);
         RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm);
+        model.addAttribute("requestForm", requestForm);
+        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
+        return new ModelAndView("request", "requestForm", requestForm);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=loadSearchRequest")
+    public ModelAndView loadSearchRequest(Model model, HttpServletRequest request) {
+        RequestForm requestForm = new RequestForm();
+        List<String> requestStatuses = new ArrayList<>();
+        Iterable<RequestStatusEntity> requestStatusEntities = requestStatusDetailsRepository.findAll();
+        for (Iterator iterator = requestStatusEntities.iterator(); iterator.hasNext(); ) {
+            RequestStatusEntity requestStatusEntity = (RequestStatusEntity) iterator.next();
+            requestStatuses.add(requestStatusEntity.getRequestStatusDescription());
+        }
+        requestForm.setRequestStatuses(requestStatuses);
         model.addAttribute("requestForm", requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
         return new ModelAndView("request", "requestForm", requestForm);
@@ -337,10 +354,7 @@ public class RequestController {
                 }
             }
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
-            HttpEntity<ItemRequestInformation> requestEntity = new HttpEntity<>(itemRequestInformation, headers);
+            HttpEntity<ItemRequestInformation> requestEntity = new HttpEntity<>(itemRequestInformation, getHttpHeaders());
 
             ResponseEntity<String> responseEntity = restTemplate.exchange(validateRequestItemUrl, HttpMethod.POST, requestEntity, String.class);
             if (RecapConstants.VALID_REQUEST.equalsIgnoreCase(responseEntity.getBody())) {
@@ -374,6 +388,28 @@ public class RequestController {
         return jsonObject.toString();
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=cancelRequest")
+    public String cancelRequest(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
+                                      BindingResult result,
+                                      Model model) throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            HttpEntity requestEntity = new HttpEntity<>(getHttpHeaders());
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(serverProtocol + scsbUrl + RecapConstants.URL_REQUEST_CANCEL).queryParam(RecapConstants.REQUEST_ID, requestForm.getRequestId());
+            HttpEntity<CancelRequestResponse> responseEntity  = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST, requestEntity, CancelRequestResponse.class);
+            CancelRequestResponse cancelRequestResponse = responseEntity.getBody();
+            jsonObject.put(RecapConstants.MESSAGE, cancelRequestResponse.getScreenMessage());
+            jsonObject.put(RecapConstants.STATUS, cancelRequestResponse.isSuccess());
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            logger.error("" + exception);
+            logger.debug(exception.getMessage());
+        }
+        return jsonObject.toString();
+    }
+
     private void searchAndSetResults(RequestForm requestForm) {
         Page<RequestItemEntity> requestItemEntities = getRequestServiceUtil().searchRequests(requestForm);
         List<SearchResultRow> searchResultRows = buildSearchResultRows(requestItemEntities.getContent());
@@ -393,6 +429,7 @@ public class RequestController {
             List<SearchResultRow> searchResultRows = new ArrayList<>();
             for (RequestItemEntity requestItemEntity : requestItemEntities) {
                 SearchResultRow searchResultRow = new SearchResultRow();
+                searchResultRow.setRequestId(requestItemEntity.getRequestId());
                 searchResultRow.setPatronBarcode(requestItemEntity.getPatronEntity().getInstitutionIdentifier());
                 searchResultRow.setRequestingInstitution(requestItemEntity.getInstitutionEntity().getInstitutionCode());
                 searchResultRow.setBarcode(requestItemEntity.getItemEntity().getBarcode());
@@ -400,10 +437,11 @@ public class RequestController {
                 searchResultRow.setDeliveryLocation(requestItemEntity.getStopCode());
                 searchResultRow.setRequestType(requestItemEntity.getRequestTypeEntity().getRequestTypeCode());
                 searchResultRow.setRequestCreatedBy(requestItemEntity.getCreatedBy());
-                searchResultRow.setPatronEmailId(requestItemEntity.getEmailId());
-                if (CollectionUtils.isNotEmpty(requestItemEntity.getNotesEntities())) {
-                    searchResultRow.setRequestNotes(requestItemEntity.getNotesEntities().get(0).getNotes());
-                }
+                searchResultRow.setPatronEmailId(requestItemEntity.getPatronEntity().getEmailId());
+                searchResultRow.setRequestNotes(requestItemEntity.getNotes());
+                searchResultRow.setCreatedDate(requestItemEntity.getCreatedDate());
+                searchResultRow.setStatus(requestItemEntity.getRequestStatusEntity().getRequestStatusDescription());
+
                 ItemEntity itemEntity = requestItemEntity.getItemEntity();
                 if (null != itemEntity) {
                     if (CollectionUtils.isNotEmpty(itemEntity.getBibliographicEntities())) {
@@ -415,6 +453,13 @@ public class RequestController {
             return searchResultRows;
         }
         return Collections.EMPTY_LIST;
+    }
+
+    private HttpHeaders getHttpHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
+        return headers;
     }
 
 }
