@@ -17,6 +17,8 @@ import java.util.List;
  */
 public interface RequestItemDetailsRepository extends JpaRepository<RequestItemEntity, Integer>, JpaSpecificationExecutor {
 
+    RequestItemEntity findByRequestId(@Param("requestId") Integer requestId);
+
     @Query(value = "select request from RequestItemEntity request where request.requestStatusId = (select requestStatusId from RequestStatusEntity requestStatus where requestStatus.requestStatusDescription = :status)")
     Page<RequestItemEntity> findByStatus(Pageable pageable, @Param("status") String status);
 
@@ -37,6 +39,9 @@ public interface RequestItemDetailsRepository extends JpaRepository<RequestItemE
 
     @Query(value = "select request from RequestItemEntity request where request.itemId = (select itemId from ItemEntity item where item.barcode = :itemBarcode) and request.requestStatusId = (select requestStatusId from RequestStatusEntity requestStatus where requestStatus.requestStatusDescription = :status)")
     Page<RequestItemEntity> findByItemBarcodeAndStatus(Pageable pageable, @Param("itemBarcode") String itemBarcode, @Param("status") String status);
+
+    @Query(value = "select request from RequestItemEntity request where request.requestStatusId in (select requestStatusId from RequestStatusEntity requestStatus where requestStatus.requestStatusCode in ('RETRIEVAL_ORDER_PLACED', 'RECALL_RETRIEVAL_ORDER_PLACED'))")
+    Page<RequestItemEntity> findAllActive(Pageable pageable);
 
     @Query(value = "SELECT COUNT(*) FROM REQUEST_ITEM_T , REQUEST_TYPE_T,ITEM_T WHERE REQUEST_ITEM_T.REQUEST_TYPE_ID=REQUEST_TYPE_T.REQUEST_TYPE_ID " +
             "AND REQUEST_ITEM_T.ITEM_ID=ITEM_T.ITEM_ID " +

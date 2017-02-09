@@ -47,7 +47,7 @@ public class RequestServiceUtil {
         } else if (StringUtils.isBlank(patronBarcode) && StringUtils.isBlank(itemBarcode) && StringUtils.isNotBlank(status)) {
             requestItemEntities = requestItemDetailsRepository.findByStatus(pageable, status);
         } else {
-            requestItemEntities = requestItemDetailsRepository.findAll(pageable);
+            requestItemEntities = requestItemDetailsRepository.findAllActive(pageable);
         }
         return requestItemEntities;
     }

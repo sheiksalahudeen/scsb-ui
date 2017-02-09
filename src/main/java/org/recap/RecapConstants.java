@@ -406,4 +406,5 @@ public class RecapConstants {
     public static final String EMAILID_SHOULD_NOT_DUPLICATE = "Email Id should not be duplicated";
 
     public static final String MESSAGE = "Message";
+    public static final String REQUEST_STATUS = "RequestStatus";
 }
