@@ -38,7 +38,8 @@
                                                 <div class="select-holder">
                                                     <select id="requestStatus"
                                                             name="requestStatus"
-                                                            class="form-control themed-input themed-select"
+                                                            class="themed-input themed-select"
+                                                            style="border: 1px solid #888988;color: #555555;outline: none;height: 50px;box-shadow: none;"
                                                             th:field="*{status}"
                                                             onchange="">
                                                         <option value=""></option>
@@ -153,7 +154,7 @@
                                                         </button>
                                                     </td>
                                                     <td width="">
-                                                        <button th:if="${searchResult.status == 'RETRIEVAL ORDER PLACED' || searchResult.status == 'RECALL_RETRIEVAL ORDER PLACED'}" th:title="'Cancel Request'" data-th-id="'cancelButton-' + ${searchResultStat.index}" type="button" name="action" th:onclick="'javascript:cancelRequest('+${searchResultStat.index}+')'"><i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                                                        <button th:if="${searchResult.status == 'RETRIEVAL ORDER PLACED' || searchResult.status == 'RECALL ORDER PLACED' || searchResult.status == 'EDD ORDER PLACED'}" th:title="'Cancel Request'" data-th-id="'cancelButton-' + ${searchResultStat.index}" type="button" name="action" th:onclick="'javascript:cancelRequest('+${searchResultStat.index}+')'"><i class="fa fa-times-circle-o" aria-hidden="true"></i>
                                                         </button>
                                                     </td>
                                                 </tr>
