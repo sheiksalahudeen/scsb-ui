@@ -129,7 +129,6 @@ function populateItemDetails() {
             data: $form.serialize(),
             success: function (response) {
                 console.log("completed");
-                console.log(response);
                 var jsonResponse = JSON.parse(response);
                 $('#itemTitleId').val(jsonResponse['itemTitle']);
                 $('#itemOwningInstitutionId').val(jsonResponse['itemOwningInstitution']);
@@ -246,7 +245,6 @@ function createRequest() {
                 $('#createRequestSection').unblock();
                 console.log("completed");
                 var jsonResponse = JSON.parse(response);
-                console.log(jsonResponse);
                 var errorMessage = jsonResponse['errorMessage'];
                 $('#errorMessageSpanId').hide();
                 if (errorMessage != null && errorMessage != '') {
@@ -372,9 +370,9 @@ function validateEmailAddress() {
 
 function createRequestSamePatron() {
     $('#createRequestModal').modal('hide');
-    $('#patronBarcodeId').val($('#patronBarcodeInRequestHdn').html());
-    $('#patronEmailId').val($('#patronEmailIdHdn').html());
-    $('#requestingInstitutionId').val($('#requestingInstitutionHdn').html());
+    $('#patronBarcodeId').val($('#patronBarcodeInRequest').html());
+    $('#patronEmailId').val($('#patronEmailAddress').html());
+    $('#requestingInstitutionId').val($('#requestingInstitution').html());
     $('.EDDdetails-section').hide();
     $('#deliverylocation_request').show();
 }
@@ -382,7 +380,6 @@ function createRequestSamePatron() {
 function cancelRequest(index) {
     var requestId = $("#requestRowRequestId-" + index).val();
     $("#requestIdHdn").val(requestId);
-    console.log(requestId);
     cancelRequestItem(index);
 }
 

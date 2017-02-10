@@ -341,14 +341,18 @@ public class RequestController {
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=createRequest")
     public String createRequest(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
                                 BindingResult result,
-                                Model model) throws Exception {
+                                Model model, HttpServletRequest request) throws Exception {
         try {
+            HttpSession session = request.getSession();
+            String username = (String) session.getAttribute(UserManagement.USER_NAME);
+
             RestTemplate restTemplate = new RestTemplate();
 
             String validateRequestItemUrl = serverProtocol + scsbUrl + RecapConstants.VALIDATE_REQUEST_ITEM_URL;
             String requestItemUrl = serverProtocol + scsbUrl + RecapConstants.REQUEST_ITEM_URL;
 
             ItemRequestInformation itemRequestInformation = new ItemRequestInformation();
+            itemRequestInformation.setUsername(username);
             itemRequestInformation.setItemBarcodes(Arrays.asList(requestForm.getItemBarcodeInRequest().split(",")));
             itemRequestInformation.setPatronBarcode(requestForm.getPatronBarcodeInRequest());
             itemRequestInformation.setRequestingInstitution(requestForm.getRequestingInstitution());
