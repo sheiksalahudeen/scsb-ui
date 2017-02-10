@@ -30,6 +30,7 @@ public class ItemRequestInformation {
     private String chapterTitle="";
     private String expirationDate;
     private String bibId;
+    private String username;
 
     public List<String> getItemBarcodes() {
         return itemBarcodes;
@@ -173,5 +174,13 @@ public class ItemRequestInformation {
 
     public void setBibId(String bibId) {
         this.bibId = bibId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
