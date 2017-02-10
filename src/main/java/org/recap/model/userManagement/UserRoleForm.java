@@ -1,7 +1,6 @@
 package org.recap.model.userManagement;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,11 +59,12 @@ public class UserRoleForm {
     private boolean deletedSuccessMsg = false;
     private boolean deleteErrorMsg= false;
 
-    private List<Object> roles = new ArrayList<Object>();
-    private List<Object> institutions = new ArrayList<Object>();
+    private List<Object> roles = new ArrayList<>();
+    private List<Object> institutions = new ArrayList<>();
     private List<Integer> showSelectedForCreate = new ArrayList<>();
     private List<Integer> selectedForCreate = new ArrayList<>();
     private List<Integer> editSelectedForCreate = new ArrayList<>();
+    private List<UserRoleForm> userRoleFormList = new ArrayList<>();
 
     private String createdBy;
     private String lastUpdatedBy;
@@ -125,7 +125,6 @@ public class UserRoleForm {
         this.editRoleId = editRoleId;
     }
 
-
     public List<Object> getRoles() {
         return roles;
     }
@@ -174,7 +173,6 @@ public class UserRoleForm {
         this.selected = selected;
     }
 
-
     public boolean isSubmitted() {
         return submitted;
     }
@@ -206,8 +204,6 @@ public class UserRoleForm {
     public void setInstitutionName(String institutionName) {
         this.institutionName = institutionName;
     }
-
-    private List<UserRoleForm> userRoleFormList = new ArrayList<UserRoleForm>();
 
     public List<UserRoleForm> getUserRoleFormList() {
         return userRoleFormList;

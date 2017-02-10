@@ -44,6 +44,12 @@ public class CollectionController {
     @Autowired
     MarcRecordViewUtil marcRecordViewUtil;
 
+    @Autowired
+    CollectionServiceUtil collectionServiceUtil;
+
+    @Autowired
+    private UserAuthUtil userAuthUtil;
+
     public MarcRecordViewUtil getMarcRecordViewUtil() {
         return marcRecordViewUtil;
     }
@@ -52,11 +58,6 @@ public class CollectionController {
         this.marcRecordViewUtil = marcRecordViewUtil;
     }
 
-    @Autowired
-    CollectionServiceUtil collectionServiceUtil;
-
-    @Autowired
-    private UserAuthUtil userAuthUtil;
 
     public UserAuthUtil getUserAuthUtil() {
         return userAuthUtil;
@@ -73,9 +74,9 @@ public class CollectionController {
         if(authenticated)
         {
             CollectionForm collectionForm = new CollectionForm();
-            model.addAttribute("collectionForm", collectionForm);
+            model.addAttribute(RecapConstants.COLLECTION_FORM, collectionForm);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.COLLECTION);
-            return "searchRecords";
+            return RecapConstants.VIEW_SEARCH_RECORDS;
         }else{
             return UserManagement.unAuthorizedUser(session,"Collection",logger);
         }
@@ -88,7 +89,7 @@ public class CollectionController {
                                        Model model) throws Exception {
         searchAndSetResults(collectionForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.COLLECTION);
-        return new ModelAndView("searchRecords", "collectionForm", collectionForm);
+        return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.COLLECTION_FORM, collectionForm);
     }
 
     @ResponseBody
@@ -101,7 +102,7 @@ public class CollectionController {
         BibliographicMarcForm bibliographicMarcForm = getMarcRecordViewUtil().buildBibliographicMarcForm(collectionForm.getBibId(), collectionForm.getItemId(),userDetailsForm);
         populateCollectionForm(collectionForm, bibliographicMarcForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.COLLECTION);
-        return new ModelAndView("collection :: #collectionUpdateModal", "collectionForm", collectionForm);
+        return new ModelAndView("collection :: #collectionUpdateModal", RecapConstants.COLLECTION_FORM, collectionForm);
     }
 
     @ResponseBody
@@ -115,7 +116,7 @@ public class CollectionController {
             collectionServiceUtil.deAccessionItem(collectionForm);
         }
         collectionForm.setAllowEdit(true);
-        return new ModelAndView("collection :: #itemDetailsSection", "collectionForm", collectionForm);
+        return new ModelAndView("collection :: #itemDetailsSection", RecapConstants.COLLECTION_FORM, collectionForm);
     }
 
     private void searchAndSetResults(CollectionForm collectionForm) throws Exception {
@@ -154,7 +155,7 @@ public class CollectionController {
 
             SearchRecordsResponse searchRecordsResponse = searchUtil.requestSearchResults(searchRecordsRequest);
             List<SearchResultRow> searchResultRows = searchRecordsResponse.getSearchResultRows();
-            collectionForm.setSearchResultRows(Collections.EMPTY_LIST);
+            collectionForm.setSearchResultRows(Collections.emptyList());
             if (CollectionUtils.isNotEmpty(searchResultRows)) {
                 collectionForm.setSearchResultRows(searchResultRows);
                 collectionForm.setSelectAll(false);
@@ -181,20 +182,18 @@ public class CollectionController {
             Set<String> missingBarcodes = new HashSet<>(Arrays.asList(barcodeArray));
             for (SearchResultRow searchResultRow : collectionForm.getSearchResultRows()) {
                 String barcode = searchResultRow.getBarcode();
-                if (StringUtils.isBlank(barcode)) {
-                    if (CollectionUtils.isNotEmpty(searchResultRow.getSearchItemResultRows())) {
+                if (StringUtils.isBlank(barcode) && CollectionUtils.isNotEmpty(searchResultRow.getSearchItemResultRows())) {
                         SearchItemResultRow searchItemResultRow = searchResultRow.getSearchItemResultRows().get(0);
                         barcode = searchItemResultRow.getBarcode();
                         searchResultRow.setBarcode(barcode);
                         searchResultRow.setItemId(searchItemResultRow.getItemId());
                         searchResultRow.setCollectionGroupDesignation(searchItemResultRow.getCollectionGroupDesignation());
                     }
-                }
                 missingBarcodes.remove(barcode);
             }
             return missingBarcodes;
         }
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
     }
 
     private void populateCollectionForm(CollectionForm collectionForm, BibliographicMarcForm bibliographicMarcForm) {

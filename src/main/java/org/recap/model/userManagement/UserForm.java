@@ -21,6 +21,10 @@ public class UserForm implements Serializable {
 
     private boolean passwordMatcher;
 
+    private int institution;
+
+    private Set<String> permissions=new HashSet<>();
+
     public boolean isPasswordMatcher() {
         return passwordMatcher;
     }
@@ -37,8 +41,6 @@ public class UserForm implements Serializable {
         this.wrongCredentials = wrongCredentials;
     }
 
-    private Set<String> permissions=new HashSet<String>();
-
     public Set<String> getPermissions() {
         return permissions;
     }
@@ -54,8 +56,6 @@ public class UserForm implements Serializable {
     public void setInstitution(int institution) {
         this.institution = institution;
     }
-
-    private int institution;
 
     public String getPassword() {
         return password;

@@ -62,7 +62,7 @@ public class LoginController {
                 return loginScreen(request,model,userForm);
             }
             UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+userForm.getInstitution(),userForm.getPassword(),true);
-            resultmap=(Map<String,Object>)userAuthUtil.doAuthentication(token);
+            resultmap=userAuthUtil.doAuthentication(token);
 
             if(!(Boolean) resultmap.get("isAuthenticated"))
             {
@@ -76,20 +76,20 @@ public class LoginController {
         }
         catch(ConnectException|ResourceAccessException e)
         {
+            logger.error(RecapConstants.LOG_ERROR,e);
             error.rejectValue("wrongCredentials","error.invalid.credentials","Connection Error.Please contact our staff");
             logger.error("Exception occured in connection : "+e.getLocalizedMessage());
             return loginScreen;
         }
         catch(Exception e)
         {
+            logger.error(RecapConstants.LOG_ERROR,e);
             error.rejectValue("wrongCredentials","error.invalid.credentials","Invalid Credentials");
             logger.debug("Exception occured in authentication Process : "+resultmap.get(UserManagement.USER_AUTH_ERRORMSG));
             logger.error(e.getLocalizedMessage()+":"+resultmap.get(UserManagement.USER_AUTH_ERRORMSG));
             return loginScreen;
         }
-
-
-            return "redirect:/search";
+        return "redirect:/search";
 
     }
 
@@ -104,8 +104,6 @@ public class LoginController {
             session.invalidate();
             return "redirect:/";
         }
-
-
     }
 
     private void setValuesInSession(HttpSession session,Map<String,Object> authMap)
@@ -115,7 +113,6 @@ public class LoginController {
         session.setAttribute(UserManagement.USER_INSTITUTION,(Integer)authMap.get(UserManagement.USER_INSTITUTION));
         session.setAttribute(UserManagement.SUPER_ADMIN_USER,(Boolean)authMap.get(UserManagement.SUPER_ADMIN_USER));
         session.setAttribute(UserManagement.ReCAP_USER,(Boolean)authMap.get(UserManagement.ReCAP_USER));
-
         session.setAttribute(UserManagement.REQUEST_PRIVILEGE,(Boolean)authMap.get(UserManagement.REQUEST_PRIVILEGE));
         session.setAttribute(UserManagement.COLLECTION_PRIVILEGE,(Boolean)authMap.get(UserManagement.COLLECTION_PRIVILEGE));
         session.setAttribute(UserManagement.REPORTS_PRIVILEGE,(Boolean)authMap.get(UserManagement.REPORTS_PRIVILEGE));
@@ -126,11 +123,4 @@ public class LoginController {
         session.setAttribute(UserManagement.BARCODE_RESTRICTED_PRIVILEGE,(Boolean)authMap.get(UserManagement.BARCODE_RESTRICTED_PRIVILEGE));
         session.setAttribute(UserManagement.DEACCESSION_PRIVILEGE,(Boolean)authMap.get(UserManagement.DEACCESSION_PRIVILEGE));
     }
-
-
-
-
-
-
-
 }

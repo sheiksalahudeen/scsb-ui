@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
  * Created by SheikS on 6/20/2016.
  */
 public class RecapConstants {
+
     public static final String PATH_SEPARATOR = "/";
     public static final String PROCESSSED_RECORDS = "processedRecords";
 
@@ -186,6 +187,8 @@ public class RecapConstants {
     public static final String NA = "NA";
 
     //Collection
+    public static final String COLLECTION_FORM = "collectionForm";
+
     public static final String UPDATE_CGD = "Update CGD";
     public static final String DEACCESSION = "Deaccession";
     public static final String TEMPLATE = "template";
@@ -214,6 +217,8 @@ public class RecapConstants {
     public static final int BARCODE_LIMIT = 10;
 
     //Request
+    public static final String REQUEST_FORM="requestForm";
+
     public static final String REQUEST_ID = "requestId";
 
     public static final String SEARCH_RESULT_ERROR_NO_RECORDS_FOUND="No search results found. Please refine search conditions.";
@@ -284,7 +289,7 @@ public class RecapConstants {
     public static final String REQUEST_NOTES = "requestNotes";
     public static final String ERROR_MESSAGE = "errorMessage";
 
-    public static final String USER_ROLES="userRolesSearch";
+    public static final String USER_ROLES_SEARCH ="userRolesSearch";
     public static final Integer CGD_PRIVATE=3;
 
     public static final String REJECTION_REPORT = "Rejection";
@@ -309,6 +314,9 @@ public class RecapConstants {
     public static final String SOLR_DATE_RANGE_TO_NOW = " TO NOW";
 
     //Reports
+    public static final String REPORTS_FORM="reportsForm";
+    public static final String REPORTS_VIEW_DEACCESSION_INFORMARION ="reports :: #deaccessionInformation";
+    public static final String REPORTS_VIEW_CGD_TABLE ="reports :: #cgdTable";
     public static final String SIMPLE_DATE_FORMAT_REPORTS = "MM/dd/yyyy";
     public static final String REPORTS = "reports";
     public static final String REPORTS_REQUEST = "request";
@@ -354,11 +362,11 @@ public class RecapConstants {
     public static final String NEW_CGD = "newCollectionGroupDesignation";
     public static final String CGD_CHANGE_NOTES = "cgdChangeNotes";
 
-    public static final String permissionsMap="permissionsMap";
+    public static final String PERMISSIONS_MAP ="PERMISSIONS_MAP";
 
     public static final String USER_AUTHENTICATION="isAuthenticated";
 
-    public static String USER_IsAUTHENTICATED="true";
+    public static final String USER_ISAUTHENTICATED ="true";
 
     public static final String USER_ID="userId";
 
@@ -374,15 +382,9 @@ public class RecapConstants {
 
     public static final String USER_ROLE_PRIVILEGE="isUserRoleAllowed";
 
-    public static HttpHeaders getHttpHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
-        return headers;
-    }
-
     //ROLES
     public static final String ROLES = "roles";
+    public static final String ROLES_FORM = "rolesForm";
     public static final String INVALID_ROLE_NAME = "Please give one valid role name";
     public static final String WRONG_PERMISSION = "This permission is not given to this role";
     public static final String INVALID_PERMISSION = "Please give one valid permission name";
@@ -401,10 +403,34 @@ public class RecapConstants {
     public static final String EMAILID_ID_DOES_NOT_EXIST = "User emailId does not exist";
     public static final String NETWORK_LOGIN_ID_AND_EMAILID_ID_DOES_NOT_EXIST = "NetworkId and emailId does not exist";
     public static final String USER_ALREADY_EXISTS = "User already exist";
-    public static final String USER_DELETED_SUCCESS_MESSAGE = "Deleted successfully";
+    public static final String USER_DELETED_SUCCESS_MESSAGE = " Deleted successfully";
     public static final String USER_ADDED_SUCCESSFULLY = " Added Successfully";
     public static final String EMAILID_SHOULD_NOT_DUPLICATE = "Email Id should not be duplicated";
 
+
     public static final String MESSAGE = "Message";
     public static final String REQUEST_STATUS = "RequestStatus";
+
+    //UserRoleController
+    public static final String VIEW_LOGIN="login";
+    public static final String VIEW_REQUEST_RESULT_TABLE="userRolesSearch :: #request-result-table";
+    public static final String USER_ROLE_FORM="userRoleForm";
+
+    //View
+    public static final String VIEW_SEARCH_RECORDS="searchRecords";
+    public static final String VIEW_SEARCH_RECORDS_REQUEST="searchRecordsRequest";
+
+    //Logger
+    public static final String LOG_ERROR="error-->";
+
+    private RecapConstants(){
+        //Do nothing
+    }
+
+    public static HttpHeaders getHttpHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
+        return headers;
+    }
 }

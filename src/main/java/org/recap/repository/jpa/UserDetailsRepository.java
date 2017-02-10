@@ -31,6 +31,7 @@ public interface UserDetailsRepository extends JpaRepository<UsersEntity,Integer
     @Query(value="select roleT.role_name from role_master_t roleT,user_master_t userT where userT.user_role_id=roleT.role_id",nativeQuery = true)
     RoleEntity userRole(@Param("loginId") String loginId);
 
+    @Override
     @Query(value="select users from UsersEntity users where users.loginId not in ('superadmin') ")
     Page<UsersEntity> findAll(Pageable pageable);
 

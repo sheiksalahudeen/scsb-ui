@@ -41,7 +41,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -145,9 +144,9 @@ public class RequestController {
             if(requestedBarcode != null){
                 requestForm.setItemBarcodeInRequest((String) requestedBarcode);
             }
-            model.addAttribute("requestForm", requestForm);
+            model.addAttribute(RecapConstants.REQUEST_FORM, requestForm);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
-            return "searchRecords";
+            return RecapConstants.VIEW_SEARCH_RECORDS;
         } else {
             return UserManagement.unAuthorizedUser(session, "Request", logger);
         }
@@ -162,12 +161,12 @@ public class RequestController {
             requestForm.resetPageNumber();
             searchAndSetResults(requestForm);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            logger.error("" + exception);
+        }
+        catch (Exception exception){
+            logger.error(RecapConstants.LOG_ERROR,exception);
             logger.debug(exception.getMessage());
         }
-        return new ModelAndView("request", "requestForm", requestForm);
+        return new ModelAndView(RecapConstants.REQUEST, RecapConstants.REQUEST_FORM, requestForm);
     }
 
     @ResponseBody
@@ -178,7 +177,7 @@ public class RequestController {
         requestForm.resetPageNumber();
         searchAndSetResults(requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
-        return new ModelAndView("request", "requestForm", requestForm);
+        return new ModelAndView(RecapConstants.REQUEST, RecapConstants.REQUEST_FORM, requestForm);
     }
 
     @ResponseBody
@@ -189,7 +188,7 @@ public class RequestController {
         requestForm.setPageNumber(requestForm.getTotalPageCount() - 1);
         searchAndSetResults(requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
-        return new ModelAndView("request", "requestForm", requestForm);
+        return new ModelAndView(RecapConstants.REQUEST, RecapConstants.REQUEST_FORM, requestForm);
     }
 
     @ResponseBody
@@ -199,7 +198,7 @@ public class RequestController {
                                        Model model) {
         searchAndSetResults(requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
-        return new ModelAndView("request", "requestForm", requestForm);
+        return new ModelAndView(RecapConstants.REQUEST, RecapConstants.REQUEST_FORM, requestForm);
     }
 
     @ResponseBody
@@ -209,7 +208,7 @@ public class RequestController {
                                    Model model) {
         searchAndSetResults(requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
-        return new ModelAndView("request", "requestForm", requestForm);
+        return new ModelAndView(RecapConstants.REQUEST, RecapConstants.REQUEST_FORM, requestForm);
     }
 
     @ResponseBody
@@ -220,7 +219,7 @@ public class RequestController {
         requestForm.setPageNumber(getPageNumberOnPageSizeChange(requestForm));
         searchAndSetResults(requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
-        return new ModelAndView("request", "requestForm", requestForm);
+        return new ModelAndView(RecapConstants.REQUEST, RecapConstants.REQUEST_FORM, requestForm);
     }
 
     @ResponseBody
@@ -228,9 +227,9 @@ public class RequestController {
     public ModelAndView loadCreateRequest(Model model,HttpServletRequest request) {
         UserDetailsForm userDetailsForm=getUserAuthUtil().getUserDetails(request.getSession(),UserManagement.REQUEST_ITEM_PRIVILEGE);
         RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm);
-        model.addAttribute("requestForm", requestForm);
+        model.addAttribute(RecapConstants.REQUEST_FORM, requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
-        return new ModelAndView("request", "requestForm", requestForm);
+        return new ModelAndView(RecapConstants.REQUEST, RecapConstants.REQUEST_FORM, requestForm);
     }
 
     @ResponseBody
@@ -246,7 +245,7 @@ public class RequestController {
         requestForm.setRequestStatuses(requestStatuses);
         model.addAttribute("requestForm", requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
-        return new ModelAndView("request", "requestForm", requestForm);
+        return new ModelAndView(RecapConstants.REQUEST, RecapConstants.REQUEST_FORM, requestForm);
     }
 
     private RequestForm setDefaultsToCreateRequest(UserDetailsForm userDetailsForm) {
@@ -297,7 +296,7 @@ public class RequestController {
             List<String> invalidBarcodes = new ArrayList<>();
             Set<String> itemTitles = new HashSet<>();
             Set<String> itemOwningInstitutions = new HashSet<>();
-            UserDetailsForm userDetailsForm=null;
+            UserDetailsForm userDetailsForm;
             for (String itemBarcode : itemBarcodes) {
                 String barcode = itemBarcode.trim();
                 if (StringUtils.isNotBlank(barcode)) {
@@ -382,10 +381,11 @@ public class RequestController {
             }
 
         } catch (HttpClientErrorException httpException) {
+            logger.error(RecapConstants.LOG_ERROR,httpException);
             String responseBodyAsString = httpException.getResponseBodyAsString();
             requestForm.setErrorMessage(responseBodyAsString);
         } catch (Exception exception) {
-            exception.printStackTrace();
+            logger.error(RecapConstants.LOG_ERROR,exception);
             requestForm.setErrorMessage(exception.getMessage());
         }
 
@@ -425,8 +425,7 @@ public class RequestController {
             }
             jsonObject.put(RecapConstants.REQUEST_STATUS, requestStatus);
         } catch (Exception exception) {
-            exception.printStackTrace();
-            logger.error("" + exception);
+            logger.error(RecapConstants.LOG_ERROR, exception);
             logger.debug(exception.getMessage());
         }
         return jsonObject.toString();
@@ -440,7 +439,7 @@ public class RequestController {
             requestForm.setTotalRecordsCount(NumberFormat.getNumberInstance().format(requestItemEntities.getTotalElements()));
             requestForm.setTotalPageCount(requestItemEntities.getTotalPages());
         } else {
-            requestForm.setSearchResultRows(Collections.EMPTY_LIST);
+            requestForm.setSearchResultRows(Collections.emptyList());
             requestForm.setMessage(RecapConstants.SEARCH_RESULT_ERROR_NO_RECORDS_FOUND);
         }
         requestForm.setShowResults(true);
@@ -465,16 +464,14 @@ public class RequestController {
                 searchResultRow.setStatus(requestItemEntity.getRequestStatusEntity().getRequestStatusDescription());
 
                 ItemEntity itemEntity = requestItemEntity.getItemEntity();
-                if (null != itemEntity) {
-                    if (CollectionUtils.isNotEmpty(itemEntity.getBibliographicEntities())) {
-                        searchResultRow.setBibId(itemEntity.getBibliographicEntities().get(0).getBibliographicId());
-                    }
+                if (null != itemEntity && CollectionUtils.isNotEmpty(itemEntity.getBibliographicEntities()) ) {
+                    searchResultRow.setBibId(itemEntity.getBibliographicEntities().get(0).getBibliographicId());
                 }
                 searchResultRows.add(searchResultRow);
             }
             return searchResultRows;
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     private HttpHeaders getHttpHeaders() {
@@ -494,7 +491,7 @@ public class RequestController {
                 pageNumber = totalPagesCount - 1;
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(RecapConstants.LOG_ERROR,e);
         }
         return pageNumber;
     }

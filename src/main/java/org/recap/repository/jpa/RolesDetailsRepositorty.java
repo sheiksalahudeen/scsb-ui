@@ -29,7 +29,7 @@ public interface RolesDetailsRepositorty extends JpaRepository<RoleEntity, Integ
     List<Integer> getRoleIDforPermissionName(@Param("permissionID") Integer permissionID);
 
     @Query(value="select roles from RoleEntity roles where roles.roleId In(:roleID) and roles.roleName not in ('SuperAdmin')")
-    Page<RoleEntity> findByRoleID(Pageable pageable, @Param("roleID") List<Integer> roleID);
+    Page<RoleEntity> findByRoleIDs(Pageable pageable, @Param("roleID") List<Integer> roleID);
 
     List<RoleEntity> findByRoleIdIn(List<Integer> roleIds);
 

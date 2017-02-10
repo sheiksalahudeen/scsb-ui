@@ -41,10 +41,12 @@ public class CollectionForm extends BibliographicMarcForm {
         this.selectAll = selectAll;
     }
 
+    @Override
     public String getErrorMessage() {
         return errorMessage;
     }
 
+    @Override
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
     }
