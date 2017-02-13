@@ -103,7 +103,7 @@ public class ReportsControllerUT extends BaseControllerUT {
         Date requestToDate = new Date();
         reportsUtil.populateILBDCountsForRequest(reportsForm, requestFromDate, requestToDate);
         assertNotNull(modelAndView);
-        assertEquals("searchRecords", modelAndView.getViewName());
+        assertEquals("reports", modelAndView.getViewName());
     }
 
     @Test
@@ -121,7 +121,7 @@ public class ReportsControllerUT extends BaseControllerUT {
         Date requestToDate =new Date();
         reportsUtil.populatePartnersCountForRequest(reportsForm, requestFromDate, requestToDate);
         assertNotNull(modelAndView);
-        assertEquals("searchRecords", modelAndView.getViewName());
+        assertEquals("reports", modelAndView.getViewName());
     }
 
     @Test
@@ -139,7 +139,7 @@ public class ReportsControllerUT extends BaseControllerUT {
         Date requestToDate = new Date();
         reportsUtil.populateRequestTypeInformation(reportsForm, requestFromDate, requestToDate);
         assertNotNull(modelAndView);
-        assertEquals("searchRecords", modelAndView.getViewName());
+        assertEquals("reports", modelAndView.getViewName());
     }
 
     @Test
@@ -154,7 +154,7 @@ public class ReportsControllerUT extends BaseControllerUT {
         ModelAndView modelAndView = reportsControllerWired.reportCounts(reportsForm,model);
         reportsUtil.populateAccessionDeaccessionItemCounts(reportsForm);
         assertNotNull(modelAndView);
-        assertEquals("searchRecords", modelAndView.getViewName());
+        assertEquals("reports", modelAndView.getViewName());
     }
 
 
