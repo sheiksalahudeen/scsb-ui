@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -106,18 +107,22 @@ public class RolesController {
             rolesForm.setNewRoleName("");
             rolesForm.setNewRoleDescription("");
         }
+        rolesForm.setPermissionNameList(getAllPermissionNames().getPermissionNameList());
+        rolesForm.setShowIntial(false);
         return new ModelAndView(RecapConstants.ROLES, RecapConstants.ROLES_FORM, rolesForm);
     }
 
     @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=editRole")
     public ModelAndView editRole(Integer roleId, String roleName, String roleDescription, String permissionName) {
+        permissionName = HtmlUtils.htmlUnescape(permissionName);
         RolesForm rolesForm = getAllPermissionNames();
         rolesForm.setRoleId(roleId);
         rolesForm.setEditRoleName(roleName);
         rolesForm.setEditRoleDescription(roleDescription);
         rolesForm.setEditPermissionNames(permissionName);
         rolesForm.setSelectedPermissionNames(getSeletedPermissionNames(permissionName));
+        rolesForm.setShowIntial(false);
         return new ModelAndView(RecapConstants.ROLES, RecapConstants.ROLES_FORM, rolesForm);
     }
 
@@ -149,12 +154,15 @@ public class RolesController {
         }
         rolesForm.setPermissionNameList(getAllPermissionNames().getPermissionNameList());
         rolesForm.setSelectedPermissionNames(Arrays.asList(editPermissionNames));
+        rolesForm.setShowIntial(false);
         return new ModelAndView(RecapConstants.ROLES, RecapConstants.ROLES_FORM, rolesForm);
     }
 
     @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=deleteRole")
-    public ModelAndView deleteRole(Integer roleId, String roleName, String roleDescription, String permissionName,Integer pageSize,Integer pageNumber,Integer totalPageCount) {
+    public ModelAndView deleteRole(Integer roleId, String roleName, String roleDescription, String permissionName,
+                                   Integer pageSize,Integer pageNumber,Integer totalPageCount) {
+        permissionName = HtmlUtils.htmlUnescape(permissionName);
         RolesForm rolesForm = getAllPermissionNames();
         rolesForm.setAfterDelPageSize(pageSize);
         rolesForm.setAfterDelPageNumber(pageNumber);
@@ -167,6 +175,7 @@ public class RolesController {
         rolesForm.setPageSize(pageSize);
         rolesForm.setPageNumber(pageNumber);
         rolesForm.setTotalPageCount(totalPageCount);
+        rolesForm.setShowIntial(false);
         return new ModelAndView(RecapConstants.ROLES, RecapConstants.ROLES_FORM, rolesForm);
     }
 
@@ -174,20 +183,21 @@ public class RolesController {
     @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=delete")
     public ModelAndView delete(@Valid @ModelAttribute("rolesForm") RolesForm rolesForm,
                                Model model) {
-
-        RoleEntity roleEntity = new RoleEntity();
-        roleEntity.setRoleId(rolesForm.getRoleId());
+        RoleEntity roleEntity = rolesDetailsRepositorty.findByRoleId(rolesForm.getRoleId());
         try {
             rolesDetailsRepositorty.delete(roleEntity);
             rolesForm.setShowResults(true);
             rolesForm.setPageNumber(rolesForm.getAfterDelPageNumber());
             rolesForm.setPageSize(rolesForm.getAfterDelPageSize());
             rolesForm.setTotalPageCount(rolesForm.getAfterDelTotalPageCount());
+            rolesForm.setRoleName("");
+            rolesForm.setPermissionNames("");
             setRolesFormSearchResults(rolesForm);
             rolesForm.setMessage(rolesForm.getRoleNameForDelete()+RecapConstants.ROLES_DELETED_SUCCESS_MESSAGE);
         } catch (Exception e) {
             logger.error(RecapConstants.LOG_ERROR,e);
         }
+        rolesForm.setShowResults(true);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.ROLES);
         return new ModelAndView(RecapConstants.ROLES, RecapConstants.ROLES_FORM, rolesForm);
     }
@@ -248,6 +258,7 @@ public class RolesController {
         rolesForm.setErrorMessage("");
         rolesForm.setMessage("");
         rolesForm.setSelectedPermissionNames(new ArrayList<String>());
+        rolesForm.setShowIntial(false);
         return new ModelAndView(RecapConstants.ROLES, RecapConstants.ROLES_FORM, rolesForm);
     }
 
@@ -268,6 +279,7 @@ public class RolesController {
             permissionEntityList.add(permission.getPermissionName());
         }
         rolesForm.setSelectedPermissionNames(permissionEntityList);
+        rolesForm.setShowIntial(false);
         return new ModelAndView(RecapConstants.ROLES, RecapConstants.ROLES_FORM, rolesForm);
     }
 
@@ -280,6 +292,13 @@ public class RolesController {
         findByPagination(rolesForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.ROLES);
         return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.ROLES_FORM, rolesForm);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=goBack")
+    public ModelAndView goBack(RolesForm rolesForm,Model model){
+        rolesForm.setShowIntial(true);
+        return new ModelAndView("roles", "rolesForm", rolesForm);
     }
 
     public void setRolesFormSearchResults(RolesForm rolesForm) {
@@ -425,7 +444,7 @@ public class RolesController {
 
 
     private boolean isSpecialCharacterCheck(String inputString) {
-        Pattern pattern = Pattern.compile("[a-zA-Z0-9]*");
+        Pattern pattern = Pattern.compile("[a-zA-Z0-9_ ]*");
         Matcher matcher = pattern.matcher(inputString);
         if(!matcher.matches()){
             return false;
@@ -517,5 +536,6 @@ public class RolesController {
         rolesForm.setPermissionNameList(permissionNameList);
         return rolesForm;
     }
+
 
 }
