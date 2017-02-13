@@ -70,7 +70,7 @@ jQuery(document).ready(function ($) {
     });
 
     /***Role Tab Form Show/Hide ***/
-    $("#recaprole a.role-detailtable").click(function (e) {
+    $("#recaprole a.role-detailtable").click(function () {
         $("#role-searchview").hide();
         $("#role-detailtableview").show();
         $('#networkLoginIdErrMsg').hide();
@@ -79,7 +79,7 @@ jQuery(document).ready(function ($) {
         $('#userDescriptionErrMsg').hide();
         $('#emailIdErrMsg').hide();
     });
-    $("#recaprole .rolebacklink a").click(function (e) {
+    $("#recaprole .rolebacklink a").click(function () {
         $("#role-detailtableview").hide();
         $("#role-searchview").show();
         $('#networkLoginIdErrMsg').hide();
@@ -89,7 +89,7 @@ jQuery(document).ready(function ($) {
         $('#emailIdErrMsg').hide();
     });
     /***Users Tab Form Show/Hide ***/
-    $("#recapusers .userscreaterequestlink a").click(function (e) {
+    $("#recapusers .userscreaterequestlink a").click(function () {
         $('#networkLoginId').val('');
         $('#institutionId').val('');
         $('#userDescription').val('');
@@ -104,7 +104,7 @@ jQuery(document).ready(function ($) {
         $('#userDescriptionErrMsg').hide();
         $('#emailIdErrMsg').hide();
     });
-    $("#recapusers .usersbacklink a").click(function (e) {
+    $("#recapusers .usersbacklink a").click(function () {
         $("#users-createview").hide();
         $("#users-searchview").show();
         $('#networkLoginIdErrMsg').hide();
@@ -116,7 +116,7 @@ jQuery(document).ready(function ($) {
     $("#userRoles .users-main-section").show();
     resetDefaults();
     /***Request Tab Create Request Form Show/Hide ***/
-    $("#userRoles .usersbacklink a").click(function (e) {
+    $("#userRoles .usersbacklink a").click(function () {
         $("#userRoles .users-main-section").show();
         $("#userRoles .user-create-section").hide();
 
@@ -141,18 +141,11 @@ jQuery(document).ready(function ($) {
     $('#recapusers #userstabaddrole').multiselect();
     $('#editroleId').multiselect();
 
-    //Refresh modal data
-    $('.modal').on('show.bs.modal', function (event) {
-        console.log(this.id);
-        refresh:true;
-        $(this).removeData();
-    });
 });
 function userRolesFirstPage() {
-    //searchUserRoles('first','#userRoles .users-main-section','#userRoles .user-create-section');
     var $form = $('#userRole-form');
     var url = "/userRoles/first";
-    var request = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: $form.serialize(),
@@ -167,11 +160,10 @@ function userRolesFirstPage() {
 }
 
 function userRolesLastPage() {
-    //searchUserRoles('last','#userRoles .users-main-section','#userRoles .user-create-section');
     $('#pageNumber').val(parseInt($('#totalPageCount').val()) - 1);
     var $form = $('#userRole-form');
     var url = "/userRoles/last";
-    var request = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: $form.serialize(),
@@ -187,10 +179,9 @@ function userRolesLastPage() {
 
 function userRolesPreviousPage() {
     $('#pageNumber').val(parseInt($('#pageNumber').val()) - 1);
-    //searchUserRoles('previous','#userRoles .users-main-section','#userRoles .user-create-section');
     var $form = $('#userRole-form');
     var url = "/userRoles/previous";
-    var request = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: $form.serialize(),
@@ -206,10 +197,9 @@ function userRolesPreviousPage() {
 
 function userRolesNextPage() {
     $('#pageNumber').val(parseInt($('#pageNumber').val()) + 1);
-    //searchUserRoles('next','#userRoles .users-main-section','#userRoles .user-create-section');
     var $form = $('#userRole-form');
     var url = "/userRoles/next";
-    var request = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: $form.serialize(),
@@ -224,20 +214,15 @@ function userRolesNextPage() {
 }
 
 function deleteUserRole(networkLoginId, userId) {
-    console.log('DeleteUserRole');
-    console.log('NetWorkLoginId : ' + networkLoginId);
-    console.log('UserId  : ' + userId);
     var pagesize = $('#numOfRecordsId').val();
     var pageNumber = $('#pageNumber').val();
     var totalPageCount = $('#totalPageCount').val();
-    var $form = $('#userRole-form');
     var url = "/userRoles/deleteUser";
-    var role = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: {networkLoginId: networkLoginId, userId: userId,pagesize:pagesize,pageNumber:pageNumber,totalPageCount :totalPageCount },
         success: function (response) {
-            console.log("completed");
             $('#userRolesContentId').html(response);
             $('#deleteUsers-view').show();
             $('#users-searchview').hide();
@@ -250,20 +235,18 @@ function deleteUserRole(networkLoginId, userId) {
 
 //Delete User Id
 function deleteUser() {
-    console.log('Delete');
     var userId = $('#editUserIdHidden').val();
     var networkLoginId = $('#deleteNetworkLoginId').val();
     var pageNumber = $('#afterDelPageNumber').val();
     var totalPageCount = $('#afterDelTotalPageCount').val();
     var pageSize = $('#afterDelPageSize').val();
-    var $form = $('#userRole-form');
+    $('#userRole-form');
     var url = "/userRoles/delete";
-    var role = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: {userId: userId,networkLoginId:networkLoginId,pageNumber:pageNumber,totalPageCount:totalPageCount,pageSize:pageSize},
         success: function (response) {
-            console.log("completed");
             $('#userRolesContentId').html(response);
             $('#showEntries').show();
             $('#request-result-table').show();
@@ -274,8 +257,6 @@ function deleteUser() {
 
 //EditUser
 function editUser(userId, networkLoginId) {
-    console.log("userId" + userId);
-    console.log("log id" + networkLoginId);
     $('#editsuccessMsg').hide();
     $('#editerrormsg').hide();
     $('#editusers-createview').show();
@@ -283,7 +264,7 @@ function editUser(userId, networkLoginId) {
     $('#users-searchview').hide();
     $('#editEmailIdErrMsg').hide();
     var url = "/userRoles/editUser";
-    var request = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: {userId: userId, networkLoginId: networkLoginId},
@@ -305,7 +286,7 @@ function editclear() {
 
 
 function editUserDetails() {
-        if(validateEditEmailAddress()==true) {
+        if(validateEditEmailAddress()) {
             var userId = $('#editUserId').val();
             var networkLoginId = $('#editnetworkLoginId').val();
             var institutionId = $('#editinstitutionId').val();
@@ -315,9 +296,8 @@ function editUserDetails() {
             $('#editusers-createview').show();
             $('#users-createview').hide();
             $('#users-searchview').hide();
-            var $form = $('#userRole-form');
             var url = "/userRoles/saveEditUserDetails";
-            var request = $.ajax({
+            $.ajax({
                 url: url,
                 type: 'post',
                 data: {
@@ -344,7 +324,7 @@ function editUserDetails() {
 function searchUserRoles() {
     var $form = $('#userRole-form');
     var url = "/userRoles/searchUsers";
-    var request = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: $form.serialize(),
@@ -362,7 +342,7 @@ function showEntriesChange() {
     $('#pageNumber').val(0);
     var $form = $('#userRole-form');
     var url = "/userRoles/searchUsers";
-    var request = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: $form.serialize(),
@@ -378,11 +358,10 @@ function showEntriesChange() {
 function submitForm() {
     var formValidation = validateForm();
     var emailAddress = validateEmailAddress();
-    console.log(formValidation);
-    if (formValidation && (emailAddress==true)) {
+    if (formValidation && (emailAddress)) {
         var $form = $('#userRole-form');
         var url = "/userRoles/createUser";
-        var request = $.ajax({
+        $.ajax({
             url: url,
             type: 'post',
             data: $form.serialize(),
@@ -458,17 +437,13 @@ function isBlankValue(value) {
 function validateEmailAddress() {
     var isValidEmailAddress = $('#emailId').is(':valid');
     var blankEmailAddress = $('#emailId').val();
-    var isValid = true;
-    if (blankEmailAddress==null || blankEmailAddress=='') {
+    var isValid;
+    if (blankEmailAddress == null || blankEmailAddress == '' || isValidEmailAddress) {
         $('#emailIdErrMsg').hide();
-        isValid=true;
-    } else if(isValidEmailAddress==true){
-        $('#emailIdErrMsg').hide();
-        isValid=true;
-    }
-    else if(isValidEmailAddress==false){
+        isValid = true;
+    } else {
         $('#emailIdErrMsg').show();
-        isValid=false;
+        isValid = false;
     }
     return isValid;
 }
@@ -477,17 +452,13 @@ function validateEmailAddress() {
 function validateEditEmailAddress() {
     var isValidEmailAddress = $('#editEmailId').is(':valid');
     var blankEmailAddress = $('#editEmailId').val();
-    var isValid = true;
-    if (blankEmailAddress==null || blankEmailAddress=='') {
+    var isValid;
+    if (blankEmailAddress == null || blankEmailAddress == '' || isValidEmailAddress) {
         $('#editEmailIdErrMsg').hide();
-        isValid=true;
-    } else if(isValidEmailAddress==true){
-        $('#editEmailIdErrMsg').hide();
-        isValid=true;
-    }
-    else if(isValidEmailAddress==false){
+        isValid = true;
+    } else {
         $('#editEmailIdErrMsg').show();
-        isValid=false;
+        isValid = false;
     }
     return isValid;
 }
@@ -564,7 +535,7 @@ function toggleEditUserDescriptionValidation() {
     }
 }
 
-function toggleEditUserDescriptionValidation() {
+function toggleEditUserEmailValidation() {
     var editEmailId = $('#editEmailId').is(':valid');
     if (isBlankValue(editEmailId)) {
         $('#editEmailIdErrMsg').show();

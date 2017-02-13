@@ -51,12 +51,11 @@ jQuery(document).ready(function ($) {
 function loadCreateRole() {
     var $form = $('#roles-form');
     var url = $form.attr('action') + "?action=loadCreateRole";
-    var role = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: $form.serialize(),
         success: function (response) {
-            console.log("completed");
             $('#rolesContentId').html(response);
             $("#recaprole .create-role-section").show();
             $("#recaprole .roles-main-section").hide();
@@ -69,12 +68,11 @@ function loadCreateRole() {
 function populatePermissionNames(){
     var $form = $('#roles-form');
     var url = $form.attr('action') + "?action=populatePermissionName";
-    var role = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: $form.serialize(),
         success: function (response) {
-            console.log("completed");
             $('#rolesContentId').html(response);
             $("#recaprole .create-role-section").show();
             $("#recaprole .roles-main-section").hide();
@@ -88,12 +86,11 @@ function populatePermissionNames(){
 function editResetDefault() {
     var $form = $('#roles-form');
     var url = $form.attr('action') + "?action=editClearPage";
-    var role = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: $form.serialize(),
         success: function (response) {
-            console.log("completed");
             $('#rolesContentId').html(response);
             $("#recaprole .roles-main-section").hide();
             $('#roleNameErrorMessage').hide();
@@ -113,12 +110,11 @@ function editResetDefault() {
 function createResetDefault() {
     var $form = $('#roles-form');
     var url = $form.attr('action') + "?action=clearPage";
-    var role = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: $form.serialize(),
         success: function (response) {
-            console.log("completed");
             $('#rolesContentId').html(response);
             $("#recaprole .create-role-section").show();
             $('#roleNameErrorMessage').hide();
@@ -139,19 +135,15 @@ function createRole(){
 }
 
 function editRole(roleId,roleNames,roleDescription,permissionNames){
-    console.log('Role Name  : ' + roleNames);
-    console.log('Role Desc  : ' + roleDescription);
-    console.log('Permission Name  : ' + permissionNames);
     var $form = $('#roles-form');
     var roleName = $('#recaprole .roleDetails').val();
     var url = $form.attr('action') + "?action=editRole";
-    var role = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: {roleId:roleId,roleName:roleNames,roleDescription:roleDescription,permissionName:permissionNames},
         success: function (response) {
             $('#rolesContentId').html(response);
-            console.log(response);
             $("#recaprole .edit-role-section").show();
             $("#recaprole .roles-main-section").hide();
             $("#recaprole .create-role-section").hide();
@@ -163,19 +155,18 @@ function editRole(roleId,roleNames,roleDescription,permissionNames){
 
 function saveEditedRole(){
     var editValidation = isValidEdit();
-    if(editValidation == true){
+    if(editValidation){
         var roleId = $('#roleId').val();
         var permissionNames = $('#editPermissionNameId').val();
         var roleName = $('#editRoleName').val();
         var roleDescription = $('#editRoleDescription').val();
         var $form = $('#roles-form');
         var url = $form.attr('action') + "?action=saveEditedRole";
-        var role = $.ajax({
+        $.ajax({
             url: url,
             type: 'post',
             data:{roleId:roleId,permissionNames:permissionNames,roleName:roleName,roleDescription:roleDescription},
             success: function (response) {
-                console.log("completed");
                 $('#rolesContentId').html(response);
                 $('#roleNameId').val('');
                 $("#recaprole .edit-role-section").show();
@@ -193,12 +184,11 @@ function deleteFromDb(){
     var pageSize = $('#afterDelPageSize').val();
     var $form = $('#roles-form');
     var url = $form.attr('action') + "?action=delete";
-    var role = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: $form.serialize(),
         success: function (response) {
-            console.log("completed");
             $('#rolesContentId').html(response);
             $("#recaprole .edit-role-section").hide();
             $("#recaprole .create-role-section").hide();
@@ -210,17 +200,13 @@ function deleteFromDb(){
 }
 
 function deleteRole(roleId,roleNames,roleDescription,permissionNames) {
-    console.log('Role Name  : ' + roleNames);
-    console.log('Role Desc  : ' + roleDescription);
-    console.log('Permission Name  : ' + permissionNames);
-
     var pageSize = $('#numOfRecordsId').val();
     var pageNumber = $('#pageNumber').val();
     var totalPageCount = $('#totalPageCount').val();
     var $form = $('#roles-form');
     var roleName = $('#recaprole .roleDetails').val();
     var url = $form.attr('action') + "?action=deleteRole";
-    var role = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: {roleId:roleId,roleName:roleNames,roleDescription:roleDescription,permissionName:permissionNames,
@@ -241,8 +227,6 @@ function isValidRole() {
     var roleName = $('#roleNameId').val();
     var roleDescription = $('#roleDescriptionId').val();
     var permissionName = $('#permissionNameId').val();
-    console.log(permissionName);
-
     if (isBlankValue(roleName)) {
         $('#roleNameErrorMessage').show();
         isValid = false;

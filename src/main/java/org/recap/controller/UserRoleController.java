@@ -248,12 +248,8 @@ public class UserRoleController {
         userRoleForm.setCreatedBy(String.valueOf(userName));
         UsersEntity usersEntity = userRoleService.saveNewUserToDB(userRoleForm);
         if (usersEntity != null) {
-            userRoleForm.setUserDescription(userRoleForm.getUserDescription());
             userRoleForm.setShowCreateSuccess(true);
             userRoleForm.setAllowCreateEdit(true);
-            userRoleForm.setUserDescription(userRoleForm.getUserDescription());
-            userRoleForm.setInstitutionId(userRoleForm.getInstitutionId());
-            userRoleForm.setShowSelectedForCreate(userRoleForm.getSelectedForCreate());
         }
         return new ModelAndView(RecapConstants.USER_ROLES_SEARCH, RecapConstants.USER_ROLE_FORM, userRoleForm);
         } else {

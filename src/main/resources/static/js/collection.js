@@ -55,12 +55,11 @@ function clearBarcodeText() {
 function displayRecords() {
     var $form = $('#collection-form');
     var url = $form.attr('action') + "?action=displayRecords";
-    var request = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: $form.serialize(),
         success: function (response) {
-            console.log("completed");
             $('#collectionContentId').html(response);
         }
     });
@@ -72,12 +71,11 @@ function openMarcView(bibId, itemId) {
 
     var $form = $('#collection-form');
     var url = $form.attr('action') + "?action=openMarcView";
-    var request = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: $form.serialize(),
         success: function (response) {
-            console.log("completed");
             $('#collectionUpdateModal').html(response);
             $('#collection-result-inner').modal({ show: true });
             showAndHideDefaults();
@@ -89,7 +87,7 @@ function collectionUpdate() {
     if (isValidInputs()) {
         var $form = $('#collection-form');
         var url = $form.attr('action') + "?action=collectionUpdate";
-        var request = $.ajax({
+        $.ajax({
             url: url,
             type: 'post',
             data: $form.serialize(),
@@ -100,7 +98,6 @@ function collectionUpdate() {
             },
             success: function (response) {
                 $('#collectionModalContent').unblock();
-                console.log("completed");
                 var editCgd = $('#editCgdclick').is(':checked');
                 var deaccession = $('#deaccesionclick').is(':checked');
                 $('#itemDetailsSection').html(response);
@@ -181,7 +178,6 @@ function toggleCgdNotesValidation() {
     var newCgd = $('#newCGD').val();
     var CGDChangeNotes = $('#CGDChangeNotes').val();
     if (isBlankValue(CGDChangeNotes)) {
-        console.log("change");
         $('#cgdNotesErrorMessage').show();
     } else {
         $('#cgdNotesErrorMessage').hide();
