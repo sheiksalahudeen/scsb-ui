@@ -22,7 +22,7 @@
               th:object="${rolesForm}" method="post">
             <fieldset>
                 <div role="tabpanel" class="tab-pane" id="recaprole">
-                    <div id="role-searchview" class="roles-main-section">
+                    <div id="role-searchview" class="roles-main-section" data-th-if="*{showIntial}">
                         <div class="col-sm-7">Provide one or more data to search. Empty search would return all data.</div>
                         <div class="col-lg-12 text-right roleCreateNewlink" onclick="populatePermissionNames()" style="margin-top: -20px;"><a href="#" id="createRoleLink"><span
                                 class="glyphicon glyphicon-plus-sign"></span> Create Role</a></div>
@@ -125,10 +125,10 @@
                                     <table class="table table-striped margin-btm-0" id="">
                                         <thead class="tablesorter-headerRow">
                                         <tr>
-                                            <th>Role Name</th>
-                                            <th>Role Description</th>
-                                            <th>Permission Names</th>
-                                            <th class="text-center">Action</th>
+                                            <th width="10%">Role Name</th>
+                                            <th width="20%">Role Description</th>
+                                            <th width="60%">Permission Names</th>
+                                            <th class="text-center" width="10%">Action</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -163,8 +163,8 @@
                                                       th:text="${searchResult.permissionName}"></span>
                                             </td>
                                             <td class="text-center">
-                                                <div class="edit-link margin-left-05 margin-right-05 editRole" ><a href="#" id="editUserLink"><span class="glyphicon glyphicon-pencil" th:onclick="'editRole(\'' + ${searchResult.roleId} + '\',\'' + ${searchResult.rolesName} + '\',\'' + ${searchResult.rolesDescription} + '\',\'' + ${searchResult.permissionName} + '\')'"></span></a>
-                                                    <a href="#" data-toggle="modal" data-target=".user-delete"><span class="glyphicon glyphicon-trash" th:onclick="'deleteRole(\'' + ${searchResult.roleId} + '\',\'' + ${searchResult.rolesName} + '\',\'' + ${searchResult.rolesDescription} + '\',\'' + ${searchResult.permissionName} + '\')'"></span></a></div>
+                                                <div class="edit-link margin-left-05 margin-right-05 editRole" ><a href="#" id="editUserLink"><span class="glyphicon glyphicon-pencil" th:onclick="'editRole(\'' + ${searchResult.roleId} + '\',\'' + ${searchResult.rolesName} + '\',\'' + ${searchResult.rolesDescription} + '\',\'' + ${#strings.escapeXml(searchResult.permissionName)} + '\')'"></span></a>
+                                                    <a href="#" data-toggle="modal" data-target=".user-delete"><span class="glyphicon glyphicon-trash" th:onclick="'deleteRole(\'' + ${searchResult.roleId} + '\',\'' + ${searchResult.rolesName} + '\',\'' + ${searchResult.rolesDescription} + '\',\'' + ${#strings.escapeXml(searchResult.permissionName)} + '\')'"></span></a></div>
                                             </td>
 
                                         </tr>
@@ -186,7 +186,7 @@
                     <div id="createRoleSection" class="create-role-section" style="display:none;">
                             <div class="row margin-top-0">
                                 <div class="col-sm-6 margin-top-0"><h3 class="margin-0">Create New Role</h3></div>
-                                <div class="col-sm-6 text-right backtext"><a href="#"><span
+                                <div class="col-sm-6 text-right backtext"><a href="#" id="createGoBackLink"><span
                                         class="glyphicon glyphicon-menu-left"></span> Go Back</a></div>
                             </div>
                         <div class="row margin-btm-10"
@@ -282,7 +282,7 @@
                     <div id="editRoleSection" class="edit-role-section" style="display:none;">
                         <div class="row margin-top-0">
                             <div class="col-sm-6 margin-top-0"><h3 class="margin-0">Edit Role</h3></div>
-                            <div class="col-sm-6 text-right backtext"><a href="#"><span
+                            <div class="col-sm-6 text-right backtext"><a href="#" id="editGoBackLink"><span
                                     class="glyphicon glyphicon-menu-left"></span> Go Back</a></div>
                         </div>
                         <div class="row margin-btm-10"
@@ -391,7 +391,7 @@
                     <div id="deleteRoleSection" class="delete-role-section" style="display:none;">
                         <div class="row margin-top-0">
                             <div class="col-sm-6 margin-top-0"><h3 class="margin-0">Delete Role</h3></div>
-                            <div class="col-sm-6 text-right backtext"><a href="#"><span
+                            <div class="col-sm-6 text-right backtext"><a href="#" id="deleteGoBackLink"><span
                                     class="glyphicon glyphicon-menu-left"></span> Go Back</a></div>
                         </div>
                         <input id="afterDelPageNumber" name="afterDelPageNumber" type="text"
