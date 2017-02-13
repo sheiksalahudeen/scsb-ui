@@ -1,7 +1,11 @@
-table.tableWithoutBorder tbody tr td{
+table.tableWithoutBorder tbody tr td {
     border-top: 0;
 }
 
-#errorMessageId,#itemBarcodeErrorMessage,#patronBarcodeErrorMessage,#requestTypeErrorMessage,#deliveryLocationErrorMessage,#requestingInstitutionErrorMessage,#patronEmailIdErrorMessage{
+thead th {
+    Height: 70px;
+}
+
+#errorMessageId, #itemBarcodeErrorMessage, #patronBarcodeErrorMessage, #requestTypeErrorMessage, #deliveryLocationErrorMessage, #requestingInstitutionErrorMessage, #patronEmailIdErrorMessage {
     display: none;
 }
