@@ -19,7 +19,7 @@ public interface RolesDetailsRepositorty extends JpaRepository<RoleEntity, Integ
 
     RoleEntity findByRoleName(String roleName);
 
-    @Query(value = "select roles from RoleEntity roles where roles.roleName not in ('SuperAdmin')")
+    @Query(value = "select roles from RoleEntity roles where roles.roleName not in ('Super Admin')")
     Page<RoleEntity> getRolesWithoutSuperAdmin(Pageable pageable);
 
     @Query(value = "select roles from RoleEntity roles where roles.roleName = :roleName")
@@ -28,7 +28,7 @@ public interface RolesDetailsRepositorty extends JpaRepository<RoleEntity, Integ
     @Query(value = "select distinct(ROLE_ID) from role_permission_t where PERMISSION_ID = :permissionID",nativeQuery = true)
     List<Integer> getRoleIDforPermissionName(@Param("permissionID") Integer permissionID);
 
-    @Query(value="select roles from RoleEntity roles where roles.roleId In(:roleID) and roles.roleName not in ('SuperAdmin')")
+    @Query(value="select roles from RoleEntity roles where roles.roleId In(:roleID) and roles.roleName not in ('Super Admin')")
     Page<RoleEntity> findByRoleID(Pageable pageable, @Param("roleID") List<Integer> roleID);
 
     List<RoleEntity> findByRoleIdIn(List<Integer> roleIds);
