@@ -59,6 +59,7 @@ public class UserRoleForm {
     private boolean showResults = false;
     private boolean deletedSuccessMsg = false;
     private boolean deleteErrorMsg= false;
+    private boolean showUserSearchView = true;
 
     private List<Object> roles = new ArrayList<Object>();
     private List<Object> institutions = new ArrayList<Object>();
@@ -515,5 +516,13 @@ public class UserRoleForm {
 
     public void setLastUpdatedBy(String lastUpdatedBy) {
         this.lastUpdatedBy = lastUpdatedBy;
+    }
+
+    public boolean isShowUserSearchView() {
+        return showUserSearchView;
+    }
+
+    public void setShowUserSearchView(boolean showUserSearchView) {
+        this.showUserSearchView = showUserSearchView;
     }
 }
