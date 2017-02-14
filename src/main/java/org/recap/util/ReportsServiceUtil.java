@@ -45,7 +45,7 @@ public class ReportsServiceUtil {
             reportsResponse = responseEntity.getBody();
             return reportsResponse;
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(RecapConstants.LOG_ERROR,e);
             reportsResponse.setMessage(e.getMessage());
             return reportsResponse;
         }
@@ -66,7 +66,7 @@ public class ReportsServiceUtil {
             reportsResponse = responseEntity.getBody();
             return reportsResponse;
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(RecapConstants.LOG_ERROR,e);
             reportsResponse.setMessage(e.getMessage());
             return reportsResponse;
         }
@@ -91,7 +91,7 @@ public class ReportsServiceUtil {
             reportsResponse = responseEntity.getBody();
             return reportsResponse;
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(RecapConstants.LOG_ERROR,e);
             reportsResponse.setMessage(e.getMessage());
             return reportsResponse;
         }

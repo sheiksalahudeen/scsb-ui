@@ -40,7 +40,7 @@ public class SearchUtil {
             searchRecordsResponse = responseEntity.getBody();
             return searchRecordsResponse;
         } catch (Exception e) {
-            logger.error("" + e.getMessage());
+            logger.error(RecapConstants.LOG_ERROR,e);
             return searchRecordsResponse;
         }
     }

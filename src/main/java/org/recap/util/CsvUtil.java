@@ -57,7 +57,7 @@ public class CsvUtil {
                     }
                 }
             } catch (Exception e) {
-                logger.error(e.getMessage());
+                logger.error(RecapConstants.LOG_ERROR,e);
             } finally {
                 csvOutput.flush();
                 csvOutput.close();
