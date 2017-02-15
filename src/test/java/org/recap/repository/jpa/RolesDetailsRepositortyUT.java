@@ -51,7 +51,7 @@ public class RolesDetailsRepositortyUT extends BaseTestCase {
        roleEntity.setLastUpdatedBy("test");
 
        PermissionEntity permissionEntity = new PermissionEntity();
-       permissionEntity.setPermissionName("CreateUser");
+       permissionEntity.setPermissionName("Create User");
 
        PermissionEntity permissionEntity1 = permissionsRepository.findByPermissionName(permissionEntity.getPermissionName());
        assertNotNull(permissionEntity1);
@@ -76,7 +76,7 @@ public class RolesDetailsRepositortyUT extends BaseTestCase {
         roleEntity.setLastUpdatedBy("test");
 
         PermissionEntity permissionEntity = new PermissionEntity();
-        permissionEntity.setPermissionName("CreateUser");
+        permissionEntity.setPermissionName("Create User");
 
         PermissionEntity permissionEntity1 = permissionsRepository.findByPermissionName(permissionEntity.getPermissionName());
         assertNotNull(permissionEntity1);
