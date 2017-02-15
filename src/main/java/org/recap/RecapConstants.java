@@ -391,12 +391,12 @@ public class RecapConstants {
     public static final String ROLES_SUPER_ADMIN = "Super Admin";
     public static final String ROLES_ADD_SUCCESS_MESSAGE = "  added successfully";
     public static final String ROLES_DUPLICATE_MESSAGE = " already exists";
-    public static final String ROLES_EDIT_SAVE_SUCCESS_MESSAGE = " edited and added successfully";
+    public static final String ROLES_EDIT_SAVE_SUCCESS_MESSAGE = " edited and saved successfully";
     public static final String ROLES_DELETED_SUCCESS_MESSAGE = " deleted successfully";
 
     //USERS
     public static final String EMAILID_EXISTS = " Email Id already Exists";
-    public static final String EDITED_AND_SAVED = " edited and added successfully";
+    public static final String EDITED_AND_SAVED = " edited and saved successfully";
     public static final String NETWORK_LOGIN_ID_DOES_NOT_EXIST = "Network Login Id does not exist";
     public static final String EMAILID_ID_DOES_NOT_EXIST = "User emailId does not exist";
     public static final String NETWORK_LOGIN_ID_AND_EMAILID_ID_DOES_NOT_EXIST = "NetworkId and emailId does not exist";
