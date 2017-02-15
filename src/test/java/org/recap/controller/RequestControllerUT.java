@@ -17,12 +17,14 @@ import org.recap.repository.jpa.RequestTypeDetailsRepository;
 import org.recap.security.UserManagement;
 import org.recap.util.RequestServiceUtil;
 import org.recap.util.UserAuthUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.support.BindingAwareModelMap;
 import org.springframework.web.servlet.ModelAndView;
+import java.lang.Thread;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -36,8 +38,10 @@ import static org.mockito.Mockito.when;
  * Created by rajeshbabuk on 21/10/16.
  */
 public class RequestControllerUT extends BaseControllerUT {
+
+
     @Mock
-    Model model;
+    BindingAwareModelMap model;
 
     @Mock
     BindingResult bindingResult;
@@ -87,6 +91,7 @@ public class RequestControllerUT extends BaseControllerUT {
         when(institutionDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
         when(requestTypeDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
         when(customerCodeDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
+        when(((BindingAwareModelMap) model).get("requestedBarcode")).thenReturn("test");
         when(requestController.collection(model,request)).thenCallRealMethod();
         String response = requestController.collection(model,request);
         assertNotNull(response);

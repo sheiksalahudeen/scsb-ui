@@ -13,6 +13,7 @@ import org.recap.model.search.CollectionForm;
 import org.recap.model.userManagement.UserDetailsForm;
 import org.recap.model.userManagement.UserForm;
 import org.recap.security.UserManagement;
+import org.recap.util.CollectionServiceUtil;
 import org.recap.util.MarcRecordViewUtil;
 import org.recap.util.UserAuthUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -73,6 +74,9 @@ public class CollectionControllerUT extends BaseControllerUT {
     HttpSession session;
 
     @Mock
+    CollectionServiceUtil collectionServiceUtil;
+
+    @Mock
     javax.servlet.http.HttpServletRequest request;
 
     @Mock
@@ -109,6 +113,7 @@ public class CollectionControllerUT extends BaseControllerUT {
     public void displayRecords() throws Exception {
         CollectionForm collectionForm = new CollectionForm();
         collectionForm.setItemBarcodes("");
+        Mockito.when(getCollectionController.displayRecords(collectionForm, bindingResult, model)).thenCallRealMethod();
         ModelAndView modelAndView = getCollectionController.displayRecords(collectionForm, bindingResult, model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords", modelAndView.getViewName());
@@ -136,6 +141,8 @@ public class CollectionControllerUT extends BaseControllerUT {
     @Test
     public void collectionUpdate() throws Exception {
         CollectionForm collectionForm = new CollectionForm();
+        Mockito.when(getCollectionController.getCollectionServiceUtil()).thenReturn(collectionServiceUtil);
+        Mockito.when(getCollectionController.collectionUpdate(collectionForm, bindingResult, model)).thenCallRealMethod();
         ModelAndView modelAndView = getCollectionController.collectionUpdate(collectionForm, bindingResult, model);
         assertNotNull(modelAndView);
         assertEquals("collection :: #itemDetailsSection", modelAndView.getViewName());
