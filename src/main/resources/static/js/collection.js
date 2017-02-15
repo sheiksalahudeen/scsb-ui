@@ -19,6 +19,9 @@ jQuery(document).ready(function ($) {
             { targets: '_all',orderable: false}
         ]
     });
+
+    $("a[href='https://htcrecap.atlassian.net/wiki/display/RTG/Search']").attr('href',
+        'https://htcrecap.atlassian.net/wiki/display/RTG/Collection');
     
 });
 
