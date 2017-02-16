@@ -65,7 +65,6 @@ public class CollectionServiceUtil {
     public void updateCGDForItem(BibliographicMarcForm bibliographicMarcForm) {
         String statusResponse = null;
         try {
-            RestTemplate restTemplate = new RestTemplate();
             HttpEntity requestEntity = new HttpEntity<>(getHttpHeaders());
 
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getServerProtocol() + getScsbUrl() + RecapConstants.SCSB_UPDATE_CGD_URL)
@@ -91,7 +90,6 @@ public class CollectionServiceUtil {
 
     public void deAccessionItem(BibliographicMarcForm bibliographicMarcForm) {
         try {
-            RestTemplate restTemplate = new RestTemplate();
             DeAccessionRequest deAccessionRequest = new DeAccessionRequest();
             String itemBarcode = bibliographicMarcForm.getBarcode();
             deAccessionRequest.setItemBarcodes(Arrays.asList(itemBarcode));
