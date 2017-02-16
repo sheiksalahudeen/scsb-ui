@@ -308,9 +308,9 @@ public class SearchRecordsController {
                 }
             }
         }
-        redirectAttributes.addFlashAttribute("requestedBarcode", StringUtils.join(barcodes, ","));
-        redirectAttributes.addFlashAttribute("itemTitle", StringUtils.join(itemTitles, " || "));
-        redirectAttributes.addFlashAttribute("itemOwningInstitution", StringUtils.join(itemOwningInstitutions, ","));
+        redirectAttributes.addFlashAttribute(RecapConstants.REQUESTED_BARCODE, StringUtils.join(barcodes, ","));
+        redirectAttributes.addFlashAttribute(RecapConstants.REQUESTED_ITEM_TITLE, StringUtils.join(itemTitles, " || "));
+        redirectAttributes.addFlashAttribute(RecapConstants.REQUESTED_ITEM_OWNING_INSTITUTION, StringUtils.join(itemOwningInstitutions, ","));
     }
 
     private void processBarcodeForSearchItemResultRow(Set<String> barcodes, Set<String> titles, Set<String> itemInstitutions, SearchItemResultRow searchItemResultRow, SearchResultRow searchResultRow) {
