@@ -7,6 +7,25 @@ jQuery(document).ready(function ($) {
         populatePermissionNames();
     });
 
+    $('#createGoBackLink,#editGoBackLink,#deleteGoBackLink').click(function(){
+        var $form = $('#roles-form');
+        var url = $form.attr('action') + "?action=goBack";
+        var role = $.ajax({
+            url: url,
+            type: 'post',
+            data: $form.serialize(),
+            success: function (response) {
+                console.log("completed");
+                $('#rolesContentId').html(response);
+                $("#recaprole .create-role-section").hide();
+                $("#recaprole .roles-main-section").show();
+                $("#recaprole .delete-role-section").hide();
+                $("#recaprole .edit-role-section").hide();
+            }
+        });
+
+    });
+
     $("#recaprole .backtext a").click(function () {
         $("#recaprole .create-role-section").hide();
         $("#recaprole .roles-main-section").show();
@@ -26,6 +45,9 @@ jQuery(document).ready(function ($) {
     $('#editRoleNameErrorMessage').hide();
     $('#editRoleDescriptionErrorMessage').hide();
     $('#editPermissionNamesErrorMessage').hide();
+
+    $("a[href='https://htcrecap.atlassian.net/wiki/display/RTG/Search']").attr('href',
+        'https://htcrecap.atlassian.net/wiki/pages/viewpage.action?pageId=25665733');
 
 });
 
@@ -198,21 +220,20 @@ function deleteRole(roleId,roleNames,roleDescription,permissionNames) {
     var pageSize = $('#numOfRecordsId').val();
     var pageNumber = $('#pageNumber').val();
     var totalPageCount = $('#totalPageCount').val();
-
     var $form = $('#roles-form');
     var roleName = $('#recaprole .roleDetails').val();
     var url = $form.attr('action') + "?action=deleteRole";
     var role = $.ajax({
         url: url,
         type: 'post',
-        data: {roleId:roleId,roleName:roleNames,roleDescription:roleDescription,permissionName:permissionNames,pageSize:pageSize,pageNumber:pageNumber,totalPageCount:totalPageCount},
+        data: {roleId:roleId,roleName:roleNames,roleDescription:roleDescription,permissionName:permissionNames,
+               pageSize:pageSize,pageNumber:pageNumber,totalPageCount:totalPageCount},
         success: function (response) {
             $('#rolesContentId').html(response);
             $("#recaprole .delete-role-section").show();
             $("#recaprole .create-role-section").hide();
             $("#recaprole .roles-main-section").hide();
             $("#recaprole .edit-role-section").hide();
-            scrollTo(0,0);
         }
     });
     

@@ -35,6 +35,7 @@ public class RolesForm {
     private List<String> selectedPermissionNames = new ArrayList<>();
     private Integer roleId;
     private List<RolesSearchResult> rolesSearchResults = new ArrayList<>();
+    private boolean showIntial = true;
 
     public String getRoleName() {
         return roleName;
@@ -273,4 +274,13 @@ public class RolesForm {
     public void setAfterDelTotalPageCount(Integer afterDelTotalPageCount) {
         this.afterDelTotalPageCount = afterDelTotalPageCount;
     }
+
+    public boolean isShowIntial() {
+        return showIntial;
+    }
+
+    public void setShowIntial(boolean showIntial) {
+        this.showIntial = showIntial;
+    }
+
 }

@@ -10,9 +10,11 @@
                 <input id="pageNumber" name="pageNumber" type="text" th:field="*{pageNumber}" hidden="hidden"/>
                 <input id="totalPageCount" name="totalPageCount" type="text" th:field="*{totalPageCount}" hidden="hidden"/>
                 <input id="totalRecordsCount" name="totalRecordsCount" type="text" th:field="*{totalRecordsCount}" hidden="hidden"/>
+                <input id="requestStatuses" name="requestStatuses" type="text" th:field="*{requestStatuses}" hidden="hidden"/>
                 <input id="patronBarcodeInRequestHdn" name="patronBarcodeInRequestHdn" type="text" value="" hidden="hidden"/>
                 <input id="patronEmailIdHdn" name="patronEmailIdHdn" type="text" value="" hidden="hidden"/>
                 <input id="requestingInstitutionHdn" name="requestingInstitutionHdn" type="text" value="" hidden="hidden"/>
+                <input id="requestIdHdn" name="requestIdHdn" type="text" th:field="*{requestId}" hidden="hidden"/>
                 <div role="tabpanel" class="tab-pane" id="request">
                     <div id="searchRequestsSection" class="request-main-section" style="display:none;">
                         <div class="search-bar">
@@ -23,15 +25,29 @@
                                 <div class="col-xs-12  padding-0">
                                     <form>
                                         <div class="input-group buscador-principal">
-                                            <div class="col-md-6 col-sm-6 padding-right-20 padding-left-0">
+                                            <div class="col-md-4 col-sm-4 padding-right-20 padding-left-0">
                                                 <label class="fontcolor-dark margin-btm-10">Patron Barcode</label>
                                                 <input id="patronBarcode" name="patronBarcode" type="text" th:field="*{patronBarcode}" class="form-control themed-input"/>
                                             </div>
-                                            <div class="col-md-6 col-sm-6 padding-right-50 padding-left-50">
+                                            <div class="col-md-4 col-sm-4 padding-right-50">
                                                 <label class="fontcolor-dark margin-btm-10">Item Barcode</label>
                                                 <input id="itemBarcode" name="itemBarcode" type="text" th:field="*{itemBarcode}" class="form-control themed-input"/>
                                             </div>
-                                            <div class="input-group-btn search-panel padding-left-70 padding-right-10">
+                                            <div class="col-md-4 col-sm-4 padding-right-50">
+                                                <label class="fontcolor-dark margin-btm-10">Status</label>
+                                                <div class="select-holder">
+                                                    <select id="requestStatus"
+                                                            name="requestStatus"
+                                                            class="themed-input themed-select"
+                                                            style="border: 1px solid #888988;color: #555555;outline: none;height: 50px;box-shadow: none;"
+                                                            th:field="*{status}"
+                                                            onchange="">
+                                                        <option value=""></option>
+                                                        <option th:each="requestStatus : *{requestStatuses}" th:value="${requestStatus}" th:text="${requestStatus}"></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="input-group-btn search-panel padding-right-10">
                                                 <button id="searchRequestsButton" class="btn themed-button themed-button-search" type="button" name="searchRequestsButton" onclick="searchRequests('searchRequests')">Search</button>
                                             </div>
                                             <div class="input-group-btn">
@@ -54,15 +70,17 @@
                                     <div class="col-sm-3 col-md-2 col-lg-2 margin-top-05 show-entries-section">
                                         <div class="">
                                             <span class="show-title margin-right-05">Show Entries</span>
-                                            <select id="numOfRecordsId" name="numOfRecordsName" class="themed-input">
+                                            <select id="numOfRecordsId" name="numOfRecordsName" class="themed-input"
+                                                    th:field="*{pageSize}" onchange="requestsOnPageSizeChange()">
                                                 <option value="10">10</option>
                                                 <option value="25">25</option>
                                                 <option value="50">50</option>
-                                                <option value="100">100</option></select>
+                                                <option value="100">100</option>
+                                            </select>
 
                                         </div>
                                     </div>
-                                    <div class="col-sm-9 col-md-10 col-lg-7 margin-top-10"><div class="row">RI - Requesting Institution, RT - Request Type, OI - Owning Institution</div>
+                                    <div class="col-sm-9 col-md-10 col-lg-7 margin-top-10"><div class="row">RI - Requesting Institution, RT - Request Type, OI - Owning Institution, DL - Delivery Location</div>
                                     </div>
                                     <div class="col-sm-12 col-md-12 col-lg-3 text-right"><h4>Search Results Found: <span th:text="*{totalRecordsCount}"></span></h4></div>
                                 </div>
@@ -71,47 +89,25 @@
                                         <table id="request-result-table" class="table table-striped margin-btm-0">
                                             <thead class="tablesorter-headerRow">
                                             <tr>
-                                                <th height="40" width="7%" align="center" class="text-center">
-                                                    <div class="checkbox table-header-checkbox">
-                                                        <label class="text-center">
-                                                            Select All
-                                                            <span class="clearfix"></span>
-                                                            <input type="checkbox" id="requestSelectAll"
-                                                                   name="requestSelectAll"
-                                                                   th:value="false"
-                                                                   th:onclick="'javascript:selectAllRows();enableRequestButtons()'">
-                                                            <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-                                                            </input>
-                                                        </label>
-                                                    </div>
-                                                </th>
-                                                <th>PATRON BARCODE</th>
+                                                <th>Patron Barcode</th>
                                                 <th th:title="'Request Institution'">RI</th>
-                                                <th>ITEM BARCODE</th>
-                                                <th th:title="'ITEM Owning Institution'">ITEM OI</th>
-                                                <th>DELIVERY LOCATION</th>
+                                                <th>Item Barcode</th>
+                                                <th th:title="'Item Owning Institution'">Item OI</th>
+                                                <th th:title="'Delivery Location'">DL</th>
                                                 <th th:title="'Request Type'">RT</th>
-                                                <th>REQUEST CREATED BY</th>
-                                                <th>PATRON EMAIL ADDRESS</th>
-                                                <th>REQUEST NOTES</th>
+                                                <th>Request Created By</th>
+                                                <th>Patron Email Address</th>
+                                                <th>Created Date</th>
+                                                <th>Status</th>
+                                                <th>Request Notes</th>
+                                                <th>Cancel</th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                                 <tr data-th-id="'requestResults-'+ ${searchResultStat.index}" th:each="searchResult,searchResultStat : *{searchResultRows}" class="requestRow">
                                                     <input data-th-id="'requestRowBibId-'+ ${searchResultStat.index}" name="requestRowBibId" type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].bibId}"/>
                                                     <input data-th-id="'requestRowItemId-'+ ${searchResultStat.index}" name="requestRowItemId" type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].itemId}"/>
-                                                    <td align="center">
-                                                        <div class="checkbox table-body-checkbox">
-                                                            <label>
-                                                                <input type="checkbox" id="requestSelected" name="requestSelected"
-                                                                       th:field="*{searchResultRows[__${searchResultStat.index}__].selected}"
-                                                                       style="margin-left: 25px;"
-                                                                       onclick="enableRequestButtons()">
-                                                                <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-                                                                </input>
-                                                            </label>
-                                                        </div>
-                                                    </td>
+                                                    <input data-th-id="'requestRowRequestId-'+ ${searchResultStat.index}" name="requestRowRequestId" type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].requestId}"/>
                                                     <td>
                                                         <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].patronBarcode}"/>
                                                         <span th:text="${searchResult.patronBarcode}"></span>
@@ -145,8 +141,21 @@
                                                         <span th:text="${searchResult.patronEmailId}"></span>
                                                     </td>
                                                     <td width="">
-                                                        <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].requestNotes}"/>
-                                                        <span th:text="${searchResult.requestNotes}"></span>
+                                                        <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].createdDate}"/>
+                                                        <span th:text="${#dates.format(searchResult.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                                                    </td>
+                                                    <td width="">
+                                                        <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].status}"/>
+                                                        <span data-th-id="'status-' + ${searchResultStat.index}" th:text="${searchResult.status}"></span>
+                                                    </td>
+                                                    <td width="" style="text-align: center">
+                                                        <input data-th-id="'notes-' + ${searchResultStat.index}" type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].requestNotes}"/>
+                                                        <button th:if="${searchResult.requestNotes ne null &amp;&amp; searchResult.requestNotes ne ''}" th:title="'Show Notes'" data-th-id="'notesButton-' + ${searchResultStat.index}" type="button" name="action" th:onclick="'javascript:showNotesPopup('+${searchResultStat.index}+')'"><i class="fa fa-file-text-o" aria-hidden="true"></i>
+                                                        </button>
+                                                    </td>
+                                                    <td width="">
+                                                        <button th:if="${searchResult.status == 'RETRIEVAL ORDER PLACED' || searchResult.status == 'RECALL ORDER PLACED' || searchResult.status == 'EDD ORDER PLACED'}" th:title="'Cancel Request'" data-th-id="'cancelButton-' + ${searchResultStat.index}" type="button" name="action" th:onclick="'javascript:cancelRequest('+${searchResultStat.index}+')'"><i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                                                        </button>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -184,9 +193,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div id="requestButtonsId" name="requestButtonsName" class="form-group input-group-btn" align="center">
-                                        <button id="cancelRequestsButtonId" type="button" name="action" value="cancelRequests" class="btn btn-primary" disabled="disabled">Cancel Selected Requests</button>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -194,7 +200,7 @@
                     <div id="createRequestSection" class="create-request-section">
                         <div class="row margin-top-0">
                             <div class="col-sm-6 margin-top-0"><h3 class="margin-0">Create Request</h3></div>
-                            <div class="col-sm-6 text-right search-request"><a href="#"><span class="glyphicon glyphicon-plus-sign"></span> Search Requests</a></div>
+                            <div class="col-sm-6 text-right search-request"><a href="#" name="searchRequestlink"><span class="glyphicon glyphicon-plus-sign"></span> Search Requests</a></div>
                         </div>
                         <div class="row">
                             <div class="col-xs-12 divider-horizontal margin-top-10 margin-btm-10"></div>
@@ -459,7 +465,7 @@
                             <div class="row">
                                 <div class="col-xs-12 text-center">
                                     <button type="button" class="btn btn-default themed-button btn-primary" id="createrequestsubmit" onclick="createRequest()">Submit</button>
-                                    <button type="reset" class="btn btn-default themed-button themed-button-cancel" id="createrequestclear" onclick="resetDefaults()">Clear</button>
+                                    <button type="button" class="btn btn-default themed-button themed-button-cancel" id="createrequestclear" onclick="resetDefaults()">Clear</button>
                                 </div>
                             </div>
                         </div>
@@ -531,6 +537,51 @@
                     </div>
                 </div>
                 <!-- Modal Data-->
+
+                <!-- Cancel Modal Data-->
+                <div id="cancelRequestModal" class="modal fade create-request-details" tabindex="-2" role="dialog" aria-labelledby="cancelRequestLargeModalLabel" data-keyboard="false" data-backdrop="static">
+                    <div class="modal-dialog" role="document">
+                        <div id="cancelRequestModalContent" class="modal-content">
+                            <div class="modal-header bg-success">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h2 class="modal-title text-center text-success" id="cancelRequestModalLabel">Cancel Request</h2>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="padding-10">
+                                            <span id="cancelStatus"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Cancel Modal Data-->
+
+                <!-- Notes Modal Data-->
+                <div id="requestNotesModal" class="modal fade create-request-details" tabindex="-2" role="dialog" aria-labelledby="requestNotesLargeModalLabel" data-keyboard="false" data-backdrop="static">
+                    <div class="modal-dialog" role="document">
+                        <div id="requestNotesModalContent" class="modal-content">
+                            <div class="modal-header bg-success">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h2 class="modal-title text-center text-success" id="requestNotesModalLabel">Request Notes</h2>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="padding-10">
+                                            <span id="requestNotesData"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Notes Modal Data-->
+
             </fieldset>
         </form>
     </div>

@@ -13,6 +13,7 @@ import org.recap.repository.jpa.RequestItemDetailsRepository;
 import org.recap.security.UserManagement;
 import org.recap.util.ReportsUtil;
 import org.recap.util.UserAuthUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -42,6 +43,9 @@ public class ReportsControllerUT extends BaseControllerUT {
 
     @Mock
     ReportsController reportsController;
+
+    @Autowired
+    ReportsController reportsControllerWired;
 
     @Mock
     RequestItemDetailsRepository requestItemDetailsRepository;
@@ -91,7 +95,7 @@ public class ReportsControllerUT extends BaseControllerUT {
         reportsForm.setRequestFromDate("11/01/2016");
         reportsForm.setRequestToDate("12/01/2016");
         reportsForm.setShowBy(RecapConstants.REPORTS_IL_BD);
-        ModelAndView modelAndView = reportsController.reportCounts(reportsForm,model);
+        ModelAndView modelAndView = reportsControllerWired.reportCounts(reportsForm,model);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(RecapConstants.SIMPLE_DATE_FORMAT_REPORTS);
         String fromDate = reportsForm.getRequestFromDate();
         String toDate = reportsForm.getRequestToDate();
@@ -99,7 +103,7 @@ public class ReportsControllerUT extends BaseControllerUT {
         Date requestToDate = new Date();
         reportsUtil.populateILBDCountsForRequest(reportsForm, requestFromDate, requestToDate);
         assertNotNull(modelAndView);
-        assertEquals("searchRecords", modelAndView.getViewName());
+        assertEquals("reports", modelAndView.getViewName());
     }
 
     @Test
@@ -109,7 +113,7 @@ public class ReportsControllerUT extends BaseControllerUT {
         reportsForm.setRequestFromDate("11/01/2016");
         reportsForm.setRequestToDate("12/01/2016");
         reportsForm.setShowBy(RecapConstants.REPORTS_PARTNERS);
-        ModelAndView modelAndView = reportsController.reportCounts(reportsForm,model);
+        ModelAndView modelAndView = reportsControllerWired.reportCounts(reportsForm,model);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(RecapConstants.SIMPLE_DATE_FORMAT_REPORTS);
         String fromDate = reportsForm.getRequestFromDate();
         String toDate = reportsForm.getRequestToDate();
@@ -117,7 +121,7 @@ public class ReportsControllerUT extends BaseControllerUT {
         Date requestToDate =new Date();
         reportsUtil.populatePartnersCountForRequest(reportsForm, requestFromDate, requestToDate);
         assertNotNull(modelAndView);
-        assertEquals("searchRecords", modelAndView.getViewName());
+        assertEquals("reports", modelAndView.getViewName());
     }
 
     @Test
@@ -127,7 +131,7 @@ public class ReportsControllerUT extends BaseControllerUT {
         reportsForm.setRequestFromDate("11/01/2016");
         reportsForm.setRequestToDate("12/01/2016");
         reportsForm.setShowBy(RecapConstants.REPORTS_REQUEST_TYPE);
-        ModelAndView modelAndView = reportsController.reportCounts(reportsForm,model);
+        ModelAndView modelAndView = reportsControllerWired.reportCounts(reportsForm,model);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(RecapConstants.SIMPLE_DATE_FORMAT_REPORTS);
         String fromDate = reportsForm.getRequestFromDate();
         String toDate = reportsForm.getRequestToDate();
@@ -135,7 +139,7 @@ public class ReportsControllerUT extends BaseControllerUT {
         Date requestToDate = new Date();
         reportsUtil.populateRequestTypeInformation(reportsForm, requestFromDate, requestToDate);
         assertNotNull(modelAndView);
-        assertEquals("searchRecords", modelAndView.getViewName());
+        assertEquals("reports", modelAndView.getViewName());
     }
 
     @Test
@@ -147,17 +151,17 @@ public class ReportsControllerUT extends BaseControllerUT {
         reportsForm.setShowBy(RecapConstants.REPORTS_ACCESSION_DEACCESSION);
         String fromDate = reportsForm.getAccessionDeaccessionFromDate();
         String toDate = reportsForm.getAccessionDeaccessionToDate();
-        ModelAndView modelAndView = reportsController.reportCounts(reportsForm,model);
+        ModelAndView modelAndView = reportsControllerWired.reportCounts(reportsForm,model);
         reportsUtil.populateAccessionDeaccessionItemCounts(reportsForm);
         assertNotNull(modelAndView);
-        assertEquals("searchRecords", modelAndView.getViewName());
+        assertEquals("reports", modelAndView.getViewName());
     }
 
 
     @Test
     public void cgdCounts() throws Exception {
         ReportsForm reportsForm = new ReportsForm();
-        ModelAndView modelAndView = reportsController.cgdCounts(reportsForm,model);
+        ModelAndView modelAndView = reportsControllerWired.cgdCounts(reportsForm,model);
         reportsUtil.populateCGDItemCounts(reportsForm);
         assertNotNull(modelAndView);
         assertEquals("reports :: #cgdTable",modelAndView.getViewName());
@@ -167,7 +171,7 @@ public class ReportsControllerUT extends BaseControllerUT {
     public void deaccessionInformation() throws Exception {
         ReportsForm reportsForm = new ReportsForm();
         List<DeaccessionItemResultsRow> deaccessionItemResultsRowList = new ArrayList<>();
-        ModelAndView modelAndView = reportsController.deaccessionInformation(reportsForm,model);
+        ModelAndView modelAndView = reportsControllerWired.deaccessionInformation(reportsForm,model);
         when((reportsUtil.deaccessionReportFieldsInformation(reportsForm))).thenReturn(deaccessionItemResultsRowList);
         assertNotNull(deaccessionItemResultsRowList);
         assertNotNull(modelAndView);
@@ -178,7 +182,7 @@ public class ReportsControllerUT extends BaseControllerUT {
     @Test
     public void searchPrevious() throws Exception{
         ReportsForm reportsForm = new ReportsForm();
-        ModelAndView modelAndView = reportsController.searchPrevious(reportsForm,model);
+        ModelAndView modelAndView = reportsControllerWired.searchPrevious(reportsForm,model);
         assertNotNull(modelAndView);
         assertEquals("reports :: #deaccessionInformation",modelAndView.getViewName());
     }
@@ -186,7 +190,7 @@ public class ReportsControllerUT extends BaseControllerUT {
     @Test
     public void searchNext() throws Exception{
         ReportsForm reportsForm = new ReportsForm();
-        ModelAndView modelAndView = reportsController.searchNext(reportsForm,model);
+        ModelAndView modelAndView = reportsControllerWired.searchNext(reportsForm,model);
         assertNotNull(modelAndView);
         assertEquals("reports :: #deaccessionInformation",modelAndView.getViewName());
     }
@@ -194,7 +198,7 @@ public class ReportsControllerUT extends BaseControllerUT {
     @Test
     public void searchFirst() throws Exception{
         ReportsForm reportsForm = new ReportsForm();
-        ModelAndView modelAndView = reportsController.searchFirst(reportsForm,model);
+        ModelAndView modelAndView = reportsControllerWired.searchFirst(reportsForm,model);
         assertNotNull(modelAndView);
         assertEquals("reports :: #deaccessionInformation",modelAndView.getViewName());
     }
@@ -202,7 +206,7 @@ public class ReportsControllerUT extends BaseControllerUT {
     @Test
     public void searchLast() throws Exception{
         ReportsForm reportsForm = new ReportsForm();
-        ModelAndView modelAndView = reportsController.searchLast(reportsForm,model);
+        ModelAndView modelAndView = reportsControllerWired.searchLast(reportsForm,model);
         assertNotNull(modelAndView);
         assertEquals("reports :: #deaccessionInformation",modelAndView.getViewName());
     }

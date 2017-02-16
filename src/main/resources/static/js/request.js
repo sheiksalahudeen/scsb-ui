@@ -3,15 +3,11 @@
  */
 
 jQuery(document).ready(function ($) {
-    resetDefaults();
     /***Request Tab Create Request Form Show/Hide ***/
     $("#request .search-request a").click(function (e) {
-        $("#request .request-main-section").show();
-        $("#request .create-request-section").hide();
+        loadSearchRequest();
     });
     $("#request .backtext a").click(function () {
-        $("#request .request-main-section").hide();
-        $("#request .create-request-section").show();
         loadCreateRequest();
     });
 
@@ -28,7 +24,20 @@ jQuery(document).ready(function ($) {
         $('#patronEmailIdErrorMessage').hide();
     });
 
+    $("a[href='https://htcrecap.atlassian.net/wiki/display/RTG/Search']").attr('href',
+        'https://htcrecap.atlassian.net/wiki/display/RTG/Request');
 
+    $('#errorMessageId').hide();
+    $('#itemBarcodeErrorMessage').hide();
+    $('#patronBarcodeErrorMessage').hide();
+    $('#requestTypeErrorMessage').hide();
+    $('#deliveryLocationErrorMessage').hide();
+    $('#requestingInstitutionErrorMessage').hide();
+    $('#startPageErrorMessage').hide();
+    $('#endPageErrorMessage').hide();
+    $('#articleTitleErrorMessage').hide();
+    $('#patronEmailIdErrorMessage').hide();
+    $('#itemBarcodeNotFoundErrorMessage').hide();
 });
 
 $(function() {
@@ -60,6 +69,22 @@ function loadCreateRequest() {
     });
 }
 
+function loadSearchRequest() {
+    var $form = $('#request-form');
+    var url = $form.attr('action') + "?action=loadSearchRequest";
+    var request = $.ajax({
+        url: url,
+        type: 'post',
+        data: $form.serialize(),
+        success: function (response) {
+            console.log("completed");
+            $('#requestContentId').html(response);
+            $("#request .request-main-section").show();
+            $("#request .create-request-section").hide();
+        }
+    });
+}
+
 function searchRequests(action) {
     var $form = $('#request-form');
     var url = $form.attr('action') + "?action=" + action;
@@ -79,6 +104,7 @@ function searchRequests(action) {
 function clearRequests() {
     $("#patronBarcode").val('');
     $("#itemBarcode").val('');
+    $("#requestStatus").val('');
     $(".search-results-container").css('display', 'none');
 }
 
@@ -100,24 +126,8 @@ function requestsNextPage() {
     searchRequests('next');
 }
 
-
-function selectAllRows() {
-    var selectAllFlag = $('#requestSelectAll').is(":checked");
-    if (selectAllFlag) {
-        $("tr.requestRow #requestSelected").prop('checked', true);
-    } else {
-        $("tr.requestRow #requestSelected").prop('checked', false);
-    }
-}
-
-function enableRequestButtons() {
-    var selectAllCheckBox = $('#requestSelectAll').is(":checked");
-    var resultsCheckBox = $('tr.requestRow #requestSelected').is(":checked");
-    if (selectAllCheckBox || resultsCheckBox) {
-        document.getElementById("cancelRequestsButtonId").disabled = false;
-    } else {
-        document.getElementById("cancelRequestsButtonId").disabled = true;
-    }
+function requestsOnPageSizeChange() {
+    searchRequests('requestPageSizeChange');
 }
 
 function populateItemDetails() {
@@ -131,7 +141,6 @@ function populateItemDetails() {
             data: $form.serialize(),
             success: function (response) {
                 console.log("completed");
-                console.log(response);
                 var jsonResponse = JSON.parse(response);
                 $('#itemTitleId').val(jsonResponse['itemTitle']);
                 $('#itemOwningInstitutionId').val(jsonResponse['itemOwningInstitution']);
@@ -248,7 +257,6 @@ function createRequest() {
                 $('#createRequestSection').unblock();
                 console.log("completed");
                 var jsonResponse = JSON.parse(response);
-                console.log(jsonResponse);
                 var errorMessage = jsonResponse['errorMessage'];
                 $('#errorMessageSpanId').hide();
                 if (errorMessage != null && errorMessage != '') {
@@ -297,6 +305,26 @@ function resetDefaults() {
     $('#endPageErrorMessage').hide();
     $('#articleTitleErrorMessage').hide();
     $('#patronEmailIdErrorMessage').hide();
+    $('#itemBarcodeNotFoundErrorMessage').hide();
+    $('#itemBarcodeId').val('');
+    $('#itemTitleId').val('');
+    $('#itemOwningInstitutionId').val('');
+    $('#patronBarcodeId').val('');
+    $('#patronEmailId').val('');
+    $('#requestTypeId').val('RETRIEVAL');
+    $('#deliveryLocationId').val('');
+    $('#requestingInstitutionId').val('');
+    $('#requestNotesId').val('');
+    $('#deliverylocation_request').show();
+    //EDD
+    $('#EDD').hide();
+    $('#StartPage').val('');
+    $('#EndPage').val('');
+    $('#VolumeNumber').val('');
+    $('#Issue').val('');
+    $('#ArticleAuthor').val('');
+    $('#ArticleChapterTitle').val('');
+
 }
 
 function toggleItemBarcodeValidation() {
@@ -374,9 +402,52 @@ function validateEmailAddress() {
 
 function createRequestSamePatron() {
     $('#createRequestModal').modal('hide');
-    $('#patronBarcodeId').val($('#patronBarcodeInRequestHdn').html());
-    $('#patronEmailId').val($('#patronEmailIdHdn').html());
-    $('#requestingInstitutionId').val($('#requestingInstitutionHdn').html());
+    $('#patronBarcodeId').val($('#patronBarcodeInRequest').html());
+    $('#patronEmailId').val($('#patronEmailAddress').html());
+    $('#requestingInstitutionId').val($('#requestingInstitution').html());
     $('.EDDdetails-section').hide();
     $('#deliverylocation_request').show();
+}
+
+function cancelRequest(index) {
+    var requestId = $("#requestRowRequestId-" + index).val();
+    $("#requestIdHdn").val(requestId);
+    cancelRequestItem(index);
+}
+
+function cancelRequestItem(index) {
+    var $form = $('#request-form');
+    var url = $form.attr('action') + "?action=cancelRequest";
+    var request = $.ajax({
+        url: url,
+        type: 'post',
+        data: $form.serialize(),
+        beforeSend: function () {
+            $('#searchRequestsSection').block({
+                message: '<h1>Processing...</h1>'
+            });
+        },
+        success: function (response) {
+            $('#searchRequestsSection').unblock();
+            console.log("completed");
+            var jsonResponse = JSON.parse(response);
+            var message = jsonResponse['Message'];
+            var status = jsonResponse['Status'];
+            var requestStatus = jsonResponse['RequestStatus'];
+            if (status) {
+                $("#cancelStatus").html("Request cancelled successfully");
+                $("#status-" + index).html(requestStatus);
+                $("#cancelButton-" + index).hide();
+            } else {
+                $("#cancelStatus").html("Request cancellation failed. " + message);
+            }
+            $('#cancelRequestModal').modal('show');
+        }
+    });
+}
+
+function showNotesPopup(index) {
+    var notes = $("#notes-" + index).val();
+    $("#requestNotesData").html(notes);
+    $('#requestNotesModal').modal('show');
 }

@@ -48,11 +48,11 @@ public class RequestItemEntity implements Serializable {
     @Column(name = "STOP_CODE")
     private String stopCode;
 
-    @Column(name = "EMAIL_ID")
-    private String emailId;
-
     @Column(name = "REQUEST_STATUS_ID")
     private Integer requestStatusId;
+
+    @Column(name = "NOTES")
+    private String notes;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "REQUESTING_INST_ID", insertable = false, updatable = false)
@@ -70,8 +70,9 @@ public class RequestItemEntity implements Serializable {
     @JoinColumn(name = "ITEM_ID", referencedColumnName = "ITEM_ID", insertable = false, updatable = false)
     private ItemEntity itemEntity;
 
-    @OneToMany(mappedBy = "requestItemEntity", cascade = CascadeType.ALL)
-    private List<NotesEntity> notesEntities;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "REQUEST_STATUS_ID", insertable = false, updatable = false)
+    private RequestStatusEntity requestStatusEntity;
 
     public Integer getRequestId() {
         return requestId;
@@ -153,12 +154,12 @@ public class RequestItemEntity implements Serializable {
         this.stopCode = stopCode;
     }
 
-    public String getEmailId() {
-        return emailId;
+    public Integer getRequestStatusId() {
+        return requestStatusId;
     }
 
-    public void setEmailId(String emailId) {
-        this.emailId = emailId;
+    public void setRequestStatusId(Integer requestStatusId) {
+        this.requestStatusId = requestStatusId;
     }
 
     public InstitutionEntity getInstitutionEntity() {
@@ -193,19 +194,19 @@ public class RequestItemEntity implements Serializable {
         this.itemEntity = itemEntity;
     }
 
-    public List<NotesEntity> getNotesEntities() {
-        return notesEntities;
+    public RequestStatusEntity getRequestStatusEntity() {
+        return requestStatusEntity;
     }
 
-    public void setNotesEntities(List<NotesEntity> notesEntities) {
-        this.notesEntities = notesEntities;
+    public void setRequestStatusEntity(RequestStatusEntity requestStatusEntity) {
+        this.requestStatusEntity = requestStatusEntity;
     }
 
-    public Integer getRequestStatusId() {
-        return requestStatusId;
+    public String getNotes() {
+        return notes;
     }
 
-    public void setRequestStatusId(Integer requestStatusId) {
-        this.requestStatusId = requestStatusId;
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

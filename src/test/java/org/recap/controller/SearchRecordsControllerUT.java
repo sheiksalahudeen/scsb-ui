@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -69,6 +70,9 @@ public class SearchRecordsControllerUT extends BaseControllerUT{
 
     @Mock
     SearchRecordsRequest searchRecordsRequest;
+
+    @Mock
+    RedirectAttributes redirectAttributes;
 
     @Before
     public void setUp() throws Exception {
@@ -174,8 +178,10 @@ public class SearchRecordsControllerUT extends BaseControllerUT{
     @Test
     public void requestRecords() throws Exception{
         searchRecordsRequest = new SearchRecordsRequest();
-        when(searchRecordsController.requestRecords(searchRecordsRequest,bindingResult,model)).thenCallRealMethod();
-        ModelAndView modelAndView = searchRecordsController.requestRecords(searchRecordsRequest,bindingResult,model);
+        ModelAndView modelAndView1 = new ModelAndView();
+        modelAndView1.setViewName("searchRecords");
+        when(searchRecordsController.requestRecords(searchRecordsRequest,bindingResult,model,redirectAttributes)).thenReturn(modelAndView1);
+        ModelAndView modelAndView = searchRecordsController.requestRecords(searchRecordsRequest,bindingResult,model,redirectAttributes);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
     }

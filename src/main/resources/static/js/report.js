@@ -29,6 +29,7 @@ jQuery(document).ready(function ($) {
         $('#AccessionDeaccessionDateRangefrom').val('');
         $('#AccessionDeaccessionDateRangeto').val('');
         $('#showAccessionDeaccessionTable').hide();
+        $('#deaccessionErrorText').hide();
         if ($(this).is(':checked')) {
             AccessionDeaccessionOption();
         }
@@ -159,7 +160,7 @@ jQuery(document).ready(function ($) {
                 $('#showReportResultsText').hide();
                 $('#RequestTypeshow').hide();
                 $('#requesttype-tableview').hide();
-                $('#partners-tableview').show();
+                $('#partners-tableview').hide();
                 $('#ILBD-tableview').hide();
                 $('#note-ILBD').hide();
                 $('#note-partners').show();
@@ -187,63 +188,121 @@ jQuery(document).ready(function ($) {
                 $('#AccessionDeaccessionDateRangeto').val('');
                 $('#recapreports #ReportRequestType').multiselect('deselectAll', false);
                 $('#recapreports #ReportRequestType').multiselect('refresh');
+                $('#requestTypeErrorText').hide();
             }
         });
 
 
     });
 
-    $('#searchButton').click(function () {
+
+    $("#reports-form").submit(function (event) {
+        event.preventDefault();
+        reportRequestSubmit();
+
+    });
+
+
+    function reportRequestSubmit(){
+        var submitValid = requestSubmit();
+        if(submitValid == true){
+            var $form = $('#reports-form');
+            var url = "/reports/submit";
+            var role = $.ajax({
+                url: url,
+                type: 'post',
+                data: $form.serialize(),
+                success: function (response) {
+                    $('#reportsContentId').html(response);
+                }
+            });
+        }
+        else{
+            if($('#recapreports #ReportAccessionDeaccessionclick').is(':checked')){
+                $('#ReportAccessionDeaccessionclickview').show();
+                $('#ReportRequestclickview').hide();
+                $('#RequestTypeshow').hide();
+                $('#showReportResultsText').hide();
+                $('#RequestTypeshow').hide();
+            }
+            else {
+                $('#ReportRequestclickview').show();
+                $('#RequestTypeshow').show();
+                $('#showReportResultsText').hide();
+                $('#RequestTypeshow').hide();
+            }
+        }
+    }
+
+
+    function requestSubmit(){
         var showBy = $('#ReportShowBy').val();
         var requestFromDate = $('#RequestDateRangefrom').val();
         var requestToDate = $('#RequestDateRangeto').val();
         var reportRequestType = $('#ReportRequestType').val();
-        if (isBlankValue(showBy)) {
-            $('#showByErrorText').show(event.preventDefault());
+        var isValid = true;
+        if($('#recapreports #ReportAccessionDeaccessionclick').is(':checked')){
+            var fromDate = $('#AccessionDeaccessionDateRangefrom').val();
+            var toDate = $('#AccessionDeaccessionDateRangeto').val();
+            if (isBlankValue(fromDate)) {
+                $('#accessionErrorText').show();
+                isValid=false;
+            }
+            else{
+                $('#accessionErrorText').hide();
+            }
+            if (isBlankValue(toDate)) {
+                $('#deaccessionErrorText').show();
+                isValid=false;
+            }
+            else {
+                $('#deaccessionErrorText').hide();
+            }
         }
-        if (isBlankValue(requestFromDate)) {
-            $('#requestFromDateErrorText').show(event.preventDefault());
+        else{
+            if (isBlankValue(requestFromDate)) {
+                $('#requestFromDateErrorText').show();
+                isValid=false;
+            }
+            else{
+                $('#requestFromDateErrorText').hide();
+            }
+            if (isBlankValue(requestToDate)) {
+                $('#requestToDateErrorText').show();
+                isValid=false;
+            }
+            else {
+                $('#requestToDateErrorText').hide();
+            }
+            if ((showBy == 'RequestType') && isBlankValue(reportRequestType)) {
+                isValid=false;
+                $('#requestTypeErrorText').show();
+                $('#RequestTypeshow').show(e.preventDefault());
+                e.preventDefault();
+            }
+            if ((showBy == 'RequestType') && !isBlankValue(reportRequestType) && isBlankValue(requestFromDate) && isBlankValue(requestToDate)) {
+                $('#RequestTypeshow').show();
+                $('#requestTypeErrorText').hide();
+                e.preventDefault();
+            }
+            if ((showBy == 'RequestType') && !isBlankValue(reportRequestType) && !isBlankValue(requestFromDate) && isBlankValue(requestToDate)) {
+                $('#RequestTypeshow').show();
+                $('#requestTypeErrorText').hide();
+                e.preventDefault();
+            }
+            if ((showBy == 'RequestType') && !isBlankValue(reportRequestType) && isBlankValue(requestFromDate) && !isBlankValue(requestToDate)) {
+                $('#RequestTypeshow').show();
+                $('#requestTypeErrorText').hide();
+                e.preventDefault();
+            }
+            if ((showBy == 'RequestType') && !isBlankValue(reportRequestType) && !isBlankValue(requestFromDate) && !isBlankValue(requestToDate)) {
+                isValid=true;
+                $('#RequestTypeshow').show();
+                $('#requestTypeErrorText').hide();
+            }
         }
-        if (isBlankValue(requestToDate)) {
-            $('#requestToDateErrorText').show(event.preventDefault());
-        }
-        if (!isBlankValue(requestFromDate) && isBlankValue(requestToDate)) {
-            $('#requestFromDateErrorText').hide();
-            $('#requestToDateErrorText').show(event.preventDefault());
-
-        }
-        if (isBlankValue(requestFromDate) && (!isBlankValue(requestToDate))) {
-            $('#requestFromDateErrorText').show(event.preventDefault());
-            $('#requestToDateErrorText').hide();
-
-        }
-        if ((showBy == 'RequestType') && isBlankValue(reportRequestType)) {
-            $('#requestTypeErrorText').show(event.preventDefault());
-        }
-
-
-    });
-
-    $('#accessionSearchButton').click(function () {
-        var fromDate = $('#AccessionDeaccessionDateRangefrom').val();
-        var toDate = $('#AccessionDeaccessionDateRangeto').val();
-
-        if (isBlankValue(fromDate)) {
-            $('#accessionErrorText').show(event.preventDefault());
-        }
-        if (isBlankValue(toDate)) {
-            $('#deaccessionErrorText').show(event.preventDefault());
-        }
-        if ((!isBlankValue(fromDate)) && isBlankValue(toDate)) {
-            $('#accessionErrorText').hide();
-            $('#deaccessionErrorText').show(event.preventDefault());
-        }
-        if (isBlankValue(fromDate) && (!isBlankValue(toDate))) {
-            $('#accessionErrorText').show(event.preventDefault());
-            $('#deaccessionErrorText').hide();
-        }
-
-    });
+        return isValid;
+    }
 
     function isBlankValue(value) {
         if (value == null || value == '') {
@@ -256,8 +315,8 @@ jQuery(document).ready(function ($) {
         $('#requestFromDateErrorText').hide();
     });
 
-    $('#ReportRequestType').click(function () {
-      $('#requestTypeErrorText').hide();
+    $('#ReportRequestType').change(function () {
+        $('#requestTypeErrorText').hide();
     });
 
     $('#RequestDateRangeto').click(function () {
@@ -301,6 +360,9 @@ jQuery(document).ready(function ($) {
         });
 
     });
+
+    $("a[href='https://htcrecap.atlassian.net/wiki/display/RTG/Search']").attr('href',
+        'https://htcrecap.atlassian.net/wiki/display/RTG/Reports');
 
 
 });

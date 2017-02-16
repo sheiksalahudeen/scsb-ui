@@ -5,8 +5,10 @@ import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
+import org.recap.model.search.SearchItemResultRow;
 import org.recap.model.search.SearchRecordsRequest;
 import org.recap.model.search.SearchRecordsResponse;
+import org.recap.model.search.SearchResultRow;
 import org.recap.security.UserManagement;
 import org.recap.util.CsvUtil;
 import org.recap.util.SearchUtil;
@@ -21,6 +23,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,8 +36,7 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Created by rajeshbabuk on 6/7/16.
@@ -176,11 +179,14 @@ public class SearchRecordsController {
     @ResponseBody
     @RequestMapping(value = "/search", method = RequestMethod.POST, params = "action=request")
     public ModelAndView requestRecords(@Valid @ModelAttribute("searchRecordsRequest") SearchRecordsRequest searchRecordsRequest,
-                                  BindingResult result,
-                                  Model model) {
-        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.SEARCH);
-        return new ModelAndView("searchRecords");
+                                       BindingResult result,
+                                       Model model,
+                                       RedirectAttributes redirectAttributes) {
+        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
+        processRequest(searchRecordsRequest, redirectAttributes);
+        return new ModelAndView(new RedirectView("/request",true));
     }
+
 
     @ResponseBody
     @RequestMapping(value = "/search", method = RequestMethod.POST, params = "action=export")
@@ -273,6 +279,73 @@ public class SearchRecordsController {
             }
         }
     }
+
+    private void processRequest(@Valid @ModelAttribute("searchRecordsRequest") SearchRecordsRequest searchRecordsRequest, RedirectAttributes redirectAttributes) {
+        List<SearchResultRow> searchResultRows = searchRecordsRequest.getSearchResultRows();
+        Set<String> barcodes = new HashSet<>();
+        Set<String> itemTitles = new HashSet<>();
+        Set<String> itemOwningInstitutions = new HashSet<>();
+        for (SearchResultRow searchResultRow : searchResultRows) {
+            if(searchResultRow.isSelected()){
+                processBarcodesForSearchResultRow(barcodes, itemTitles, itemOwningInstitutions, searchResultRow);
+            }
+            else if(searchResultRow.isSelectAllItems()){
+                for(SearchItemResultRow searchItemResultRow : searchResultRow.getSearchItemResultRows()) {
+                    processBarcodeForSearchItemResultRow(barcodes, itemTitles, itemOwningInstitutions, searchItemResultRow, searchResultRow);
+                }
+            }
+            else if (!CollectionUtils.isEmpty(searchResultRow.getSearchItemResultRows())) {
+                if (searchResultRow.isSelectAllItems()) {
+                    processBarcodesForSearchResultRow(barcodes, itemTitles, itemOwningInstitutions, searchResultRow);
+                }
+                else if (isAnyItemSelected(searchResultRow.getSearchItemResultRows())) {
+                    processBarcodesForSearchResultRow(barcodes, itemTitles, itemOwningInstitutions, searchResultRow);
+                }
+                for (SearchItemResultRow searchItemResultRow : searchResultRow.getSearchItemResultRows()) {
+                    if (searchItemResultRow.isSelectedItem()) {
+                        processBarcodeForSearchItemResultRow(barcodes, itemTitles, itemOwningInstitutions, searchItemResultRow, searchResultRow);
+                    }
+                }
+            }
+        }
+        redirectAttributes.addFlashAttribute(RecapConstants.REQUESTED_BARCODE, StringUtils.join(barcodes, ","));
+        redirectAttributes.addFlashAttribute(RecapConstants.REQUESTED_ITEM_TITLE, StringUtils.join(itemTitles, " || "));
+        redirectAttributes.addFlashAttribute(RecapConstants.REQUESTED_ITEM_OWNING_INSTITUTION, StringUtils.join(itemOwningInstitutions, ","));
+    }
+
+    private void processBarcodeForSearchItemResultRow(Set<String> barcodes, Set<String> titles, Set<String> itemInstitutions, SearchItemResultRow searchItemResultRow, SearchResultRow searchResultRow) {
+        String barcode = searchItemResultRow.getBarcode();
+        processTitleAndItemInstitution(barcodes, titles, itemInstitutions, searchResultRow, barcode);
+    }
+
+    private void processBarcodesForSearchResultRow(Set<String> barcodes, Set<String> titles, Set<String> itemInstitutions, SearchResultRow searchResultRow) {
+        String barcode = searchResultRow.getBarcode();
+        processTitleAndItemInstitution(barcodes, titles, itemInstitutions, searchResultRow, barcode);
+    }
+
+    private void processTitleAndItemInstitution(Set<String> barcodes, Set<String> titles, Set<String> itemInstitutions, SearchResultRow searchResultRow, String barcode) {
+        String title = searchResultRow.getTitle();
+        String owningInstitution = searchResultRow.getOwningInstitution();
+        if (StringUtils.isNotBlank(barcode)) {
+            barcodes.add(barcode);
+        }
+        if (StringUtils.isNotBlank(title)) {
+            titles.add(title);
+        }
+        if (StringUtils.isNotBlank(owningInstitution)) {
+            itemInstitutions.add(owningInstitution);
+        }
+    }
+
+    private boolean isAnyItemSelected(List<SearchItemResultRow> searchItemResultRows) {
+        for (SearchItemResultRow searchItemResultRow :  searchItemResultRows) {
+            if (searchItemResultRow.isSelectedItem()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {

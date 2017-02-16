@@ -1,7 +1,6 @@
 <!-- User Roles Tab-->
 <div id="userRolesContentId" name="userRolesContentName" th:fragment="content" xmlns:th="http://www.thymeleaf.org"
      role="tabpanel" class="tab-pane active">
-    <link rel="stylesheet" th:href="@{../css/request.css}"/>
     <link rel="stylesheet" th:href="@{../css/styles.css}"/>
     <script type="text/javascript" th:src="@{../js/bootstrap-multiselect.js}"></script>
     <script type="text/javascript" th:src="@{../js/select-step.js}"></script>
@@ -16,7 +15,7 @@
             <fieldset>
                 <input type="text" id="editUserIdHidden" th:field="${userRoleForm.userId}" hidden="hidden"/>
                 <div role="tabpanel" class="tab-pane" id="recapusers">
-                    <div id="users-searchview" style="display: none">
+                    <div id="users-searchview" th:if="*{showUserSearchView}">
                         <div class="row margin-btm-10">
                             <div class="col-sm-7 margin-top-05">Provide one or more data to search. Empty search would
                                 return all data.
@@ -58,7 +57,6 @@
                             </div>
                         </div>
                         <div class="search-results-container">
-                            <div class="divider-horizontal margin-top-10 margin-btm-10"></div>
                             <div class="row margin-btm-10">
                                 <div class="col-sm-12" style="display: none">
                                     <div class="bg-danger text-danger padding-10"><span
@@ -79,27 +77,19 @@
                                                             th:text="${userRoleForm.message}"></span></div>
                                                 </div>
                                             </div>
-                                            <div class="row margin-btm-10" id="deletedSuccessMsg"
+                                            <div class="row" id="deletedSuccessMsg"
                                                  data-th-if="${userRoleForm.deletedSuccessMsg}">
-                                                <div class="col-sm-12 text-left">
+                                                <div class="text-left">
                                                     <div class="alert alert-success" role="alert"><span
                                                             class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span
                                                             th:text="${userRoleForm.message}"></span></div>
                                                 </div>
                                             </div>
-
-                                            <div class="row margin-btm-10" id="deleteSuccessMsg"
-                                                 data-th-if="${userRoleForm.deleteSuccessMsg}">
-                                                <div class="col-sm-12 text-left">
-                                                    <div class="alert alert-success" role="alert"><span
-                                                            class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span
-                                                            th:text="${userRoleForm.message}"></span></div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-sm-3 col-md-2 col-lg-2 margin-top-05 show-entries-section">
-                                                    <div class="showEntriesOption" id="showEntries"
-                                                         data-th-if="${userRoleForm.showResults}">
+                                            <div class="row"  data-th-if="${userRoleForm.showResults}">
+                                                <h3 style="margin-top: -10px;">Search Results</h3>
+                                                <div class="divider-horizontal margin-top-10 margin-btm-05"></div>
+                                                <div class="col-sm-3 col-md-2 col-lg-2 show-entries-section">
+                                                    <div class="showEntriesOption" id="showEntries">
                                                         <span class="show-title margin-right-05">Show Entries</span>
                                                         <select id="numOfRecordsId" name="numOfRecordsName"
                                                                 class="themed-input" th:field="${userRoleForm.pageSize}"
@@ -123,7 +113,7 @@
                                                    th:field="${userRoleForm.totalRecordsCount}" hidden="hidden"/>
                                             <button id="pageSizeChangeButtonId" type="submit" name="action"
                                                     value="pageSizeChange" hidden="hidden"></button>
-                                            <h4 class="pull-right" data-th-if="${userRoleForm.showResults}">Total
+                                            <h4 class="pull-right" data-th-if="${userRoleForm.showResults}" style="margin-top: -20px;">Total
                                                 Results Found:<span id="totalResults"
                                                                     th:text="${userRoleForm.totalRecordsCount}"></span>
                                             </h4>

@@ -8,8 +8,10 @@ import java.util.List;
  */
 public class RequestForm {
 
+    private Integer requestId;
     private String patronBarcode;
     private String itemBarcode;
+    private String status;
     private String deliveryLocation;
     private String patronBarcodeInRequest;
     private String itemBarcodeInRequest;
@@ -38,6 +40,15 @@ public class RequestForm {
     private List<String> requestTypes = new ArrayList<>();
     private List<String> deliveryLocations = new ArrayList<>();
     private List<SearchResultRow> searchResultRows = new ArrayList<>();
+    private List<String> requestStatuses = new ArrayList<>();
+
+    public Integer getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(Integer requestId) {
+        this.requestId = requestId;
+    }
 
     public String getPatronBarcode() {
         return patronBarcode;
@@ -53,6 +64,14 @@ public class RequestForm {
 
     public void setItemBarcode(String itemBarcode) {
         this.itemBarcode = itemBarcode;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getDeliveryLocation() {
@@ -277,6 +296,14 @@ public class RequestForm {
 
     public void setSearchResultRows(List<SearchResultRow> searchResultRows) {
         this.searchResultRows = searchResultRows;
+    }
+
+    public List<String> getRequestStatuses() {
+        return requestStatuses;
+    }
+
+    public void setRequestStatuses(List<String> requestStatuses) {
+        this.requestStatuses = requestStatuses;
     }
 
     public void resetPageNumber() {
