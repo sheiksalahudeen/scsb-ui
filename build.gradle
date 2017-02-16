@@ -62,7 +62,6 @@ dependencies {
 	testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
 	testCompile('junit:junit:4.12')
 }
-/*
 
 jacocoTestReport {
 	group = "Reporting"
@@ -72,4 +71,4 @@ jacocoTestReport {
 		html.enabled = true
 		html.destination "${buildDir}/jacocoHtml"
 	}
-}*/
+}
