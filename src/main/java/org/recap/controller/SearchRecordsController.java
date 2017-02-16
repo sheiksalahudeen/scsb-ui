@@ -36,9 +36,7 @@ import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by rajeshbabuk on 6/7/16.
@@ -284,45 +282,58 @@ public class SearchRecordsController {
 
     private void processRequest(@Valid @ModelAttribute("searchRecordsRequest") SearchRecordsRequest searchRecordsRequest, RedirectAttributes redirectAttributes) {
         List<SearchResultRow> searchResultRows = searchRecordsRequest.getSearchResultRows();
-        List<String> barcodes = new ArrayList<>();
+        Set<String> barcodes = new HashSet<>();
+        Set<String> itemTitles = new HashSet<>();
+        Set<String> itemOwningInstitutions = new HashSet<>();
         for (SearchResultRow searchResultRow : searchResultRows) {
             if(searchResultRow.isSelected()){
-                processBarcodesForSearchResultRow(barcodes, searchResultRow);
+                processBarcodesForSearchResultRow(barcodes, itemTitles, itemOwningInstitutions, searchResultRow);
             }
             else if(searchResultRow.isSelectAllItems()){
                 for(SearchItemResultRow searchItemResultRow : searchResultRow.getSearchItemResultRows()) {
-                    processBarcodeForSearchItemResultRow(barcodes, searchItemResultRow);
+                    processBarcodeForSearchItemResultRow(barcodes, itemTitles, itemOwningInstitutions, searchItemResultRow, searchResultRow);
                 }
             }
             else if (!CollectionUtils.isEmpty(searchResultRow.getSearchItemResultRows())) {
                 if (searchResultRow.isSelectAllItems()) {
-                    processBarcodesForSearchResultRow(barcodes, searchResultRow);
+                    processBarcodesForSearchResultRow(barcodes, itemTitles, itemOwningInstitutions, searchResultRow);
                 }
                 else if (isAnyItemSelected(searchResultRow.getSearchItemResultRows())) {
-                    processBarcodesForSearchResultRow(barcodes, searchResultRow);
+                    processBarcodesForSearchResultRow(barcodes, itemTitles, itemOwningInstitutions, searchResultRow);
                 }
                 for (SearchItemResultRow searchItemResultRow : searchResultRow.getSearchItemResultRows()) {
                     if (searchItemResultRow.isSelectedItem()) {
-                        processBarcodeForSearchItemResultRow(barcodes, searchItemResultRow);
+                        processBarcodeForSearchItemResultRow(barcodes, itemTitles, itemOwningInstitutions, searchItemResultRow, searchResultRow);
                     }
                 }
             }
         }
-        String requestBarcode = StringUtils.substringBetween(String.valueOf(barcodes), "[", "]");
-        redirectAttributes.addFlashAttribute("requestedBarcode",requestBarcode);
+        redirectAttributes.addFlashAttribute("requestedBarcode", StringUtils.join(barcodes, ","));
+        redirectAttributes.addFlashAttribute("itemTitle", StringUtils.join(itemTitles, " || "));
+        redirectAttributes.addFlashAttribute("itemOwningInstitution", StringUtils.join(itemOwningInstitutions, ","));
     }
 
-    private void processBarcodeForSearchItemResultRow(List<String> barcodes, SearchItemResultRow searchItemResultRow) {
+    private void processBarcodeForSearchItemResultRow(Set<String> barcodes, Set<String> titles, Set<String> itemInstitutions, SearchItemResultRow searchItemResultRow, SearchResultRow searchResultRow) {
         String barcode = searchItemResultRow.getBarcode();
-        if (StringUtils.isNotBlank(barcode) && StringUtils.isNotEmpty(barcode)){
+        processTitleAndItemInstitution(barcodes, titles, itemInstitutions, searchResultRow, barcode);
+    }
+
+    private void processBarcodesForSearchResultRow(Set<String> barcodes, Set<String> titles, Set<String> itemInstitutions, SearchResultRow searchResultRow) {
+        String barcode = searchResultRow.getBarcode();
+        processTitleAndItemInstitution(barcodes, titles, itemInstitutions, searchResultRow, barcode);
+    }
+
+    private void processTitleAndItemInstitution(Set<String> barcodes, Set<String> titles, Set<String> itemInstitutions, SearchResultRow searchResultRow, String barcode) {
+        String title = searchResultRow.getTitle();
+        String owningInstitution = searchResultRow.getOwningInstitution();
+        if (StringUtils.isNotBlank(barcode)) {
             barcodes.add(barcode);
         }
-    }
-
-    private void processBarcodesForSearchResultRow(List<String> barcodes, SearchResultRow searchResultRow) {
-        String barcode = searchResultRow.getBarcode();
-        if (StringUtils.isNotBlank(barcode) && StringUtils.isNotEmpty(barcode)){
-            barcodes.add(barcode);
+        if (StringUtils.isNotBlank(title)) {
+            titles.add(title);
+        }
+        if (StringUtils.isNotBlank(owningInstitution)) {
+            itemInstitutions.add(owningInstitution);
         }
     }
 
