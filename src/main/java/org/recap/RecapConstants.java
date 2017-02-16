@@ -390,10 +390,10 @@ public class RecapConstants {
     public static final String INVALID_PERMISSION = "Please give one valid permission name";
     public static final String SPECIAL_CHARACTERS_NOT_ALLOWED = "Special characters and spaces are not allowed";
     public static final String SPECIAL_CHARACTERS_NOT_ALLOWED_CREATE = "Special characters and spaces are not allowed in Role Name";
-    public static final String ROLES_SUPER_ADMIN = "SuperAdmin";
+    public static final String ROLES_SUPER_ADMIN = "Super Admin";
     public static final String ROLES_ADD_SUCCESS_MESSAGE = "  added successfully";
     public static final String ROLES_DUPLICATE_MESSAGE = " already exists";
-    public static final String ROLES_EDIT_SAVE_SUCCESS_MESSAGE = " edited and added successfully";
+    public static final String ROLES_EDIT_SAVE_SUCCESS_MESSAGE = " edited and saved successfully";
     public static final String ROLES_DELETED_SUCCESS_MESSAGE = " deleted successfully";
 
     //USERS
@@ -402,9 +402,9 @@ public class RecapConstants {
     public static final String NETWORK_LOGIN_ID_DOES_NOT_EXIST = "Network Login Id does not exist";
     public static final String EMAILID_ID_DOES_NOT_EXIST = "User emailId does not exist";
     public static final String NETWORK_LOGIN_ID_AND_EMAILID_ID_DOES_NOT_EXIST = "NetworkId and emailId does not exist";
-    public static final String USER_ALREADY_EXISTS = "User already exist";
-    public static final String USER_DELETED_SUCCESS_MESSAGE = " Deleted successfully";
-    public static final String USER_ADDED_SUCCESSFULLY = " Added Successfully";
+    public static final String USER_ALREADY_EXISTS = " already exists";
+    public static final String USER_DELETED_SUCCESS_MESSAGE = "deleted successfully";
+    public static final String USER_ADDED_SUCCESSFULLY = " added Successfully";
     public static final String EMAILID_SHOULD_NOT_DUPLICATE = "Email Id should not be duplicated";
 
 

@@ -25,6 +25,8 @@ jQuery(document).ready(function ($) {
         $('#patronEmailIdErrorMessage').hide();
     });
 
+    $("a[href='https://htcrecap.atlassian.net/wiki/display/RTG/Search']").attr('href',
+        'https://htcrecap.atlassian.net/wiki/display/RTG/Request');
 
 });
 

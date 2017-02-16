@@ -46,6 +46,9 @@ jQuery(document).ready(function ($) {
     $('#editRoleDescriptionErrorMessage').hide();
     $('#editPermissionNamesErrorMessage').hide();
 
+    $("a[href='https://htcrecap.atlassian.net/wiki/display/RTG/Search']").attr('href',
+        'https://htcrecap.atlassian.net/wiki/pages/viewpage.action?pageId=25665733');
+
 });
 
 function loadCreateRole() {

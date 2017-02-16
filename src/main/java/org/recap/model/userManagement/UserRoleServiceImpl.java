@@ -108,7 +108,7 @@ public class UserRoleServiceImpl implements UserRoleService {
                 userRoleForm.setMessage(networkLoginId + RecapConstants.USER_ADDED_SUCCESSFULLY);
             } else {
             userRoleForm.setShowCreateError(true);
-            userRoleForm.setErrorMessage(RecapConstants.USER_ALREADY_EXISTS);
+            userRoleForm.setErrorMessage(networkLoginId + RecapConstants.USER_ALREADY_EXISTS);
         }
         return saveUsersEntity;
     }
@@ -140,7 +140,21 @@ public class UserRoleServiceImpl implements UserRoleService {
             if (roleEntityList != null) {
                 usersEntity.setUserRole(roleEntityList);
             }
-            savedUsersEntity = userDetailsRepository.save(usersEntity);
+            UsersEntity byUserIdUserEntity = userDetailsRepository.findByUserId(userId);
+            if (byUserIdUserEntity.getInstitutionId().equals(institutionId)){
+                savedUsersEntity = userDetailsRepository.saveAndFlush(usersEntity);
+                userRoleForm.setMessage(networkLoginId + RecapConstants.USER_ADDED_SUCCESSFULLY);
+            }
+            else {
+                UsersEntity byLoginIdAndInstitutionIdUserEntity = userDetailsRepository.findByLoginIdAndInstitutionId(networkLoginId, institutionId);
+                if(byLoginIdAndInstitutionIdUserEntity == null){
+                    savedUsersEntity = userDetailsRepository.saveAndFlush(usersEntity);
+                    userRoleForm.setMessage(networkLoginId + RecapConstants.USER_ADDED_SUCCESSFULLY);
+                }
+                else{
+                    userRoleForm.setErrorMessage(networkLoginId + RecapConstants.USER_ALREADY_EXISTS);
+                }
+            }
         }
         return savedUsersEntity;
     }

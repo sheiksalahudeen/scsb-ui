@@ -361,6 +361,9 @@ jQuery(document).ready(function ($) {
 
     });
 
+    $("a[href='https://htcrecap.atlassian.net/wiki/display/RTG/Search']").attr('href',
+        'https://htcrecap.atlassian.net/wiki/display/RTG/Reports');
+
 
 });
 

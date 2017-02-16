@@ -31,7 +31,7 @@ public class LoginControllerUT extends BaseControllerUT{
     @Mock
     javax.servlet.http.HttpServletRequest request;
 
-    @Autowired
+    @Mock
     private UserAuthUtil userAuthUtil;
 
     @Mock

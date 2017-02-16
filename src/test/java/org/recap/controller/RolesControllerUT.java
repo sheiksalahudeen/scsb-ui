@@ -52,6 +52,7 @@ public class RolesControllerUT extends BaseTestCase {
     public void testRoles(){
         RolesForm rolesForm = new RolesForm();
         rolesForm.setRoleName("SuperAdmin");
+        rolesForm.setPermissionNames("Create User");
         ModelAndView modelAndView = rolesController.search(rolesForm,model);
         assertNotNull(modelAndView);
         Map rolesMap = new HashMap();

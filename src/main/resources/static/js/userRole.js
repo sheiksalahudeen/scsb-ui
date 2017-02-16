@@ -1,5 +1,4 @@
 jQuery(document).ready(function ($) {
-    $('#users-searchview').show();
     $('#createRequest').click(function () {
         $('#networkLoginId').val('');
         $('#institutionId').val('');
@@ -26,10 +25,6 @@ jQuery(document).ready(function ($) {
 
     });
 
-    $('#editusers-createview').hide();
-    $('#deleteUsers-view').hide();
-    $('#users-createview').hide();
-
     $('#backLink').click(function () {
         $('#successMsg').hide();
         $('#failureMsg').hide();
@@ -41,6 +36,8 @@ jQuery(document).ready(function ($) {
         $('#deleteUsers-view').hide();
         $('#numOfRecordsId').val(10);
         $('#pageNumber').val(0);
+        $('#searchNetworkId').val('');
+        $('#userEmailId').val('');
     });
 
     $('#editbackLink').click(function () {
@@ -54,6 +51,8 @@ jQuery(document).ready(function ($) {
         $('#deleteUsers-view').hide();
         $('#numOfRecordsId').val(10);
         $('#pageNumber').val(0);
+        $('#searchNetworkId').val('');
+        $('#userEmailId').val('');
     });
 
     $('#deletebackLink').click(function () {
@@ -67,6 +66,8 @@ jQuery(document).ready(function ($) {
         $('#deleteUsers-view').hide();
         $('#numOfRecordsId').val(10);
         $('#pageNumber').val(0);
+        $('#searchNetworkId').val('');
+        $('#userEmailId').val('');
     });
 
     /***Role Tab Form Show/Hide ***/
@@ -113,7 +114,6 @@ jQuery(document).ready(function ($) {
         $('#userDescriptionErrMsg').hide();
     });
 
-    $("#userRoles .users-main-section").show();
     resetDefaults();
     /***Request Tab Create Request Form Show/Hide ***/
     $("#userRoles .usersbacklink a").click(function () {
@@ -140,6 +140,30 @@ jQuery(document).ready(function ($) {
     $('#roleId').multiselect();
     $('#recapusers #userstabaddrole').multiselect();
     $('#editroleId').multiselect();
+
+
+    $('#backLink,#editbackLink,#deletebackLink').click(function(){
+        var $form = $('#userRole-form');
+        var url = $form.attr('action') + "?action=goBack";
+        var role = $.ajax({
+            url: url,
+            type: 'post',
+            data: $form.serialize(),
+            success: function (response) {
+                console.log("completed");
+                $('#userRolesContentId').html(response);
+                $('#editusers-createview').hide();
+                $('#users-searchview').show();
+                $('#users-createview').hide();
+                $('#deleteUsers-view').hide();
+            }
+        });
+
+    });
+
+    $("a[href='https://htcrecap.atlassian.net/wiki/display/RTG/Search']").attr('href',
+        'https://htcrecap.atlassian.net/wiki/pages/viewpage.action?pageId=25665733');
+
 
 });
 function userRolesFirstPage() {
@@ -257,45 +281,52 @@ function deleteUser() {
 
 //EditUser
 function editUser(userId, networkLoginId) {
-    $('#editsuccessMsg').hide();
-    $('#editerrormsg').hide();
-    $('#editusers-createview').show();
-    $('#users-createview').hide();
-    $('#users-searchview').hide();
-    $('#editEmailIdErrMsg').hide();
+    console.log("userId" + userId);
+    console.log("log id" + networkLoginId);
     var url = "/userRoles/editUser";
-    $.ajax({
+    var request = $.ajax({
         url: url,
         type: 'post',
         data: {userId: userId, networkLoginId: networkLoginId},
         success: function (response) {
             $('#userRolesContentId').html(response);
             $('#editusers-createview').show();
-            $('#users-searchview').hide();
             $('#users-createview').hide();
             $('#successMsg').show();
-            $('#editroleId').multiselect();
         }
     });
 }
 
 function editclear() {
-    $('#editsuccessMsg').hide();
-    editUser(userId, networkLoginId);
+    var $form = $('#userRole-form');
+    var url = $form.attr('action') + "?action=editClearPage";
+    var role = $.ajax({
+        url: url,
+        type: 'post',
+        data: $form.serialize(),
+        success: function (response) {
+            $('#userRolesContentId').html(response);
+            $('#editusers-createview').show();
+            $('#users-createview').hide();
+            $('#successMsg').hide();
+        }
+    });
 }
 
 
+
+
+
 function editUserDetails() {
-        if(validateEditEmailAddress()) {
+    var isValidEdit = editUserDetailsValidation();
+        if(isValidEdit && validateEditEmailAddress()) {
             var userId = $('#editUserId').val();
             var networkLoginId = $('#editnetworkLoginId').val();
             var institutionId = $('#editinstitutionId').val();
             var roleIds = $('#editroleId').val();
             var userDescription = $('#edituserDescription').val();
             var userEmailId = $('#editEmailId').val();
-            $('#editusers-createview').show();
-            $('#users-createview').hide();
-            $('#users-searchview').hide();
+            var $form = $('#userRole-form');
             var url = "/userRoles/saveEditUserDetails";
             $.ajax({
                 url: url,
@@ -314,10 +345,36 @@ function editUserDetails() {
                     $('#users-searchview').hide();
                     $('#users-createview').hide();
                     $('#successMsg').show();
-                    $('#editroleId').multiselect();
                 }
             });
         }
+}
+
+
+function editUserDetailsValidation(){
+    var isValid = true;
+    var institutionId = $('#editinstitutionId').val();
+    var roleId = $('#editroleId').val();
+    var userDescription = $('#edituserDescription').val();
+    if (isBlankValue(institutionId)) {
+        $('#editinstitutionIdErrMsg').show();
+        isValid = false;
+    } else {
+        $('#editinstitutionIdErrMsg').hide();
+    }
+    if (isBlankValue(roleId)) {
+        $('#editroleIdErrMsg').show();
+        isValid = false;
+    } else {
+        $('#editroleIdErrMsg').hide();
+    }
+    if (isBlankValue(userDescription)) {
+        $('#edituserDescriptionErrMsg').show();
+        isValid = false;
+    } else {
+        $('#edituserDescriptionErrMsg').hide();
+    }
+    return isValid;
 }
 
 
@@ -370,11 +427,16 @@ function submitForm() {
                 $('#users-searchview').hide();
                 $('#users-createview').show();
                 $('#successMsg').show();
-                $('#roleId').multiselect();
                 $('#networkLoginIdErrMsg').hide();
                 $('#institutionIdErrMsg').hide();
                 $('#roleIdErrMsg').hide();
                 $('#userDescriptionErrMsg').hide();
+                $('#networkLoginId').val('');
+                $('#institutionId').val('');
+                $('#roleId').multiselect('deselectAll', false);
+                $('#roleId').multiselect('refresh');
+                $('#userDescription').val('');
+                $('#emailId').val('');
             }
         });
         $('#networkLoginIdErrMsg').hide();

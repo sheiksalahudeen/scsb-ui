@@ -42,20 +42,40 @@ public class CollectionServiceUtil {
     @Autowired
     ItemDetailsRepository itemDetailsRepository;
 
+    public String getServerProtocol() {
+        return serverProtocol;
+    }
+
+    public void setServerProtocol(String serverProtocol) {
+        this.serverProtocol = serverProtocol;
+    }
+
+    public String getScsbUrl() {
+        return scsbUrl;
+    }
+
+    public void setScsbUrl(String scsbUrl) {
+        this.scsbUrl = scsbUrl;
+    }
+
+    public RestTemplate getRestTemplate(){
+        return new RestTemplate();
+    }
+
     public void updateCGDForItem(BibliographicMarcForm bibliographicMarcForm) {
         String statusResponse = null;
         try {
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity requestEntity = new HttpEntity<>(getHttpHeaders());
 
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(serverProtocol + scsbUrl + RecapConstants.SCSB_UPDATE_CGD_URL)
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getServerProtocol() + getScsbUrl() + RecapConstants.SCSB_UPDATE_CGD_URL)
                     .queryParam(RecapConstants.CGD_UPDATE_ITEM_BARCODE, bibliographicMarcForm.getBarcode())
                     .queryParam(RecapConstants.OWNING_INSTITUTION, bibliographicMarcForm.getOwningInstitution())
                     .queryParam(RecapConstants.OLD_CGD, bibliographicMarcForm.getCollectionGroupDesignation())
                     .queryParam(RecapConstants.NEW_CGD, bibliographicMarcForm.getNewCollectionGroupDesignation())
                     .queryParam(RecapConstants.CGD_CHANGE_NOTES, bibliographicMarcForm.getCgdChangeNotes());
 
-            ResponseEntity<String> responseEntity = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, requestEntity, String.class);
+            ResponseEntity<String> responseEntity = getRestTemplate().exchange(builder.build().encode().toUri(), HttpMethod.GET, requestEntity, String.class);
             statusResponse = responseEntity.getBody();
             if (RecapConstants.SUCCESS.equals(statusResponse)) {
                 bibliographicMarcForm.setSubmitted(true);
@@ -76,7 +96,7 @@ public class CollectionServiceUtil {
             String itemBarcode = bibliographicMarcForm.getBarcode();
             deAccessionRequest.setItemBarcodes(Arrays.asList(itemBarcode));
             HttpEntity<DeAccessionRequest> requestEntity = new HttpEntity<>(deAccessionRequest, getHttpHeaders());
-            String resultMessage = restTemplate.postForObject(serverProtocol + scsbUrl + RecapConstants.SCSB_DEACCESSION_URL, requestEntity, String.class);
+            String resultMessage = getRestTemplate().postForObject(getServerProtocol() + getScsbUrl() + RecapConstants.SCSB_DEACCESSION_URL, requestEntity, String.class);
             if (StringUtils.isNotBlank(resultMessage)) {
                 if (resultMessage.contains(RecapConstants.SUCCESS)) {
                     String userName = RecapConstants.GUEST;

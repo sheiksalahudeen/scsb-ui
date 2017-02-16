@@ -178,7 +178,9 @@ public class SearchRecordsControllerUT extends BaseControllerUT{
     @Test
     public void requestRecords() throws Exception{
         searchRecordsRequest = new SearchRecordsRequest();
-        when(searchRecordsController.requestRecords(searchRecordsRequest,bindingResult,model,redirectAttributes)).thenCallRealMethod();
+        ModelAndView modelAndView1 = new ModelAndView();
+        modelAndView1.setViewName("searchRecords");
+        when(searchRecordsController.requestRecords(searchRecordsRequest,bindingResult,model,redirectAttributes)).thenReturn(modelAndView1);
         ModelAndView modelAndView = searchRecordsController.requestRecords(searchRecordsRequest,bindingResult,model,redirectAttributes);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());

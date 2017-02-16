@@ -67,6 +67,14 @@ public class CollectionController {
         this.userAuthUtil = userAuthUtil;
     }
 
+    public CollectionServiceUtil getCollectionServiceUtil() {
+        return collectionServiceUtil;
+    }
+
+    public void setCollectionServiceUtil(CollectionServiceUtil collectionServiceUtil) {
+        this.collectionServiceUtil = collectionServiceUtil;
+    }
+
     @RequestMapping("/collection")
     public String collection(Model model,HttpServletRequest request) {
         HttpSession session=request.getSession();
@@ -111,9 +119,9 @@ public class CollectionController {
                                          BindingResult result,
                                          Model model) throws JSONException {
         if (RecapConstants.UPDATE_CGD.equalsIgnoreCase(collectionForm.getCollectionAction())) {
-            collectionServiceUtil.updateCGDForItem(collectionForm);
+            getCollectionServiceUtil().updateCGDForItem(collectionForm);
         } else if (RecapConstants.DEACCESSION.equalsIgnoreCase(collectionForm.getCollectionAction())) {
-            collectionServiceUtil.deAccessionItem(collectionForm);
+            getCollectionServiceUtil().deAccessionItem(collectionForm);
         }
         collectionForm.setAllowEdit(true);
         return new ModelAndView("collection :: #itemDetailsSection", RecapConstants.COLLECTION_FORM, collectionForm);
