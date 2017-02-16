@@ -411,6 +411,11 @@ public class RecapConstants {
     public static final String MESSAGE = "Message";
     public static final String REQUEST_STATUS = "RequestStatus";
 
+    //populating Item Barcode, Title and Institution for Request
+    public static final String REQUESTED_BARCODE = "requestedBarcode";
+    public static final String REQUESTED_ITEM_TITLE = "itemTitle";
+    public static final String REQUESTED_ITEM_OWNING_INSTITUTION = "itemOwningInstitution";
+
     //UserRoleController
     public static final String VIEW_LOGIN="login";
     public static final String VIEW_REQUEST_RESULT_TABLE="userRolesSearch :: #request-result-table";

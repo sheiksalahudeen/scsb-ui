@@ -140,9 +140,13 @@ public class RequestController {
         if (authenticated) {
             UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(session, UserManagement.REQUEST_ITEM_PRIVILEGE);
             RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm);
-            Object requestedBarcode = ((BindingAwareModelMap) model).get("requestedBarcode");
-            if(requestedBarcode != null){
+            Object requestedBarcode = ((BindingAwareModelMap) model).get(RecapConstants.REQUESTED_BARCODE);
+            Object itemTitle = ((BindingAwareModelMap) model).get(RecapConstants.REQUESTED_ITEM_TITLE);
+            Object itemOwningInstitution = ((BindingAwareModelMap) model).get(RecapConstants.REQUESTED_ITEM_OWNING_INSTITUTION);
+            if(requestedBarcode  != null && itemTitle != null && itemOwningInstitution != null){
                 requestForm.setItemBarcodeInRequest((String) requestedBarcode);
+                requestForm.setItemTitle((String) itemTitle);
+                requestForm.setItemOwningInstitution((String) itemOwningInstitution);
             }
             model.addAttribute(RecapConstants.REQUEST_FORM, requestForm);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);

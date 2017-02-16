@@ -3,7 +3,6 @@
  */
 
 jQuery(document).ready(function ($) {
-    resetDefaults();
     /***Request Tab Create Request Form Show/Hide ***/
     $("#request .search-request a").click(function (e) {
         loadSearchRequest();
@@ -28,6 +27,17 @@ jQuery(document).ready(function ($) {
     $("a[href='https://htcrecap.atlassian.net/wiki/display/RTG/Search']").attr('href',
         'https://htcrecap.atlassian.net/wiki/display/RTG/Request');
 
+    $('#errorMessageId').hide();
+    $('#itemBarcodeErrorMessage').hide();
+    $('#patronBarcodeErrorMessage').hide();
+    $('#requestTypeErrorMessage').hide();
+    $('#deliveryLocationErrorMessage').hide();
+    $('#requestingInstitutionErrorMessage').hide();
+    $('#startPageErrorMessage').hide();
+    $('#endPageErrorMessage').hide();
+    $('#articleTitleErrorMessage').hide();
+    $('#patronEmailIdErrorMessage').hide();
+    $('#itemBarcodeNotFoundErrorMessage').hide();
 });
 
 $(function() {
@@ -295,6 +305,26 @@ function resetDefaults() {
     $('#endPageErrorMessage').hide();
     $('#articleTitleErrorMessage').hide();
     $('#patronEmailIdErrorMessage').hide();
+    $('#itemBarcodeNotFoundErrorMessage').hide();
+    $('#itemBarcodeId').val('');
+    $('#itemTitleId').val('');
+    $('#itemOwningInstitutionId').val('');
+    $('#patronBarcodeId').val('');
+    $('#patronEmailId').val('');
+    $('#requestTypeId').val('RETRIEVAL');
+    $('#deliveryLocationId').val('');
+    $('#requestingInstitutionId').val('');
+    $('#requestNotesId').val('');
+    $('#deliverylocation_request').show();
+    //EDD
+    $('#EDD').hide();
+    $('#StartPage').val('');
+    $('#EndPage').val('');
+    $('#VolumeNumber').val('');
+    $('#Issue').val('');
+    $('#ArticleAuthor').val('');
+    $('#ArticleChapterTitle').val('');
+
 }
 
 function toggleItemBarcodeValidation() {
