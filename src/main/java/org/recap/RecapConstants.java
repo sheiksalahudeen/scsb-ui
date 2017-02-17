@@ -412,4 +412,15 @@ public class RecapConstants {
     public static final String REQUESTED_BARCODE = "requestedBarcode";
     public static final String REQUESTED_ITEM_TITLE = "itemTitle";
     public static final String REQUESTED_ITEM_OWNING_INSTITUTION = "itemOwningInstitution";
+
+    public static final String ADMIN = "ROLE_ADMIN";
+    public static final String USER = "ROLE_USER";
+    public static final String ANONYMOUS = "ROLE_ANONYMOUS";
+    public static final String RECAP_INSTITUTION_ID = "RECAP_INSTITUTION_ID";
+    public static final String CAS = "cas.";
+    public static final String SERVICE_LOGIN = ".service.login";
+    public static final String SERVICE_LOGOUT = ".service.logout";
+    public static final String URL_PREFIX = ".url.prefix";
+    public static final String REDIRECT_URI = "logout.redirect.uri";
+
 }
