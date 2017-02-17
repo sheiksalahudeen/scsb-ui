@@ -3,7 +3,6 @@ package org.recap.model.jpa;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by pvsubrah on 6/11/16.
@@ -26,9 +25,6 @@ public class RequestItemEntity implements Serializable {
 
     @Column(name = "REQUESTING_INST_ID")
     private Integer requestingInstitutionId;
-
-    @Column(name = "PATRON_ID")
-    private Integer patronId;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "REQ_EXP_DATE")
@@ -54,6 +50,9 @@ public class RequestItemEntity implements Serializable {
     @Column(name = "NOTES")
     private String notes;
 
+    @Column(name = "PATRON_ID")
+    private String patronId;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "REQUESTING_INST_ID", insertable = false, updatable = false)
     private InstitutionEntity institutionEntity;
@@ -63,16 +62,15 @@ public class RequestItemEntity implements Serializable {
     private RequestTypeEntity requestTypeEntity;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "PATRON_ID", insertable = false, updatable = false)
-    private PatronEntity patronEntity;
-
-    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "ITEM_ID", referencedColumnName = "ITEM_ID", insertable = false, updatable = false)
     private ItemEntity itemEntity;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "REQUEST_STATUS_ID", insertable = false, updatable = false)
     private RequestStatusEntity requestStatusEntity;
+
+    @Column(name = "EMAIL_ID")
+    private String emailId;
 
     public Integer getRequestId() {
         return requestId;
@@ -104,14 +102,6 @@ public class RequestItemEntity implements Serializable {
 
     public void setRequestingInstitutionId(Integer requestingInstitutionId) {
         this.requestingInstitutionId = requestingInstitutionId;
-    }
-
-    public Integer getPatronId() {
-        return patronId;
-    }
-
-    public void setPatronId(Integer patronId) {
-        this.patronId = patronId;
     }
 
     public Date getRequestExpirationDate() {
@@ -178,14 +168,6 @@ public class RequestItemEntity implements Serializable {
         this.requestTypeEntity = requestTypeEntity;
     }
 
-    public PatronEntity getPatronEntity() {
-        return patronEntity;
-    }
-
-    public void setPatronEntity(PatronEntity patronEntity) {
-        this.patronEntity = patronEntity;
-    }
-
     public ItemEntity getItemEntity() {
         return itemEntity;
     }
@@ -208,5 +190,21 @@ public class RequestItemEntity implements Serializable {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getPatronId() {
+        return patronId;
+    }
+
+    public void setPatronId(String patronId) {
+        this.patronId = patronId;
+    }
+
+    public String getEmailId() {
+        return emailId;
+    }
+
+    public void setEmailId(String emailId) {
+        this.emailId = emailId;
     }
 }
