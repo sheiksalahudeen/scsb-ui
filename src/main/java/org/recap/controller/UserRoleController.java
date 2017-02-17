@@ -4,10 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
 import org.recap.model.jpa.InstitutionEntity;
-import org.recap.model.jpa.PermissionEntity;
 import org.recap.model.jpa.RoleEntity;
 import org.recap.model.jpa.UsersEntity;
-import org.recap.model.search.RolesForm;
 import org.recap.model.userManagement.UserDetailsForm;
 import org.recap.model.userManagement.UserRoleForm;
 import org.recap.model.userManagement.UserRoleService;
@@ -34,7 +32,6 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by dharmendrag on 23/12/16.
