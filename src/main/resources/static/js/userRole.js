@@ -145,12 +145,11 @@ jQuery(document).ready(function ($) {
     $('#backLink,#editbackLink,#deletebackLink').click(function(){
         var $form = $('#userRole-form');
         var url = $form.attr('action') + "?action=goBack";
-        var role = $.ajax({
+        $.ajax({
             url: url,
             type: 'post',
             data: $form.serialize(),
             success: function (response) {
-                console.log("completed");
                 $('#userRolesContentId').html(response);
                 $('#editusers-createview').hide();
                 $('#users-searchview').show();
@@ -281,10 +280,8 @@ function deleteUser() {
 
 //EditUser
 function editUser(userId, networkLoginId) {
-    console.log("userId" + userId);
-    console.log("log id" + networkLoginId);
     var url = "/userRoles/editUser";
-    var request = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: {userId: userId, networkLoginId: networkLoginId},
@@ -300,7 +297,7 @@ function editUser(userId, networkLoginId) {
 function editclear() {
     var $form = $('#userRole-form');
     var url = $form.attr('action') + "?action=editClearPage";
-    var role = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: $form.serialize(),
@@ -326,7 +323,6 @@ function editUserDetails() {
             var roleIds = $('#editroleId').val();
             var userDescription = $('#edituserDescription').val();
             var userEmailId = $('#editEmailId').val();
-            var $form = $('#userRole-form');
             var url = "/userRoles/saveEditUserDetails";
             $.ajax({
                 url: url,

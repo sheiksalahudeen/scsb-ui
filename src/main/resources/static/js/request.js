@@ -4,14 +4,14 @@
 
 jQuery(document).ready(function ($) {
     /***Request Tab Create Request Form Show/Hide ***/
-    $("#request .search-request a").click(function (e) {
+    $("#request .search-request a").click(function () {
         loadSearchRequest();
     });
     $("#request .backtext a").click(function () {
         loadCreateRequest();
     });
 
-    $('#goBackLink').click(function(e){
+    $('#goBackLink').click(function(){
         $('#errorMessageId').hide();
         $('#itemBarcodeErrorMessage').hide();
         $('#patronBarcodeErrorMessage').hide();
@@ -56,12 +56,11 @@ $(function() {
 function loadCreateRequest() {
     var $form = $('#request-form');
     var url = $form.attr('action') + "?action=loadCreateRequest";
-    var request = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: $form.serialize(),
         success: function (response) {
-            console.log("completed");
             $('#requestContentId').html(response);
             $("#request .request-main-section").hide();
             $("#request .create-request-section").show();
@@ -72,12 +71,11 @@ function loadCreateRequest() {
 function loadSearchRequest() {
     var $form = $('#request-form');
     var url = $form.attr('action') + "?action=loadSearchRequest";
-    var request = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: $form.serialize(),
         success: function (response) {
-            console.log("completed");
             $('#requestContentId').html(response);
             $("#request .request-main-section").show();
             $("#request .create-request-section").hide();
@@ -88,12 +86,11 @@ function loadSearchRequest() {
 function searchRequests(action) {
     var $form = $('#request-form');
     var url = $form.attr('action') + "?action=" + action;
-    var request = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: $form.serialize(),
         success: function (response) {
-            console.log("completed");
             $('#requestContentId').html(response);
             $("#request .request-main-section").show();
             $("#request .create-request-section").hide();
@@ -140,7 +137,6 @@ function populateItemDetails() {
             type: 'post',
             data: $form.serialize(),
             success: function (response) {
-                console.log("completed");
                 var jsonResponse = JSON.parse(response);
                 $('#itemTitleId').val(jsonResponse['itemTitle']);
                 $('#itemOwningInstitutionId').val(jsonResponse['itemOwningInstitution']);
@@ -244,7 +240,7 @@ function createRequest() {
     if (isValidInputs()) {
         var $form = $('#request-form');
         var url = $form.attr('action') + "?action=createRequest";
-        var request = $.ajax({
+        $.ajax({
             url: url,
             type: 'post',
             data: $form.serialize(),
@@ -255,7 +251,6 @@ function createRequest() {
             },
             success: function (response) {
                 $('#createRequestSection').unblock();
-                console.log("completed");
                 var jsonResponse = JSON.parse(response);
                 var errorMessage = jsonResponse['errorMessage'];
                 $('#errorMessageSpanId').hide();
@@ -418,7 +413,7 @@ function cancelRequest(index) {
 function cancelRequestItem(index) {
     var $form = $('#request-form');
     var url = $form.attr('action') + "?action=cancelRequest";
-    var request = $.ajax({
+    $.ajax({
         url: url,
         type: 'post',
         data: $form.serialize(),
@@ -429,7 +424,6 @@ function cancelRequestItem(index) {
         },
         success: function (response) {
             $('#searchRequestsSection').unblock();
-            console.log("completed");
             var jsonResponse = JSON.parse(response);
             var message = jsonResponse['Message'];
             var status = jsonResponse['Status'];

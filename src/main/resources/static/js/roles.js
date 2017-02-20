@@ -10,12 +10,11 @@ jQuery(document).ready(function ($) {
     $('#createGoBackLink,#editGoBackLink,#deleteGoBackLink').click(function(){
         var $form = $('#roles-form');
         var url = $form.attr('action') + "?action=goBack";
-        var role = $.ajax({
+        $.ajax({
             url: url,
             type: 'post',
             data: $form.serialize(),
             success: function (response) {
-                console.log("completed");
                 $('#rolesContentId').html(response);
                 $("#recaprole .create-role-section").hide();
                 $("#recaprole .roles-main-section").show();
@@ -139,7 +138,7 @@ function createRole(){
 
 function editRole(roleId,roleNames,roleDescription,permissionNames){
     var $form = $('#roles-form');
-    var roleName = $('#recaprole .roleDetails').val();
+    $('#recaprole .roleDetails').val();
     var url = $form.attr('action') + "?action=editRole";
     $.ajax({
         url: url,
@@ -207,7 +206,7 @@ function deleteRole(roleId,roleNames,roleDescription,permissionNames) {
     var pageNumber = $('#pageNumber').val();
     var totalPageCount = $('#totalPageCount').val();
     var $form = $('#roles-form');
-    var roleName = $('#recaprole .roleDetails').val();
+    $('#recaprole .roleDetails').val();
     var url = $form.attr('action') + "?action=deleteRole";
     $.ajax({
         url: url,
