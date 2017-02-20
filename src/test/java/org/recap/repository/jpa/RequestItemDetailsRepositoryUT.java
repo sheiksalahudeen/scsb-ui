@@ -31,9 +31,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetIlRequestCountsForPUL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 1, "PUL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(2,2);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),1,2,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),1,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -48,9 +46,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetIlRequestCountsForCUL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 2, 1, "CUL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(3,3);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),1,3,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),1,3,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -66,9 +62,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetIlRequestCountsForNYPL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 3, 1, "NYPL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(2,2);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),1,2,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),1,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -85,9 +79,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetBDRequestCountsForPUL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 1, "PUL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(2,2);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),4,2,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),4,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -100,9 +92,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetBDRequestCountsForCUL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 2, 1, "CUL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(3,3);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),4,3,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),4,3,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -115,9 +105,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetBDRequestCountsForNYPL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 3, 1, "NYPL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(1,1);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),4,2,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),4,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -132,9 +120,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetPhysicalPrivateRequestCountsForPUL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 3, "PUL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(2,2);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),1,2,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),1,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -151,9 +137,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetPhysicalSharedAndOpenRequestCountsForPUL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 1, "PUL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(2,2);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),1,2,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),1,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -170,9 +154,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetPhysicalPrivateRequestCountsForCUL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 2, 3, "CUL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(3,3);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),1,3,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),1,3,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -190,9 +172,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetPhysicalSharedAndOpenRequestCountsForCUL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 2, 1, "CUL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(3,3);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),1,3,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),1,3,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -209,9 +189,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetPhysicalPrivateRequestCountsForNYPL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 3, 3, "NYPL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(1,1);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),1,1,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),1,1,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -228,8 +206,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetPhysicalSharedAndOpenRequestCountsForNYPL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 3, 1, "NYPL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(1,1);
-        RequestItemEntity requestItemEntity = saveRequestEntity(itemEntity.getItemId(),1,2,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),1,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -247,9 +224,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetEDDPrivateRequestCountsForPUL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 3, "PUL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(2,2);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),3,2,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),3,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -266,9 +241,9 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetEDDSharedAndOpenRequestCountsForPUL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 1, "PUL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(2,2);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),3,2,patronEntity.getPatronId());
+       
+        
+        saveRequestEntity(itemEntity.getItemId(),3,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -285,9 +260,9 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetEDDPrivateRequestCountsForCUL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 2, 3, "CUL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(3,3);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),3,3,patronEntity.getPatronId());
+       
+        
+        saveRequestEntity(itemEntity.getItemId(),3,3,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -304,9 +279,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetEDDSharedAndOpenRequestCountsForCUL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 2, 1, "CUL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(3,3);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),3,3,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),3,3,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -323,9 +296,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetEDDPrivateRequestCountsForNYPL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 3, 3, "NYPL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(1,1);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),3,1,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),3,1,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -342,9 +313,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetEDDSharedAndOpenRequestCountsForNYPL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 3, 1, "NYPL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(1,1);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),3,1,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),3,1,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -363,9 +332,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetRecallRequestCountsForPUL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 1, "PUL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(2,2);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),2,2,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),2,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -378,9 +345,9 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetRecallRequestCountsForCUL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 2, 1, "CUL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(1,1);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),2,1,patronEntity.getPatronId());
+        
+        
+        saveRequestEntity(itemEntity.getItemId(),2,1,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -393,9 +360,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetRecallRequestCountsForNYPL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 3, 1, "NYPL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(2,2);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),2,2,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),2,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -409,9 +374,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetRetrievalRequestCountsForPUL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 1, "PUL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(2,2);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),1,2,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),1,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -424,9 +387,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetRetrievalRequestCountsForCUL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 2, 1, "CUL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(1,1);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),1,1,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),1,1,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -439,9 +400,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     public void checkGetRetrievalRequestCountsForNYPL() throws Exception{
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 3, 1, "NYPL");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        PatronEntity patronEntity = savePatronEntity(2,2);
-        RequestTypeEntity requestTypeEntity = saveRequestTypeEntity();
-        saveRequestEntity(itemEntity.getItemId(),1,2,patronEntity.getPatronId());
+        saveRequestEntity(itemEntity.getItemId(),1,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -503,7 +462,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         return savedBibliographicEntity;
     }
 
-    private RequestItemEntity saveRequestEntity(Integer itemId, Integer requestTypeId, Integer requestingInstID, Integer patronID) throws Exception {
+    private RequestItemEntity saveRequestEntity(Integer itemId, Integer requestTypeId, Integer requestingInstID, String patronID) throws Exception {
         RequestItemEntity requestItemEntity = new RequestItemEntity();
         requestItemEntity.setItemId(itemId);
         requestItemEntity.setRequestTypeId(requestTypeId);
@@ -518,22 +477,4 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         requestItemEntity.setRequestStatusId(4);
         return requestItemDetailsRepository.save(requestItemEntity);
     }
-
-    private PatronEntity savePatronEntity(Integer patronId, Integer patronInstitutionID) throws Exception {
-        PatronEntity patronEntity = new PatronEntity();
-        patronEntity.setPatronId(patronId);
-        patronEntity.setInstitutionId(patronInstitutionID);
-        patronEntity.setInstitutionIdentifier("test");
-        patronEntity.setEmailId("testmail");
-        return patronDetailsRepository.save(patronEntity);
-    }
-    private RequestTypeEntity saveRequestTypeEntity(){
-        RequestTypeEntity requestTypeEntity = new RequestTypeEntity();
-        requestTypeEntity.setRequestTypeCode("Recallhold");
-        requestTypeEntity.setRequestTypeDesc("Recallhold");
-        RequestTypeEntity savedRequestTypeEntity = requestTypeDetailsRepository.save(requestTypeEntity);
-        return savedRequestTypeEntity;
-    }
-
-
 }

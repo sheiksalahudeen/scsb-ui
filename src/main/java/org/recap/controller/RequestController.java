@@ -459,14 +459,14 @@ public class RequestController {
             for (RequestItemEntity requestItemEntity : requestItemEntities) {
                 SearchResultRow searchResultRow = new SearchResultRow();
                 searchResultRow.setRequestId(requestItemEntity.getRequestId());
-                searchResultRow.setPatronBarcode(requestItemEntity.getPatronEntity().getInstitutionIdentifier());
+                searchResultRow.setPatronBarcode(requestItemEntity.getPatronId());
                 searchResultRow.setRequestingInstitution(requestItemEntity.getInstitutionEntity().getInstitutionCode());
                 searchResultRow.setBarcode(requestItemEntity.getItemEntity().getBarcode());
                 searchResultRow.setOwningInstitution(requestItemEntity.getItemEntity().getInstitutionEntity().getInstitutionCode());
                 searchResultRow.setDeliveryLocation(requestItemEntity.getStopCode());
                 searchResultRow.setRequestType(requestItemEntity.getRequestTypeEntity().getRequestTypeCode());
                 searchResultRow.setRequestCreatedBy(requestItemEntity.getCreatedBy());
-                searchResultRow.setPatronEmailId(requestItemEntity.getPatronEntity().getEmailId());
+                searchResultRow.setPatronEmailId(requestItemEntity.getEmailId());
                 searchResultRow.setRequestNotes(requestItemEntity.getNotes());
                 searchResultRow.setCreatedDate(requestItemEntity.getCreatedDate());
                 searchResultRow.setStatus(requestItemEntity.getRequestStatusEntity().getRequestStatusDescription());

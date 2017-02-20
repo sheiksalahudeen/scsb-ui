@@ -4,9 +4,10 @@
     <script type="text/javascript" th:src="@{../js/collection.js}"></script>
     <div id="collectionFormDivId" name="collectionFormDivName" th:fragment="collection-form"
          xmlns:th="http://www.thymeleaf.org" th:remove="tag">
-        <form id="collection-form" name="collection-form" class="form-horizontal" action="#"
+        <form id="collection-form" name="collection-form" class="form-horizontal"
               th:action="@{/collection}"
               th:object="${collectionForm}" method="post">
+            <input type="hidden"  th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>
             <fieldset>
                 <div class="search-bar">
                     <div class="row margin-0">

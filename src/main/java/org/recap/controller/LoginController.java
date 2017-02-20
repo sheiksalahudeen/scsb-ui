@@ -9,6 +9,8 @@ import org.recap.util.UserAuthUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -43,6 +45,44 @@ public class LoginController {
     public String loginScreen(HttpServletRequest request, Model model, @ModelAttribute UserForm userForm) {
         logger.info("Login Screen called");
         return "login";
+    }
+
+
+
+    @RequestMapping(value = "/login-scsb", method = RequestMethod.GET)
+    public String login(@Valid @ModelAttribute UserForm userForm, HttpServletRequest request, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String user = auth.getName();
+        String credentials = String.valueOf(auth.getCredentials());
+        logger.info("passing in /login");
+        model.addAttribute("user", user);
+        final String loginScreen="login";
+        Map<String,Object> resultmap=null;
+        userForm.setUsername(user);
+        userForm.setPassword("");
+        try
+        {
+            UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+userForm.getInstitution(),userForm.getPassword(),true);
+            resultmap=(Map<String,Object>)userAuthUtil.doAuthentication(token);
+
+            if(!(Boolean) resultmap.get("isAuthenticated"))
+            {
+                throw new Exception("Subject Authtentication Failed");
+            }
+            HttpSession session=request.getSession(true);
+            session.setAttribute("token",token);
+            session.setAttribute(UserManagement.USER_AUTH,resultmap);
+            setValuesInSession(session,resultmap);
+
+        }
+        catch(Exception e)
+        {
+            logger.error("Exception occured in authentication : "+e.getLocalizedMessage());
+            return loginScreen;
+        }
+
+
+        return "redirect:/search";
     }
 
 
