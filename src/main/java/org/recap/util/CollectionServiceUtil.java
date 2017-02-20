@@ -21,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by rajeshbabuk on 19/10/16.
@@ -91,12 +92,12 @@ public class CollectionServiceUtil {
 
     public void deAccessionItem(BibliographicMarcForm bibliographicMarcForm) {
         try {
-            RestTemplate restTemplate = new RestTemplate();
             DeAccessionRequest deAccessionRequest = new DeAccessionRequest();
             String itemBarcode = bibliographicMarcForm.getBarcode();
             deAccessionRequest.setItemBarcodes(Arrays.asList(itemBarcode));
             HttpEntity<DeAccessionRequest> requestEntity = new HttpEntity<>(deAccessionRequest, getHttpHeaders());
-            String resultMessage = getRestTemplate().postForObject(getServerProtocol() + getScsbUrl() + RecapConstants.SCSB_DEACCESSION_URL, requestEntity, String.class);
+            Map<String, String> resultMap = getRestTemplate().postForObject(getServerProtocol() + getScsbUrl() + RecapConstants.SCSB_DEACCESSION_URL, requestEntity, Map.class);
+            String resultMessage = resultMap.get(itemBarcode);
             if (StringUtils.isNotBlank(resultMessage)) {
                 if (resultMessage.contains(RecapConstants.SUCCESS)) {
                     String userName = RecapConstants.GUEST;
