@@ -41,6 +41,10 @@ public class HoldingsPK implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
         HoldingsPK holdingsPK  = (HoldingsPK) obj;
         if(holdingsPK.getOwningInstitutionId().equals(owningInstitutionId) && holdingsPK.getOwningInstitutionHoldingsId().equals(owningInstitutionHoldingsId)){
             return true;

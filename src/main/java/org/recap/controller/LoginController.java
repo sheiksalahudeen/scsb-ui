@@ -112,7 +112,6 @@ public class LoginController {
             session.setAttribute(UserManagement.USER_TOKEN,token);
             session.setAttribute(UserManagement.USER_AUTH,resultmap);
             setValuesInSession(session,resultmap);
-
         }
         catch(ConnectException|ResourceAccessException e)
         {
@@ -125,8 +124,8 @@ public class LoginController {
         {
             logger.error(RecapConstants.LOG_ERROR,e);
             error.rejectValue("wrongCredentials","error.invalid.credentials","Invalid Credentials");
-            logger.debug("Exception occured in authentication Process : "+resultmap.get(UserManagement.USER_AUTH_ERRORMSG));
-            logger.error(e.getLocalizedMessage()+":"+resultmap.get(UserManagement.USER_AUTH_ERRORMSG));
+            logger.debug("Exception occured in authentication Process : {} ",resultmap.get(UserManagement.USER_AUTH_ERRORMSG));
+            logger.error("{} : {}",e.getLocalizedMessage(),resultmap.get(UserManagement.USER_AUTH_ERRORMSG));
             return loginScreen;
         }
         return "redirect:/search";
