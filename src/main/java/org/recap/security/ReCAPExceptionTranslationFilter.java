@@ -17,7 +17,6 @@ import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.security.web.util.ThrowableAnalyzer;
-import org.springframework.security.web.util.ThrowableCauseExtractor;
 import org.springframework.util.Assert;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -69,6 +68,7 @@ public class ReCAPExceptionTranslationFilter extends GenericFilterBean {
                 "authenticationEntryPoint must be specified");
     }
 
+    @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
             throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
@@ -205,15 +205,14 @@ public class ReCAPExceptionTranslationFilter extends GenericFilterBean {
         /**
          * @see ThrowableAnalyzer#initExtractorMap()
          */
+        @Override
         protected void initExtractorMap() {
             super.initExtractorMap();
 
-            registerExtractor(ServletException.class, new ThrowableCauseExtractor() {
-                public Throwable extractCause(Throwable throwable) {
-                    ThrowableAnalyzer.verifyThrowableHierarchy(throwable,
-                            ServletException.class);
-                    return ((ServletException) throwable).getRootCause();
-                }
+            registerExtractor(ServletException.class, throwable -> {
+                ThrowableAnalyzer.verifyThrowableHierarchy(throwable,
+                        ServletException.class);
+                return ((ServletException) throwable).getRootCause();
             });
         }
 

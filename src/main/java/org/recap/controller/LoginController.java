@@ -44,7 +44,7 @@ public class LoginController {
     @RequestMapping(value="/",method= RequestMethod.GET)
     public String loginScreen(HttpServletRequest request, Model model, @ModelAttribute UserForm userForm) {
         logger.info("Login Screen called");
-        return "login";
+        return RecapConstants.VIEW_LOGIN;
     }
 
 
@@ -56,14 +56,14 @@ public class LoginController {
         String credentials = String.valueOf(auth.getCredentials());
         logger.info("passing in /login");
         model.addAttribute("user", user);
-        final String loginScreen="login";
+        final String loginScreen=RecapConstants.VIEW_LOGIN;
         Map<String,Object> resultmap=null;
         userForm.setUsername(user);
         userForm.setPassword("");
         try
         {
             UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+userForm.getInstitution(),userForm.getPassword(),true);
-            resultmap=(Map<String,Object>)userAuthUtil.doAuthentication(token);
+            resultmap=userAuthUtil.doAuthentication(token);
 
             if(!(Boolean) resultmap.get("isAuthenticated"))
             {
@@ -77,6 +77,7 @@ public class LoginController {
         }
         catch(Exception e)
         {
+            logger.error(RecapConstants.LOG_ERROR,e);
             logger.error("Exception occured in authentication : "+e.getLocalizedMessage());
             return loginScreen;
         }
@@ -89,7 +90,7 @@ public class LoginController {
     @RequestMapping(value="/",method= RequestMethod.POST)
     public String createSession(@Valid @ModelAttribute UserForm userForm, HttpServletRequest request, Model model, BindingResult error){
         loginValidator.validate(userForm,error);
-        final String loginScreen="login";
+        final String loginScreen=RecapConstants.VIEW_LOGIN;
         Map<String,Object> resultmap=null;
         if(userForm==null){
             return loginScreen;

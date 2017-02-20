@@ -6,6 +6,7 @@ import org.jasig.cas.client.util.CommonUtils;
 import org.jasig.cas.client.validation.Assertion;
 import org.jasig.cas.client.validation.TicketValidationException;
 import org.jasig.cas.client.validation.TicketValidator;
+import org.recap.RecapConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,7 +83,7 @@ public abstract class ReCAPAbstractUrlBasedTicketValidator implements TicketVali
      * @return the fully constructed URL.
      */
     protected final String constructValidationUrl(final String ticket, final String serviceUrl) {
-        final Map<String, String> urlParameters = new HashMap<String, String>();
+        final Map<String, String> urlParameters = new HashMap<>();
 
         logger.debug("Placing URL parameters in map.");
         urlParameters.put("ticket", ticket);
@@ -143,6 +144,7 @@ public abstract class ReCAPAbstractUrlBasedTicketValidator implements TicketVali
         try {
             return URLEncoder.encode(url, "UTF-8");
         } catch (final UnsupportedEncodingException e) {
+            logger.error(RecapConstants.LOG_ERROR,e);
             return url;
         }
     }
@@ -167,6 +169,7 @@ public abstract class ReCAPAbstractUrlBasedTicketValidator implements TicketVali
 
     protected abstract String retrieveResponseFromServer(URL validationUrl, String ticket);
 
+    @Override
     public final Assertion validate(final String ticket, final String service) throws TicketValidationException {
         final String validationUrl = constructValidationUrl(ticket, service);
         logger.debug("Constructing validation url: {}", validationUrl);
