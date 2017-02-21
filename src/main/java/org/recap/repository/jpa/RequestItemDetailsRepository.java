@@ -42,6 +42,15 @@ public interface RequestItemDetailsRepository extends JpaRepository<RequestItemE
     @Query(value = "select request from RequestItemEntity request where request.requestStatusId in (select requestStatusId from RequestStatusEntity requestStatus where requestStatus.requestStatusCode in ('RETRIEVAL_ORDER_PLACED', 'RECALL_ORDER_PLACED','EDD_ORDER_PLACED'))")
     Page<RequestItemEntity> findAllActive(Pageable pageable);
 
+    @Query(value = "select request from RequestItemEntity request where request.patronId = :patronBarcode")
+    Page<RequestItemEntity> findByPatronBarcode(Pageable pageable, @Param("patronBarcode") String patronBarcode);
+
+    @Query(value = "select request from RequestItemEntity request where request.itemId = (select itemId from ItemEntity item where item.barcode = :itemBarcode)")
+    Page<RequestItemEntity> findByItemBarcode(Pageable pageable, @Param("itemBarcode") String itemBarcode);
+
+    @Query(value = "select request from RequestItemEntity request where request.patronId = :patronBarcode and request.itemId = (select itemId from ItemEntity item where item.barcode = :itemBarcode)")
+    Page<RequestItemEntity> findByPatronBarcodeAndItemBarcode(Pageable pageable, @Param("patronBarcode") String patronBarcode, @Param("itemBarcode") String itemBarcode);
+
     @Query(value = "SELECT COUNT(*) FROM REQUEST_ITEM_T , REQUEST_TYPE_T,ITEM_T WHERE REQUEST_ITEM_T.REQUEST_TYPE_ID=REQUEST_TYPE_T.REQUEST_TYPE_ID " +
             "AND REQUEST_ITEM_T.ITEM_ID=ITEM_T.ITEM_ID " +
             "AND REQUEST_ITEM_T.REQUEST_TYPE_ID IN (SELECT REQUEST_TYPE_ID FROM REQUEST_TYPE_T WHERE REQUEST_TYPE_CODE IN ('RETRIEVAL', 'RECALL', 'EDD')) " +

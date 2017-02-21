@@ -22,6 +22,8 @@ jQuery(document).ready(function ($) {
         $('#endPageErrorMessage').hide();
         $('#articleTitleErrorMessage').hide();
         $('#patronEmailIdErrorMessage').hide();
+        $('#patronBarcodeSearchError').hide();
+        $('#itemBarcodeSearchError').hide();
     });
 
     $("a[href='https://htcrecap.atlassian.net/wiki/display/RTG/Search']").attr('href',
@@ -38,6 +40,24 @@ jQuery(document).ready(function ($) {
     $('#articleTitleErrorMessage').hide();
     $('#patronEmailIdErrorMessage').hide();
     $('#itemBarcodeNotFoundErrorMessage').hide();
+
+    $('#requestStatus').change(function(){
+        var status = $('#requestStatus').val();
+        if (status == 'active'){
+            $('#noteActive').show();
+            $('#noteAll').hide();
+        }
+        else if (isBlankValue(status)){
+            $('#noteAll').show();
+            $('#noteActive').hide();
+        }
+        else {
+            $('#noteAll').hide();
+            $('#noteActive').hide();
+        }
+        $('#patronBarcodeSearchError').hide();
+        $('#itemBarcodeSearchError').hide();
+    });
 });
 
 $(function() {
@@ -86,6 +106,71 @@ function loadSearchRequest() {
 }
 
 function searchRequests(action) {
+    var isValidSearch = validSearch();
+    if(isValidSearch){
+        var $form = $('#request-form');
+        var url = $form.attr('action') + "?action=" + action;
+        var request = $.ajax({
+            url: url,
+            type: 'post',
+            data: $form.serialize(),
+            success: function (response) {
+                console.log("completed");
+                $('#requestContentId').html(response);
+                $("#request .request-main-section").show();
+                $("#request .create-request-section").hide();
+                var status = $('#requestStatus').val();
+                if (status == 'active'){
+                    $('#noteActive').show();
+                    $('#noteAll').hide();
+                }
+                else if (isBlankValue(status)){
+                    $('#noteAll').show();
+                    $('#noteActive').hide();
+                }
+                else {
+                    $('#noteAll').hide();
+                    $('#noteActive').hide();
+                }
+
+            }
+        });
+    }
+    else {
+        $(".search-results-container").css('display', 'none');
+    }
+}
+
+function validSearch() {
+    var patronBarcode = $("#patronBarcode").val();
+    var itemBarcode = $("#itemBarcode").val();
+    var requestStatus = $("#requestStatus").val();
+    var isValidSearch = true;
+    if(isBlankValue(requestStatus)){
+        if (isBlankValue(patronBarcode) && isBlankValue(itemBarcode)){
+            isValidSearch = false;
+            $('#patronBarcodeSearchError').show();
+            $('#itemBarcodeSearchError').show();
+        }
+    }
+    return isValidSearch;
+}
+
+
+
+function clearRequests() {
+    $("#patronBarcode").val('');
+    $("#itemBarcode").val('');
+    $("#requestStatus").val('');
+    $(".search-results-container").css('display', 'none');
+    $('#patronBarcodeSearchError').hide();
+    $('#itemBarcodeSearchError').hide();
+    $('#noteAll').show();
+    $('#noteActive').hide();
+}
+
+
+function searchRequestsPagination(action) {
     var $form = $('#request-form');
     var url = $form.attr('action') + "?action=" + action;
     var request = $.ajax({
@@ -101,33 +186,27 @@ function searchRequests(action) {
     });
 }
 
-function clearRequests() {
-    $("#patronBarcode").val('');
-    $("#itemBarcode").val('');
-    $("#requestStatus").val('');
-    $(".search-results-container").css('display', 'none');
-}
 
 function requestsFirstPage() {
-    searchRequests('first');
+    searchRequestsPagination('first');
 }
 
 function requestsLastPage() {
-    searchRequests('last');
+    searchRequestsPagination('last');
 }
 
 function requestsPreviousPage() {
     $('#pageNumber').val(parseInt($('#pageNumber').val()) - 1);
-    searchRequests('previous');
+    searchRequestsPagination('previous');
 }
 
 function requestsNextPage() {
     $('#pageNumber').val(parseInt($('#pageNumber').val()) + 1);
-    searchRequests('next');
+    searchRequestsPagination('next');
 }
 
 function requestsOnPageSizeChange() {
-    searchRequests('requestPageSizeChange');
+    searchRequestsPagination('requestPageSizeChange');
 }
 
 function populateItemDetails() {
