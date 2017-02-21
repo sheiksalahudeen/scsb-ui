@@ -423,4 +423,6 @@ public class RecapConstants {
     public static final String URL_PREFIX = ".url.prefix";
     public static final String REDIRECT_URI = "logout.redirect.uri";
 
+    public static final String Search_Request_ACTIVE = "active";
+
 }
