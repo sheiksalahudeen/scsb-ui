@@ -251,7 +251,7 @@
                                             <div class="itemdetail">
                                                 <h4 class="border-style-bottom padding-10 margin-top-05 margin-btm-0">Item Details</h4>
                                                 <div id="itemDetailsSection" class="padding-10">
-
+                                                    <input id="allowEdit" type="hidden" th:field="${collectionForm.allowEdit}"/>
                                                     <div class="row form-group">
                                                         <div id="collectionUpdateMessage" class="row margin-btm-10" th:if="${collectionForm.message ne null &amp;&amp; collectionForm.message ne ''}">
                                                             <div class="col-sm-12">
@@ -264,6 +264,13 @@
                                                             <div class="col-sm-12">
                                                                 <div class="bg-danger text-danger padding-10">
                                                                     <span class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span th:text="${collectionForm.errorMessage}"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div id="collectionUpdateWarningMessage" class="row margin-btm-10" th:if="${collectionForm.warningMessage ne null &amp;&amp; collectionForm.warningMessage ne ''}">
+                                                            <div class="col-sm-12">
+                                                                <div class="bg-warning text-warning padding-10">
+                                                                    <span id="warningMessageId" class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span th:text="${collectionForm.warningMessage}"></span>
                                                                 </div>
                                                             </div>
                                                         </div>

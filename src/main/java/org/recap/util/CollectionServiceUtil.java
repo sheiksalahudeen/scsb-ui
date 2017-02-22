@@ -3,10 +3,13 @@ package org.recap.util;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.recap.RecapConstants;
+import org.recap.model.deAccession.DeAccessionItem;
 import org.recap.model.deAccession.DeAccessionRequest;
+import org.recap.model.jpa.CustomerCodeEntity;
 import org.recap.model.jpa.ItemChangeLogEntity;
 import org.recap.model.jpa.ItemEntity;
 import org.recap.model.search.BibliographicMarcForm;
+import org.recap.repository.jpa.CustomerCodeDetailsRepository;
 import org.recap.repository.jpa.ItemChangeLogDetailsRepository;
 import org.recap.repository.jpa.ItemDetailsRepository;
 import org.slf4j.Logger;
@@ -39,6 +42,9 @@ public class CollectionServiceUtil {
 
     @Autowired
     ItemChangeLogDetailsRepository itemChangeLogDetailsRepository;
+
+    @Autowired
+    CustomerCodeDetailsRepository customerCodeDetailsRepository;
 
     @Autowired
     ItemDetailsRepository itemDetailsRepository;
@@ -92,15 +98,24 @@ public class CollectionServiceUtil {
 
     public void deAccessionItem(BibliographicMarcForm bibliographicMarcForm) {
         try {
-            DeAccessionRequest deAccessionRequest = new DeAccessionRequest();
             String itemBarcode = bibliographicMarcForm.getBarcode();
-            deAccessionRequest.setItemBarcodes(Arrays.asList(itemBarcode));
+            String deliveryLocation = null;
+            CustomerCodeEntity customerCodeEntity = customerCodeDetailsRepository.findByDescription(bibliographicMarcForm.getDeliveryLocation());
+            if (null != customerCodeEntity) {
+                deliveryLocation = customerCodeEntity.getCustomerCode();
+            }
+            String userName = bibliographicMarcForm.getUsername();
+            DeAccessionRequest deAccessionRequest = new DeAccessionRequest();
+            DeAccessionItem deAccessionItem = new DeAccessionItem();
+            deAccessionItem.setItemBarcode(itemBarcode);
+            deAccessionItem.setDeliveryLocation(deliveryLocation);
+            deAccessionRequest.setDeAccessionItems(Arrays.asList(deAccessionItem));
+            deAccessionRequest.setUsername(userName);
             HttpEntity<DeAccessionRequest> requestEntity = new HttpEntity<>(deAccessionRequest, getHttpHeaders());
             Map<String, String> resultMap = getRestTemplate().postForObject(getServerProtocol() + getScsbUrl() + RecapConstants.SCSB_DEACCESSION_URL, requestEntity, Map.class);
             String resultMessage = resultMap.get(itemBarcode);
             if (StringUtils.isNotBlank(resultMessage)) {
                 if (resultMessage.contains(RecapConstants.SUCCESS)) {
-                    String userName = RecapConstants.GUEST;
                     Date lastUpdatedDate = new Date();
                     List<ItemEntity> itemEntities = itemDetailsRepository.findByBarcode(itemBarcode);
                     saveItemChangeLogEntity(itemEntities, userName, lastUpdatedDate, RecapConstants.DEACCESSION, bibliographicMarcForm.getDeaccessionNotes());

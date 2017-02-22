@@ -3,10 +3,11 @@ package org.recap.controller;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.codehaus.jettison.json.JSONException;
 import org.recap.RecapConstants;
+import org.recap.model.jpa.RequestItemEntity;
 import org.recap.model.search.*;
 import org.recap.model.userManagement.UserDetailsForm;
+import org.recap.repository.jpa.RequestItemDetailsRepository;
 import org.recap.security.UserManagement;
 import org.recap.util.CollectionServiceUtil;
 import org.recap.util.MarcRecordViewUtil;
@@ -44,6 +45,15 @@ public class CollectionController {
     @Autowired
     MarcRecordViewUtil marcRecordViewUtil;
 
+    @Autowired
+    CollectionServiceUtil collectionServiceUtil;
+
+    @Autowired
+    private UserAuthUtil userAuthUtil;
+
+    @Autowired
+    RequestItemDetailsRepository requestItemDetailsRepository;
+
     public MarcRecordViewUtil getMarcRecordViewUtil() {
         return marcRecordViewUtil;
     }
@@ -51,12 +61,6 @@ public class CollectionController {
     public void setMarcRecordViewUtil(MarcRecordViewUtil marcRecordViewUtil) {
         this.marcRecordViewUtil = marcRecordViewUtil;
     }
-
-    @Autowired
-    CollectionServiceUtil collectionServiceUtil;
-
-    @Autowired
-    private UserAuthUtil userAuthUtil;
 
     public UserAuthUtil getUserAuthUtil() {
         return userAuthUtil;
@@ -72,6 +76,22 @@ public class CollectionController {
 
     public void setCollectionServiceUtil(CollectionServiceUtil collectionServiceUtil) {
         this.collectionServiceUtil = collectionServiceUtil;
+    }
+
+    public SearchUtil getSearchUtil() {
+        return searchUtil;
+    }
+
+    public void setSearchUtil(SearchUtil searchUtil) {
+        this.searchUtil = searchUtil;
+    }
+
+    public RequestItemDetailsRepository getRequestItemDetailsRepository() {
+        return requestItemDetailsRepository;
+    }
+
+    public void setRequestItemDetailsRepository(RequestItemDetailsRepository requestItemDetailsRepository) {
+        this.requestItemDetailsRepository = requestItemDetailsRepository;
     }
 
     @RequestMapping("/collection")
@@ -116,13 +136,33 @@ public class CollectionController {
     @RequestMapping(value = "/collection", method = RequestMethod.POST, params = "action=collectionUpdate")
     public ModelAndView collectionUpdate(@Valid @ModelAttribute("collectionForm") CollectionForm collectionForm,
                                          BindingResult result,
-                                         Model model) throws JSONException {
+                                         Model model, HttpServletRequest request) throws Exception {
+        HttpSession session = request.getSession();
+        String username = (String) session.getAttribute(UserManagement.USER_NAME);
+        collectionForm.setUsername(username);
         if (RecapConstants.UPDATE_CGD.equalsIgnoreCase(collectionForm.getCollectionAction())) {
             getCollectionServiceUtil().updateCGDForItem(collectionForm);
         } else if (RecapConstants.DEACCESSION.equalsIgnoreCase(collectionForm.getCollectionAction())) {
             getCollectionServiceUtil().deAccessionItem(collectionForm);
         }
         collectionForm.setAllowEdit(true);
+        return new ModelAndView("collection :: #itemDetailsSection", "collectionForm", collectionForm);
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/collection", method = RequestMethod.POST, params = "action=checkCrossInstitutionBorrowed")
+    public ModelAndView checkCrossInstitutionBorrowed(@Valid @ModelAttribute("collectionForm") CollectionForm collectionForm,
+                                       BindingResult result,
+                                       Model model) throws Exception {
+        String itemBarcode = collectionForm.getBarcode();
+        RequestItemEntity activeRetrievalRequest = getRequestItemDetailsRepository().findByItemBarcodeAndRequestStaCode(itemBarcode, RecapConstants.REQUEST_STATUS_RETRIEVAL_ORDER_PLACED);
+        if (null != activeRetrievalRequest) {
+            String itemOwningInstitution = activeRetrievalRequest.getItemEntity().getInstitutionEntity().getInstitutionCode();
+            String retrievalRequestingInstitution = activeRetrievalRequest.getInstitutionEntity().getInstitutionCode();
+            if (!itemOwningInstitution.equalsIgnoreCase(retrievalRequestingInstitution)) {
+                collectionForm.setWarningMessage(RecapConstants.WARNING_MESSAGE_CROSS_BORROWED_ITEM);
+            }
+        }
         return new ModelAndView("collection :: #itemDetailsSection", "collectionForm", collectionForm);
     }
 
@@ -234,6 +274,7 @@ public class CollectionController {
         collectionForm.setSubmitted(bibliographicMarcForm.isSubmitted());
         collectionForm.setMessage(bibliographicMarcForm.getMessage());
         collectionForm.setErrorMessage(bibliographicMarcForm.getErrorMessage());
+        collectionForm.setWarningMessage(bibliographicMarcForm.getWarningMessage());
         collectionForm.setCollectionAction(bibliographicMarcForm.getCollectionAction());
         collectionForm.setShowModal(true);
         collectionForm.setShowResults(true);
