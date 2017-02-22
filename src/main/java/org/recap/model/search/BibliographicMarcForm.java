@@ -2,7 +2,6 @@ package org.recap.model.search;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by rajeshbabuk on 22/7/16.
@@ -24,6 +23,7 @@ public class BibliographicMarcForm {
     private String content;
     private List<BibDataField> bibDataFields = new ArrayList<>();
     private String errorMessage;
+    private String warningMessage;
 
     private Integer itemId;
     private String availability;
@@ -44,6 +44,7 @@ public class BibliographicMarcForm {
     private String message;
     private String collectionAction;
     private boolean allowEdit;
+    private String username;
 
     public boolean isAllowEdit() {
         return allowEdit;
@@ -317,5 +318,21 @@ public class BibliographicMarcForm {
 
     public void setLeaderMaterialType(String leaderMaterialType) {
         this.leaderMaterialType = leaderMaterialType;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getWarningMessage() {
+        return warningMessage;
+    }
+
+    public void setWarningMessage(String warningMessage) {
+        this.warningMessage = warningMessage;
     }
 }
