@@ -142,6 +142,18 @@ public class CasAuthenticationProvider implements AuthenticationProvider,
             String urlProperty = RecapConstants.CAS + institution + RecapConstants.URL_PREFIX;
             String casServerUrl = HelperUtil.getBean(PropertyValueProvider.class).getProperty(urlProperty);
 
+            String login = RecapConstants.CAS + institution + RecapConstants.SERVICE_LOGIN;
+            String loginUrl = HelperUtil.getBean(PropertyValueProvider.class).getProperty(login);
+
+            String logout = RecapConstants.CAS + institution + RecapConstants.SERVICE_LOGOUT;
+            String logoutUri = HelperUtil.getBean(PropertyValueProvider.class).getProperty(logout);
+
+            logger.info(" ****** CAS Properties Start***** ");
+            logger.info("Prefix : " + casServerUrl);
+            logger.info("Login : " + loginUrl);
+            logger.info("Logout Uri : " + logoutUri);
+            logger.info(" ****** CAS Properties End ***** ");
+
             ReCAPCas20ServiceTicketValidator ticketValidator = (ReCAPCas20ServiceTicketValidator) this.ticketValidator;
             ticketValidator.setCasServerUrlPrefix(casServerUrl);
             ticketValidator.setProxyRetriever(new Cas20ProxyRetriever(casServerUrl, "UTF-8",ticketValidator.getURLConnectionFactory()));
