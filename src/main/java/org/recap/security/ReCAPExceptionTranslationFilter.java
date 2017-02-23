@@ -1,6 +1,8 @@
 package org.recap.security;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.recap.RecapConstants;
 import org.recap.spring.PropertyValueProvider;
 import org.recap.util.HelperUtil;
@@ -33,6 +35,10 @@ import java.io.IOException;
  * Created by sheiks on 25/01/17.
  */
 public class ReCAPExceptionTranslationFilter extends GenericFilterBean {
+
+
+
+    private static final Log logger = LogFactory.getLog(CasAuthenticationEntryPoint.class);
 
     private CASPropertyProvider casPropertyProvider;
 
@@ -165,11 +171,18 @@ public class ReCAPExceptionTranslationFilter extends GenericFilterBean {
         requestCache.saveRequest(request, response);
         logger.debug("Calling Authentication entry point.");
         String institution = HelperUtil.getAttributeValueFromRequest(request, RecapConstants.RECAP_INSTITUTION_ID);
+
+        logger.info(" ****  Translation Filter *** Start");
+        logger.info("Institution : " + institution);
+
         if(StringUtils.equals(institution, "3")) {
             this.authenticationEntryPoint.commence(request,response,reason);
         } else {
             String urlProperty = RecapConstants.CAS + institution + RecapConstants.SERVICE_LOGIN;
             String url = HelperUtil.getBean(PropertyValueProvider.class).getProperty(urlProperty);
+
+            logger.info("urlProperty : " + urlProperty);
+            logger.info("loginUrl : " + url);
 
             //Calling cas entry point based on institution type.
             CasAuthenticationEntryPoint casAuthenticationEntryPoint = new CasAuthenticationEntryPoint();
@@ -177,6 +190,9 @@ public class ReCAPExceptionTranslationFilter extends GenericFilterBean {
             casAuthenticationEntryPoint.setServiceProperties(casPropertyProvider.getServiceProperties());
             casAuthenticationEntryPoint.commence(request, response, reason);
         }
+
+
+        logger.info(" ****  Translation Filter *** End");
 
     }
 
