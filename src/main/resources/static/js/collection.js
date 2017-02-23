@@ -40,6 +40,9 @@ function editCgdcontrol() {
     $('#Deaccession-section').hide();
     $('#locationErrorMessage').hide();
     $('#deaccessionNotesErrorMessage').hide();
+    $('#collectionUpdateMessage').hide();
+    $('#collectionUpdateErrorMessage').hide();
+    $('#collectionUpdateWarningMessage').hide();
 }
 function deaccessioncontrol() {
     $('#editCDG-section').hide();
@@ -47,7 +50,37 @@ function deaccessioncontrol() {
     $('#cgdNotesErrorMessage').hide();
     $('#locationErrorMessage').hide();
     $('#deaccessionNotesErrorMessage').hide();
-    $('#Deaccession-section').show();
+    checkCrossBorrowedItem();
+}
+
+function checkCrossBorrowedItem() {
+    var $form = $('#collection-form');
+    var url = $form.attr('action') + "?action=checkCrossInstitutionBorrowed";
+    var request = $.ajax({
+        url: url,
+        type: 'post',
+        data: $form.serialize(),
+        success: function (response) {
+            console.log("completed");
+            var editCgd = $('#editCgdclick').is(':checked');
+            var deaccession = $('#deaccesionclick').is(':checked');
+            $('#itemDetailsSection').html(response);
+            if (editCgd) {
+                $('#Deaccession-section').hide();
+                $('#cgdErrorMessage').hide();
+                $('#cgdNotesErrorMessage').hide();
+                $('#locationErrorMessage').hide();
+                $('#deaccessionNotesErrorMessage').hide();
+            } else if (deaccession) {
+                $('#editCDG-section').hide();
+                $('#cgdErrorMessage').hide();
+                $('#locationErrorMessage').hide();
+                $('#deaccessionNotesErrorMessage').hide();
+                $('#cgdNotesErrorMessage').hide();
+            }
+            $('#Deaccession-section').show();
+        }
+    });
 }
 
 function clearBarcodeText() {

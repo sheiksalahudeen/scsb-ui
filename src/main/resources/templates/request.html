@@ -25,16 +25,18 @@
                             <div class="row margin-0">
                                 <div class="col-xs-12  padding-0">
                                     <form>
-                                        <div class="input-group buscador-principal">
-                                            <div class="col-md-4 col-sm-4 padding-right-20 padding-left-0">
+                                        <div class="input-group buscador-principal col-lg-12 col-md-12 col-sm-12">
+                                            <div class="col-md-3 col-sm-3 col-lg-3 padding-right-20 padding-left-0">
                                                 <label class="fontcolor-dark margin-btm-10">Patron Barcode</label>
                                                 <input id="patronBarcode" name="patronBarcode" type="text" th:field="*{patronBarcode}" class="form-control themed-input"/>
+                                                <p id="patronBarcodeSearchError" style="color: red;display: none">Patron barcode is required.</p>
                                             </div>
-                                            <div class="col-md-4 col-sm-4 padding-right-50">
+                                            <div class="col-md-3 col-sm-3 col-lg-3 padding-right-20">
                                                 <label class="fontcolor-dark margin-btm-10">Item Barcode</label>
                                                 <input id="itemBarcode" name="itemBarcode" type="text" th:field="*{itemBarcode}" class="form-control themed-input"/>
+                                                <p id="itemBarcodeSearchError" style="color: red;display: none">Item barcode is required.</p>
                                             </div>
-                                            <div class="col-md-4 col-sm-4 padding-right-50">
+                                            <div class="col-md-3 col-sm-3 col-lg-3 padding-right-20">
                                                 <label class="fontcolor-dark margin-btm-10">Status</label>
                                                 <div class="select-holder">
                                                     <select id="requestStatus"
@@ -43,17 +45,27 @@
                                                             style="border: 1px solid #888988;color: #555555;outline: none;height: 50px;box-shadow: none;"
                                                             th:field="*{status}"
                                                             onchange="">
-                                                        <option value=""></option>
+                                                        <option value="">ALL</option>
+                                                        <option value="active">ACTIVE</option>
                                                         <option th:each="requestStatus : *{requestStatuses}" th:value="${requestStatus}" th:text="${requestStatus}"></option>
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="input-group-btn search-panel padding-right-10">
-                                                <button id="searchRequestsButton" class="btn themed-button themed-button-search" type="button" name="searchRequestsButton" onclick="searchRequests('searchRequests')">Search</button>
+                                            <div class="col-md-3 col-sm-3 col-lg-3">
+                                                <div class="input-group-btn search-panel padding-right-10">
+                                                    <button id="searchRequestsButton" class="btn themed-button themed-button-search" type="button" name="searchRequestsButton" onclick="searchRequests('searchRequests')">Search</button>
+                                                </div>
+                                                <div class="input-group-btn">
+                                                    <button id="clearRequestForm" class="btn themed-button themed-button-cancel" type="button" name="action" onclick="clearRequests()">Clear Search</button>
+                                                </div>
+
                                             </div>
-                                            <div class="input-group-btn">
-                                                <button id="clearRequestForm" class="btn themed-button themed-button-cancel" type="button" name="action" onclick="clearRequests()">Clear Search</button>
-                                            </div>
+                                        </div>
+                                        <div class="input-group buscador-principal col-lg-12 col-md-12 col-sm-12" id="noteAll" style="">
+                                            <strong>Note:</strong> 'Patron Barcode' or 'Item Barcode' needs to be provided to search with request status as 'All'. Neither are mandatory when searching with other request statuses.
+                                        </div>
+                                        <div class="input-group buscador-principal col-lg-12 col-md-12 col-sm-12" id="noteActive" style="display: none;">
+                                            <strong>Note:</strong> Under 'Active' request status, records under retrieval order placed, recall order placed and EDD order placed are retrieved.
                                         </div>
                                     </form>
                                 </div>

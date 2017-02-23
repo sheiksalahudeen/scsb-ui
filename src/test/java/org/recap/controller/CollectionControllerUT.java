@@ -4,14 +4,17 @@ import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.recap.RecapConstants;
+import org.recap.model.jpa.*;
 import org.recap.model.search.BibliographicMarcForm;
 import org.recap.model.search.CollectionForm;
 import org.recap.model.userManagement.UserDetailsForm;
 import org.recap.model.userManagement.UserForm;
+import org.recap.repository.jpa.RequestItemDetailsRepository;
 import org.recap.security.UserManagement;
 import org.recap.util.CollectionServiceUtil;
 import org.recap.util.MarcRecordViewUtil;
@@ -23,6 +26,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.Arrays;
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -64,6 +69,9 @@ public class CollectionControllerUT extends BaseControllerUT {
     @Mock
     HttpServletRequest httpServletRequest;
 
+    @InjectMocks
+    CollectionController collectionController;
+
     @Mock
     CollectionController getCollectionController;
 
@@ -82,12 +90,23 @@ public class CollectionControllerUT extends BaseControllerUT {
     @Mock
     private UserAuthUtil userAuthUtil;
 
+    @Mock
+    RequestItemDetailsRepository requestItemDetailsRepository;
+
     public UserAuthUtil getUserAuthUtil() {
         return userAuthUtil;
     }
 
     public void setUserAuthUtil(UserAuthUtil userAuthUtil) {
         this.userAuthUtil = userAuthUtil;
+    }
+
+    public RequestItemDetailsRepository getRequestItemDetailsRepository() {
+        return requestItemDetailsRepository;
+    }
+
+    public void setRequestItemDetailsRepository(RequestItemDetailsRepository requestItemDetailsRepository) {
+        this.requestItemDetailsRepository = requestItemDetailsRepository;
     }
 
     @Before
@@ -141,9 +160,11 @@ public class CollectionControllerUT extends BaseControllerUT {
     @Test
     public void collectionUpdate() throws Exception {
         CollectionForm collectionForm = new CollectionForm();
+        when(request.getSession()).thenReturn(session);
+        usersSessionAttributes();
         Mockito.when(getCollectionController.getCollectionServiceUtil()).thenReturn(collectionServiceUtil);
-        Mockito.when(getCollectionController.collectionUpdate(collectionForm, bindingResult, model)).thenCallRealMethod();
-        ModelAndView modelAndView = getCollectionController.collectionUpdate(collectionForm, bindingResult, model);
+        Mockito.when(getCollectionController.collectionUpdate(collectionForm, bindingResult, model, request)).thenCallRealMethod();
+        ModelAndView modelAndView = getCollectionController.collectionUpdate(collectionForm, bindingResult, model, request);
         assertNotNull(modelAndView);
         assertEquals("collection :: #itemDetailsSection", modelAndView.getViewName());
     }
@@ -162,5 +183,63 @@ public class CollectionControllerUT extends BaseControllerUT {
         when(session.getAttribute(UserManagement.REQUEST_ITEM_PRIVILEGE)).thenReturn(false);
         when(session.getAttribute(UserManagement.USER_INSTITUTION)).thenReturn(1);
         when(session.getAttribute(UserManagement.REQUEST_ALL_PRIVILEGE)).thenReturn(false);
+    }
+
+    @Test
+    public void checkCrossInstitutionBorrowed() throws Exception {
+        String itemBarcode = "123";
+        CollectionForm collectionForm = new CollectionForm();
+        collectionForm.setBarcode(itemBarcode);
+        when(getRequestItemDetailsRepository().findByItemBarcodeAndRequestStaCode(itemBarcode, RecapConstants.REQUEST_STATUS_RETRIEVAL_ORDER_PLACED)).thenReturn(getMockRequestItemEntity());
+        ModelAndView modelAndView = collectionController.checkCrossInstitutionBorrowed(collectionForm, bindingResult, model);
+        assertNotNull(modelAndView);
+        assertEquals("collection :: #itemDetailsSection", modelAndView.getViewName());
+    }
+
+    private RequestItemEntity getMockRequestItemEntity() {
+        InstitutionEntity institutionEntity1 = new InstitutionEntity();
+        institutionEntity1.setInstitutionId(1);
+        institutionEntity1.setInstitutionCode("PUL");
+        institutionEntity1.setInstitutionName("Princeton");
+
+        RequestTypeEntity requestTypeEntity1 = new RequestTypeEntity();
+        requestTypeEntity1.setRequestTypeId(1);
+        requestTypeEntity1.setRequestTypeCode("RETRIEVAL");
+        requestTypeEntity1.setRequestTypeDesc("RETRIEVAL");
+
+        RequestStatusEntity requestStatusEntity1 = new RequestStatusEntity();
+        requestStatusEntity1.setRequestStatusId(1);
+        requestStatusEntity1.setRequestStatusCode("RETRIEVAL_ORDER_PLACED");
+        requestStatusEntity1.setRequestStatusDescription("RETRIEVAL_ORDER_PLACED");
+
+        ItemEntity itemEntity1 = new ItemEntity();
+        itemEntity1.setItemId(1);
+        itemEntity1.setBarcode("123");
+        itemEntity1.setOwningInstitutionId(1);
+        itemEntity1.setInstitutionEntity(institutionEntity1);
+
+        BibliographicEntity bibliographicEntity1 = new BibliographicEntity();
+        bibliographicEntity1.setOwningInstitutionBibId("345");
+        itemEntity1.setBibliographicEntities(Arrays.asList(bibliographicEntity1));
+
+        RequestItemEntity requestItemEntity1 = new RequestItemEntity();
+        requestItemEntity1.setRequestId(1);
+        requestItemEntity1.setItemId(2);
+        requestItemEntity1.setRequestTypeId(1);
+        requestItemEntity1.setRequestingInstitutionId(1);
+        requestItemEntity1.setPatronId("123");
+        requestItemEntity1.setEmailId("test1@gmail.com");
+        requestItemEntity1.setRequestExpirationDate(new Date());
+        requestItemEntity1.setCreatedBy("Test");
+        requestItemEntity1.setCreatedDate(new Date());
+        requestItemEntity1.setStopCode("PA");
+        requestItemEntity1.setRequestStatusId(1);
+        requestItemEntity1.setNotes("Test Notes");
+        requestItemEntity1.setInstitutionEntity(institutionEntity1);
+        requestItemEntity1.setRequestTypeEntity(requestTypeEntity1);
+        requestItemEntity1.setRequestStatusEntity(requestStatusEntity1);
+        requestItemEntity1.setItemEntity(itemEntity1);
+
+        return requestItemEntity1;
     }
 }

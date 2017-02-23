@@ -7,7 +7,6 @@ import org.springframework.http.MediaType;
  * Created by SheikS on 6/20/2016.
  */
 public class RecapConstants {
-
     public static final String PATH_SEPARATOR = "/";
     public static final String PROCESSSED_RECORDS = "processedRecords";
 
@@ -425,6 +424,10 @@ public class RecapConstants {
     public static final String SERVICE_LOGOUT = ".service.logout";
     public static final String URL_PREFIX = ".url.prefix";
     public static final String REDIRECT_URI = "logout.redirect.uri";
+
+    public static final String Search_Request_ACTIVE = "active";
+    public static final String REQUEST_STATUS_RETRIEVAL_ORDER_PLACED = "RETRIEVAL_ORDER_PLACED";
+    public static final String WARNING_MESSAGE_CROSS_BORROWED_ITEM = "Warning : This item has been borrowed by other institution";
 
 
     //UserRoleController
