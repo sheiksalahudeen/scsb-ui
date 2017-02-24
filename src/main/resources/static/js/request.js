@@ -2,63 +2,27 @@
  * Created by rajeshbabuk on 25/10/16.
  */
 
-jQuery(document).ready(function ($) {
-    /***Request Tab Create Request Form Show/Hide ***/
-    $("#request .search-request a").click(function (e) {
-        loadSearchRequest();
-    });
-    $("#request .backtext a").click(function () {
-        loadCreateRequest();
-    });
+$("a[href='https://htcrecap.atlassian.net/wiki/display/RTG/Search']").attr('href',
+    'https://htcrecap.atlassian.net/wiki/display/RTG/Request');
 
-    $('#goBackLink').click(function(e){
-        $('#errorMessageId').hide();
-        $('#itemBarcodeErrorMessage').hide();
-        $('#patronBarcodeErrorMessage').hide();
-        $('#requestTypeErrorMessage').hide();
-        $('#deliveryLocationErrorMessage').hide();
-        $('#requestingInstitutionErrorMessage').hide();
-        $('#startPageErrorMessage').hide();
-        $('#endPageErrorMessage').hide();
-        $('#articleTitleErrorMessage').hide();
-        $('#patronEmailIdErrorMessage').hide();
-        $('#patronBarcodeSearchError').hide();
-        $('#itemBarcodeSearchError').hide();
-    });
-
-    $("a[href='https://htcrecap.atlassian.net/wiki/display/RTG/Search']").attr('href',
-        'https://htcrecap.atlassian.net/wiki/display/RTG/Request');
-
-    $('#errorMessageId').hide();
-    $('#itemBarcodeErrorMessage').hide();
-    $('#patronBarcodeErrorMessage').hide();
-    $('#requestTypeErrorMessage').hide();
-    $('#deliveryLocationErrorMessage').hide();
-    $('#requestingInstitutionErrorMessage').hide();
-    $('#startPageErrorMessage').hide();
-    $('#endPageErrorMessage').hide();
-    $('#articleTitleErrorMessage').hide();
-    $('#patronEmailIdErrorMessage').hide();
-    $('#itemBarcodeNotFoundErrorMessage').hide();
-
-    $('#requestStatus').change(function(){
-        var status = $('#requestStatus').val();
-        if (status == 'active'){
-            $('#noteActive').show();
-            $('#noteAll').hide();
-        }
-        else if (isBlankValue(status)){
-            $('#noteAll').show();
-            $('#noteActive').hide();
-        }
-        else {
-            $('#noteAll').hide();
-            $('#noteActive').hide();
-        }
-        $('#patronBarcodeSearchError').hide();
-        $('#itemBarcodeSearchError').hide();
-    });
-});
+function onChangeRequestStatus() {
+    console.log("change");
+    var status = $('#requestStatus').val();
+    if (status == 'active'){
+        $('#noteActive').show();
+        $('#noteAll').hide();
+    }
+    else if (isBlankValue(status)){
+        $('#noteAll').show();
+        $('#noteActive').hide();
+    }
+    else {
+        $('#noteAll').hide();
+        $('#noteActive').hide();
+    }
+    $('#patronBarcodeSearchError').hide();
+    $('#itemBarcodeSearchError').hide();
+}
 
 $(function() {
     $("#searchRequestsSection input").keypress(function (e) {
@@ -84,6 +48,7 @@ function loadCreateRequest() {
             console.log("completed");
             $('#requestContentId').html(response);
             $("#request .request-main-section").hide();
+            $("#goBackLink").hide();
             $("#request .create-request-section").show();
         }
     });
@@ -100,6 +65,7 @@ function loadSearchRequest() {
             console.log("completed");
             $('#requestContentId').html(response);
             $("#request .request-main-section").show();
+            $("#goBackLink").show();
             $("#request .create-request-section").hide();
         }
     });
@@ -107,34 +73,8 @@ function loadSearchRequest() {
 
 function searchRequests(action) {
     var isValidSearch = validSearch();
-    if(isValidSearch){
-        var $form = $('#request-form');
-        var url = $form.attr('action') + "?action=" + action;
-        var request = $.ajax({
-            url: url,
-            type: 'post',
-            data: $form.serialize(),
-            success: function (response) {
-                console.log("completed");
-                $('#requestContentId').html(response);
-                $("#request .request-main-section").show();
-                $("#request .create-request-section").hide();
-                var status = $('#requestStatus').val();
-                if (status == 'active'){
-                    $('#noteActive').show();
-                    $('#noteAll').hide();
-                }
-                else if (isBlankValue(status)){
-                    $('#noteAll').show();
-                    $('#noteActive').hide();
-                }
-                else {
-                    $('#noteAll').hide();
-                    $('#noteActive').hide();
-                }
-
-            }
-        });
+    if (isValidSearch) {
+        searchRequestsByAction(action);
     }
     else {
         $(".search-results-container").css('display', 'none');
@@ -156,8 +96,6 @@ function validSearch() {
     return isValidSearch;
 }
 
-
-
 function clearRequests() {
     $("#patronBarcode").val('');
     $("#itemBarcode").val('');
@@ -170,7 +108,7 @@ function clearRequests() {
 }
 
 
-function searchRequestsPagination(action) {
+function searchRequestsByAction(action) {
     var $form = $('#request-form');
     var url = $form.attr('action') + "?action=" + action;
     var request = $.ajax({
@@ -179,34 +117,46 @@ function searchRequestsPagination(action) {
         data: $form.serialize(),
         success: function (response) {
             console.log("completed");
-            $('#requestContentId').html(response);
+            $('#searchRequestsSection').html(response);
             $("#request .request-main-section").show();
             $("#request .create-request-section").hide();
+            var status = $('#requestStatus').val();
+            if (status == 'active'){
+                $('#noteActive').show();
+                $('#noteAll').hide();
+            }
+            else if (isBlankValue(status)){
+                $('#noteAll').show();
+                $('#noteActive').hide();
+            }
+            else {
+                $('#noteAll').hide();
+                $('#noteActive').hide();
+            }
         }
     });
 }
 
-
 function requestsFirstPage() {
-    searchRequestsPagination('first');
+    searchRequestsByAction('first');
 }
 
 function requestsLastPage() {
-    searchRequestsPagination('last');
+    searchRequestsByAction('last');
 }
 
 function requestsPreviousPage() {
     $('#pageNumber').val(parseInt($('#pageNumber').val()) - 1);
-    searchRequestsPagination('previous');
+    searchRequestsByAction('previous');
 }
 
 function requestsNextPage() {
     $('#pageNumber').val(parseInt($('#pageNumber').val()) + 1);
-    searchRequestsPagination('next');
+    searchRequestsByAction('next');
 }
 
 function requestsOnPageSizeChange() {
-    searchRequestsPagination('requestPageSizeChange');
+    searchRequestsByAction('requestPageSizeChange');
 }
 
 function populateItemDetails() {
@@ -529,4 +479,24 @@ function showNotesPopup(index) {
     var notes = $("#notes-" + index).val();
     $("#requestNotesData").html(notes);
     $('#requestNotesModal').modal('show');
+}
+
+function togglePatronBarcodeSearch(){
+    var patronBarcode = $('#patronBarcode').val();
+    if(isBlankValue(patronBarcode)){
+        $('#patronBarcodeSearchError').show();
+    }
+    else{
+        $('#patronBarcodeSearchError').hide();
+    }
+}
+
+function toggleItemBarcodeSearch(){
+    var itemBarcode = $('#itemBarcode').val();
+    if(isBlankValue(itemBarcode)){
+        $('#itemBarcodeSearchError').show();
+    }
+    else{
+        $('#itemBarcodeSearchError').hide();
+    }
 }
