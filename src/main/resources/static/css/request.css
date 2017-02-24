@@ -6,6 +6,6 @@ thead th {
     Height: 70px;
 }
 
-#errorMessageId, #itemBarcodeErrorMessage, #patronBarcodeErrorMessage, #requestTypeErrorMessage, #deliveryLocationErrorMessage, #requestingInstitutionErrorMessage, #patronEmailIdErrorMessage {
+#errorMessageId, #itemBarcodeErrorMessage, #patronBarcodeErrorMessage, #requestTypeErrorMessage, #deliveryLocationErrorMessage, #requestingInstitutionErrorMessage, #patronEmailIdErrorMessage, #startPageErrorMessage, #endPageErrorMessage, #articleTitleErrorMessage {
     display: none;
 }
