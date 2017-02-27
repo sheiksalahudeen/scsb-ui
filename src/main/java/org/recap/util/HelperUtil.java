@@ -1,9 +1,11 @@
 package org.recap.util;
 
 import org.apache.commons.lang3.StringUtils;
+import org.recap.RecapConstants;
 import org.recap.spring.ApplicationContextProvider;
 import org.springframework.context.ApplicationContext;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -18,6 +20,22 @@ public class HelperUtil {
     public static <T> T getBean(Class<T> requiredType) {
         ApplicationContext applicationContext = ApplicationContextProvider.getInstance().getApplicationContext();
         return applicationContext.getBean(requiredType);
+    }
+
+    public static String getInstitutionFromRequest(HttpServletRequest request) {
+        String institution = request.getParameter("institution");
+        if(StringUtils.isBlank(institution)) {
+            institution = (String) request.getAttribute(RecapConstants.RECAP_INSTITUTION_ID);
+        }
+        if(StringUtils.isBlank(institution)) {
+            Cookie[] cookies = request.getCookies();
+            for(Cookie cookie : cookies) {
+                if(StringUtils.equals(cookie.getName(), RecapConstants.RECAP_INSTITUTION_ID)) {
+                    institution = cookie.getValue();
+                }
+            }
+        }
+        return institution;
     }
 }
 
