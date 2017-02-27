@@ -164,7 +164,7 @@ public class ReCAPExceptionTranslationFilter extends GenericFilterBean {
         SecurityContextHolder.getContext().setAuthentication(null);
         requestCache.saveRequest(request, response);
         logger.debug("Calling Authentication entry point.");
-        String institution = HelperUtil.getAttributeValueFromRequest(request, RecapConstants.RECAP_INSTITUTION_ID);
+        String institution = HelperUtil.getInstitutionFromRequest(request);
         if(StringUtils.equals(institution, "3")) {
             this.authenticationEntryPoint.commence(request,response,reason);
         } else {
