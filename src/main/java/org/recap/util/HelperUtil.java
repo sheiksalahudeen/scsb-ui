@@ -29,9 +29,11 @@ public class HelperUtil {
         }
         if(StringUtils.isBlank(institution)) {
             Cookie[] cookies = request.getCookies();
-            for(Cookie cookie : cookies) {
-                if(StringUtils.equals(cookie.getName(), RecapConstants.RECAP_INSTITUTION_ID)) {
-                    institution = cookie.getValue();
+            if (null != cookies) {
+                for(Cookie cookie : cookies) {
+                    if(StringUtils.equals(cookie.getName(), RecapConstants.RECAP_INSTITUTION_ID)) {
+                        institution = cookie.getValue();
+                    }
                 }
             }
         }
