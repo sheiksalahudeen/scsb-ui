@@ -9,6 +9,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -20,17 +21,15 @@ public class ReCAPInstitutionFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // Adding institution Id to the request attribute
-        String institutionId = (String) request.getParameter("institution");
-        UserInstitutionCache userInstitutionCache = HelperUtil.getBean(UserInstitutionCache.class);
-        CsrfToken csrfToken = (CsrfToken) request.getAttribute("_csrf");
-        String token = csrfToken.getToken();
-        if(StringUtils.isNotBlank(institutionId)) {
-            userInstitutionCache.addCsrf(token, institutionId);
-        }
+        String institutionId = HelperUtil.getInstitutionFromRequest(request);
 
-        String institutionForCsrf = userInstitutionCache.getInstitutionForCsrf(token);
-        if(StringUtils.isNotBlank(institutionForCsrf)) {
-            request.setAttribute(RecapConstants.RECAP_INSTITUTION_ID, institutionForCsrf);
+        if(StringUtils.isNotBlank(institutionId)) {
+            request.setAttribute(RecapConstants.RECAP_INSTITUTION_ID, institutionId);
+            Cookie cookie = new Cookie(RecapConstants.RECAP_INSTITUTION_ID, institutionId);
+            cookie.setMaxAge(-1);
+            cookie.setHttpOnly(false);
+            cookie.setPath("/");
+            response.addCookie(cookie);
         }
         filterChain.doFilter(request, response);
     }
