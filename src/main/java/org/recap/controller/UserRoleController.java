@@ -153,7 +153,7 @@ public class UserRoleController {
 
     //DeleteUser Screen
     @ResponseBody
-    @RequestMapping(value = "/userRoles/deleteUser", method = RequestMethod.POST)
+    @RequestMapping(value = "/userRoles/deleteUser", method = RequestMethod.GET)
     public ModelAndView deleteUserRole(String networkLoginId, Integer userId, HttpServletRequest request,Integer pagesize,Integer pageNumber,Integer totalPageCount) {
         HttpSession session = request.getSession();
         boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
@@ -198,7 +198,7 @@ public class UserRoleController {
 
     //DeleteUser On Confirm
     @ResponseBody
-    @RequestMapping(value = "/userRoles/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "/userRoles/delete", method = RequestMethod.GET)
     public ModelAndView deleteUser(@Valid @ModelAttribute("userRoleForm") UserRoleForm userRoleForm, Model model, Integer userId, String networkLoginId, Integer pageNumber, Integer totalPageCount, Integer pageSize, HttpServletRequest request) {
         HttpSession session = request.getSession();
         boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
@@ -319,7 +319,7 @@ public class UserRoleController {
 
     //Edit User
     @ResponseBody
-    @RequestMapping(value = "/userRoles/editUser", method = RequestMethod.POST)
+    @RequestMapping(value = "/userRoles/editUser", method = RequestMethod.GET)
     public ModelAndView editUser(@ModelAttribute("userId") Integer userId, @ModelAttribute("networkLoginId") String networkLoginId, HttpServletRequest request) {
         HttpSession session = request.getSession();
         boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
@@ -360,7 +360,7 @@ public class UserRoleController {
 
     //Save Edited User
     @ResponseBody
-    @RequestMapping(value = "/userRoles/saveEditUserDetails", method = RequestMethod.POST)
+    @RequestMapping(value = "/userRoles/saveEditUserDetails", method = RequestMethod.GET)
     public ModelAndView saveEditUserDetails(@ModelAttribute("userId") Integer userId, @ModelAttribute("networkLoginId") String networkLoginId,
                                             @ModelAttribute("userDescription") String userDescription,
                                             @ModelAttribute("institutionId") Integer institutionId,

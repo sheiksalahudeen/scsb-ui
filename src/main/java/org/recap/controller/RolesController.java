@@ -113,7 +113,7 @@ public class RolesController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=editRole")
+    @RequestMapping(value = "/roles", method = RequestMethod.GET, params = "action=editRole")
     public ModelAndView editRole(Integer roleId, String roleName, String roleDescription, String permissionName) {
         permissionName = HtmlUtils.htmlUnescape(permissionName);
         RolesForm rolesForm = getAllPermissionNames();
@@ -127,7 +127,7 @@ public class RolesController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=saveEditedRole")
+    @RequestMapping(value = "/roles", method = RequestMethod.GET, params = "action=saveEditedRole")
     public ModelAndView saveEditedRole(@ModelAttribute("roleId") Integer roleId,
                                        @ModelAttribute("roleName") String roleName,
                                        @ModelAttribute("roleDescription") String roleDescription,
@@ -159,7 +159,7 @@ public class RolesController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=deleteRole")
+    @RequestMapping(value = "/roles", method = RequestMethod.GET, params = "action=deleteRole")
     public ModelAndView deleteRole(Integer roleId, String roleName, String roleDescription, String permissionName,
                                    Integer pageSize,Integer pageNumber,Integer totalPageCount) {
         permissionName = HtmlUtils.htmlUnescape(permissionName);
@@ -180,7 +180,7 @@ public class RolesController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=delete")
+    @RequestMapping(value = "/roles", method = RequestMethod.GET, params = "action=delete")
     public ModelAndView delete(@Valid @ModelAttribute("rolesForm") RolesForm rolesForm,
                                Model model) {
         RoleEntity roleEntity = rolesDetailsRepositorty.findByRoleId(rolesForm.getRoleId());
