@@ -243,7 +243,7 @@ function deleteUserRole(networkLoginId, userId) {
     var url = "/userRoles/deleteUser";
     $.ajax({
         url: url,
-        type: 'post',
+        type: 'get',
         data: {networkLoginId: networkLoginId, userId: userId,pagesize:pagesize,pageNumber:pageNumber,totalPageCount :totalPageCount },
         success: function (response) {
             $('#userRolesContentId').html(response);
@@ -267,7 +267,7 @@ function deleteUser() {
     var url = "/userRoles/delete";
     $.ajax({
         url: url,
-        type: 'post',
+        type: 'get',
         data: {userId: userId,networkLoginId:networkLoginId,pageNumber:pageNumber,totalPageCount:totalPageCount,pageSize:pageSize},
         success: function (response) {
             $('#userRolesContentId').html(response);
@@ -283,7 +283,7 @@ function editUser(userId, networkLoginId) {
     var url = "/userRoles/editUser";
     $.ajax({
         url: url,
-        type: 'post',
+        type: 'get',
         data: {userId: userId, networkLoginId: networkLoginId},
         success: function (response) {
             $('#userRolesContentId').html(response);
@@ -326,7 +326,7 @@ function editUserDetails() {
             var url = "/userRoles/saveEditUserDetails";
             $.ajax({
                 url: url,
-                type: 'post',
+                type: 'get',
                 data: {
                     userId: userId,
                     networkLoginId: networkLoginId,

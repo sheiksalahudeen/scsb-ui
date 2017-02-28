@@ -48,6 +48,15 @@ jQuery(document).ready(function ($) {
     $("a[href='https://htcrecap.atlassian.net/wiki/display/RTG/Search']").attr('href',
         'https://htcrecap.atlassian.net/wiki/pages/viewpage.action?pageId=25665733');
 
+    $(".search-role-section input").keypress(function (e) {
+        if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+            $("#searchRoles").click();
+            return false;
+        } else {
+            return true;
+        }
+    });
+
 });
 
 function loadCreateRole() {
@@ -142,7 +151,7 @@ function editRole(roleId,roleNames,roleDescription,permissionNames){
     var url = $form.attr('action') + "?action=editRole";
     $.ajax({
         url: url,
-        type: 'post',
+        type: 'get',
         data: {roleId:roleId,roleName:roleNames,roleDescription:roleDescription,permissionName:permissionNames},
         success: function (response) {
             $('#rolesContentId').html(response);
@@ -166,7 +175,7 @@ function saveEditedRole(){
         var url = $form.attr('action') + "?action=saveEditedRole";
         $.ajax({
             url: url,
-            type: 'post',
+            type: 'get',
             data:{roleId:roleId,permissionNames:permissionNames,roleName:roleName,roleDescription:roleDescription},
             success: function (response) {
                 $('#rolesContentId').html(response);
@@ -188,7 +197,7 @@ function deleteFromDb(){
     var url = $form.attr('action') + "?action=delete";
     $.ajax({
         url: url,
-        type: 'post',
+        type: 'get',
         data: $form.serialize(),
         success: function (response) {
             $('#rolesContentId').html(response);
@@ -210,7 +219,7 @@ function deleteRole(roleId,roleNames,roleDescription,permissionNames) {
     var url = $form.attr('action') + "?action=deleteRole";
     $.ajax({
         url: url,
-        type: 'post',
+        type: 'get',
         data: {roleId:roleId,roleName:roleNames,roleDescription:roleDescription,permissionName:permissionNames,
                pageSize:pageSize,pageNumber:pageNumber,totalPageCount:totalPageCount},
         success: function (response) {
