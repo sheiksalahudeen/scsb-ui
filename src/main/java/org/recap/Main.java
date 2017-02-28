@@ -23,6 +23,9 @@ public class Main {
 	@Value("${tomcat.maxParameterCount}")
 	Integer tomcatMaxParameterCount;
 
+	@Value("${server.secure}")
+	boolean tomcatSecure;
+
 	@Bean
 	public EmbeddedServletContainerFactory servletContainerFactory() {
 		TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory();
@@ -30,6 +33,7 @@ public class Main {
 			@Override
 			public void customize(Connector connector) {
 				connector.setMaxParameterCount(tomcatMaxParameterCount);
+				connector.setSecure(tomcatSecure);
 			}
 		});
 		return factory;
