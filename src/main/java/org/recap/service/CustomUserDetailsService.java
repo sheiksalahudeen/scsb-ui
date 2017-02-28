@@ -39,7 +39,7 @@ public class CustomUserDetailsService implements AuthenticationUserDetailsServic
         String lowercaseLogin = login.toLowerCase();
 
         log.debug("Authenticating '{}'", login);
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 
         if (admins != null && admins.contains(lowercaseLogin)) {
             grantedAuthorities.add(new SimpleGrantedAuthority(RecapConstants.ADMIN));

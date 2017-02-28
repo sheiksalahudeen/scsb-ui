@@ -425,7 +425,7 @@ public class RecapConstants {
     public static final String URL_PREFIX = ".url.prefix";
     public static final String REDIRECT_URI = "logout.redirect.uri";
 
-    public static final String Search_Request_ACTIVE = "active";
+    public static final String SEARCH_REQUEST_ACTIVE = "active";
     public static final String REQUEST_STATUS_RETRIEVAL_ORDER_PLACED = "RETRIEVAL_ORDER_PLACED";
     public static final String WARNING_MESSAGE_CROSS_BORROWED_ITEM = "Warning : This item has been borrowed by other institution";
 
@@ -438,6 +438,9 @@ public class RecapConstants {
     //View
     public static final String VIEW_SEARCH_RECORDS="searchRecords";
     public static final String VIEW_SEARCH_RECORDS_REQUEST="searchRecordsRequest";
+    public static final String VIEW_SEARCH_REQUESTS_SECTION="request :: #searchRequestsSection";
+
+    public static final String USERS_TAB_CLICKED = "Users Tab Clicked";
 
     //Logger
     public static final String LOG_ERROR="error-->";

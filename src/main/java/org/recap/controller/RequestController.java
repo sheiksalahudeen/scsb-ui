@@ -170,7 +170,7 @@ public class RequestController {
             logger.error(RecapConstants.LOG_ERROR,exception);
             logger.debug(exception.getMessage());
         }
-        return new ModelAndView("request :: #searchRequestsSection", "requestForm", requestForm);
+        return new ModelAndView(RecapConstants.VIEW_SEARCH_REQUESTS_SECTION, RecapConstants.REQUEST_FORM, requestForm);
     }
 
     @ResponseBody
@@ -181,7 +181,7 @@ public class RequestController {
         requestForm.resetPageNumber();
         searchAndSetResults(requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
-        return new ModelAndView("request :: #searchRequestsSection", "requestForm", requestForm);
+        return new ModelAndView(RecapConstants.VIEW_SEARCH_REQUESTS_SECTION, RecapConstants.REQUEST_FORM, requestForm);
     }
 
     @ResponseBody
@@ -192,7 +192,7 @@ public class RequestController {
         requestForm.setPageNumber(requestForm.getTotalPageCount() - 1);
         searchAndSetResults(requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
-        return new ModelAndView("request :: #searchRequestsSection", "requestForm", requestForm);
+        return new ModelAndView(RecapConstants.VIEW_SEARCH_REQUESTS_SECTION, RecapConstants.REQUEST_FORM, requestForm);
     }
 
     @ResponseBody
@@ -202,7 +202,7 @@ public class RequestController {
                                        Model model) {
         searchAndSetResults(requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
-        return new ModelAndView("request :: #searchRequestsSection", "requestForm", requestForm);
+        return new ModelAndView(RecapConstants.VIEW_SEARCH_REQUESTS_SECTION, RecapConstants.REQUEST_FORM, requestForm);
     }
 
     @ResponseBody
@@ -212,7 +212,7 @@ public class RequestController {
                                    Model model) {
         searchAndSetResults(requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
-        return new ModelAndView("request :: #searchRequestsSection", "requestForm", requestForm);
+        return new ModelAndView(RecapConstants.VIEW_SEARCH_REQUESTS_SECTION, RecapConstants.REQUEST_FORM, requestForm);
     }
 
     @ResponseBody
@@ -223,7 +223,7 @@ public class RequestController {
         requestForm.setPageNumber(getPageNumberOnPageSizeChange(requestForm));
         searchAndSetResults(requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
-        return new ModelAndView("request :: #searchRequestsSection", "requestForm", requestForm);
+        return new ModelAndView(RecapConstants.VIEW_SEARCH_REQUESTS_SECTION, RecapConstants.REQUEST_FORM, requestForm);
     }
 
     @ResponseBody
@@ -247,7 +247,7 @@ public class RequestController {
             requestStatuses.add(requestStatusEntity.getRequestStatusDescription());
         }
         requestForm.setRequestStatuses(requestStatuses);
-        model.addAttribute("requestForm", requestForm);
+        model.addAttribute(RecapConstants.REQUEST_FORM, requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
         return new ModelAndView(RecapConstants.REQUEST, RecapConstants.REQUEST_FORM, requestForm);
     }

@@ -33,7 +33,7 @@ public class RequestServiceUtil {
 
         Page<RequestItemEntity> requestItemEntities;
         if (StringUtils.isNotBlank(patronBarcode) && StringUtils.isNotBlank(itemBarcode) && StringUtils.isNotBlank(status)) {
-            if (status.equals(RecapConstants.Search_Request_ACTIVE)) {
+            if (status.equals(RecapConstants.SEARCH_REQUEST_ACTIVE)) {
                 requestItemEntities = requestItemDetailsRepository.findByPatronBarcodeAndItemBarcodeAndActive(pageable, patronBarcode, itemBarcode);
             } else {
                 requestItemEntities = requestItemDetailsRepository.findByPatronBarcodeAndItemBarcodeAndStatus(pageable, patronBarcode, itemBarcode, status);
@@ -41,13 +41,13 @@ public class RequestServiceUtil {
         } else if (StringUtils.isNotBlank(patronBarcode) && StringUtils.isNotBlank(itemBarcode) && StringUtils.isBlank(status)) {
             requestItemEntities = requestItemDetailsRepository.findByPatronBarcodeAndItemBarcode(pageable, patronBarcode, itemBarcode);
         } else if (StringUtils.isNotBlank(patronBarcode) && StringUtils.isBlank(itemBarcode) && StringUtils.isNotBlank(status)) {
-            if (status.equals(RecapConstants.Search_Request_ACTIVE)) {
+            if (status.equals(RecapConstants.SEARCH_REQUEST_ACTIVE)) {
                 requestItemEntities = requestItemDetailsRepository.findByPatronBarcodeAndActive(pageable, patronBarcode);
             } else {
                 requestItemEntities = requestItemDetailsRepository.findByPatronBarcodeAndStatus(pageable, patronBarcode, status);
             }
         } else if (StringUtils.isBlank(patronBarcode) && StringUtils.isNotBlank(itemBarcode) && StringUtils.isNotBlank(status)) {
-            if (status.equals(RecapConstants.Search_Request_ACTIVE)) {
+            if (status.equals(RecapConstants.SEARCH_REQUEST_ACTIVE)) {
                 requestItemEntities = requestItemDetailsRepository.findByItemBarcodeAndActive(pageable, itemBarcode);
             } else {
                 requestItemEntities = requestItemDetailsRepository.findByItemBarcodeAndStatus(pageable, itemBarcode, status);
@@ -57,7 +57,7 @@ public class RequestServiceUtil {
         } else if (StringUtils.isBlank(patronBarcode) && StringUtils.isNotBlank(itemBarcode) && StringUtils.isBlank(status)) {
             requestItemEntities = requestItemDetailsRepository.findByItemBarcode(pageable, itemBarcode);
         } else if (StringUtils.isBlank(patronBarcode) && StringUtils.isBlank(itemBarcode) && StringUtils.isNotBlank(status)) {
-            if (status.equals(RecapConstants.Search_Request_ACTIVE)) {
+            if (status.equals(RecapConstants.SEARCH_REQUEST_ACTIVE)) {
                 requestItemEntities = requestItemDetailsRepository.findAllActive(pageable);
             } else {
                 requestItemEntities = requestItemDetailsRepository.findByStatus(pageable, status);
