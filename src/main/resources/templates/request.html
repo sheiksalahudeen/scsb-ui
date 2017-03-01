@@ -363,7 +363,7 @@
                                                                         th:field="${requestForm.deliveryLocationInRequest}"
                                                                         th:onchange="'javascript:toggleDeliveryLocationValidation()'">
                                                                     <option value=""></option>
-                                                                    <option th:each="location : ${requestForm.deliveryLocations}" th:value="${location}" th:text="${location}"></option>
+                                                                    <option th:each="location : ${requestForm.deliveryLocations}" th:value="${location.getCustomerCode()}" th:text="${location.getDescription()}"></option>
                                                                 </select>
                                                                 <span id="deliveryLocationErrorMessage" style="color: red;">Delivery location is required.</span>
                                                             </div>

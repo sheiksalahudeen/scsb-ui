@@ -215,6 +215,8 @@ public class RecapConstants {
 
     //Request
     public static final String REQUEST_ID = "requestId";
+    public static final String REQUEST_PRIVATE_ERROR_USER_NOT_PERMITTED = "User is not permitted to request private item(s)";
+    public static final String REQUEST_ERROR_USER_NOT_PERMITTED = "User is not permitted to request item(s)";
 
     public static final String SEARCH_RESULT_ERROR_NO_RECORDS_FOUND="No search results found. Please refine search conditions.";
     public static final String SEARCH_RESULT_ERROR_INVALID_CHARACTERS="No search results found. Search conditions, has invalid characters (double quotes [\"],open parenthesis [(], backslash [\\], curly braces[{}] and caret [^). Please refine search conditions.";
@@ -283,6 +285,7 @@ public class RecapConstants {
     public static final String DELIVERY_LOCATION = "deliveryLocation";
     public static final String REQUEST_NOTES = "requestNotes";
     public static final String ERROR_MESSAGE = "errorMessage";
+    public static final String NO_PERMISSION_ERROR_MESSAGE = "noPermissionErrorMessage";
 
     public static final String USER_ROLES="userRolesSearch";
     public static final Integer CGD_PRIVATE=3;
@@ -426,5 +429,7 @@ public class RecapConstants {
     public static final String Search_Request_ACTIVE = "active";
     public static final String REQUEST_STATUS_RETRIEVAL_ORDER_PLACED = "RETRIEVAL_ORDER_PLACED";
     public static final String WARNING_MESSAGE_CROSS_BORROWED_ITEM = "Warning : This item has been borrowed by other institution";
+
+    public static final String PRIVATE = "Private";
 
 }

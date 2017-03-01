@@ -180,8 +180,8 @@ public class SearchRecordsControllerUT extends BaseControllerUT{
         searchRecordsRequest = new SearchRecordsRequest();
         ModelAndView modelAndView1 = new ModelAndView();
         modelAndView1.setViewName("searchRecords");
-        when(searchRecordsController.requestRecords(searchRecordsRequest,bindingResult,model,redirectAttributes)).thenReturn(modelAndView1);
-        ModelAndView modelAndView = searchRecordsController.requestRecords(searchRecordsRequest,bindingResult,model,redirectAttributes);
+        when(searchRecordsController.requestRecords(searchRecordsRequest,bindingResult,model, request, redirectAttributes)).thenReturn(modelAndView1);
+        ModelAndView modelAndView = searchRecordsController.requestRecords(searchRecordsRequest,bindingResult,model, request, redirectAttributes);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
     }

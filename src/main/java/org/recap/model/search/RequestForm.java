@@ -1,5 +1,7 @@
 package org.recap.model.search;
 
+import org.recap.model.jpa.CustomerCodeEntity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +40,7 @@ public class RequestForm {
     private boolean showResults = false;
     private List<String> requestingInstitutions = new ArrayList<>();
     private List<String> requestTypes = new ArrayList<>();
-    private List<String> deliveryLocations = new ArrayList<>();
+    private List<CustomerCodeEntity> deliveryLocations = new ArrayList<>();
     private List<SearchResultRow> searchResultRows = new ArrayList<>();
     private List<String> requestStatuses = new ArrayList<>();
 
@@ -282,11 +284,11 @@ public class RequestForm {
         this.requestTypes = requestTypes;
     }
 
-    public List<String> getDeliveryLocations() {
+    public List<CustomerCodeEntity> getDeliveryLocations() {
         return deliveryLocations;
     }
 
-    public void setDeliveryLocations(List<String> deliveryLocations) {
+    public void setDeliveryLocations(List<CustomerCodeEntity> deliveryLocations) {
         this.deliveryLocations = deliveryLocations;
     }
 
