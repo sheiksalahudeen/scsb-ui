@@ -174,9 +174,13 @@ function populateItemDetails() {
                 $('#itemTitleId').val(jsonResponse['itemTitle']);
                 $('#itemOwningInstitutionId').val(jsonResponse['itemOwningInstitution']);
                 var errorMessage = jsonResponse['errorMessage'];
+                var noPermissionErrorMessage = jsonResponse['noPermissionErrorMessage'];
                 $('#itemBarcodeErrorMessage').hide();
                 if (errorMessage != null && errorMessage != '') {
                     $('#itemBarcodeNotFoundErrorMessage').html(errorMessage);
+                    $('#itemBarcodeNotFoundErrorMessage').show();
+                } else if (noPermissionErrorMessage != null && noPermissionErrorMessage != '') {
+                    $('#itemBarcodeNotFoundErrorMessage').html(noPermissionErrorMessage);
                     $('#itemBarcodeNotFoundErrorMessage').show();
                 } else {
                     $('#itemBarcodeNotFoundErrorMessage').html('');

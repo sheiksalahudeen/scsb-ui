@@ -41,7 +41,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -135,19 +134,25 @@ public class RequestController {
     }
 
     @RequestMapping("/request")
-    public String collection(Model model, HttpServletRequest request) {
+    public String request(Model model, HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession();
         boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REQUEST_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
         if (authenticated) {
-            UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(session, UserManagement.REQUEST_ITEM_PRIVILEGE);
+            UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(session, UserManagement.REQUEST_PRIVILEGE);
             RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm);
             Object requestedBarcode = ((BindingAwareModelMap) model).get(RecapConstants.REQUESTED_BARCODE);
-            Object itemTitle = ((BindingAwareModelMap) model).get(RecapConstants.REQUESTED_ITEM_TITLE);
-            Object itemOwningInstitution = ((BindingAwareModelMap) model).get(RecapConstants.REQUESTED_ITEM_OWNING_INSTITUTION);
-            if(requestedBarcode  != null && itemTitle != null && itemOwningInstitution != null){
+            if (requestedBarcode != null) {
                 requestForm.setItemBarcodeInRequest((String) requestedBarcode);
-                requestForm.setItemTitle((String) itemTitle);
-                requestForm.setItemOwningInstitution((String) itemOwningInstitution);
+                String stringJson = populateItem(requestForm, null, model, request);
+                if (stringJson != null) {
+                    JSONObject jsonObject = new JSONObject(stringJson);
+                    Object itemTitle = jsonObject.has(RecapConstants.REQUESTED_ITEM_TITLE) ? jsonObject.get(RecapConstants.REQUESTED_ITEM_TITLE) : null;
+                    Object itemOwningInstitution = jsonObject.has(RecapConstants.REQUESTED_ITEM_OWNING_INSTITUTION) ? jsonObject.get(RecapConstants.REQUESTED_ITEM_OWNING_INSTITUTION) : null;
+                    if (itemTitle != null && itemOwningInstitution != null) {
+                        requestForm.setItemTitle((String) itemTitle);
+                        requestForm.setItemOwningInstitution((String) itemOwningInstitution);
+                    }
+                }
             }
             model.addAttribute("requestForm", requestForm);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
@@ -230,7 +235,7 @@ public class RequestController {
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=loadCreateRequest")
     public ModelAndView loadCreateRequest(Model model,HttpServletRequest request) {
-        UserDetailsForm userDetailsForm=getUserAuthUtil().getUserDetails(request.getSession(),UserManagement.REQUEST_ITEM_PRIVILEGE);
+        UserDetailsForm userDetailsForm=getUserAuthUtil().getUserDetails(request.getSession(),UserManagement.REQUEST_PRIVILEGE);
         RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm);
         model.addAttribute("requestForm", requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
@@ -258,7 +263,7 @@ public class RequestController {
 
         List<String> requestingInstitutions = new ArrayList<>();
         List<String> requestTypes = new ArrayList<>();
-        List<String> deliveryLocations = new ArrayList<>();
+        List<CustomerCodeEntity> deliveryLocations = new ArrayList<>();
 
         Iterable<InstitutionEntity> institutionEntities = getInstitutionDetailsRepository().findAll();
         for (Iterator iterator = institutionEntities.iterator(); iterator.hasNext(); ) {
@@ -278,7 +283,7 @@ public class RequestController {
         for (Iterator iterator = customerCodeEntities.iterator(); iterator.hasNext(); ) {
             CustomerCodeEntity customerCodeEntity = (CustomerCodeEntity) iterator.next();
             if (userDetailsForm.getLoginInstitutionId() == customerCodeEntity.getOwningInstitutionId() || userDetailsForm.isRecapUser() || userDetailsForm.isSuperAdmin()) {
-                deliveryLocations.add(customerCodeEntity.getDescription());
+                deliveryLocations.add(customerCodeEntity);
             }
         }
 
@@ -309,9 +314,13 @@ public class RequestController {
                     if (CollectionUtils.isNotEmpty(itemEntities)) {
                         for (ItemEntity itemEntity : itemEntities) {
                             if (null != itemEntity && CollectionUtils.isNotEmpty(itemEntity.getBibliographicEntities())) {
-                                userDetailsForm = getUserAuthUtil().getUserDetails(request.getSession(),UserManagement.REQUEST_ITEM_PRIVILEGE);
+                                userDetailsForm = getUserAuthUtil().getUserDetails(request.getSession(),UserManagement.REQUEST_PRIVILEGE);
                                 if (itemEntity.getCollectionGroupId()==RecapConstants.CGD_PRIVATE && !userDetailsForm.isSuperAdmin() && !userDetailsForm.isRecapUser() && !userDetailsForm.getLoginInstitutionId().equals(itemEntity.getOwningInstitutionId())) {
-                                    jsonObject.put("errorMessage", "User is not permitted to request private item(s)");
+                                    jsonObject.put(RecapConstants.NO_PERMISSION_ERROR_MESSAGE, RecapConstants.REQUEST_PRIVATE_ERROR_USER_NOT_PERMITTED);
+                                    return jsonObject.toString();
+                                } else if (!userDetailsForm.isRecapPermissionAllowed()) {
+                                    jsonObject.put(RecapConstants.NO_PERMISSION_ERROR_MESSAGE, RecapConstants.REQUEST_ERROR_USER_NOT_PERMITTED);
+                                    return jsonObject.toString();
                                 } else {
                                     for (BibliographicEntity bibliographicEntity : itemEntity.getBibliographicEntities()) {
                                         String bibContent = new String(bibliographicEntity.getContent());
@@ -330,13 +339,13 @@ public class RequestController {
                 }
             }
             if (CollectionUtils.isNotEmpty(itemTitles)) {
-                jsonObject.put("itemTitle", StringUtils.join(itemTitles, " || "));
+                jsonObject.put(RecapConstants.REQUESTED_ITEM_TITLE, StringUtils.join(itemTitles, " || "));
             }
             if (CollectionUtils.isNotEmpty(itemOwningInstitutions)) {
-                jsonObject.put("itemOwningInstitution", StringUtils.join(itemOwningInstitutions, ","));
+                jsonObject.put(RecapConstants.REQUESTED_ITEM_OWNING_INSTITUTION, StringUtils.join(itemOwningInstitutions, ","));
             }
             if (CollectionUtils.isNotEmpty(invalidBarcodes)) {
-                jsonObject.put("errorMessage", RecapConstants.BARCODES_NOT_FOUND + " - " + StringUtils.join(invalidBarcodes, ","));
+                jsonObject.put(RecapConstants.ERROR_MESSAGE, RecapConstants.BARCODES_NOT_FOUND + " - " + StringUtils.join(invalidBarcodes, ","));
             }
         }
         return jsonObject.toString();
@@ -347,9 +356,26 @@ public class RequestController {
     public String createRequest(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
                                 BindingResult result,
                                 Model model, HttpServletRequest request) throws Exception {
+        JSONObject jsonObject = new JSONObject();
+        String customerCodeDescription = null;
         try {
             HttpSession session = request.getSession();
             String username = (String) session.getAttribute(UserManagement.USER_NAME);
+            String stringJson = populateItem(requestForm, null, model, request);
+            if (stringJson != null) {
+                JSONObject responseJsonObject = new JSONObject(stringJson);
+                Object errorMessage = responseJsonObject.has(RecapConstants.ERROR_MESSAGE) ? responseJsonObject.get(RecapConstants.ERROR_MESSAGE) : null;
+                Object noPermissionErrorMessage = responseJsonObject.has(RecapConstants.NO_PERMISSION_ERROR_MESSAGE) ? responseJsonObject.get(RecapConstants.NO_PERMISSION_ERROR_MESSAGE) : null;
+                if (noPermissionErrorMessage != null) {
+                    requestForm.setErrorMessage((String) noPermissionErrorMessage);
+                    jsonObject.put(RecapConstants.ERROR_MESSAGE, requestForm.getErrorMessage());
+                    return jsonObject.toString();
+                } else if (errorMessage != null) {
+                    requestForm.setErrorMessage((String) errorMessage);
+                    jsonObject.put(RecapConstants.ERROR_MESSAGE, requestForm.getErrorMessage());
+                    return jsonObject.toString();
+                }
+            }
 
             RestTemplate restTemplate = new RestTemplate();
 
@@ -372,8 +398,9 @@ public class RequestController {
             itemRequestInformation.setAuthor(requestForm.getArticleAuthor());
             itemRequestInformation.setChapterTitle(requestForm.getArticleTitle());
             if (StringUtils.isNotBlank(requestForm.getDeliveryLocationInRequest())) {
-                CustomerCodeEntity customerCodeEntity = customerCodeDetailsRepository.findByDescription(requestForm.getDeliveryLocationInRequest());
+                CustomerCodeEntity customerCodeEntity = customerCodeDetailsRepository.findByCustomerCode(requestForm.getDeliveryLocationInRequest());
                 if (null != customerCodeEntity) {
+                    customerCodeDescription = customerCodeEntity.getDescription();
                     itemRequestInformation.setDeliveryLocation(customerCodeEntity.getCustomerCode());
                 }
             }
@@ -397,7 +424,6 @@ public class RequestController {
             requestForm.setErrorMessage(exception.getMessage());
         }
 
-        JSONObject jsonObject = new JSONObject();
         jsonObject.put(RecapConstants.ITEM_TITLE, requestForm.getItemTitle());
         jsonObject.put(RecapConstants.ITEM_BARCODE, requestForm.getItemBarcodeInRequest());
         jsonObject.put(RecapConstants.ITEM_OWNING_INSTITUTION, requestForm.getItemOwningInstitution());
@@ -405,7 +431,7 @@ public class RequestController {
         jsonObject.put(RecapConstants.PATRON_EMAIL_ADDRESS, requestForm.getPatronEmailAddress());
         jsonObject.put(RecapConstants.REQUESTING_INSTITUTION, requestForm.getRequestingInstitution());
         jsonObject.put(RecapConstants.REQUEST_TYPE, requestForm.getRequestType());
-        jsonObject.put(RecapConstants.DELIVERY_LOCATION, requestForm.getDeliveryLocationInRequest());
+        jsonObject.put(RecapConstants.DELIVERY_LOCATION, customerCodeDescription);
         jsonObject.put(RecapConstants.REQUEST_NOTES, requestForm.getRequestNotes());
         jsonObject.put(RecapConstants.ERROR_MESSAGE, requestForm.getErrorMessage());
 

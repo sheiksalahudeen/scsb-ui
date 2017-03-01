@@ -5,10 +5,13 @@ import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
+import org.recap.model.jpa.InstitutionEntity;
 import org.recap.model.search.SearchItemResultRow;
 import org.recap.model.search.SearchRecordsRequest;
 import org.recap.model.search.SearchRecordsResponse;
 import org.recap.model.search.SearchResultRow;
+import org.recap.model.userManagement.UserDetailsForm;
+import org.recap.repository.jpa.InstitutionDetailsRepository;
 import org.recap.security.UserManagement;
 import org.recap.util.CsvUtil;
 import org.recap.util.SearchUtil;
@@ -68,6 +71,14 @@ public class SearchRecordsController {
     @Autowired
     private CsvUtil csvUtil;
 
+    public CsvUtil getCsvUtil() {
+        return csvUtil;
+    }
+
+    public void setCsvUtil(CsvUtil csvUtil) {
+        this.csvUtil = csvUtil;
+    }
+
     @Autowired
     private UserAuthUtil userAuthUtil;
 
@@ -77,6 +88,17 @@ public class SearchRecordsController {
 
     public void setUserAuthUtil(UserAuthUtil userAuthUtil) {
         this.userAuthUtil = userAuthUtil;
+    }
+
+    @Autowired
+    InstitutionDetailsRepository institutionDetailsRepository;
+
+    public InstitutionDetailsRepository getInstitutionDetailsRepository() {
+        return institutionDetailsRepository;
+    }
+
+    public void setInstitutionDetailsRepository(InstitutionDetailsRepository institutionDetailsRepository) {
+        this.institutionDetailsRepository = institutionDetailsRepository;
     }
 
     @RequestMapping("/search")
@@ -181,9 +203,17 @@ public class SearchRecordsController {
     public ModelAndView requestRecords(@Valid @ModelAttribute("searchRecordsRequest") SearchRecordsRequest searchRecordsRequest,
                                        BindingResult result,
                                        Model model,
+                                       HttpServletRequest request,
                                        RedirectAttributes redirectAttributes) {
+        UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(request.getSession(),UserManagement.REQUEST_PRIVILEGE);
+        processRequest(searchRecordsRequest, userDetailsForm, redirectAttributes);
+        if (StringUtils.isNotBlank(searchRecordsRequest.getErrorMessage())) {
+            searchRecordsRequest.setShowResults(true);
+            model.addAttribute("searchRecordsRequest", searchRecordsRequest);
+            model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.SEARCH);
+            return new ModelAndView("searchRecords");
+        }
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
-        processRequest(searchRecordsRequest, redirectAttributes);
         return new ModelAndView(new RedirectView("/request",true));
     }
 
@@ -280,30 +310,39 @@ public class SearchRecordsController {
         }
     }
 
-    private void processRequest(@Valid @ModelAttribute("searchRecordsRequest") SearchRecordsRequest searchRecordsRequest, RedirectAttributes redirectAttributes) {
+    private void processRequest(SearchRecordsRequest searchRecordsRequest, UserDetailsForm userDetailsForm, RedirectAttributes redirectAttributes) {
+        String userInstitution = null;
+        InstitutionEntity institutionEntity = getInstitutionDetailsRepository().findByInstitutionId(userDetailsForm.getLoginInstitutionId());
+        if (null != institutionEntity) {
+            userInstitution = institutionEntity.getInstitutionCode();
+        }
         List<SearchResultRow> searchResultRows = searchRecordsRequest.getSearchResultRows();
         Set<String> barcodes = new HashSet<>();
         Set<String> itemTitles = new HashSet<>();
         Set<String> itemOwningInstitutions = new HashSet<>();
         for (SearchResultRow searchResultRow : searchResultRows) {
-            if(searchResultRow.isSelected()){
-                processBarcodesForSearchResultRow(barcodes, itemTitles, itemOwningInstitutions, searchResultRow);
-            }
-            else if(searchResultRow.isSelectAllItems()){
-                for(SearchItemResultRow searchItemResultRow : searchResultRow.getSearchItemResultRows()) {
-                    processBarcodeForSearchItemResultRow(barcodes, itemTitles, itemOwningInstitutions, searchItemResultRow, searchResultRow);
-                }
-            }
-            else if (!CollectionUtils.isEmpty(searchResultRow.getSearchItemResultRows())) {
-                if (searchResultRow.isSelectAllItems()) {
+            if (searchResultRow.isSelected()) {
+                if (RecapConstants.PRIVATE.equals(searchResultRow.getCollectionGroupDesignation()) && !userDetailsForm.isSuperAdmin() && !userDetailsForm.isRecapUser() && StringUtils.isNotBlank(userInstitution) && !userInstitution.equals(searchResultRow.getOwningInstitution())) {
+                    searchRecordsRequest.setErrorMessage(RecapConstants.REQUEST_PRIVATE_ERROR_USER_NOT_PERMITTED);
+                    return;
+                } else if (!userDetailsForm.isRecapPermissionAllowed()) {
+                    searchRecordsRequest.setErrorMessage(RecapConstants.REQUEST_ERROR_USER_NOT_PERMITTED);
+                    return;
+                } else {
                     processBarcodesForSearchResultRow(barcodes, itemTitles, itemOwningInstitutions, searchResultRow);
                 }
-                else if (isAnyItemSelected(searchResultRow.getSearchItemResultRows())) {
-                    processBarcodesForSearchResultRow(barcodes, itemTitles, itemOwningInstitutions, searchResultRow);
-                }
+            } else if (!CollectionUtils.isEmpty(searchResultRow.getSearchItemResultRows())) {
                 for (SearchItemResultRow searchItemResultRow : searchResultRow.getSearchItemResultRows()) {
                     if (searchItemResultRow.isSelectedItem()) {
-                        processBarcodeForSearchItemResultRow(barcodes, itemTitles, itemOwningInstitutions, searchItemResultRow, searchResultRow);
+                        if (RecapConstants.PRIVATE.equals(searchItemResultRow.getCollectionGroupDesignation()) && !userDetailsForm.isSuperAdmin() && !userDetailsForm.isRecapUser() && StringUtils.isNotBlank(userInstitution) && !userInstitution.equals(searchResultRow.getOwningInstitution())) {
+                            searchRecordsRequest.setErrorMessage(RecapConstants.REQUEST_PRIVATE_ERROR_USER_NOT_PERMITTED);
+                            return;
+                        } else if (!userDetailsForm.isRecapPermissionAllowed()) {
+                            searchRecordsRequest.setErrorMessage(RecapConstants.REQUEST_ERROR_USER_NOT_PERMITTED);
+                            return;
+                        } else {
+                            processBarcodeForSearchItemResultRow(barcodes, itemTitles, itemOwningInstitutions, searchItemResultRow, searchResultRow);
+                        }
                     }
                 }
             }

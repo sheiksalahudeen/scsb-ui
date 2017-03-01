@@ -11,14 +11,14 @@ public class UserDetailsForm {
 
     private boolean recapUser;
 
-    private boolean requestAllItems;
+    private boolean recapPermissionAllowed;
 
-    public boolean isRequestAllItems() {
-        return requestAllItems;
+    public boolean isRecapPermissionAllowed() {
+        return recapPermissionAllowed;
     }
 
-    public void setRequestAllItems(boolean requestAllItems) {
-        this.requestAllItems = requestAllItems;
+    public void setRecapPermissionAllowed(boolean recapPermissionAllowed) {
+        this.recapPermissionAllowed = recapPermissionAllowed;
     }
 
     public Integer getLoginInstitutionId() {
