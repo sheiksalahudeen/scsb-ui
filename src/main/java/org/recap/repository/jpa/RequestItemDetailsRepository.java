@@ -19,37 +19,37 @@ public interface RequestItemDetailsRepository extends JpaRepository<RequestItemE
 
     RequestItemEntity findByRequestId(@Param("requestId") Integer requestId);
 
-    @Query(value = "select request from RequestItemEntity request where request.requestStatusId = (select requestStatusId from RequestStatusEntity requestStatus where requestStatus.requestStatusDescription = :status)")
+    @Query(value = "select request from RequestItemEntity request inner join  request.requestStatusEntity status where status.requestStatusDescription = :status")
     Page<RequestItemEntity> findByStatus(Pageable pageable, @Param("status") String status);
 
-    @Query(value = "select request from RequestItemEntity request where request.itemId = (select itemId from ItemEntity item where item.barcode = :itemBarcode) and request.requestStatusId in (select requestStatusId from RequestStatusEntity requestStatus where requestStatus.requestStatusCode in ('RETRIEVAL_ORDER_PLACED','RECALL_ORDER_PLACED', 'EDD_ORDER_PLACED'))")
+    @Query(value = "select request from RequestItemEntity request inner join request.itemEntity item inner join request.requestStatusEntity status where item.barcode = :itemBarcode and status.requestStatusCode in ('RETRIEVAL_ORDER_PLACED','RECALL_ORDER_PLACED', 'EDD_ORDER_PLACED')")
     Page<RequestItemEntity> findByItemBarcodeAndActive(Pageable pageable, @Param("itemBarcode") String itemBarcode);
 
-    @Query(value = "select request from RequestItemEntity request where request.patronId = :patronBarcode and request.requestStatusId in (select requestStatusId from RequestStatusEntity requestStatus where requestStatus.requestStatusCode in ('RETRIEVAL_ORDER_PLACED', 'RECALL_ORDER_PLACED', 'EDD_ORDER_PLACED'))")
+    @Query(value = "select request from RequestItemEntity request inner join request.requestStatusEntity status where request.patronId = :patronBarcode and status.requestStatusCode in ('RETRIEVAL_ORDER_PLACED', 'RECALL_ORDER_PLACED', 'EDD_ORDER_PLACED')")
     Page<RequestItemEntity> findByPatronBarcodeAndActive(Pageable pageable, @Param("patronBarcode") String patronBarcode);
 
-    @Query(value = "select request from RequestItemEntity request where request.patronId = :patronBarcode and request.itemId = (select itemId from ItemEntity item where item.barcode = :itemBarcode) and request.requestStatusId = (select requestStatusId from RequestStatusEntity requestStatus where requestStatus.requestStatusDescription = :status)")
+    @Query(value = "select request from RequestItemEntity request inner join request.itemEntity item inner join request.requestStatusEntity status where request.patronId = :patronBarcode and item.barcode = :itemBarcode and status.requestStatusCode.requestStatusDescription = :status")
     Page<RequestItemEntity> findByPatronBarcodeAndItemBarcodeAndStatus(Pageable pageable, @Param("patronBarcode") String patronBarcode, @Param("itemBarcode") String itemBarcode, @Param("status") String status);
 
-    @Query(value = "select request from RequestItemEntity request where request.patronId = :patronBarcode and request.itemId = (select itemId from ItemEntity item where item.barcode = :itemBarcode) and request.requestStatusId in (select requestStatusId from RequestStatusEntity requestStatus where requestStatus.requestStatusCode in ('RETRIEVAL_ORDER_PLACED', 'RECALL_ORDER_PLACED', 'EDD_ORDER_PLACED'))")
+    @Query(value = "select request from RequestItemEntity request inner join request.itemEntity item inner join request.requestStatusEntity status where request.patronId = :patronBarcode and item.barcode = :itemBarcode and status.requestStatusCode in ('RETRIEVAL_ORDER_PLACED', 'RECALL_ORDER_PLACED', 'EDD_ORDER_PLACED')")
     Page<RequestItemEntity> findByPatronBarcodeAndItemBarcodeAndActive(Pageable pageable, @Param("patronBarcode") String patronBarcode, @Param("itemBarcode") String itemBarcode);
 
-    @Query(value = "select request from RequestItemEntity request where request.patronId = :patronBarcode and request.requestStatusId = (select requestStatusId from RequestStatusEntity requestStatus where requestStatus.requestStatusDescription = :status)")
+    @Query(value = "select request from RequestItemEntity request inner join request.requestStatusEntity status where request.patronId = :patronBarcode and status.requestStatusDescription = :status")
     Page<RequestItemEntity> findByPatronBarcodeAndStatus(Pageable pageable, @Param("patronBarcode") String patronBarcode, @Param("status") String status);
 
-    @Query(value = "select request from RequestItemEntity request where request.itemId = (select itemId from ItemEntity item where item.barcode = :itemBarcode) and request.requestStatusId = (select requestStatusId from RequestStatusEntity requestStatus where requestStatus.requestStatusDescription = :status)")
+    @Query(value = "select request from RequestItemEntity request inner join request.itemEntity item inner join request.requestStatusEntity status where item.barcode = :itemBarcode and status.requestStatusDescription = :status")
     Page<RequestItemEntity> findByItemBarcodeAndStatus(Pageable pageable, @Param("itemBarcode") String itemBarcode, @Param("status") String status);
 
-    @Query(value = "select request from RequestItemEntity request where request.requestStatusId in (select requestStatusId from RequestStatusEntity requestStatus where requestStatus.requestStatusCode in ('RETRIEVAL_ORDER_PLACED', 'RECALL_ORDER_PLACED','EDD_ORDER_PLACED'))")
+    @Query(value = "select request from RequestItemEntity request inner join request.requestStatusEntity status where status.requestStatusCode in ('RETRIEVAL_ORDER_PLACED', 'RECALL_ORDER_PLACED','EDD_ORDER_PLACED')")
     Page<RequestItemEntity> findAllActive(Pageable pageable);
 
     @Query(value = "select request from RequestItemEntity request where request.patronId = :patronBarcode")
     Page<RequestItemEntity> findByPatronBarcode(Pageable pageable, @Param("patronBarcode") String patronBarcode);
 
-    @Query(value = "select request from RequestItemEntity request where request.itemId = (select itemId from ItemEntity item where item.barcode = :itemBarcode)")
+    @Query(value = "select request from RequestItemEntity request inner join request.itemEntity item where item.barcode = :itemBarcode")
     Page<RequestItemEntity> findByItemBarcode(Pageable pageable, @Param("itemBarcode") String itemBarcode);
 
-    @Query(value = "select request from RequestItemEntity request where request.patronId = :patronBarcode and request.itemId = (select itemId from ItemEntity item where item.barcode = :itemBarcode)")
+    @Query(value = "select request from RequestItemEntity request inner join request.itemEntity item where request.patronId = :patronBarcode and item.barcode = :itemBarcode")
     Page<RequestItemEntity> findByPatronBarcodeAndItemBarcode(Pageable pageable, @Param("patronBarcode") String patronBarcode, @Param("itemBarcode") String itemBarcode);
 
     @Query(value = "select requestItemEntity from RequestItemEntity requestItemEntity inner join requestItemEntity.itemEntity ie inner join requestItemEntity.requestStatusEntity as rse  where ie.barcode = :itemBarcode and rse.requestStatusCode= :requestStatusCode ")
