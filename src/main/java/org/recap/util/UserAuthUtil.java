@@ -55,9 +55,9 @@ public class UserAuthUtil {
     {
         UserDetailsForm userDetailsForm=new UserDetailsForm();
         userDetailsForm.setSuperAdmin((Boolean)session.getAttribute(UserManagement.SUPER_ADMIN_USER));
-        userDetailsForm.setRecapUser((Boolean)session.getAttribute(recapPermission));
+        userDetailsForm.setRecapUser((Boolean)session.getAttribute(UserManagement.ReCAP_USER));
         userDetailsForm.setLoginInstitutionId((Integer)session.getAttribute(UserManagement.USER_INSTITUTION));
-        userDetailsForm.setRequestAllItems((Boolean) session.getAttribute(UserManagement.REQUEST_ALL_PRIVILEGE));
+        userDetailsForm.setRecapPermissionAllowed((Boolean) session.getAttribute(recapPermission));
         return userDetailsForm;
     }
 

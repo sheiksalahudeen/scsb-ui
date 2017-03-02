@@ -50,6 +50,8 @@ public class SearchResultRow {
     @ApiModelProperty(name= "itemId", value= "Item Id",position = 17)
     private Integer itemId;
 
+    private boolean showAllItems = false;
+
     private Integer requestId;
     private String patronBarcode;
     private String requestingInstitution;
@@ -283,5 +285,13 @@ public class SearchResultRow {
 
     public void setRequestId(Integer requestId) {
         this.requestId = requestId;
+    }
+
+    public boolean isShowAllItems() {
+        return showAllItems;
+    }
+
+    public void setShowAllItems(boolean showAllItems) {
+        this.showAllItems = showAllItems;
     }
 }

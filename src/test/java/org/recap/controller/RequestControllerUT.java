@@ -92,8 +92,9 @@ public class RequestControllerUT extends BaseControllerUT {
         when(requestTypeDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
         when(customerCodeDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
         when(((BindingAwareModelMap) model).get("requestedBarcode")).thenReturn("test");
-        when(requestController.collection(model,request)).thenCallRealMethod();
-        String response = requestController.collection(model,request);
+        when(requestController.populateItem(new RequestForm(), null, model,request)).thenReturn("");
+        when(requestController.request(model,request)).thenCallRealMethod();
+        String response = requestController.request(model,request);
         assertNotNull(response);
         assertEquals("searchRecords",response);
     }
@@ -107,7 +108,7 @@ public class RequestControllerUT extends BaseControllerUT {
         when(requestController.searchRequests(requestForm, bindingResult, model)).thenCallRealMethod();
         ModelAndView modelAndView = requestController.searchRequests(requestForm, bindingResult, model);
         assertNotNull(modelAndView);
-        assertEquals("request", modelAndView.getViewName());
+        assertEquals("request :: #searchRequestsSection", modelAndView.getViewName());
     }
 
     @Test
@@ -119,7 +120,7 @@ public class RequestControllerUT extends BaseControllerUT {
         when(requestController.searchPrevious(requestForm, bindingResult, model)).thenCallRealMethod();
         ModelAndView modelAndView = requestController.searchPrevious(requestForm, bindingResult, model);
         assertNotNull(modelAndView);
-        assertEquals("request", modelAndView.getViewName());
+        assertEquals("request :: #searchRequestsSection", modelAndView.getViewName());
     }
 
     @Test
@@ -131,7 +132,7 @@ public class RequestControllerUT extends BaseControllerUT {
         when(requestController.searchNext(requestForm, bindingResult, model)).thenCallRealMethod();
         ModelAndView modelAndView = requestController.searchNext(requestForm, bindingResult, model);
         assertNotNull(modelAndView);
-        assertEquals("request", modelAndView.getViewName());
+        assertEquals("request :: #searchRequestsSection", modelAndView.getViewName());
     }
 
     @Test
@@ -143,7 +144,7 @@ public class RequestControllerUT extends BaseControllerUT {
         when(requestController.searchFirst(requestForm, bindingResult, model)).thenCallRealMethod();
         ModelAndView modelAndView = requestController.searchFirst(requestForm, bindingResult, model);
         assertNotNull(modelAndView);
-        assertEquals("request", modelAndView.getViewName());
+        assertEquals("request :: #searchRequestsSection", modelAndView.getViewName());
     }
 
     @Test
@@ -155,7 +156,7 @@ public class RequestControllerUT extends BaseControllerUT {
         when(requestController.searchLast(requestForm, bindingResult, model)).thenCallRealMethod();
         ModelAndView modelAndView = requestController.searchLast(requestForm, bindingResult, model);
         assertNotNull(modelAndView);
-        assertEquals("request", modelAndView.getViewName());
+        assertEquals("request :: #searchRequestsSection", modelAndView.getViewName());
     }
 
     @Test
@@ -191,7 +192,7 @@ public class RequestControllerUT extends BaseControllerUT {
         UserDetailsForm userDetailsForm=new UserDetailsForm();
         userDetailsForm.setLoginInstitutionId(1);;
         userDetailsForm.setSuperAdmin(false);
-        userDetailsForm.setRequestAllItems(false);
+        userDetailsForm.setRecapPermissionAllowed(false);
         userDetailsForm.setRecapUser(false);
         return userDetailsForm;
     }

@@ -340,6 +340,7 @@
                                             <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].bibId}"/>
                                             <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].availability}"/>
                                             <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].leaderMaterialType}"/>
+                                            <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].showItems}"/>
                                             <td data-th-id="'searchResultsDataPlus-'+ ${searchResultStat.index}" align="center">
                                                 <div class="checkbox table-body-checkbox">
                                                     <label>
@@ -399,11 +400,6 @@
                                                 <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].barcode}"/>
                                                 <span data-th-id="'searchResultsDataBarS-'+ ${searchResultStat.index}" th:text="${searchResult.barcode}"></span>
                                             </td>
-                                            <!--<td align="center" class="details-control" th:if="${searchResult.showItems}"></td>
-                                            <td th:if="${!searchResult.showItems}">
-                                                <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].barcode}"/>
-                                                <span data-th-id="'searchResultsDataBarS-'+ ${searchResultStat.index}" th:text="${searchResult.barcode}"></span>
-                                            </td>-->
                                             <td data-th-id="'searchResultsDataSH-'+ ${searchResultStat.index}">
                                                 <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].summaryHoldings}"/>
                                                 <span data-th-id="'searchResultsDataSHS-'+ ${searchResultStat.index}" th:text="${searchResult.summaryHoldings}"></span>
@@ -411,15 +407,6 @@
                                         <tr data-th-if="${searchResult.showItems}" data-th-id="'searchItemResultsRow-' + ${searchResultStat.index}" class="collapse childRow" th:classappend="'row' + ${searchResultStat.index}">
                                             <th></th>
                                             <th></th>
-                                            <!--<th data-th-id="'searchItemResultsSelectHead-' + ${searchResultStat.index}" style="background-color: grey; color: white; width: 20px;">
-                                                <label for="selectAll" style="width: 80px;">Select All</label>
-                                                <input data-th-id="'selectAllItems-' + ${searchResultStat.index}" type="checkbox"
-                                                       name="selectAllItems"
-                                                       class="innerSelectAllCBClass"
-                                                       th:field="*{searchResultRows[__${searchResultStat.index}__].selectAllItems}"
-                                                       style="margin-left: 26px;"
-                                                       th:onclick="'javascript:selectAllChildRows('+${searchResultStat.index}+');enableExportSelectedRecordButton()'"/>
-                                            </th>-->
                                             <th data-th-id="'searchItemResultsSelectHead-' + ${searchResultStat.index}" style="background-color: grey; color: white; width: 20px;" width="7%" align="center" class="text-center" data-sorter="false">
                                                 <div class="checkbox table-header-checkbox">
                                                     <label class="text-center">
@@ -445,11 +432,6 @@
                                             <td></td>
                                             <td></td>
                                             <td data-th-id="'searchItemResultsDataPlus-'+ ${searchItemResultStat.index}">
-                                                <!--<input type="checkbox" id="selectedItem" name="selectedItem" class="selectInnerCBClass"
-                                                       th:value="${searchItemResult.selectedItem}"
-                                                       th:field="*{searchResultRows[__${searchResultStat.index}__].searchItemResultRows[__${searchItemResultStat.index}__].selectedItem}"
-                                                       th:style="${searchItemResult.availability == 'Available' || searchItemResult.availability == 'Not Available'} ? 'margin-left: 5px;' : 'margin-left: 25px;'"
-                                                       onclick="enableExportSelectedRecordButton()"/>-->
                                                 <div class="checkbox table-body-checkbox" style="margin-left: 40px;">
                                                     <label>
                                                         <input type="checkbox" id="selectedItem" name="selectedItem" class="selectInnerCBClass"
@@ -506,7 +488,7 @@
                                                 class="btn btn-primary pull-right" style="margin-right: 10px;"
                                                 disabled="disabled">Export Selected Records
                                         </button>
-                                        <button th:if="${session.isRequestAllowed || session.isRequestItemAllowed || session.isRequestAllAllowed}" id="requestButton" type="submit" name="action" value="request" class="btn btn-primary pull-right"
+                                        <button th:if="${!session.isRecapUser &amp;&amp; (session.isRequestAllowed || session.isRequestItemAllowed || session.isRequestAllAllowed)}" id="requestButton" type="submit" name="action" value="request" class="btn btn-primary pull-right"
                                                 style="margin-right: 10px;" disabled="disabled">Request Selected
                                             Items(s)
                                         </button>
