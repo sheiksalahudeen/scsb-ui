@@ -2,6 +2,7 @@ package org.recap.security;
 
 import org.recap.filter.CsrfCookieGeneratorFilter;
 import org.recap.filter.ReCAPInstitutionFilter;
+import org.recap.filter.ReCAPLogoutFilter;
 import org.recap.service.CustomUserDetailsService;
 import org.recap.util.UserAuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,7 @@ public class MultiCASAndOAuthSecurityConfiguration extends WebSecurityConfigurer
                 .addFilterAfter(reCAPExceptionTranslationFilter, ExceptionTranslationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(loginUrlAuthenticationEntryPoint).and().addFilter(casAuthenticationFilter())
+                .addFilterBefore(reCAPLogoutFilter(), LogoutFilter.class)
                 .addFilterBefore(requestCasGlobalLogoutFilter(), LogoutFilter.class);
 
         http.authorizeRequests().antMatchers("/").permitAll()
@@ -85,6 +87,11 @@ public class MultiCASAndOAuthSecurityConfiguration extends WebSecurityConfigurer
 
 
         return logoutFilter;
+    }
+
+    @Bean
+    public ReCAPLogoutFilter reCAPLogoutFilter() {
+        return new ReCAPLogoutFilter();
     }
 
     @Bean

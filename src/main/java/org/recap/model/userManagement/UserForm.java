@@ -47,15 +47,15 @@ public class UserForm implements Serializable {
         this.permissions = permissions;
     }
 
-    public int getInstitution() {
+    public String getInstitution() {
         return institution;
     }
 
-    public void setInstitution(int institution) {
+    public void setInstitution(String institution) {
         this.institution = institution;
     }
 
-    private int institution;
+    private String institution;
 
     public String getPassword() {
         return password;

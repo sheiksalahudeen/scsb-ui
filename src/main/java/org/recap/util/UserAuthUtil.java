@@ -37,7 +37,7 @@ public class UserAuthUtil {
             return resultMap;
     }
 
-    public boolean authorizedUser(String serviceURL,UsernamePasswordToken token)
+    public Boolean authorizedUser(String serviceURL, UsernamePasswordToken token)
     {
 
         Boolean statusResponse = false;
