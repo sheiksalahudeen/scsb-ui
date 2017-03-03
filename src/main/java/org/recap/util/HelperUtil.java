@@ -25,13 +25,13 @@ public class HelperUtil {
     public static String getInstitutionFromRequest(HttpServletRequest request) {
         String institution = request.getParameter("institution");
         if(StringUtils.isBlank(institution)) {
-            institution = (String) request.getAttribute(RecapConstants.RECAP_INSTITUTION_ID);
+            institution = (String) request.getAttribute(RecapConstants.RECAP_INSTITUTION_CODE);
         }
         if(StringUtils.isBlank(institution)) {
             Cookie[] cookies = request.getCookies();
             if (null != cookies) {
                 for(Cookie cookie : cookies) {
-                    if(StringUtils.equals(cookie.getName(), RecapConstants.RECAP_INSTITUTION_ID)) {
+                    if(StringUtils.equals(cookie.getName(), RecapConstants.RECAP_INSTITUTION_CODE)) {
                         institution = cookie.getValue();
                     }
                 }

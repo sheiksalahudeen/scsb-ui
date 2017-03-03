@@ -1,5 +1,6 @@
 package org.recap.model.userManagement;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -17,7 +18,7 @@ public class LoginValidator implements Validator {
     public void validate(Object target, Errors errors) {
         UserForm userForm=(UserForm) target;
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "error.username.empty", "Please specify a username.");
-        if(userForm.getInstitution()==0)
+        if(StringUtils.isBlank(userForm.getInstitution()))
         {
             errors.rejectValue("institution","error.username.notselected","Please select your institution");
         }

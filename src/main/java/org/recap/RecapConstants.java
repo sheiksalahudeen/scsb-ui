@@ -419,7 +419,7 @@ public class RecapConstants {
     public static final String ADMIN = "ROLE_ADMIN";
     public static final String USER = "ROLE_USER";
     public static final String ANONYMOUS = "ROLE_ANONYMOUS";
-    public static final String RECAP_INSTITUTION_ID = "RECAP_INSTITUTION_ID";
+    public static final String RECAP_INSTITUTION_CODE = "RECAP_INSTITUTION_CODE";
     public static final String CAS = "cas.";
     public static final String SERVICE_LOGIN = ".service.login";
     public static final String SERVICE_LOGOUT = ".service.logout";
