@@ -66,6 +66,9 @@ public class SearchRecordsController {
     @Autowired
     private UserAuthUtil userAuthUtil;
 
+    @Autowired
+    InstitutionDetailsRepository institutionDetailsRepository;
+
     public CsvUtil getCsvUtil() {
         return csvUtil;
     }
@@ -90,9 +93,6 @@ public class SearchRecordsController {
     public void setUserAuthUtil(UserAuthUtil userAuthUtil) {
         this.userAuthUtil = userAuthUtil;
     }
-
-    @Autowired
-    InstitutionDetailsRepository institutionDetailsRepository;
 
     public InstitutionDetailsRepository getInstitutionDetailsRepository() {
         return institutionDetailsRepository;
