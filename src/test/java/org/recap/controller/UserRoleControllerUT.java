@@ -233,7 +233,7 @@ public class UserRoleControllerUT extends BaseTestCase {
         when(request.getSession()).thenReturn(session);
         UserForm userForm = new UserForm();
         userForm.setUsername("kholi");
-        userForm.setInstitution(3);
+        userForm.setInstitution("3");
         userForm.setPassword("12345");
         UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+userForm.getInstitution(),userForm.getPassword(),true);
         userAuthUtil.doAuthentication(token);
