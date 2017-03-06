@@ -62,7 +62,7 @@ public class LoginControllerUT extends BaseControllerUT{
         when(request.getSession()).thenReturn(session);
         UserForm userForm = new UserForm();
         userForm.setUsername("SuperAdmin");
-        userForm.setInstitution(1);
+        userForm.setInstitution("1");
         userForm.setPassword("12345");
         UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+userForm.getInstitution(),userForm.getPassword(),true);
         userAuthUtil.doAuthentication(token);
