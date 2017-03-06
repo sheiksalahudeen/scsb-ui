@@ -36,7 +36,7 @@ public class UserAuthUtil {
             return restTemplate.postForObject(serverProtocol + scsbShiro + RecapConstants.SCSB_SHIRO_AUTHENTICATE_URL, requestEntity, HashMap.class);
     }
 
-    public boolean authorizedUser(String serviceURL,UsernamePasswordToken token)
+    public Boolean authorizedUser(String serviceURL, UsernamePasswordToken token)
     {
 
         Boolean statusResponse = false;

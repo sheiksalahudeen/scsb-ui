@@ -65,11 +65,11 @@
                                         <select class="form-control themed-input themed-select" id="institution"
                                                 th:field="*{institution}"
                                                 th:onchange="'javascript:toggleInstitutionValidation()'">
-                                            <option value="0">Select One</option>
-                                            <option value="1">PUL</option>
-                                            <option value="2">CUL</option>
-                                            <option value="3">NYPL</option>
-                                            <option value="4">HTC</option>
+                                            <option value="">Select One</option>
+                                            <option value="PUL">PUL</option>
+                                            <option value="CUL">CUL</option>
+                                            <option value="NYPL">NYPL</option>
+                                            <option value="HTC">HTC</option>
                                         </select>
                                     </div>
                                     <p id="institutionError" th:if="${#fields.hasErrors('institution')}"

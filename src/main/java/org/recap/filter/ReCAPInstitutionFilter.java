@@ -22,8 +22,8 @@ public class ReCAPInstitutionFilter extends OncePerRequestFilter {
         String institutionId = HelperUtil.getInstitutionFromRequest(request);
 
         if(StringUtils.isNotBlank(institutionId)) {
-            request.setAttribute(RecapConstants.RECAP_INSTITUTION_ID, institutionId);
-            Cookie cookie = new Cookie(RecapConstants.RECAP_INSTITUTION_ID, institutionId);
+            request.setAttribute(RecapConstants.RECAP_INSTITUTION_CODE, institutionId);
+            Cookie cookie = new Cookie(RecapConstants.RECAP_INSTITUTION_CODE, institutionId);
             cookie.setMaxAge(-1);
             cookie.setHttpOnly(false);
             cookie.setPath("/");

@@ -53,7 +53,6 @@ public class LoginController {
     public String login(@Valid @ModelAttribute UserForm userForm, HttpServletRequest request, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String user = auth.getName();
-        String credentials = String.valueOf(auth.getCredentials());
         logger.info("passing in /login");
         model.addAttribute("user", user);
         final String loginScreen=RecapConstants.VIEW_LOGIN;

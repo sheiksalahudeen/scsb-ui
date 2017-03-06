@@ -137,7 +137,7 @@ public class CasAuthenticationProvider implements AuthenticationProvider,
             throws AuthenticationException {
         try {
             RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-            String institution = (String)((ServletRequestAttributes) requestAttributes).getRequest().getAttribute(RecapConstants.RECAP_INSTITUTION_ID);
+            String institution = (String)((ServletRequestAttributes) requestAttributes).getRequest().getAttribute(RecapConstants.RECAP_INSTITUTION_CODE);
 
             String urlProperty = RecapConstants.CAS + institution + RecapConstants.URL_PREFIX;
             String casServerUrl = HelperUtil.getBean(PropertyValueProvider.class).getProperty(urlProperty);
