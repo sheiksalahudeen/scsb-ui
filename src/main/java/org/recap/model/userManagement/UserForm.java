@@ -21,7 +21,7 @@ public class UserForm implements Serializable {
 
     private boolean passwordMatcher;
 
-    private int institution;
+    private String institution;
 
     private Set<String> permissions=new HashSet<>();
 
@@ -56,8 +56,6 @@ public class UserForm implements Serializable {
     public void setInstitution(String institution) {
         this.institution = institution;
     }
-
-    private String institution;
 
     public String getPassword() {
         return password;

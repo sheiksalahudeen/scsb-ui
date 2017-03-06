@@ -29,7 +29,7 @@ public class UserAuthUtilUT extends BaseTestCase {
         boolean authorized=false;
         UserForm userForm=new UserForm();
         userForm.setUsername("john");
-        userForm.setInstitution(2);
+        userForm.setInstitution("2");
         userForm.setPassword("123");
 
         Map<String,Object> map = new HashMap<>();
