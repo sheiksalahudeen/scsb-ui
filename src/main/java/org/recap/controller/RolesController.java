@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
 @Controller
 public class RolesController {
 
-    Logger logger = LoggerFactory.getLogger(RolesController.class);
+    private static final Logger logger = LoggerFactory.getLogger(RolesController.class);
 
     @Autowired
     RolesDetailsRepositorty rolesDetailsRepositorty;

@@ -32,7 +32,7 @@ import java.util.List;
 @Controller
 public class ReportsController {
 
-    Logger logger = LoggerFactory.getLogger(ReportsController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ReportsController.class);
 
     @Autowired
     ReportsUtil reportsUtil;

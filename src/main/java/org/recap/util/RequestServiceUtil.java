@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RequestServiceUtil {
 
-    Logger logger = LoggerFactory.getLogger(RequestServiceUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(RequestServiceUtil.class);
 
     @Autowired
     RequestItemDetailsRepository requestItemDetailsRepository;

@@ -50,7 +50,7 @@ import java.util.*;
 @Controller
 public class RequestController {
 
-    Logger logger = LoggerFactory.getLogger(RequestController.class);
+    private static final Logger logger = LoggerFactory.getLogger(RequestController.class);
 
     @Value("${server.protocol}")
     String serverProtocol;

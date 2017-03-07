@@ -37,7 +37,7 @@ import java.util.*;
 @Controller
 public class CollectionController {
 
-    Logger logger = LoggerFactory.getLogger(CollectionController.class);
+    private static final Logger logger = LoggerFactory.getLogger(CollectionController.class);
 
     @Autowired
     SearchUtil searchUtil;

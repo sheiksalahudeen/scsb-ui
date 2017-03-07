@@ -18,7 +18,7 @@ import java.io.IOException;
 @ComponentScan
 public class SessionFilter implements Filter{
 
-    Logger logger = LoggerFactory.getLogger(SessionFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(SessionFilter.class);
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

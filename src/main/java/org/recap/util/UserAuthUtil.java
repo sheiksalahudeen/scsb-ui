@@ -21,7 +21,7 @@ import java.util.Map;
 @Service
 public class UserAuthUtil {
 
-    Logger logger = LoggerFactory.getLogger(UserAuthUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserAuthUtil.class);
 
     @Value("${server.protocol}")
     String serverProtocol;

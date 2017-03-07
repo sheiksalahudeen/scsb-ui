@@ -39,7 +39,7 @@ import java.util.List;
 @Controller
 public class UserRoleController {
 
-    Logger logger = LoggerFactory.getLogger(UserRoleController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserRoleController.class);
 
     @Autowired
     private UserRoleService userRoleService;
@@ -62,14 +62,6 @@ public class UserRoleController {
 
     public void setUserAuthUtil(UserAuthUtil userAuthUtil) {
         this.userAuthUtil = userAuthUtil;
-    }
-
-    public Logger getLogger() {
-        return logger;
-    }
-
-    public void setLogger(Logger logger) {
-        this.logger = logger;
     }
 
     public UserRoleService getUserRoleService() {
@@ -225,7 +217,7 @@ public class UserRoleController {
     @ResponseBody
     @RequestMapping(value = "/userRoles/first", method = RequestMethod.POST)
     public ModelAndView searchFirstPage(@ModelAttribute("userForm") UserRoleForm userRoleForm, Model model, HttpServletRequest request) {
-        getLogger().info("Users - Search First Page button Clicked");
+        logger.info("Users - Search First Page button Clicked");
         HttpSession session = request.getSession();
         boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
         if (authenticated) {
@@ -450,7 +442,7 @@ public class UserRoleController {
 
     private void searchAndSetResult(UserRoleForm userRoleForm, boolean superAdmin, Integer userId) {
         if (StringUtils.isBlank(userRoleForm.getSearchNetworkId()) && StringUtils.isBlank(userRoleForm.getUserEmailId())) {
-            getLogger().debug("Search All Users");
+            logger.debug("Search All Users");
             Page<UsersEntity> usersEntities = getUserRoleService().searchUsers(userRoleForm, superAdmin);
             userRoleForm.setUserRoleFormList(setFormValues(usersEntities.getContent(), userId));
             userRoleForm.setShowResults(true);
@@ -461,15 +453,15 @@ public class UserRoleController {
             }
             userRoleForm.setTotalPageCount(usersEntities.getTotalPages());
         } else if (StringUtils.isNotBlank(userRoleForm.getSearchNetworkId()) && StringUtils.isBlank(userRoleForm.getUserEmailId())) {
-            getLogger().debug("Search Users By NetworkId :" + userRoleForm.getSearchNetworkId());
+            logger.debug("Search Users By NetworkId :" + userRoleForm.getSearchNetworkId());
             Page<UsersEntity> usersEntities = getUserRoleService().searchByNetworkId(userRoleForm, superAdmin);
             getUsersInformation(userRoleForm, superAdmin, userId, usersEntities,RecapConstants.NETWORK_LOGIN_ID_DOES_NOT_EXIST);
         } else if (StringUtils.isBlank(userRoleForm.getSearchNetworkId()) && StringUtils.isNotBlank(userRoleForm.getUserEmailId())) {
-            getLogger().debug("Search Users by Email Id:" + userRoleForm.getUserEmailId());
+            logger.debug("Search Users by Email Id:" + userRoleForm.getUserEmailId());
             Page<UsersEntity> usersEntities = getUserRoleService().searchByUserEmailId(userRoleForm, superAdmin);
             getUsersInformation(userRoleForm, superAdmin, userId, usersEntities, RecapConstants.EMAILID_ID_DOES_NOT_EXIST);
         } else if (StringUtils.isNotBlank(userRoleForm.getSearchNetworkId()) && StringUtils.isNotBlank(userRoleForm.getUserEmailId())) {
-            getLogger().debug("Search Users by Network Id : " + userRoleForm.getSearchNetworkId() + " and Email Id : " + userRoleForm.getUserEmailId());
+            logger.debug("Search Users by Network Id : " + userRoleForm.getSearchNetworkId() + " and Email Id : " + userRoleForm.getUserEmailId());
             Page<UsersEntity> usersEntities = getUserRoleService().searchByNetworkIdAndUserEmailId(userRoleForm, superAdmin);
             getUsersInformation(userRoleForm, superAdmin, userId, usersEntities,RecapConstants.NETWORK_LOGIN_ID_AND_EMAILID_ID_DOES_NOT_EXIST);
         } else {

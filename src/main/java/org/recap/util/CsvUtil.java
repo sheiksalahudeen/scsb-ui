@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 public class CsvUtil {
 
-    Logger logger = LoggerFactory.getLogger(CsvUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(CsvUtil.class);
 
     /**
      * Generates a csv file for the selected search result rows.

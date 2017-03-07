@@ -36,7 +36,7 @@ import java.util.Map;
 @Controller
 public class LoginController {
 
-    Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     private LoginValidator loginValidator=new LoginValidator();
 

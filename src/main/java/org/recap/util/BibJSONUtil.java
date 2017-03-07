@@ -15,7 +15,7 @@ import java.util.*;
  */
 public class BibJSONUtil extends MarcUtil {
 
-    Logger logger = LoggerFactory.getLogger(BibJSONUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(BibJSONUtil.class);
 
     public String getPublisherValue(Record record) {
         String publisherValue;

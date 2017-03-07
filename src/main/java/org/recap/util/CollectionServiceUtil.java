@@ -32,7 +32,7 @@ import java.util.Map;
 @Service
 public class CollectionServiceUtil {
 
-    Logger logger = LoggerFactory.getLogger(CollectionServiceUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(CollectionServiceUtil.class);
 
     @Value("${server.protocol}")
     String serverProtocol;

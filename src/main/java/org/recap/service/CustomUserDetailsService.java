@@ -20,7 +20,7 @@ import java.util.Set;
  */
 public class CustomUserDetailsService implements AuthenticationUserDetailsService<CasAssertionAuthenticationToken> {
 
-    private final Logger log = LoggerFactory.getLogger(CustomUserDetailsService.class);
+    private static final Logger log = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
     private Set<String> admins;
 

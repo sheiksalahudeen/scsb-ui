@@ -48,7 +48,7 @@ import java.util.*;
 @Controller
 public class SearchRecordsController {
 
-    Logger logger = LoggerFactory.getLogger(SearchRecordsController.class);
+    private static final Logger logger = LoggerFactory.getLogger(SearchRecordsController.class);
 
     @Value("${server.protocol}")
     String serverProtocol;
