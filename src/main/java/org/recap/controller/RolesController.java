@@ -57,7 +57,7 @@ public class RolesController {
     @RequestMapping("/roles")
     public String collection(Model model, HttpServletRequest request) {
         HttpSession session=request.getSession();
-        boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
+        boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_ROLE_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
         if(authenticated)
         {
             RolesForm rolesForm = new RolesForm();
