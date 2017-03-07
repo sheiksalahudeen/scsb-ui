@@ -164,8 +164,8 @@
                                                       th:text="${searchResult.permissionName}"></span>
                                             </td>
                                             <td class="text-center">
-                                                <div class="edit-link margin-left-05 margin-right-05 editRole" ><a href="#" id="editUserLink"><span class="glyphicon glyphicon-pencil" th:onclick="'editRole(\'' + ${searchResult.roleId} + '\',\'' + ${searchResult.rolesName} + '\',\'' + ${searchResult.rolesDescription} + '\',\'' + ${#strings.escapeXml(searchResult.permissionName)} + '\')'"></span></a>
-                                                    <a href="#" data-toggle="modal" data-target=".user-delete"><span class="glyphicon glyphicon-trash" th:onclick="'deleteRole(\'' + ${searchResult.roleId} + '\',\'' + ${searchResult.rolesName} + '\',\'' + ${searchResult.rolesDescription} + '\',\'' + ${#strings.escapeXml(searchResult.permissionName)} + '\')'"></span></a></div>
+                                                <div class="edit-link margin-left-05 margin-right-05 editRole" ><a href="#" id="editUserLink"><span class="glyphicon glyphicon-pencil" th:title="'Edit Role'" th:onclick="'editRole(\'' + ${searchResult.roleId} + '\',\'' + ${searchResult.rolesName} + '\',\'' + ${searchResult.rolesDescription} + '\',\'' + ${#strings.escapeXml(searchResult.permissionName)} + '\')'"></span></a>
+                                                    <a href="#" data-toggle="modal" data-target=".user-delete"><span class="glyphicon glyphicon-trash" th:title="'Delete Role'" th:onclick="'deleteRole(\'' + ${searchResult.roleId} + '\',\'' + ${searchResult.rolesName} + '\',\'' + ${searchResult.rolesDescription} + '\',\'' + ${#strings.escapeXml(searchResult.permissionName)} + '\')'"></span></a></div>
                                             </td>
 
                                         </tr>
@@ -186,7 +186,7 @@
                     </div>
                     <div id="createRoleSection" class="create-role-section" style="display:none;">
                             <div class="row margin-top-0">
-                                <div class="col-sm-6 margin-top-0"><h3 class="margin-0">Create New Role</h3></div>
+                                <div class="col-sm-6 margin-top-0"><h3 class="margin-0">Create Role</h3></div>
                                 <div class="col-sm-6 text-right backtext"><a href="#" id="createGoBackLink"><span
                                         class="glyphicon glyphicon-menu-left"></span> Go Back</a></div>
                             </div>
@@ -271,8 +271,8 @@
                                         </div>
                                         <div class="row">
                                                 <div class="col-xs-12 text-center">
-                                                    <button type="submit" name="action" value="loadCreateRole" class="btn btn-default themed-button btn-primary" id="createrolesubmitHdn" style="display: none;">Submit</button>
-                                                    <button type="button" class="btn btn-default themed-button btn-primary" id="createrolesubmit" onclick="createRole()">Submit</button>
+                                                    <button type="submit" name="action" value="loadCreateRole" class="btn btn-default themed-button btn-primary" id="createrolesubmitHdn" style="display: none;">Create Role</button>
+                                                    <button type="button" class="btn btn-default themed-button btn-primary" id="createrolesubmit" onclick="createRole()">Create Role</button>
                                                     <button type="reset" class="btn btn-default themed-button themed-button-cancel" id="createrequestclear" onclick="createResetDefault()">Clear</button>
                                                 </div>
                                         </div>
@@ -380,8 +380,8 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 text-center">
-                                            <button type="submit" name="action" value="editRole" class="btn btn-default themed-button btn-primary" id="editRolesubmitHdn" style="display: none;">Submit</button>
-                                            <button type="button" class="btn btn-default themed-button btn-primary" id="editRolesubmit" onclick="saveEditedRole()">Submit</button>
+                                            <button type="submit" name="action" value="editRole" class="btn btn-default themed-button btn-primary" id="editRolesubmitHdn" style="display: none;">Edit Role</button>
+                                            <button type="button" class="btn btn-default themed-button btn-primary" id="editRolesubmit" onclick="saveEditedRole()">Edit Role</button>
                                             <button type="reset" class="btn btn-default themed-button themed-button-cancel" id="editRequestclear" onclick="editResetDefault()">Clear</button>
                                         </div>
                                     </div>
@@ -482,7 +482,7 @@
                                     <div class="row">
                                         <div class="col-xs-12 text-center">
                                             <!--<button type="submit" name="action" value="loadCreateRole" class="btn btn-default themed-button btn-primary" id="createrolesubmitHdn" style="display: none;">Submit</button>-->
-                                            <button type="button" class="btn btn-default themed-button btn-primary" id="deleteRole" onclick="deleteFromDb()">Delete</button>
+                                            <button type="button" class="btn btn-default themed-button btn-primary" id="deleteRole" onclick="deleteFromDb()">Delete Role</button>
                                             <!--<button type="reset" class="btn btn-default themed-button themed-button-cancel" value="clear" id="createrequestclear" onclick="resetDefault()">Clear</button>-->
                                         </div>
                                     </div>
