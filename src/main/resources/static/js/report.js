@@ -15,10 +15,7 @@ jQuery(document).ready(function ($) {
         $('#partners-tableview').hide();
         $('#requesttype-tableview').hide();
         $('#showReportResultsText').hide();
-        $('#RequestTypeshow').hide();
         $('#ReportShowBy').val('IL_BD');
-        $('#recapreports #ReportRequestType').multiselect('deselectAll', false);
-        $('#recapreports #ReportRequestType').multiselect('refresh');
         if ($(this).is(':checked')) {
             RequestOption();
         }
@@ -49,19 +46,16 @@ jQuery(document).ready(function ($) {
     /** Request Type show and hide **/
     var reportShowBy = $('#ReportShowBy').val();
     if (reportShowBy == 'RequestType') {
-        $('#RequestTypeshow').show();
         $('#note-ILBD').hide();
         $('#note-partners').hide();
         $('#note-requesttype').show();
     }
     if (reportShowBy == 'Partners') {
-        $('#RequestTypeshow').hide();
         $('#note-ILBD').hide();
         $('#note-partners').show();
         $('#note-requesttype').hide();
     }
     if (reportShowBy == 'IL_BD') {
-        $('#RequestTypeshow').hide();
         $('#note-ILBD').show();
         $('#note-partners').hide();
         $('#note-requesttype').hide();
@@ -92,8 +86,6 @@ jQuery(document).ready(function ($) {
         }
     });
 
-    /*** Multiselect ***/
-    $('#recapreports #ReportRequestType').multiselect();
 
     /****Report Tab RequestType Option Show/Hide*****/
     function ReportRequestTabOption() {
@@ -114,7 +106,6 @@ jQuery(document).ready(function ($) {
         $('#requestFromDateErrorText').hide();
         $('#requestToDateErrorText').hide();
         $('#accessionErrorText').hide();
-        $('#requestTypeErrorText').hide();
 
     }
 
@@ -144,7 +135,6 @@ jQuery(document).ready(function ($) {
             $('#' + $(this).val()).show();
             if ($(this).find(':selected').val() === 'IL_BD') {
                 $('#showReportResultsText').hide();
-                $('#RequestTypeshow').hide();
                 $('#requesttype-tableview').hide();
                 $('#partners-tableview').hide();
                 $('#ILBD-tableview').hide();
@@ -158,7 +148,6 @@ jQuery(document).ready(function ($) {
                 $('#RequestDateRangeto').val('');
             } else if ($(this).find(':selected').val() === 'Partners') {
                 $('#showReportResultsText').hide();
-                $('#RequestTypeshow').hide();
                 $('#requesttype-tableview').hide();
                 $('#partners-tableview').hide();
                 $('#ILBD-tableview').hide();
@@ -172,7 +161,6 @@ jQuery(document).ready(function ($) {
                 $('#RequestDateRangeto').val('');
             } else if ($(this).find(':selected').val() === 'RequestType') {
                 $('#showReportResultsText').hide();
-                $('#RequestTypeshow').show();
                 $('#requesttype-tableview').hide();
                 $('#partners-tableview').hide();
                 $('#ILBD-tableview').hide();
@@ -186,9 +174,6 @@ jQuery(document).ready(function ($) {
                 $('#RequestDateRangeto').val('');
                 $('#AccessionDeaccessionDateRangefrom').val('');
                 $('#AccessionDeaccessionDateRangeto').val('');
-                $('#recapreports #ReportRequestType').multiselect('deselectAll', false);
-                $('#recapreports #ReportRequestType').multiselect('refresh');
-                $('#requestTypeErrorText').hide();
             }
         });
 
@@ -221,15 +206,11 @@ jQuery(document).ready(function ($) {
             if($('#recapreports #ReportAccessionDeaccessionclick').is(':checked')){
                 $('#ReportAccessionDeaccessionclickview').show();
                 $('#ReportRequestclickview').hide();
-                $('#RequestTypeshow').hide();
                 $('#showReportResultsText').hide();
-                $('#RequestTypeshow').hide();
             }
             else {
                 $('#ReportRequestclickview').show();
-                $('#RequestTypeshow').show();
                 $('#showReportResultsText').hide();
-                $('#RequestTypeshow').hide();
             }
         }
     }
@@ -239,7 +220,6 @@ jQuery(document).ready(function ($) {
         var showBy = $('#ReportShowBy').val();
         var requestFromDate = $('#RequestDateRangefrom').val();
         var requestToDate = $('#RequestDateRangeto').val();
-        var reportRequestType = $('#ReportRequestType').val();
         var isValid = true;
         if($('#recapreports #ReportAccessionDeaccessionclick').is(':checked')){
             var fromDate = $('#AccessionDeaccessionDateRangefrom').val();
@@ -274,32 +254,6 @@ jQuery(document).ready(function ($) {
             else {
                 $('#requestToDateErrorText').hide();
             }
-            if ((showBy == 'RequestType') && isBlankValue(reportRequestType)) {
-                isValid=false;
-                $('#requestTypeErrorText').show();
-                $('#RequestTypeshow').show(e.preventDefault());
-                e.preventDefault();
-            }
-            if ((showBy == 'RequestType') && !isBlankValue(reportRequestType) && isBlankValue(requestFromDate) && isBlankValue(requestToDate)) {
-                $('#RequestTypeshow').show();
-                $('#requestTypeErrorText').hide();
-                e.preventDefault();
-            }
-            if ((showBy == 'RequestType') && !isBlankValue(reportRequestType) && !isBlankValue(requestFromDate) && isBlankValue(requestToDate)) {
-                $('#RequestTypeshow').show();
-                $('#requestTypeErrorText').hide();
-                e.preventDefault();
-            }
-            if ((showBy == 'RequestType') && !isBlankValue(reportRequestType) && isBlankValue(requestFromDate) && !isBlankValue(requestToDate)) {
-                $('#RequestTypeshow').show();
-                $('#requestTypeErrorText').hide();
-                e.preventDefault();
-            }
-            if ((showBy == 'RequestType') && !isBlankValue(reportRequestType) && !isBlankValue(requestFromDate) && !isBlankValue(requestToDate)) {
-                isValid=true;
-                $('#RequestTypeshow').show();
-                $('#requestTypeErrorText').hide();
-            }
         }
         return isValid;
     }
@@ -313,10 +267,6 @@ jQuery(document).ready(function ($) {
 
     $('#RequestDateRangefrom').click(function () {
         $('#requestFromDateErrorText').hide();
-    });
-
-    $('#ReportRequestType').change(function () {
-        $('#requestTypeErrorText').hide();
     });
 
     $('#RequestDateRangeto').click(function () {
