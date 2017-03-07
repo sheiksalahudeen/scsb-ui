@@ -13,6 +13,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -40,6 +41,17 @@ public class ReCAPSimpleUrlLogoutSuccessHandler extends SimpleUrlLogoutSuccessHa
             logger.error(RecapConstants.LOG_ERROR,e);
         }
         request.removeAttribute(UserManagement.USER_TOKEN);
+        request.removeAttribute(RecapConstants.RECAP_INSTITUTION_CODE);
+
+        Cookie[] cookies = request.getCookies();
+        if (null != cookies) {
+            for(Cookie cookie : cookies) {
+                if(StringUtils.equals(cookie.getName(), RecapConstants.RECAP_INSTITUTION_CODE)) {
+                    cookie.setMaxAge(0);
+                    response.addCookie(cookie);
+                }
+            }
+        }
     }
 
     @Override

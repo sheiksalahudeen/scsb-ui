@@ -1,5 +1,6 @@
 package org.recap.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
 import org.recap.model.userManagement.LoginValidator;
@@ -10,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.net.ConnectException;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 
 
@@ -43,6 +47,10 @@ public class LoginController {
 
     @RequestMapping(value="/",method= RequestMethod.GET)
     public String loginScreen(HttpServletRequest request, Model model, @ModelAttribute UserForm userForm) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(null != auth && !isAnonymousUser(auth)) {
+            return "redirect:/search";
+        }
         logger.info("Login Screen called");
         return RecapConstants.VIEW_LOGIN;
     }
@@ -161,5 +169,18 @@ public class LoginController {
         session.setAttribute(UserManagement.REQUEST_ITEM_PRIVILEGE,(Boolean)authMap.get(UserManagement.REQUEST_ITEM_PRIVILEGE));
         session.setAttribute(UserManagement.BARCODE_RESTRICTED_PRIVILEGE,(Boolean)authMap.get(UserManagement.BARCODE_RESTRICTED_PRIVILEGE));
         session.setAttribute(UserManagement.DEACCESSION_PRIVILEGE,(Boolean)authMap.get(UserManagement.DEACCESSION_PRIVILEGE));
+    }
+
+    private boolean isAnonymousUser(Authentication auth) {
+        if(StringUtils.equals(auth.getName(), RecapConstants.ANONYMOUS_USER)) {
+            Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+            for (Iterator<? extends GrantedAuthority> iterator = authorities.iterator(); iterator.hasNext(); ) {
+                GrantedAuthority grantedAuthority = iterator.next();
+                if(StringUtils.equals(grantedAuthority.getAuthority(), RecapConstants.ROLE_ANONYMOUS)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
