@@ -53,6 +53,8 @@ public enum UserManagement {
 
     public static final String USER_NAME="userName";
 
+    public static final String ROLE_FOR_SUPER_ADMIN="isRoleAllowed";
+
 
     private String value;
 

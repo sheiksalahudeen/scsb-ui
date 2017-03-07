@@ -356,6 +356,7 @@ public class RecapConstants {
     public static final String SCSB_SHIRO_COLLECTION_URL="auth/collection";
     public static final String SCSB_SHIRO_REPORT_URL="auth/reports";
     public static final String SCSB_SHIRO_USER_ROLE_URL="auth/userRoles";
+    public static final String SCSB_SHIRO_ROLE_URL="auth/roles";
     public static final String SCSB_SHIRO_LOGOUT_URL="userAuth/logout";
     public static final String SCSB_SHIRO_UI_VALUES="authentication/permissions";
 

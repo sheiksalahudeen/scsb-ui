@@ -169,6 +169,13 @@ public class LoginController {
         session.setAttribute(UserManagement.REQUEST_ITEM_PRIVILEGE,(Boolean)authMap.get(UserManagement.REQUEST_ITEM_PRIVILEGE));
         session.setAttribute(UserManagement.BARCODE_RESTRICTED_PRIVILEGE,(Boolean)authMap.get(UserManagement.BARCODE_RESTRICTED_PRIVILEGE));
         session.setAttribute(UserManagement.DEACCESSION_PRIVILEGE,(Boolean)authMap.get(UserManagement.DEACCESSION_PRIVILEGE));
+        Object isSuperAdmin = session.getAttribute(UserManagement.SUPER_ADMIN_USER);
+        if((boolean)isSuperAdmin == true){
+            session.setAttribute(UserManagement.ROLE_FOR_SUPER_ADMIN,true);
+        }
+        else {
+            session.setAttribute(UserManagement.ROLE_FOR_SUPER_ADMIN,false);
+        }
     }
 
     private boolean isAnonymousUser(Authentication auth) {
