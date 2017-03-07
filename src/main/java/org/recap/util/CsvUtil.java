@@ -20,7 +20,7 @@ import java.util.List;
 @Component
 public class CsvUtil {
 
-    Logger logger = LoggerFactory.getLogger(CsvUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(CsvUtil.class);
 
     /**
      * Generates a csv file for the selected search result rows.
@@ -57,7 +57,7 @@ public class CsvUtil {
                     }
                 }
             } catch (Exception e) {
-                logger.error(e.getMessage());
+                logger.error(RecapConstants.LOG_ERROR,e);
             } finally {
                 csvOutput.flush();
                 csvOutput.close();

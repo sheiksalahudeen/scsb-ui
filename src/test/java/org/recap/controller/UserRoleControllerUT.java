@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
  */
 public class UserRoleControllerUT extends BaseTestCase {
 
-    Logger logger = LoggerFactory.getLogger(UserRoleController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserRoleController.class);
 
     @Autowired
     UserRoleController userRoleController;

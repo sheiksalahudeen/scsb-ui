@@ -177,7 +177,7 @@ public class ReCAPCas20ServiceTicketValidator extends ReCAPAbstractCasProtocolUr
 
         @Override
         public void startDocument() throws SAXException {
-            this.attributes = new HashMap<String, Object>();
+            this.attributes = new HashMap<>();
         }
 
         @Override
@@ -214,7 +214,7 @@ public class ReCAPCas20ServiceTicketValidator extends ReCAPAbstractCasProtocolUr
                     if (o instanceof List) {
                         items = (List<Object>) o;
                     } else {
-                        items = new LinkedList<Object>();
+                        items = new LinkedList<>();
                         items.add(o);
                         this.attributes.put(this.currentAttribute, items);
                     }

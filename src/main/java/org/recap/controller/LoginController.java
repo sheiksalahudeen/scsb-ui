@@ -36,7 +36,7 @@ import java.util.Map;
 @Controller
 public class LoginController {
 
-    Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     private LoginValidator loginValidator=new LoginValidator();
 
@@ -52,7 +52,7 @@ public class LoginController {
             return "redirect:/search";
         }
         logger.info("Login Screen called");
-        return "login";
+        return RecapConstants.VIEW_LOGIN;
     }
 
 
@@ -63,14 +63,14 @@ public class LoginController {
         String user = auth.getName();
         logger.info("passing in /login");
         model.addAttribute("user", user);
-        final String loginScreen="login";
+        final String loginScreen=RecapConstants.VIEW_LOGIN;
         Map<String,Object> resultmap=null;
         userForm.setUsername(user);
         userForm.setPassword("");
         try
         {
             UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+userForm.getInstitution(),userForm.getPassword(),true);
-            resultmap=(Map<String,Object>)userAuthUtil.doAuthentication(token);
+            resultmap=userAuthUtil.doAuthentication(token);
 
             if(!(Boolean) resultmap.get("isAuthenticated"))
             {
@@ -84,6 +84,7 @@ public class LoginController {
         }
         catch(Exception e)
         {
+            logger.error(RecapConstants.LOG_ERROR,e);
             logger.error("Exception occured in authentication : "+e.getLocalizedMessage());
             return loginScreen;
         }
@@ -96,7 +97,7 @@ public class LoginController {
     @RequestMapping(value="/",method= RequestMethod.POST)
     public String createSession(@Valid @ModelAttribute UserForm userForm, HttpServletRequest request, Model model, BindingResult error){
         loginValidator.validate(userForm,error);
-        final String loginScreen="login";
+        final String loginScreen=RecapConstants.VIEW_LOGIN;
         Map<String,Object> resultmap=null;
         if(userForm==null){
             return loginScreen;
@@ -109,7 +110,7 @@ public class LoginController {
                 return loginScreen(request,model,userForm);
             }
             UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+userForm.getInstitution(),userForm.getPassword(),true);
-            resultmap=(Map<String,Object>)userAuthUtil.doAuthentication(token);
+            resultmap=userAuthUtil.doAuthentication(token);
 
             if(!(Boolean) resultmap.get("isAuthenticated"))
             {
@@ -119,24 +120,23 @@ public class LoginController {
             session.setAttribute(UserManagement.USER_TOKEN,token);
             session.setAttribute(UserManagement.USER_AUTH,resultmap);
             setValuesInSession(session,resultmap);
-
         }
         catch(ConnectException|ResourceAccessException e)
         {
+            logger.error(RecapConstants.LOG_ERROR,e);
             error.rejectValue("wrongCredentials","error.invalid.credentials","Connection Error.Please contact our staff");
             logger.error("Exception occured in connection : "+e.getLocalizedMessage());
             return loginScreen;
         }
         catch(Exception e)
         {
+            logger.error(RecapConstants.LOG_ERROR,e);
             error.rejectValue("wrongCredentials","error.invalid.credentials","Invalid Credentials");
-            logger.debug("Exception occured in authentication Process : "+resultmap.get(UserManagement.USER_AUTH_ERRORMSG));
-            logger.error(e.getLocalizedMessage()+":"+resultmap.get(UserManagement.USER_AUTH_ERRORMSG));
+            logger.debug("Exception occured in authentication Process : {} ",resultmap.get(UserManagement.USER_AUTH_ERRORMSG));
+            logger.error("{} : {}",e.getLocalizedMessage(),resultmap.get(UserManagement.USER_AUTH_ERRORMSG));
             return loginScreen;
         }
-
-
-            return "redirect:/search";
+        return "redirect:/search";
 
     }
 
@@ -151,8 +151,6 @@ public class LoginController {
             session.invalidate();
             return "redirect:/";
         }
-
-
     }
 
     private void setValuesInSession(HttpSession session,Map<String,Object> authMap)
@@ -162,7 +160,6 @@ public class LoginController {
         session.setAttribute(UserManagement.USER_INSTITUTION,(Integer)authMap.get(UserManagement.USER_INSTITUTION));
         session.setAttribute(UserManagement.SUPER_ADMIN_USER,(Boolean)authMap.get(UserManagement.SUPER_ADMIN_USER));
         session.setAttribute(UserManagement.ReCAP_USER,(Boolean)authMap.get(UserManagement.ReCAP_USER));
-
         session.setAttribute(UserManagement.REQUEST_PRIVILEGE,(Boolean)authMap.get(UserManagement.REQUEST_PRIVILEGE));
         session.setAttribute(UserManagement.COLLECTION_PRIVILEGE,(Boolean)authMap.get(UserManagement.COLLECTION_PRIVILEGE));
         session.setAttribute(UserManagement.REPORTS_PRIVILEGE,(Boolean)authMap.get(UserManagement.REPORTS_PRIVILEGE));
@@ -193,10 +190,4 @@ public class LoginController {
         }
         return false;
     }
-
-
-
-
-
-
 }

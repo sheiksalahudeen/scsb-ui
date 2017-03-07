@@ -60,10 +60,6 @@ public enum UserManagement {
 
     private int integerValues;
 
-    public int getIntegerValues() {
-        return integerValues;
-    }
-
     UserManagement(String value)
     {
         this.value=value;
@@ -72,6 +68,10 @@ public enum UserManagement {
     UserManagement(int value)
     {
         this.integerValues=value;
+    }
+
+    public int getIntegerValues() {
+        return integerValues;
     }
 
     public String getValue()
@@ -89,10 +89,4 @@ public enum UserManagement {
         }
         return loginScreen;
     }
-
-
-
-
-
-
 }

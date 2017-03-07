@@ -15,10 +15,10 @@ import java.util.*;
  */
 public class BibJSONUtil extends MarcUtil {
 
-    Logger logger = LoggerFactory.getLogger(BibJSONUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(BibJSONUtil.class);
 
     public String getPublisherValue(Record record) {
-        String publisherValue = null;
+        String publisherValue;
         List<String> publisherDataFields = Arrays.asList("260", "261", "262", "264");
         for (String publisherDataField : publisherDataFields) {
             publisherValue = getDataFieldValue(record, publisherDataField, null, null, "b");
@@ -30,7 +30,7 @@ public class BibJSONUtil extends MarcUtil {
     }
 
     private String getPublicationPlaceValue(Record record) {
-        String publicationPlaceValue = null;
+        String publicationPlaceValue;
         List<String> publicationPlaceDataFields = Arrays.asList("260", "261", "262", "264");
         for (String publicationPlaceDataField : publicationPlaceDataFields) {
             publicationPlaceValue = getDataFieldValue(record, publicationPlaceDataField, null, null, "a");
@@ -42,7 +42,7 @@ public class BibJSONUtil extends MarcUtil {
     }
 
     public String getPublicationDateValue(Record record) {
-        String publicationDateValue = null;
+        String publicationDateValue;
         List<String> publicationDateDataFields = Arrays.asList("260", "261", "262", "264");
         for (String publicationDateDataField : publicationDateDataFields) {
             publicationDateValue = getDataFieldValue(record, publicationDateDataField, null, null, "c");
@@ -71,9 +71,9 @@ public class BibJSONUtil extends MarcUtil {
                 oclcNumbers.add(modifiedOclc);
             }
         }
-        if (CollectionUtils.isEmpty(oclcNumbers) && StringUtils.isNotBlank(institutionCode) && institutionCode.equalsIgnoreCase("NYPL")) {
+        if (CollectionUtils.isEmpty(oclcNumbers) && StringUtils.isNotBlank(institutionCode) && "NYPL".equalsIgnoreCase(institutionCode)) {
             String oclcTag = getControlFieldValue(record, "003");
-            if (StringUtils.isNotBlank(oclcTag) && oclcTag.equalsIgnoreCase("OCoLC")) {
+            if (StringUtils.isNotBlank(oclcTag) && "OCoLC".equalsIgnoreCase(oclcTag)) {
                 oclcTag = getControlFieldValue(record, "001");
             }
             oclcTag = StringUtils.stripStart(oclcTag, "0");
@@ -157,7 +157,7 @@ public class BibJSONUtil extends MarcUtil {
 
     public List<String> getAuthorSearchValue(Record marcRecord) {
         List<String> authorSearchValues = new ArrayList<>();
-        List<String> fieldValues = null;
+        List<String> fieldValues;
 
         Map<String, List<Character>> authorMap = new HashMap<>();
         authorMap.put("100", Arrays.asList('a','q'));

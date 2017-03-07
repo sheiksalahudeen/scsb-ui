@@ -9,7 +9,7 @@ jQuery(document).ready(function ($) {
         $("#clearSearchText").hide();
     }
 
-    $("#fieldValue").keyup(function(e) {
+    $("#fieldValue").keyup(function() {
         if ($("#fieldValue").val().length > 0) {
             $("#clearSearchText").show();
         } else {

@@ -1,6 +1,9 @@
 package org.recap.security;
 
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.recap.RecapConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.ComponentScan;
 
 import javax.servlet.*;
@@ -15,9 +18,11 @@ import java.io.IOException;
 @ComponentScan
 public class SessionFilter implements Filter{
 
+    private static final Logger logger = LoggerFactory.getLogger(SessionFilter.class);
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        //Do nothing
     }
 
     @Override
@@ -35,12 +40,13 @@ public class SessionFilter implements Filter{
                 chain.doFilter(request,response);
             }catch(Exception e)
             {//if session time out redirects to login screen
+                logger.error(RecapConstants.LOG_ERROR,e);
                 httpResponse.sendRedirect("/");
             }
     }
 
     @Override
     public void destroy() {
-
+        //Do nothing
     }
 }

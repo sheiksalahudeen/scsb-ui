@@ -20,7 +20,7 @@ import java.util.Set;
  */
 public class CustomUserDetailsService implements AuthenticationUserDetailsService<CasAssertionAuthenticationToken> {
 
-    private final Logger log = LoggerFactory.getLogger(CustomUserDetailsService.class);
+    private static final Logger log = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
     private Set<String> admins;
 
@@ -39,7 +39,7 @@ public class CustomUserDetailsService implements AuthenticationUserDetailsServic
         String lowercaseLogin = login.toLowerCase();
 
         log.debug("Authenticating '{}'", login);
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
 
         if (admins != null && admins.contains(lowercaseLogin)) {
             grantedAuthorities.add(new SimpleGrantedAuthority(RecapConstants.ADMIN));

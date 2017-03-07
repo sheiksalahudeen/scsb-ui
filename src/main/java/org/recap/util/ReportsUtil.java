@@ -6,8 +6,6 @@ import org.recap.model.search.DeaccessionItemResultsRow;
 import org.recap.model.search.ReportsForm;
 import org.recap.repository.jpa.ItemChangeLogDetailsRepository;
 import org.recap.repository.jpa.RequestItemDetailsRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +18,6 @@ import java.util.List;
  */
 @Component
 public class ReportsUtil {
-
-    private Logger logger = LoggerFactory.getLogger(ReportsUtil.class);
 
     @Autowired
     ReportsServiceUtil reportsServiceUtil;

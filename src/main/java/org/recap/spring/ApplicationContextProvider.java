@@ -15,17 +15,15 @@ public class ApplicationContextProvider implements ApplicationContextAware {
 
     private static ApplicationContextProvider applicationContextProvider;
 
+    private ApplicationContextProvider(){
+    }
+
     public static ApplicationContextProvider getInstance(){
         if(null == applicationContextProvider){
             applicationContextProvider = new ApplicationContextProvider();
         }
         return applicationContextProvider;
     }
-
-    private ApplicationContextProvider(){
-
-    }
-
     public ApplicationContext getApplicationContext() {
         return context;
     }

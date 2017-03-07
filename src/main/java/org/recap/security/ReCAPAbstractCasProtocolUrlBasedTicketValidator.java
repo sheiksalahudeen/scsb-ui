@@ -1,7 +1,6 @@
 package org.recap.security;
 
 import org.jasig.cas.client.util.CommonUtils;
-import org.jasig.cas.client.validation.AbstractUrlBasedTicketValidator;
 
 import java.net.URL;
 

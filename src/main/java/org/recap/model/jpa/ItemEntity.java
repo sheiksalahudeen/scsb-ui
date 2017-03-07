@@ -90,6 +90,7 @@ public class ItemEntity implements Serializable {
     private List<BibliographicEntity> bibliographicEntities;
 
     public ItemEntity() {
+        //Do nothing
     }
 
 

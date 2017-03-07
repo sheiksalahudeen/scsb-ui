@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class SearchUtil {
 
-    Logger logger = LoggerFactory.getLogger(SearchUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(SearchUtil.class);
 
     @Value("${server.protocol}")
     String serverProtocol;
@@ -40,7 +40,7 @@ public class SearchUtil {
             searchRecordsResponse = responseEntity.getBody();
             return searchRecordsResponse;
         } catch (Exception e) {
-            logger.error("" + e.getMessage());
+            logger.error(RecapConstants.LOG_ERROR,e);
             return searchRecordsResponse;
         }
     }
