@@ -3,8 +3,8 @@ package org.recap.util;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.recap.RecapConstants;
-import org.recap.model.deAccession.DeAccessionItem;
-import org.recap.model.deAccession.DeAccessionRequest;
+import org.recap.model.deaccession.DeAccessionItem;
+import org.recap.model.deaccession.DeAccessionRequest;
 import org.recap.model.jpa.CustomerCodeEntity;
 import org.recap.model.jpa.ItemChangeLogEntity;
 import org.recap.model.jpa.ItemEntity;
@@ -32,7 +32,7 @@ import java.util.Map;
 @Service
 public class CollectionServiceUtil {
 
-    Logger logger = LoggerFactory.getLogger(CollectionServiceUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(CollectionServiceUtil.class);
 
     @Value("${server.protocol}")
     String serverProtocol;
@@ -72,7 +72,6 @@ public class CollectionServiceUtil {
     public void updateCGDForItem(BibliographicMarcForm bibliographicMarcForm) {
         String statusResponse = null;
         try {
-            RestTemplate restTemplate = new RestTemplate();
             HttpEntity requestEntity = new HttpEntity<>(getHttpHeaders());
 
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getServerProtocol() + getScsbUrl() + RecapConstants.SCSB_UPDATE_CGD_URL)
@@ -91,7 +90,7 @@ public class CollectionServiceUtil {
                 bibliographicMarcForm.setErrorMessage(RecapConstants.CGD_UPDATE_FAILED + "-" + statusResponse.replace(RecapConstants.FAILURE + "-", ""));
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(RecapConstants.LOG_ERROR,e);
             bibliographicMarcForm.setErrorMessage(RecapConstants.CGD_UPDATE_FAILED + "-" + e.getMessage());
         }
     }
@@ -131,7 +130,7 @@ public class CollectionServiceUtil {
                 }
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(RecapConstants.LOG_ERROR,e);
             bibliographicMarcForm.setErrorMessage(RecapConstants.DEACCESSION_FAILED + " - " + e.getMessage());
         }
     }

@@ -48,7 +48,7 @@ import java.util.*;
 @Controller
 public class SearchRecordsController {
 
-    Logger logger = LoggerFactory.getLogger(SearchRecordsController.class);
+    private static final Logger logger = LoggerFactory.getLogger(SearchRecordsController.class);
 
     @Value("${server.protocol}")
     String serverProtocol;
@@ -60,16 +60,14 @@ public class SearchRecordsController {
     @Autowired
     SearchUtil searchUtil;
 
-    public SearchUtil getSearchUtil() {
-        return searchUtil;
-    }
-
-    public void setSearchUtil(SearchUtil searchUtil) {
-        this.searchUtil = searchUtil;
-    }
-
     @Autowired
     private CsvUtil csvUtil;
+
+    @Autowired
+    private UserAuthUtil userAuthUtil;
+
+    @Autowired
+    InstitutionDetailsRepository institutionDetailsRepository;
 
     public CsvUtil getCsvUtil() {
         return csvUtil;
@@ -79,8 +77,14 @@ public class SearchRecordsController {
         this.csvUtil = csvUtil;
     }
 
-    @Autowired
-    private UserAuthUtil userAuthUtil;
+    public SearchUtil getSearchUtil() {
+        return searchUtil;
+    }
+
+    public void setSearchUtil(SearchUtil searchUtil) {
+        this.searchUtil = searchUtil;
+    }
+
 
     public UserAuthUtil getUserAuthUtil() {
         return userAuthUtil;
@@ -89,9 +93,6 @@ public class SearchRecordsController {
     public void setUserAuthUtil(UserAuthUtil userAuthUtil) {
         this.userAuthUtil = userAuthUtil;
     }
-
-    @Autowired
-    InstitutionDetailsRepository institutionDetailsRepository;
 
     public InstitutionDetailsRepository getInstitutionDetailsRepository() {
         return institutionDetailsRepository;
@@ -108,9 +109,9 @@ public class SearchRecordsController {
         if(authenticated)
         {
             SearchRecordsRequest searchRecordsRequest = new SearchRecordsRequest();
-            model.addAttribute("searchRecordsRequest", searchRecordsRequest);
+            model.addAttribute(RecapConstants.VIEW_SEARCH_RECORDS_REQUEST, searchRecordsRequest);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.SEARCH);
-            return "searchRecords";
+            return RecapConstants.VIEW_SEARCH_RECORDS;
         }else{
             return UserManagement.unAuthorizedUser(session,"Search",logger);
         }
@@ -125,7 +126,7 @@ public class SearchRecordsController {
         searchRecordsRequest.resetPageNumber();
         searchAndSetResults(searchRecordsRequest);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.SEARCH);
-        return new ModelAndView("searchRecords", "searchRecordsRequest", searchRecordsRequest);
+        return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.VIEW_SEARCH_RECORDS_REQUEST, searchRecordsRequest);
     }
 
     @ResponseBody
@@ -135,7 +136,7 @@ public class SearchRecordsController {
                                Model model) {
         searchAndSetResults(searchRecordsRequest);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.SEARCH);
-        return new ModelAndView("searchRecords", "searchRecordsRequest", searchRecordsRequest);
+        return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.VIEW_SEARCH_RECORDS_REQUEST, searchRecordsRequest);
     }
 
     @ResponseBody
@@ -145,7 +146,7 @@ public class SearchRecordsController {
                                    Model model) {
         searchAndSetResults(searchRecordsRequest);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.SEARCH);
-        return new ModelAndView("searchRecords", "searchRecordsRequest", searchRecordsRequest);
+        return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.VIEW_SEARCH_RECORDS_REQUEST, searchRecordsRequest);
     }
 
     @ResponseBody
@@ -156,7 +157,7 @@ public class SearchRecordsController {
         searchRecordsRequest.resetPageNumber();
         searchAndSetResults(searchRecordsRequest);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.SEARCH);
-        return new ModelAndView("searchRecords", "searchRecordsRequest", searchRecordsRequest);
+        return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.VIEW_SEARCH_RECORDS_REQUEST, searchRecordsRequest);
     }
 
     @ResponseBody
@@ -167,7 +168,7 @@ public class SearchRecordsController {
         searchRecordsRequest.setPageNumber(searchRecordsRequest.getTotalPageCount() - 1);
         searchAndSetResults(searchRecordsRequest);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.SEARCH);
-        return new ModelAndView("searchRecords", "searchRecordsRequest", searchRecordsRequest);
+        return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.VIEW_SEARCH_RECORDS_REQUEST, searchRecordsRequest);
     }
 
     @ResponseBody
@@ -184,7 +185,7 @@ public class SearchRecordsController {
         searchRecordsRequest.setUseRestrictions(new ArrayList<>());
         searchRecordsRequest.setShowResults(false);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.SEARCH);
-        return new ModelAndView("searchRecords");
+        return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS);
     }
 
     @ResponseBody
@@ -193,9 +194,9 @@ public class SearchRecordsController {
                                   BindingResult result,
                                   Model model) {
         searchRecordsRequest = new SearchRecordsRequest();
-        model.addAttribute("searchRecordsRequest", searchRecordsRequest);
+        model.addAttribute(RecapConstants.VIEW_SEARCH_RECORDS_REQUEST, searchRecordsRequest);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.SEARCH);
-        return new ModelAndView("searchRecords");
+        return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS);
     }
 
     @ResponseBody
@@ -241,7 +242,7 @@ public class SearchRecordsController {
         searchRecordsRequest.setPageNumber(getPageNumberOnPageSizeChange(searchRecordsRequest));
         searchAndSetResults(searchRecordsRequest);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.SEARCH);
-        return new ModelAndView("searchRecords", "searchRecordsRequest", searchRecordsRequest);
+        return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.VIEW_SEARCH_RECORDS_REQUEST, searchRecordsRequest);
     }
 
     public Integer getPageNumberOnPageSizeChange(SearchRecordsRequest searchRecordsRequest) {

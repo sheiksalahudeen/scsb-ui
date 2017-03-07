@@ -1,7 +1,7 @@
 $(document).ready(function () {
     
 	/*** Data Table Events ****/
-	$('#search-content-tab li a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
+	$('#search-content-tab li a[data-toggle="tab"]').on( 'shown.bs.tab', function () {
         $.fn.dataTable.tables( {visible: true, api: true} ).columns.adjust();
     });
     

@@ -208,7 +208,7 @@ jQuery(document).ready(function ($) {
         if(submitValid == true){
             var $form = $('#reports-form');
             var url = "/reports/submit";
-            var role = $.ajax({
+            $.ajax({
                 url: url,
                 type: 'post',
                 data: $form.serialize(),
@@ -373,7 +373,6 @@ function cgd() {
         url: url,
         type: 'get',
         success: function (response) {
-            console.log("completed");
             $('#cgdTable').html(response);
         }
     });

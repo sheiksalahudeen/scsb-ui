@@ -32,7 +32,7 @@ import java.util.List;
 @Controller
 public class ReportsController {
 
-    Logger logger = LoggerFactory.getLogger(ReportsController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ReportsController.class);
 
     @Autowired
     ReportsUtil reportsUtil;
@@ -55,9 +55,9 @@ public class ReportsController {
         if(authenticated)
         {
             ReportsForm reportsForm = new ReportsForm();
-            model.addAttribute("reportsForm", reportsForm);
+            model.addAttribute(RecapConstants.REPORTS_FORM, reportsForm);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
-            return "searchRecords";
+            return RecapConstants.VIEW_SEARCH_RECORDS;
         }else{
             return UserManagement.unAuthorizedUser(session,"Reports",logger);
         }
@@ -83,12 +83,11 @@ public class ReportsController {
         } else if (reportsForm.getRequestType().equalsIgnoreCase(RecapConstants.REPORTS_ACCESSION_DEACCESSION)) {
             reportsUtil.populateAccessionDeaccessionItemCounts(reportsForm);
 
-        } else if (reportsForm.getRequestType().equalsIgnoreCase("CollectionGroupDesignation")) {
+        } else if ("CollectionGroupDesignation".equalsIgnoreCase(reportsForm.getRequestType())) {
             reportsUtil.populateCGDItemCounts(reportsForm);
         }
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
         return new ModelAndView("reports", "reportsForm", reportsForm);
-
     }
 
     @ResponseBody
@@ -97,7 +96,7 @@ public class ReportsController {
                                   Model model) throws Exception {
         reportsUtil.populateCGDItemCounts(reportsForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
-        return new ModelAndView("reports :: #cgdTable", "reportsForm", reportsForm);
+        return new ModelAndView(RecapConstants.REPORTS_VIEW_CGD_TABLE, RecapConstants.REPORTS_FORM, reportsForm);
 
     }
 
@@ -108,7 +107,7 @@ public class ReportsController {
         List<DeaccessionItemResultsRow> deaccessionItemResultsRowList = reportsUtil.deaccessionReportFieldsInformation(reportsForm);
         reportsForm.setDeaccessionItemResultsRows(deaccessionItemResultsRowList);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
-        return new ModelAndView("reports :: #deaccessionInformation", "reportsForm", reportsForm);
+        return new ModelAndView(RecapConstants.REPORTS_VIEW_DEACCESSION_INFORMARION, RecapConstants.REPORTS_FORM, reportsForm);
 
     }
 
@@ -121,7 +120,7 @@ public class ReportsController {
         List<DeaccessionItemResultsRow> deaccessionItemResultsRowList = reportsUtil.deaccessionReportFieldsInformation(reportsForm);
         reportsForm.setDeaccessionItemResultsRows(deaccessionItemResultsRowList);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
-        return new ModelAndView("reports :: #deaccessionInformation", "reportsForm", reportsForm);
+        return new ModelAndView(RecapConstants.REPORTS_VIEW_DEACCESSION_INFORMARION, RecapConstants.REPORTS_FORM, reportsForm);
     }
 
     @ResponseBody
@@ -131,7 +130,7 @@ public class ReportsController {
         List<DeaccessionItemResultsRow> deaccessionItemResultsRowList = reportsUtil.deaccessionReportFieldsInformation(reportsForm);
         reportsForm.setDeaccessionItemResultsRows(deaccessionItemResultsRowList);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
-        return new ModelAndView("reports :: #deaccessionInformation", "reportsForm", reportsForm);
+        return new ModelAndView(RecapConstants.REPORTS_VIEW_DEACCESSION_INFORMARION, RecapConstants.REPORTS_FORM, reportsForm);
     }
 
 
@@ -142,7 +141,7 @@ public class ReportsController {
         List<DeaccessionItemResultsRow> deaccessionItemResultsRowList = reportsUtil.deaccessionReportFieldsInformation(reportsForm);
         reportsForm.setDeaccessionItemResultsRows(deaccessionItemResultsRowList);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
-        return new ModelAndView("reports :: #deaccessionInformation", "reportsForm", reportsForm);
+        return new ModelAndView(RecapConstants.REPORTS_VIEW_DEACCESSION_INFORMARION, RecapConstants.REPORTS_FORM, reportsForm);
     }
 
 
@@ -154,6 +153,6 @@ public class ReportsController {
         List<DeaccessionItemResultsRow> deaccessionItemResultsRowList = reportsUtil.deaccessionReportFieldsInformation(reportsForm);
         reportsForm.setDeaccessionItemResultsRows(deaccessionItemResultsRowList);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
-        return new ModelAndView("reports :: #deaccessionInformation", "reportsForm", reportsForm);
+        return new ModelAndView(RecapConstants.REPORTS_VIEW_DEACCESSION_INFORMARION, RecapConstants.REPORTS_FORM, reportsForm);
     }
 }

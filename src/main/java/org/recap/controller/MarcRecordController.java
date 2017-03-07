@@ -19,7 +19,7 @@ import javax.validation.Valid;
 @Controller
 public class MarcRecordController {
 
-    Logger logger = LoggerFactory.getLogger(MarcRecordController.class);
+    private static final Logger logger = LoggerFactory.getLogger(MarcRecordController.class);
 
     @Autowired
     MarcRecordViewUtil marcRecordViewUtil;

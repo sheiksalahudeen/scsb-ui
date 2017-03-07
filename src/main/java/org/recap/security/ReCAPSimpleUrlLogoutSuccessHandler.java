@@ -38,7 +38,7 @@ public class ReCAPSimpleUrlLogoutSuccessHandler extends SimpleUrlLogoutSuccessHa
         try{
             userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_LOGOUT_URL,(UsernamePasswordToken) attribute);
         }catch (Exception e) {
-            e.printStackTrace();
+            logger.error(RecapConstants.LOG_ERROR,e);
         }
         request.removeAttribute(UserManagement.USER_TOKEN);
         request.removeAttribute(RecapConstants.RECAP_INSTITUTION_CODE);
@@ -59,7 +59,7 @@ public class ReCAPSimpleUrlLogoutSuccessHandler extends SimpleUrlLogoutSuccessHa
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         String institution = (String)((ServletRequestAttributes) requestAttributes).getRequest().getAttribute(RecapConstants.RECAP_INSTITUTION_CODE);
 
-        String casLogoutUrl = null;
+        String casLogoutUrl;
         if (StringUtils.equals(institution, "NYPL")) {
             casLogoutUrl = "/"; // Todo : Need to get the corresponding logout url from NYPL
         } else {

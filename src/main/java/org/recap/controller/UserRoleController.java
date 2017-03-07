@@ -4,10 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
 import org.recap.model.jpa.InstitutionEntity;
-import org.recap.model.jpa.PermissionEntity;
 import org.recap.model.jpa.RoleEntity;
 import org.recap.model.jpa.UsersEntity;
-import org.recap.model.search.RolesForm;
 import org.recap.model.userManagement.UserDetailsForm;
 import org.recap.model.userManagement.UserRoleForm;
 import org.recap.model.userManagement.UserRoleService;
@@ -34,7 +32,6 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by dharmendrag on 23/12/16.
@@ -42,7 +39,7 @@ import java.util.Set;
 @Controller
 public class UserRoleController {
 
-    Logger logger = LoggerFactory.getLogger(UserRoleController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserRoleController.class);
 
     @Autowired
     private UserRoleService userRoleService;
@@ -65,14 +62,6 @@ public class UserRoleController {
 
     public void setUserAuthUtil(UserAuthUtil userAuthUtil) {
         this.userAuthUtil = userAuthUtil;
-    }
-
-    public Logger getLogger() {
-        return logger;
-    }
-
-    public void setLogger(Logger logger) {
-        this.logger = logger;
     }
 
     public UserRoleService getUserRoleService() {
@@ -112,21 +101,25 @@ public class UserRoleController {
         HttpSession session = request.getSession();
         boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
         if (authenticated) {
-            logger.info("Users Tab Clicked");
+            logger.info(RecapConstants.USERS_TAB_CLICKED);
             UserRoleForm userRoleForm = new UserRoleForm();
             UserDetailsForm userDetailsForm = userAuthUtil.getUserDetails(session, UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
-            List<Object> roles = userRoleService.getRoles(UserManagement.SUPER_ADMIN.getIntegerValues());
-            List<Object> institutions = userRoleService.getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId());
-            userRoleForm.setRoles(roles);
-            userRoleForm.setInstitutions(institutions);
+            getAndSetRolesAndInstitutions(userRoleForm, userDetailsForm);
             userRoleForm.setAllowCreateEdit(true);
-            model.addAttribute("userRoleForm", userRoleForm);
-            model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES);
-            return "searchRecords";
+            model.addAttribute(RecapConstants.USER_ROLE_FORM, userRoleForm);
+            model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES_SEARCH);
+            return RecapConstants.VIEW_SEARCH_RECORDS;
         } else {
             return UserManagement.unAuthorizedUser(session,"Users",logger);
         }
 
+    }
+
+    private void getAndSetRolesAndInstitutions(UserRoleForm userRoleForm, UserDetailsForm userDetailsForm) {
+        List<Object> roles = userRoleService.getRoles(UserManagement.SUPER_ADMIN.getIntegerValues());
+        List<Object> institutions = userRoleService.getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId());
+        userRoleForm.setRoles(roles);
+        userRoleForm.setInstitutions(institutions);
     }
 
     //Search
@@ -140,13 +133,13 @@ public class UserRoleController {
         try {
             priorSearch(userRoleForm, request);
             userRoleForm.setShowPagination(true);
-            model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES);
+            model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES_SEARCH);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(RecapConstants.LOG_ERROR,e);
         }
-        return new ModelAndView("userRolesSearch :: #request-result-table", "userRoleForm", userRoleForm);
+        return new ModelAndView(RecapConstants.VIEW_REQUEST_RESULT_TABLE, RecapConstants.USER_ROLE_FORM, userRoleForm);
         } else {
-            return new ModelAndView("login");
+            return new ModelAndView(RecapConstants.VIEW_LOGIN);
         }
     }
 
@@ -160,18 +153,13 @@ public class UserRoleController {
         if (authenticated) {
         UserDetailsForm userDetailsForm = userAuthUtil.getUserDetails(request.getSession(), UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
         logger.info("User - Delete User clicked");
-        logger.info("User Id  " + userId);
-        logger.info("NetworkLoginId  " + networkLoginId);
         UsersEntity usersEntity = userDetailsRepository.findByUserId(userId);
         UserRoleForm userRoleForm = new UserRoleForm();
         userRoleForm.setAfterDelPageSize(pagesize);
         userRoleForm.setAfterDelPageNumber(pageNumber);
         userRoleForm.setAfterDelTotalPageCount(totalPageCount);
-        List<Object> roles = userRoleService.getRoles(UserManagement.SUPER_ADMIN.getIntegerValues());
-        List<Object> institutions = userRoleService.getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId());
+        getAndSetRolesAndInstitutions(userRoleForm, userDetailsForm);
         userRoleForm.setEditNetworkLoginId(usersEntity.getLoginId());
-        userRoleForm.setInstitutions(institutions);
-        userRoleForm.setRoles(roles);
         userRoleForm.setEditUserDescription(usersEntity.getUserDescription());
         userRoleForm.setEditUserId(userId);
         userRoleForm.setUserId(userId);
@@ -189,9 +177,9 @@ public class UserRoleController {
         userRoleForm.setShowSelectedForCreate(userRoleForm.getEditSelectedForCreate());
         userRoleForm.setEditInstitutionId(usersEntity.getInstitutionId());
         userRoleForm.setShowUserSearchView(false);
-        return new ModelAndView("userRolesSearch", "userRoleForm", userRoleForm);
+        return new ModelAndView(RecapConstants.USER_ROLES_SEARCH, RecapConstants.USER_ROLE_FORM, userRoleForm);
         } else {
-            return new ModelAndView("login");
+            return new ModelAndView(RecapConstants.VIEW_LOGIN);
         }
     }
 
@@ -215,30 +203,30 @@ public class UserRoleController {
             userRoleForm.setAfterDelPageSize(pageSize);
             userRoleForm.setShowPagination(true);
             userRoleForm.setShowResults(true);
-            model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES);
+            model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES_SEARCH);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(RecapConstants.LOG_ERROR,e);
         }
         userRoleForm.setShowUserSearchView(true);
-        return new ModelAndView("userRolesSearch", "userRoleForm", userRoleForm);
+        return new ModelAndView(RecapConstants.USER_ROLES_SEARCH, RecapConstants.USER_ROLE_FORM, userRoleForm);
         } else {
-            return new ModelAndView("login");
+            return new ModelAndView(RecapConstants.VIEW_LOGIN);
         }
     }
 
     @ResponseBody
     @RequestMapping(value = "/userRoles/first", method = RequestMethod.POST)
     public ModelAndView searchFirstPage(@ModelAttribute("userForm") UserRoleForm userRoleForm, Model model, HttpServletRequest request) {
-        getLogger().info("Users - Search First Page button Clicked");
+        logger.info("Users - Search First Page button Clicked");
         HttpSession session = request.getSession();
         boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
         if (authenticated) {
         userRoleForm.resetPageNumber();
         priorSearch(userRoleForm, request);
-        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES);
-        return new ModelAndView("userRolesSearch :: #request-result-table", "userRoleForm", userRoleForm);
+        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES_SEARCH);
+        return new ModelAndView(RecapConstants.VIEW_REQUEST_RESULT_TABLE, RecapConstants.USER_ROLE_FORM, userRoleForm);
         } else {
-            return new ModelAndView("login");
+            return new ModelAndView(RecapConstants.VIEW_LOGIN);
         }
     }
 
@@ -246,45 +234,21 @@ public class UserRoleController {
     @RequestMapping(value = "/userRoles/next", method = RequestMethod.POST)
     public ModelAndView searchNextPage(@ModelAttribute("userForm") UserRoleForm userRoleForm, Model model, HttpServletRequest request) {
         logger.info("Users - Search Next Page button Clicked");
-        HttpSession session = request.getSession();
-        boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
-        if (authenticated) {
-        priorSearch(userRoleForm, request);
-        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES);
-        return new ModelAndView("userRolesSearch :: #request-result-table", "userRoleForm", userRoleForm);
-        } else {
-            return new ModelAndView("login");
-        }
+        return getPaginatioinModelAndView(userRoleForm, model, request);
     }
 
     @ResponseBody
     @RequestMapping(value = "/userRoles/previous", method = RequestMethod.POST)
     public ModelAndView searchPreviousPage(@ModelAttribute("userForm") UserRoleForm userRoleForm, Model model, HttpServletRequest request) {
         logger.info("Users - Search Previous Page button Clicked");
-        HttpSession session = request.getSession();
-        boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
-        if (authenticated) {
-        priorSearch(userRoleForm, request);
-        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES);
-        return new ModelAndView("userRolesSearch :: #request-result-table", "userRoleForm", userRoleForm);
-        } else {
-            return new ModelAndView("login");
-        }
+        return getPaginatioinModelAndView(userRoleForm, model, request);
     }
 
     @ResponseBody
     @RequestMapping(value = "/userRoles/last", method = RequestMethod.POST)
     public ModelAndView searchLastPage(@ModelAttribute("userForm") UserRoleForm userRoleForm, Model model, HttpServletRequest request) {
         logger.info("Users - Search Last Page button Clicked");
-        HttpSession session = request.getSession();
-        boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
-        if (authenticated) {
-        priorSearch(userRoleForm, request);
-        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES);
-        return new ModelAndView("userRolesSearch :: #request-result-table", "userRoleForm", userRoleForm);
-        } else {
-            return new ModelAndView("login");
-        }
+        return getPaginatioinModelAndView(userRoleForm, model, request);
     }
 
     @ResponseBody
@@ -295,25 +259,18 @@ public class UserRoleController {
         boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
         if (authenticated) {
         UserDetailsForm userDetailsForm = userAuthUtil.getUserDetails(request.getSession(), UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
-        List<Object> roles = userRoleService.getRoles(UserManagement.SUPER_ADMIN.getIntegerValues());
-        List<Object> institutions = userRoleService.getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId());
-        userRoleForm.setRoles(roles);
-        userRoleForm.setInstitutions(institutions);
+            getAndSetRolesAndInstitutions(userRoleForm, userDetailsForm);
         Object userName = session.getAttribute(UserManagement.USER_NAME);
         userRoleForm.setCreatedBy(String.valueOf(userName));
         UsersEntity usersEntity = userRoleService.saveNewUserToDB(userRoleForm);
         if (usersEntity != null) {
-            userRoleForm.setUserDescription(userRoleForm.getUserDescription());
             userRoleForm.setShowCreateSuccess(true);
             userRoleForm.setAllowCreateEdit(true);
-            userRoleForm.setUserDescription(userRoleForm.getUserDescription());
-            userRoleForm.setInstitutionId(userRoleForm.getInstitutionId());
-            userRoleForm.setShowSelectedForCreate(userRoleForm.getSelectedForCreate());
         }
         userRoleForm.setShowUserSearchView(false);
-        return new ModelAndView("userRolesSearch", "userRoleForm", userRoleForm);
+        return new ModelAndView(RecapConstants.USER_ROLES_SEARCH, RecapConstants.USER_ROLE_FORM, userRoleForm);
         } else {
-        return new ModelAndView("login");
+        return new ModelAndView(RecapConstants.VIEW_LOGIN);
         }
     }
 
@@ -326,15 +283,10 @@ public class UserRoleController {
         if (authenticated) {
         UserDetailsForm userDetailsForm = userAuthUtil.getUserDetails(request.getSession(), UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
         logger.info("User - editUser clicked");
-        logger.info("userid  " + userId);
-        logger.info("networkLoginId  " + networkLoginId);
         UsersEntity usersEntity = userDetailsRepository.findByUserId(userId);
         UserRoleForm userRoleForm = new UserRoleForm();
-        List<Object> roles = userRoleService.getRoles(UserManagement.SUPER_ADMIN.getIntegerValues());
-        List<Object> institutions = userRoleService.getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId());
+            getAndSetRolesAndInstitutions(userRoleForm, userDetailsForm);
         userRoleForm.setEditNetworkLoginId(usersEntity.getLoginId());
-        userRoleForm.setInstitutions(institutions);
-        userRoleForm.setRoles(roles);
         userRoleForm.setEditUserDescription(usersEntity.getUserDescription());
         userRoleForm.setEditUserId(userId);
         userRoleForm.setUserId(userId);
@@ -352,9 +304,9 @@ public class UserRoleController {
         userRoleForm.setShowSelectedForCreate(userRoleForm.getEditSelectedForCreate());
         userRoleForm.setEditInstitutionId(usersEntity.getInstitutionId());
         userRoleForm.setShowUserSearchView(false);
-        return new ModelAndView("userRolesSearch", "userRoleForm", userRoleForm);
+        return new ModelAndView(RecapConstants.USER_ROLES_SEARCH, RecapConstants.USER_ROLE_FORM, userRoleForm);
         } else {
-            return new ModelAndView("login");
+            return new ModelAndView(RecapConstants.VIEW_LOGIN);
         }
     }
 
@@ -377,10 +329,7 @@ public class UserRoleController {
             roleIds.add(Integer.valueOf(parameterValue));
         }
         userRoleForm.setMessage(networkLoginId + RecapConstants.EDITED_AND_SAVED);
-        List<Object> roles = userRoleService.getRoles(UserManagement.SUPER_ADMIN.getIntegerValues());
-        List<Object> institutions = userRoleService.getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId());
-        userRoleForm.setInstitutions(institutions);
-        userRoleForm.setRoles(roles);
+            getAndSetRolesAndInstitutions(userRoleForm, userDetailsForm);
         userRoleForm.setUserId(userId);
         Object userName = session.getAttribute(UserManagement.USER_NAME);
         userRoleForm.setLastUpdatedBy(String.valueOf(userName));
@@ -413,9 +362,9 @@ public class UserRoleController {
             userRoleForm.setEditEmailId(userEmailId);
         }
             userRoleForm.setShowUserSearchView(false);
-        return new ModelAndView("userRolesSearch", "userRoleForm", userRoleForm);
+        return new ModelAndView(RecapConstants.USER_ROLES_SEARCH, RecapConstants.USER_ROLE_FORM, userRoleForm);
         } else {
-            return new ModelAndView("login");
+            return new ModelAndView(RecapConstants.VIEW_LOGIN);
         }
     }
 
@@ -425,7 +374,7 @@ public class UserRoleController {
         HttpSession session = request.getSession();
         boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
         if (authenticated) {
-            logger.info("Users Tab Clicked");
+            logger.info(RecapConstants.USERS_TAB_CLICKED);
             UserDetailsForm userDetailsForm = userAuthUtil.getUserDetails(session, UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
             List<Object> roles = userRoleService.getRoles(UserManagement.SUPER_ADMIN.getIntegerValues());
             List<Object> institutions = userRoleService.getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId());
@@ -444,7 +393,7 @@ public class UserRoleController {
         HttpSession session = request.getSession();
         boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
         if (authenticated) {
-            logger.info("Users Tab Clicked");
+            logger.info(RecapConstants.USERS_TAB_CLICKED);
             UserDetailsForm userDetailsForm = userAuthUtil.getUserDetails(session, UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
             List<Object> roles = userRoleService.getRoles(UserManagement.SUPER_ADMIN.getIntegerValues());
             List<Object> institutions = userRoleService.getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId());
@@ -493,7 +442,7 @@ public class UserRoleController {
 
     private void searchAndSetResult(UserRoleForm userRoleForm, boolean superAdmin, Integer userId) {
         if (StringUtils.isBlank(userRoleForm.getSearchNetworkId()) && StringUtils.isBlank(userRoleForm.getUserEmailId())) {
-            getLogger().debug("Search All Users");
+            logger.debug("Search All Users");
             Page<UsersEntity> usersEntities = getUserRoleService().searchUsers(userRoleForm, superAdmin);
             userRoleForm.setUserRoleFormList(setFormValues(usersEntities.getContent(), userId));
             userRoleForm.setShowResults(true);
@@ -504,75 +453,43 @@ public class UserRoleController {
             }
             userRoleForm.setTotalPageCount(usersEntities.getTotalPages());
         } else if (StringUtils.isNotBlank(userRoleForm.getSearchNetworkId()) && StringUtils.isBlank(userRoleForm.getUserEmailId())) {
-            getLogger().debug("Search Users By NetworkId :" + userRoleForm.getSearchNetworkId());
+            logger.debug("Search Users By NetworkId :" + userRoleForm.getSearchNetworkId());
             Page<UsersEntity> usersEntities = getUserRoleService().searchByNetworkId(userRoleForm, superAdmin);
-            List<UsersEntity> userEntity = usersEntities.getContent();
-            if (userEntity != null && userEntity.size() > 0) {
-                userRoleForm.setUserRoleFormList(setFormValues(usersEntities.getContent(), userId));
-                userRoleForm.setShowResults(true);
-                if(superAdmin){
-                    userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements()));
-                }else{
-                    userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements() - 1));
-                }
-                userRoleForm.setTotalPageCount(usersEntities.getTotalPages());
-            } else {
-                userRoleForm.setMessage(RecapConstants.NETWORK_LOGIN_ID_DOES_NOT_EXIST);
-                userRoleForm.setShowErrorMessage(true);
-                userRoleForm.setShowResults(false);
-            }
+            getUsersInformation(userRoleForm, superAdmin, userId, usersEntities,RecapConstants.NETWORK_LOGIN_ID_DOES_NOT_EXIST);
         } else if (StringUtils.isBlank(userRoleForm.getSearchNetworkId()) && StringUtils.isNotBlank(userRoleForm.getUserEmailId())) {
-            getLogger().debug("Search Users by Email Id:" + userRoleForm.getUserEmailId());
+            logger.debug("Search Users by Email Id:" + userRoleForm.getUserEmailId());
             Page<UsersEntity> usersEntities = getUserRoleService().searchByUserEmailId(userRoleForm, superAdmin);
-            List<UsersEntity> userEntity = usersEntities.getContent();
-            if (userEntity != null && userEntity.size() > 0) {
-                userRoleForm.setUserRoleFormList(setFormValues(usersEntities.getContent(), userId));
-                userRoleForm.setShowResults(true);
-                if(superAdmin){
-                    userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements()));
-                }else{
-                    userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements() - 1));
-                }
-                userRoleForm.setTotalPageCount(usersEntities.getTotalPages());
-            } else {
-                userRoleForm.setMessage(RecapConstants.EMAILID_ID_DOES_NOT_EXIST);
-                userRoleForm.setShowErrorMessage(true);
-                userRoleForm.setShowResults(false);
-            }
+            getUsersInformation(userRoleForm, superAdmin, userId, usersEntities, RecapConstants.EMAILID_ID_DOES_NOT_EXIST);
         } else if (StringUtils.isNotBlank(userRoleForm.getSearchNetworkId()) && StringUtils.isNotBlank(userRoleForm.getUserEmailId())) {
-            getLogger().debug("Search Users by Network Id : " + userRoleForm.getSearchNetworkId() + " and Email Id : " + userRoleForm.getUserEmailId());
+            logger.debug("Search Users by Network Id : " + userRoleForm.getSearchNetworkId() + " and Email Id : " + userRoleForm.getUserEmailId());
             Page<UsersEntity> usersEntities = getUserRoleService().searchByNetworkIdAndUserEmailId(userRoleForm, superAdmin);
-            List<UsersEntity> userEntity = usersEntities.getContent();
-            if (userEntity != null && userEntity.size() > 0) {
-                userRoleForm.setUserRoleFormList(setFormValues(usersEntities.getContent(), userId));
-                userRoleForm.setShowResults(true);
-                if(superAdmin){
-                    userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements()));
-                }else{
-                    userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements() - 1));
-                }
-                userRoleForm.setTotalPageCount(usersEntities.getTotalPages());
-            } else {
-                userRoleForm.setMessage(RecapConstants.NETWORK_LOGIN_ID_AND_EMAILID_ID_DOES_NOT_EXIST);
-                userRoleForm.setShowErrorMessage(true);
-                userRoleForm.setShowResults(false);
-            }
+            getUsersInformation(userRoleForm, superAdmin, userId, usersEntities,RecapConstants.NETWORK_LOGIN_ID_AND_EMAILID_ID_DOES_NOT_EXIST);
         } else {
             userRoleForm.setShowResults(false);
         }
     }
 
-    private List<UserRoleForm> setFormValues(List<UsersEntity> usersEntities, Integer userId) {
-        List<UserRoleForm> userRoleFormList = new ArrayList<UserRoleForm>();
-        appendValues(usersEntities, userRoleFormList, userId);
-        return userRoleFormList;
+    private void getUsersInformation(UserRoleForm userRoleForm, boolean superAdmin, Integer userId, Page<UsersEntity> usersEntities,String message) {
+        List<UsersEntity> userEntity = usersEntities.getContent();
+        if (userEntity != null && !userEntity.isEmpty()) {
+            userRoleForm.setUserRoleFormList(setFormValues(usersEntities.getContent(), userId));
+            userRoleForm.setShowResults(true);
+            if(superAdmin){
+                userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements()));
+            }else{
+                userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements() - 1));
+            }
+            userRoleForm.setTotalPageCount(usersEntities.getTotalPages());
+        } else {
+            userRoleForm.setMessage(message);
+            userRoleForm.setShowErrorMessage(true);
+            userRoleForm.setShowResults(false);
+        }
     }
 
-    private List<UserRoleForm> setValuesFromRole(List<RoleEntity> roleEntities, Integer userId, Integer loginInstitutionId) {
-        List<UserRoleForm> userRoleFormList = new ArrayList<UserRoleForm>();
-        for (RoleEntity rolesEntity : roleEntities) {
-            appendValues(rolesEntity.getUsers(), userRoleFormList, userId);
-        }
+    private List<UserRoleForm> setFormValues(List<UsersEntity> usersEntities, Integer userId) {
+        List<UserRoleForm> userRoleFormList = new ArrayList<>();
+        appendValues(usersEntities, userRoleFormList, userId);
         return userRoleFormList;
     }
 
@@ -581,7 +498,7 @@ public class UserRoleController {
             InstitutionEntity institutionEntity = usersEntity.getInstitutionEntity();
             if (!userId.equals(usersEntity.getUserId()) && !usersEntity.getUserId().equals(UserManagement.SUPER_ADMIN.getIntegerValues())) {
                 UserRoleForm userRoleDeatailsForm = new UserRoleForm();
-                StringBuffer rolesBuffer = new StringBuffer();
+                StringBuilder rolesBuffer = new StringBuilder();
                 userRoleDeatailsForm.setUserId(usersEntity.getUserId());
                 userRoleDeatailsForm.setInstitutionId(institutionEntity.getInstitutionId());
                 userRoleDeatailsForm.setInstitutionName(institutionEntity.getInstitutionName());
@@ -592,6 +509,18 @@ public class UserRoleController {
                 userRoleDeatailsForm.setRoleName(roles(rolesBuffer.toString(), ","));
                 userRoleFormList.add(userRoleDeatailsForm);//Added all user's details
             }
+        }
+    }
+
+    private ModelAndView getPaginatioinModelAndView(@ModelAttribute("userForm") UserRoleForm userRoleForm, Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
+        if (authenticated) {
+            priorSearch(userRoleForm, request);
+            model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES_SEARCH);
+            return new ModelAndView(RecapConstants.VIEW_REQUEST_RESULT_TABLE, RecapConstants.USER_ROLE_FORM, userRoleForm);
+        } else {
+            return new ModelAndView(RecapConstants.VIEW_LOGIN);
         }
     }
 

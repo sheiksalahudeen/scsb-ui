@@ -21,7 +21,7 @@ import java.util.Map;
 @Service
 public class UserAuthUtil {
 
-    Logger logger = LoggerFactory.getLogger(UserAuthUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserAuthUtil.class);
 
     @Value("${server.protocol}")
     String serverProtocol;
@@ -33,8 +33,7 @@ public class UserAuthUtil {
     public Map<String,Object> doAuthentication(UsernamePasswordToken token) throws Exception{
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<UsernamePasswordToken> requestEntity = new HttpEntity<>(token, RecapConstants.getHttpHeaders());
-            Map<String, Object> resultMap = restTemplate.postForObject(serverProtocol + scsbShiro + RecapConstants.SCSB_SHIRO_AUTHENTICATE_URL, requestEntity, HashMap.class);
-            return resultMap;
+            return restTemplate.postForObject(serverProtocol + scsbShiro + RecapConstants.SCSB_SHIRO_AUTHENTICATE_URL, requestEntity, HashMap.class);
     }
 
     public Boolean authorizedUser(String serviceURL, UsernamePasswordToken token)
@@ -47,7 +46,7 @@ public class UserAuthUtil {
             HttpEntity<UsernamePasswordToken> requestEntity = new HttpEntity<>(token, RecapConstants.getHttpHeaders());
             statusResponse = restTemplate.postForObject(serverProtocol + scsbShiro + serviceURL, requestEntity, Boolean.class);
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(RecapConstants.LOG_ERROR,e);
         }
         return statusResponse;
     }
