@@ -105,10 +105,10 @@ public class UserRoleServiceImpl implements UserRoleService {
         UsersEntity byLoginIdAndInstitutionEntity = userDetailsRepository.findByLoginIdAndInstitutionId(networkLoginId, institutionId);
         if (byLoginIdAndInstitutionEntity == null) {
                 saveUsersEntity = userDetailsRepository.saveAndFlush(usersEntity);
-                userRoleForm.setMessage(networkLoginId + RecapConstants.USER_ADDED_SUCCESSFULLY);
+                userRoleForm.setMessage(networkLoginId + RecapConstants.ADDED_SUCCESSFULLY);
             } else {
             userRoleForm.setShowCreateError(true);
-            userRoleForm.setErrorMessage(networkLoginId + RecapConstants.USER_ALREADY_EXISTS);
+            userRoleForm.setErrorMessage(networkLoginId + RecapConstants.ALREADY_EXISTS);
         }
         return saveUsersEntity;
     }
@@ -143,16 +143,16 @@ public class UserRoleServiceImpl implements UserRoleService {
             UsersEntity byUserIdUserEntity = userDetailsRepository.findByUserId(userId);
             if (byUserIdUserEntity.getInstitutionId().equals(institutionId)){
                 savedUsersEntity = userDetailsRepository.saveAndFlush(usersEntity);
-                userRoleForm.setMessage(networkLoginId + RecapConstants.USER_ADDED_SUCCESSFULLY);
+                userRoleForm.setMessage(networkLoginId + RecapConstants.ADDED_SUCCESSFULLY);
             }
             else {
                 UsersEntity byLoginIdAndInstitutionIdUserEntity = userDetailsRepository.findByLoginIdAndInstitutionId(networkLoginId, institutionId);
                 if(byLoginIdAndInstitutionIdUserEntity == null){
                     savedUsersEntity = userDetailsRepository.saveAndFlush(usersEntity);
-                    userRoleForm.setMessage(networkLoginId + RecapConstants.USER_ADDED_SUCCESSFULLY);
+                    userRoleForm.setMessage(networkLoginId + RecapConstants.ADDED_SUCCESSFULLY);
                 }
                 else{
-                    userRoleForm.setErrorMessage(networkLoginId + RecapConstants.USER_ALREADY_EXISTS);
+                    userRoleForm.setErrorMessage(networkLoginId + RecapConstants.ALREADY_EXISTS);
                 }
             }
         }
