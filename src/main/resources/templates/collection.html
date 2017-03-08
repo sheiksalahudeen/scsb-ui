@@ -359,6 +359,20 @@
                                                                 </div>
                                                             </div>
                                                         </div>
+
+                                                        <div class="row form-group">
+                                                            <div class="col-sm-6 text-right padding-right-30"></div>
+                                                            <div class="col-sm-6 padding-left-0">
+                                                                <button id="collectionUpdateCgdButton"
+                                                                        type="button"
+                                                                        name="action"
+                                                                        onclick="collectionUpdate()"
+                                                                        class="btn btn-primary"
+                                                                        th:if="${!collectionForm.submitted}">
+                                                                    Edit CGD
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <!--Deaccession-->
                                                     <div id="Deaccession-section" class="padding-top-20">
@@ -403,20 +417,22 @@
                                                                 <span th:if="${collectionForm.submitted}" th:text="${collectionForm.deaccessionNotes}"></span>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="row form-group">
-                                                        <div class="col-sm-6 text-right padding-right-30"></div>
-                                                        <div class="col-sm-6 padding-left-0">
-                                                            <button id="collectionUpdateButton"
-                                                                    type="button"
-                                                                    name="action"
-                                                                    onclick="collectionUpdate()"
-                                                                    class="btn btn-primary"
-                                                                    th:if="${!collectionForm.submitted}">
-                                                                Submit
-                                                            </button>
+
+                                                        <div class="row form-group">
+                                                            <div class="col-sm-6 text-right padding-right-30"></div>
+                                                            <div class="col-sm-6 padding-left-0">
+                                                                <button id="collectionDeaccessionButton"
+                                                                        type="button"
+                                                                        name="action"
+                                                                        onclick="collectionUpdate()"
+                                                                        class="btn btn-primary"
+                                                                        th:if="${!collectionForm.submitted}">
+                                                                    Deaccession Item
+                                                                </button>
+                                                            </div>
                                                         </div>
                                                     </div>
+
 
                                                     <div id="mandateText" th:if="${!collectionForm.submitted}">
                                                         Fields marked with asterisk(<span class="error-color">*</span>) are mandatory.
