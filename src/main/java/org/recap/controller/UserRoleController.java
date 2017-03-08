@@ -196,7 +196,7 @@ public class UserRoleController {
         try {
             userDetailsRepository.delete(usersEntity);
             userRoleForm.setDeletedSuccessMsg(true);
-            userRoleForm.setMessage(networkLoginId + RecapConstants.DELETED_SUCCESSFULLY);
+            userRoleForm.setMessage(networkLoginId + RecapConstants.USER_DELETED_SUCCESS_MESSAGE);
             priorSearch(userRoleForm, request);
             userRoleForm.setAfterDelPageNumber(pageNumber);
             userRoleForm.setAfterDelTotalPageCount(totalPageCount);
@@ -353,7 +353,7 @@ public class UserRoleController {
             userRoleForm.setEditEmailId(usersEntity.getEmailId());
         } else {
             userRoleForm.setShowEditError(true);
-            userRoleForm.setEditErromessage(networkLoginId +  RecapConstants.ALREADY_EXISTS);
+            userRoleForm.setEditErromessage(networkLoginId +  RecapConstants.USER_ALREADY_EXISTS);
             userRoleForm.setEditNetworkLoginId(networkLoginId);
             userRoleForm.setEditUserDescription(userDescription);
             userRoleForm.setEditSelectedForCreate(roleIds);

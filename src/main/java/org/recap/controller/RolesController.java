@@ -100,9 +100,9 @@ public class RolesController {
         else{
             RoleEntity roleEntity = saveNewRoleToDB(rolesForm);
             if(null != roleEntity){
-                rolesForm.setMessage(rolesForm.getNewRoleName()+RecapConstants.ADDED_SUCCESSFULLY);
+                rolesForm.setMessage(rolesForm.getNewRoleName()+RecapConstants.ROLES_ADD_SUCCESS_MESSAGE);
             }else{
-                rolesForm.setErrorMessage(rolesForm.getNewRoleName()+RecapConstants.ALREADY_EXISTS);
+                rolesForm.setErrorMessage(rolesForm.getNewRoleName()+RecapConstants.ROLES_DUPLICATE_MESSAGE);
             }
             rolesForm.setNewRoleName("");
             rolesForm.setNewRoleDescription("");
@@ -147,10 +147,10 @@ public class RolesController {
         roleEntityByRoleId.setLastUpdatedBy(String.valueOf(session.getAttribute(UserManagement.USER_NAME)));
         RoleEntity roleEntity = saveRoleEntity(roleEntityByRoleId, Arrays.asList(editPermissionNames));
             if(null != roleEntity){
-                rolesForm.setMessage(rolesForm.getEditRoleName()+RecapConstants.EDITED_AND_SAVED);
+                rolesForm.setMessage(rolesForm.getEditRoleName()+RecapConstants.ROLES_EDIT_SAVE_SUCCESS_MESSAGE);
             }
             else{
-            rolesForm.setErrorMessage(rolesForm.getEditRoleName()+RecapConstants.ALREADY_EXISTS);
+            rolesForm.setErrorMessage(rolesForm.getEditRoleName()+RecapConstants.ROLES_DUPLICATE_MESSAGE);
         }
         rolesForm.setPermissionNameList(getAllPermissionNames().getPermissionNameList());
         rolesForm.setSelectedPermissionNames(Arrays.asList(editPermissionNames));
@@ -193,7 +193,7 @@ public class RolesController {
             rolesForm.setRoleName("");
             rolesForm.setPermissionNames("");
             setRolesFormSearchResults(rolesForm);
-            rolesForm.setMessage(rolesForm.getRoleNameForDelete()+RecapConstants.DELETED_SUCCESSFULLY);
+            rolesForm.setMessage(rolesForm.getRoleNameForDelete()+RecapConstants.ROLES_DELETED_SUCCESS_MESSAGE);
         } catch (Exception e) {
             logger.error(RecapConstants.LOG_ERROR,e);
         }
