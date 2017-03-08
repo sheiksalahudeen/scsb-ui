@@ -262,7 +262,7 @@
                                     <div class="row">
                                         <div class="col-md-8 col-sm-6">
                                             <div class="form-group">
-                                                <div class="col-md-3 col-sm-4 text-right margin-top-15"><label for="itemTitleId" class="fontcolor-dark">Item title</label></div>
+                                                <div class="col-md-3 col-sm-4 text-right margin-top-15"><label for="itemTitleId" class="fontcolor-dark">Item Title</label></div>
                                                 <div class="col-md-9 col-sm-8">
                                                     <textarea type="text"
                                                               id="itemTitleId"
@@ -343,7 +343,6 @@
                                                                         class="form-control themed-input themed-select"
                                                                         th:field="${requestForm.requestType}"
                                                                         onchange="">
-                                                                    <option value=""></option>
                                                                     <option th:each="requestType : ${requestForm.requestTypes}" th:value="${requestType}" th:text="${requestType}"></option>
                                                                 </select>
                                                                 <span id="requestTypeErrorMessage" style="color: red;">Request type is required.</span>
@@ -477,7 +476,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-xs-12 text-center">
-                                    <button type="button" class="btn btn-default themed-button btn-primary" id="createrequestsubmit" onclick="createRequest()">Submit</button>
+                                    <button type="button" class="btn btn-default themed-button btn-primary" id="createrequestsubmit" onclick="createRequest()">Create Request</button>
                                     <button type="button" class="btn btn-default themed-button themed-button-cancel" id="createrequestclear" onclick="resetDefaults()">Clear</button>
                                 </div>
                             </div>
