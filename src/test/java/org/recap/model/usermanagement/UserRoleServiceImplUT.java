@@ -123,7 +123,7 @@ public class UserRoleServiceImplUT extends BaseTestCase {
     public void getInstitutionsForSuperAdmin(){
         List<Object> institutions = userRoleService.getInstitutions(true, 1);
         assertNotNull(institutions);
-        assertEquals(3,institutions.size());
+        assertEquals(4,institutions.size());
     }
 
     @Test

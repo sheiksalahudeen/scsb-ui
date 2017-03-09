@@ -48,6 +48,9 @@ public class ReportsControllerUT extends BaseControllerUT {
     ReportsController reportsControllerWired;
 
     @Mock
+    ReportsController mockedReportsController;
+
+    @Mock
     RequestItemDetailsRepository requestItemDetailsRepository;
 
     @Mock
@@ -177,6 +180,27 @@ public class ReportsControllerUT extends BaseControllerUT {
         assertNotNull(modelAndView);
         assertEquals("reports :: #deaccessionInformation",modelAndView.getViewName());
 
+    }
+
+    @Test
+    public void testDeaccessionItemResultRows() throws Exception {
+        ReportsForm reportsForm = new ReportsForm();
+        reportsForm.setAccessionDeaccessionFromDate(new Date().toString());
+        reportsForm.setAccessionDeaccessionToDate(new Date().toString());
+        List<DeaccessionItemResultsRow> deaccessionItemResultsRowList = new ArrayList<>();
+        Mockito.when(mockedReportsController.getReportsUtil()).thenReturn(reportsUtil);
+        DeaccessionItemResultsRow deaccessionItemResultsRow = new DeaccessionItemResultsRow();
+        deaccessionItemResultsRow.setItemBarcode("123456");
+
+        deaccessionItemResultsRow.setCgd("Shared");
+        deaccessionItemResultsRow.setDeaccessionDate(new Date().toString());
+        deaccessionItemResultsRow.setTitle("test");
+        deaccessionItemResultsRowList.add(deaccessionItemResultsRow);
+        Mockito.when(mockedReportsController.getReportsUtil().deaccessionReportFieldsInformation(reportsForm)).thenReturn(deaccessionItemResultsRowList);
+        Mockito.when(mockedReportsController.deaccessionInformation(reportsForm,model)).thenCallRealMethod();
+        ModelAndView modelAndView = mockedReportsController.deaccessionInformation(reportsForm,model);
+        assertNotNull(modelAndView);
+        assertEquals(modelAndView.getViewName(),"reports :: #deaccessionInformation");
     }
 
     @Test

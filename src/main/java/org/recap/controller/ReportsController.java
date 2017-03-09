@@ -48,6 +48,10 @@ public class ReportsController {
         this.userAuthUtil = userAuthUtil;
     }
 
+    public ReportsUtil getReportsUtil() {
+        return reportsUtil;
+    }
+
     @RequestMapping("/reports")
     public String collection(Model model, HttpServletRequest request) {
         HttpSession session=request.getSession();
@@ -104,7 +108,7 @@ public class ReportsController {
     @RequestMapping(value = "/reports/deaccessionInformation", method = RequestMethod.GET)
     public ModelAndView deaccessionInformation(ReportsForm reportsForm,
                                                Model model) throws Exception {
-        List<DeaccessionItemResultsRow> deaccessionItemResultsRowList = reportsUtil.deaccessionReportFieldsInformation(reportsForm);
+        List<DeaccessionItemResultsRow> deaccessionItemResultsRowList = getReportsUtil().deaccessionReportFieldsInformation(reportsForm);
         reportsForm.setDeaccessionItemResultsRows(deaccessionItemResultsRowList);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
         return new ModelAndView(RecapConstants.REPORTS_VIEW_DEACCESSION_INFORMARION, RecapConstants.REPORTS_FORM, reportsForm);

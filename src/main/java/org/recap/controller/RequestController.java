@@ -133,6 +133,30 @@ public class RequestController {
         this.itemDetailsRepository = itemDetailsRepository;
     }
 
+    public String getServerProtocol() {
+        return serverProtocol;
+    }
+
+    public String getScsbShiro() {
+        return scsbShiro;
+    }
+
+    public String getScsbUrl() {
+        return scsbUrl;
+    }
+
+    public RequestStatusDetailsRepository getRequestStatusDetailsRepository() {
+        return requestStatusDetailsRepository;
+    }
+
+    public RequestItemDetailsRepository getRequestItemDetailsRepository() {
+        return requestItemDetailsRepository;
+    }
+
+    public RestTemplate getRestTemplate(){
+        return new RestTemplate();
+    }
+
     @RequestMapping("/request")
     public String request(Model model, HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession();
@@ -383,10 +407,10 @@ public class RequestController {
 
             RestTemplate restTemplate = new RestTemplate();
 
-            String validateRequestItemUrl = serverProtocol + scsbUrl + RecapConstants.VALIDATE_REQUEST_ITEM_URL;
-            String requestItemUrl = serverProtocol + scsbUrl + RecapConstants.REQUEST_ITEM_URL;
+            String validateRequestItemUrl = getServerProtocol() + getScsbUrl() + RecapConstants.VALIDATE_REQUEST_ITEM_URL;
+            String requestItemUrl = getServerProtocol() + getScsbUrl() + RecapConstants.REQUEST_ITEM_URL;
 
-            ItemRequestInformation itemRequestInformation = new ItemRequestInformation();
+            ItemRequestInformation itemRequestInformation = getItemRequestInformation();
             itemRequestInformation.setUsername(username);
             itemRequestInformation.setItemBarcodes(Arrays.asList(requestForm.getItemBarcodeInRequest().split(",")));
             itemRequestInformation.setPatronBarcode(requestForm.getPatronBarcodeInRequest());
@@ -402,7 +426,7 @@ public class RequestController {
             itemRequestInformation.setAuthor(requestForm.getArticleAuthor());
             itemRequestInformation.setChapterTitle(requestForm.getArticleTitle());
             if (StringUtils.isNotBlank(requestForm.getDeliveryLocationInRequest())) {
-                CustomerCodeEntity customerCodeEntity = customerCodeDetailsRepository.findByCustomerCode(requestForm.getDeliveryLocationInRequest());
+                CustomerCodeEntity customerCodeEntity = getCustomerCodeDetailsRepository().findByCustomerCode(requestForm.getDeliveryLocationInRequest());
                 if (null != customerCodeEntity) {
                     customerCodeDescription = customerCodeEntity.getDescription();
                     itemRequestInformation.setDeliveryLocation(customerCodeEntity.getCustomerCode());
@@ -411,9 +435,9 @@ public class RequestController {
 
             HttpEntity<ItemRequestInformation> requestEntity = new HttpEntity<>(itemRequestInformation, getHttpHeaders());
 
-            ResponseEntity<String> responseEntity = restTemplate.exchange(validateRequestItemUrl, HttpMethod.POST, requestEntity, String.class);
+            ResponseEntity<String> responseEntity = getRestTemplate().exchange(validateRequestItemUrl, HttpMethod.POST, requestEntity, String.class);
             if (RecapConstants.VALID_REQUEST.equalsIgnoreCase(responseEntity.getBody())) {
-                ResponseEntity<ItemResponseInformation> itemResponseEntity = restTemplate.exchange(requestItemUrl, HttpMethod.POST, requestEntity, ItemResponseInformation.class);
+                ResponseEntity<ItemResponseInformation> itemResponseEntity = getRestTemplate().exchange(requestItemUrl, HttpMethod.POST, requestEntity, ItemResponseInformation.class);
                 ItemResponseInformation itemResponseInformation = itemResponseEntity.getBody();
                 if (null != itemResponseInformation && !itemResponseInformation.isSuccess()) {
                     requestForm.setErrorMessage(itemResponseInformation.getScreenMessage());
@@ -453,12 +477,12 @@ public class RequestController {
         String requestStatus = null;
         try {
             HttpEntity requestEntity = new HttpEntity<>(getHttpHeaders());
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(serverProtocol + scsbUrl + RecapConstants.URL_REQUEST_CANCEL).queryParam(RecapConstants.REQUEST_ID, requestForm.getRequestId());
-            HttpEntity<CancelRequestResponse> responseEntity  = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST, requestEntity, CancelRequestResponse.class);
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getServerProtocol() + getScsbUrl() + RecapConstants.URL_REQUEST_CANCEL).queryParam(RecapConstants.REQUEST_ID, requestForm.getRequestId());
+            HttpEntity<CancelRequestResponse> responseEntity  = getRestTemplate().exchange(builder.build().encode().toUri(), HttpMethod.POST, requestEntity, CancelRequestResponse.class);
             CancelRequestResponse cancelRequestResponse = responseEntity.getBody();
             jsonObject.put(RecapConstants.MESSAGE, cancelRequestResponse.getScreenMessage());
             jsonObject.put(RecapConstants.STATUS, cancelRequestResponse.isSuccess());
-            RequestItemEntity requestItemEntity = requestItemDetailsRepository.findByRequestId(requestForm.getRequestId());
+            RequestItemEntity requestItemEntity = getRequestItemDetailsRepository().findByRequestId(requestForm.getRequestId());
             if (null != requestItemEntity) {
                 requestStatus = requestItemEntity.getRequestStatusEntity().getRequestStatusDescription();
             }
@@ -535,4 +559,7 @@ public class RequestController {
         return pageNumber;
     }
 
+    public ItemRequestInformation getItemRequestInformation() {
+        return new ItemRequestInformation();
+    }
 }
