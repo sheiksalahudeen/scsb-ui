@@ -56,6 +56,10 @@ public class UserRoleController {
     @Autowired
     private UserAuthUtil userAuthUtil;
 
+    public Logger getLogger() {
+        return logger;
+    }
+
     public UserAuthUtil getUserAuthUtil() {
         return userAuthUtil;
     }
@@ -99,11 +103,11 @@ public class UserRoleController {
     @RequestMapping(value = "/userRoles")
     public String showUserRoles(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
+        boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
         if (authenticated) {
             logger.info(RecapConstants.USERS_TAB_CLICKED);
             UserRoleForm userRoleForm = new UserRoleForm();
-            UserDetailsForm userDetailsForm = userAuthUtil.getUserDetails(session, UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
+            UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(session, UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
             getAndSetRolesAndInstitutions(userRoleForm, userDetailsForm);
             userRoleForm.setAllowCreateEdit(true);
             model.addAttribute(RecapConstants.USER_ROLE_FORM, userRoleForm);
@@ -116,8 +120,8 @@ public class UserRoleController {
     }
 
     private void getAndSetRolesAndInstitutions(UserRoleForm userRoleForm, UserDetailsForm userDetailsForm) {
-        List<Object> roles = userRoleService.getRoles(UserManagement.SUPER_ADMIN.getIntegerValues());
-        List<Object> institutions = userRoleService.getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId());
+        List<Object> roles = getUserRoleService().getRoles(UserManagement.SUPER_ADMIN.getIntegerValues());
+        List<Object> institutions = getUserRoleService().getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId());
         userRoleForm.setRoles(roles);
         userRoleForm.setInstitutions(institutions);
     }
@@ -126,10 +130,11 @@ public class UserRoleController {
     @ResponseBody
     @RequestMapping(value = "/userRoles/searchUsers", method = RequestMethod.POST)
     public ModelAndView searchUserRole(@Valid @ModelAttribute("userRoleForm") UserRoleForm userRoleForm, Model model, HttpServletRequest request) {
-        logger.info("Users - Search button Clicked");
+        getLogger().info("Users - Search button Clicked");
         HttpSession session = request.getSession();
-        boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
+        boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
         if (authenticated) {
+            getLogger().info("Users Tab Clicked");
         try {
             priorSearch(userRoleForm, request);
             userRoleForm.setShowPagination(true);
@@ -147,37 +152,37 @@ public class UserRoleController {
     //DeleteUser Screen
     @ResponseBody
     @RequestMapping(value = "/userRoles/deleteUser", method = RequestMethod.GET)
-    public ModelAndView deleteUserRole(String networkLoginId, Integer userId, HttpServletRequest request,Integer pagesize,Integer pageNumber,Integer totalPageCount) {
+    public ModelAndView deleteUserRole(String networkLoginId, Integer userId, HttpServletRequest request, Integer pagesize, Integer pageNumber, Integer totalPageCount) {
         HttpSession session = request.getSession();
-        boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
+        boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
         if (authenticated) {
-        UserDetailsForm userDetailsForm = userAuthUtil.getUserDetails(request.getSession(), UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
-        logger.info("User - Delete User clicked");
-        UsersEntity usersEntity = userDetailsRepository.findByUserId(userId);
-        UserRoleForm userRoleForm = new UserRoleForm();
-        userRoleForm.setAfterDelPageSize(pagesize);
-        userRoleForm.setAfterDelPageNumber(pageNumber);
-        userRoleForm.setAfterDelTotalPageCount(totalPageCount);
-        getAndSetRolesAndInstitutions(userRoleForm, userDetailsForm);
-        userRoleForm.setEditNetworkLoginId(usersEntity.getLoginId());
-        userRoleForm.setEditUserDescription(usersEntity.getUserDescription());
-        userRoleForm.setEditUserId(userId);
-        userRoleForm.setUserId(userId);
-        userRoleForm.setEmailId(usersEntity.getEmailId());
-        userRoleForm.setEditEmailId(usersEntity.getEmailId());
-        List<RoleEntity> roleEntityList = usersEntity.getUserRole();
-        List<Integer> roleIds = new ArrayList<>();
-        if (roleEntityList != null) {
-            for (RoleEntity roleEntity : roleEntityList) {
-                roleIds.add(roleEntity.getRoleId());
+            UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(request.getSession(), UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
+            getLogger().info("User - Delete User clicked");
+            UsersEntity usersEntity = getUserDetailsRepository().findByUserId(userId);
+            UserRoleForm userRoleForm = new UserRoleForm();
+            userRoleForm.setAfterDelPageSize(pagesize);
+            userRoleForm.setAfterDelPageNumber(pageNumber);
+            userRoleForm.setAfterDelTotalPageCount(totalPageCount);
+            getAndSetRolesAndInstitutions(userRoleForm, userDetailsForm);
+            userRoleForm.setEditNetworkLoginId(usersEntity.getLoginId());
+            userRoleForm.setEditUserDescription(usersEntity.getUserDescription());
+            userRoleForm.setEditUserId(userId);
+            userRoleForm.setUserId(userId);
+            userRoleForm.setEmailId(usersEntity.getEmailId());
+            userRoleForm.setEditEmailId(usersEntity.getEmailId());
+            List<RoleEntity> roleEntityList = usersEntity.getUserRole();
+            List<Integer> roleIds = new ArrayList<>();
+            if (roleEntityList != null) {
+                for (RoleEntity roleEntity : roleEntityList) {
+                    roleIds.add(roleEntity.getRoleId());
 
+                }
             }
-        }
-        userRoleForm.setEditSelectedForCreate(roleIds);
-        userRoleForm.setShowSelectedForCreate(userRoleForm.getEditSelectedForCreate());
-        userRoleForm.setEditInstitutionId(usersEntity.getInstitutionId());
-        userRoleForm.setShowUserSearchView(false);
-        return new ModelAndView(RecapConstants.USER_ROLES_SEARCH, RecapConstants.USER_ROLE_FORM, userRoleForm);
+            userRoleForm.setEditSelectedForCreate(roleIds);
+            userRoleForm.setShowSelectedForCreate(userRoleForm.getEditSelectedForCreate());
+            userRoleForm.setEditInstitutionId(usersEntity.getInstitutionId());
+            userRoleForm.setShowUserSearchView(false);
+            return new ModelAndView(RecapConstants.USER_ROLES_SEARCH, RecapConstants.USER_ROLE_FORM, userRoleForm);
         } else {
             return new ModelAndView(RecapConstants.VIEW_LOGIN);
         }
@@ -189,12 +194,12 @@ public class UserRoleController {
     @RequestMapping(value = "/userRoles/delete", method = RequestMethod.GET)
     public ModelAndView deleteUser(@Valid @ModelAttribute("userRoleForm") UserRoleForm userRoleForm, Model model, Integer userId, String networkLoginId, Integer pageNumber, Integer totalPageCount, Integer pageSize, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
+        boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
         if (authenticated) {
         UsersEntity usersEntity = new UsersEntity();
         usersEntity.setUserId(userId);
         try {
-            userDetailsRepository.delete(usersEntity);
+            getUserDetailsRepository().delete(usersEntity);
             userRoleForm.setDeletedSuccessMsg(true);
             userRoleForm.setMessage(networkLoginId + RecapConstants.USER_DELETED_SUCCESS_MESSAGE);
             priorSearch(userRoleForm, request);
@@ -233,21 +238,21 @@ public class UserRoleController {
     @ResponseBody
     @RequestMapping(value = "/userRoles/next", method = RequestMethod.POST)
     public ModelAndView searchNextPage(@ModelAttribute("userForm") UserRoleForm userRoleForm, Model model, HttpServletRequest request) {
-        logger.info("Users - Search Next Page button Clicked");
+        getLogger().info("Users - Search Next Page button Clicked");
         return getPaginatioinModelAndView(userRoleForm, model, request);
     }
 
     @ResponseBody
     @RequestMapping(value = "/userRoles/previous", method = RequestMethod.POST)
     public ModelAndView searchPreviousPage(@ModelAttribute("userForm") UserRoleForm userRoleForm, Model model, HttpServletRequest request) {
-        logger.info("Users - Search Previous Page button Clicked");
+        getLogger().info("Users - Search Previous Page button Clicked");
         return getPaginatioinModelAndView(userRoleForm, model, request);
     }
 
     @ResponseBody
     @RequestMapping(value = "/userRoles/last", method = RequestMethod.POST)
     public ModelAndView searchLastPage(@ModelAttribute("userForm") UserRoleForm userRoleForm, Model model, HttpServletRequest request) {
-        logger.info("Users - Search Last Page button Clicked");
+        getLogger().info("Users - Search Last Page button Clicked");
         return getPaginatioinModelAndView(userRoleForm, model, request);
     }
 
@@ -256,7 +261,7 @@ public class UserRoleController {
     public ModelAndView createUserRequest(@ModelAttribute("userRoleForm") UserRoleForm userRoleForm, HttpServletRequest request) {
         logger.info("User - Create Request clicked");
         HttpSession session = request.getSession();
-        boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
+        boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
         if (authenticated) {
         UserDetailsForm userDetailsForm = userAuthUtil.getUserDetails(request.getSession(), UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
             getAndSetRolesAndInstitutions(userRoleForm, userDetailsForm);
@@ -279,7 +284,7 @@ public class UserRoleController {
     @RequestMapping(value = "/userRoles/editUser", method = RequestMethod.GET)
     public ModelAndView editUser(@ModelAttribute("userId") Integer userId, @ModelAttribute("networkLoginId") String networkLoginId, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
+        boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
         if (authenticated) {
         UserDetailsForm userDetailsForm = userAuthUtil.getUserDetails(request.getSession(), UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
         logger.info("User - editUser clicked");
@@ -319,7 +324,7 @@ public class UserRoleController {
                                             @ModelAttribute("userEmailId") String userEmailId,
                                             HttpServletRequest request) {
         HttpSession session = request.getSession();
-        boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
+        boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
         if (authenticated) {
         UserRoleForm userRoleForm = new UserRoleForm();
         UserDetailsForm userDetailsForm = userAuthUtil.getUserDetails(request.getSession(), UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
@@ -375,9 +380,9 @@ public class UserRoleController {
         boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
         if (authenticated) {
             logger.info(RecapConstants.USERS_TAB_CLICKED);
-            UserDetailsForm userDetailsForm = userAuthUtil.getUserDetails(session, UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
-            List<Object> roles = userRoleService.getRoles(UserManagement.SUPER_ADMIN.getIntegerValues());
-            List<Object> institutions = userRoleService.getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId());
+            UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(session, UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
+            List<Object> roles = getUserRoleService().getRoles(UserManagement.SUPER_ADMIN.getIntegerValues());
+            List<Object> institutions = getUserRoleService().getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId());
             userRoleForm.setRoles(roles);
             userRoleForm.setInstitutions(institutions);
         }
@@ -514,7 +519,7 @@ public class UserRoleController {
 
     private ModelAndView getPaginatioinModelAndView(@ModelAttribute("userForm") UserRoleForm userRoleForm, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        boolean authenticated = userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
+        boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
         if (authenticated) {
             priorSearch(userRoleForm, request);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.USER_ROLES_SEARCH);

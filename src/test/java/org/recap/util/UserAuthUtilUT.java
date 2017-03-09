@@ -29,14 +29,14 @@ public class UserAuthUtilUT extends BaseTestCase {
         boolean authorized=false;
         UserForm userForm=new UserForm();
         userForm.setUsername("john");
-        userForm.setInstitution("2");
+        userForm.setInstitution("CUL");
         userForm.setPassword("123");
 
         Map<String,Object> map = new HashMap<>();
         map.put("isAuthenticated",true);
         map.put("userName","john");
-        map.put(UserManagement.USER_ID,2);
-        UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+userForm.getInstitution(),userForm.getPassword(),true);
+        map.put(UserManagement.USER_ID,"CUL");
+        UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+"CUL",userForm.getPassword(),true);
         Mockito.when((Map<String,Object>)userAuthUtil.doAuthentication(token)).thenReturn(map);
         Map<String,Object> resultmap=(Map<String,Object>)userAuthUtil.doAuthentication(token);
 

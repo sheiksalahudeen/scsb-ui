@@ -15,6 +15,10 @@ public class VersionNumber {
     @Value("${version.number}")
     String versionNumber;
 
+    public void setVersionNumber(String versionNumber) {
+        this.versionNumber = versionNumber;
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/getVersionNumber")
     @ResponseBody
     public String getVersionNumber() {

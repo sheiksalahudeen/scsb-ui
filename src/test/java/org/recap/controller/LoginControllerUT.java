@@ -11,6 +11,7 @@ import org.recap.util.UserAuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 
 import javax.servlet.http.HttpSession;
 
@@ -37,6 +38,9 @@ public class LoginControllerUT extends BaseControllerUT{
     @Mock
     Model model;
 
+    @Mock
+    BindingResult error;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
@@ -57,6 +61,15 @@ public class LoginControllerUT extends BaseControllerUT{
         String response = loginController.logoutUser(request);
         assertNotNull(response);
     }
+
+    @Test
+    public void createSessionTest(){
+        UserForm userForm = new UserForm();
+        String response = loginController.createSession(userForm,request,model,error);
+        assertNotNull(response);
+        assertEquals(response,"login");
+    }
+
 
     private void usersSessionAttributes() throws Exception {
         when(request.getSession()).thenReturn(session);
