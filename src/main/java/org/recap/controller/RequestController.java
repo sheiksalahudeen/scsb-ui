@@ -269,14 +269,18 @@ public class RequestController {
         for (Iterator iterator = institutionEntities.iterator(); iterator.hasNext(); ) {
             InstitutionEntity institutionEntity = (InstitutionEntity) iterator.next();
             if (userDetailsForm.getLoginInstitutionId() == institutionEntity.getInstitutionId() || userDetailsForm.isRecapUser() || userDetailsForm.isSuperAdmin()) {
-                requestingInstitutions.add(institutionEntity.getInstitutionCode());
+                if (!RecapConstants.HTC.equals(institutionEntity.getInstitutionCode())) {
+                    requestingInstitutions.add(institutionEntity.getInstitutionCode());
+                }
             }
         }
 
         Iterable<RequestTypeEntity> requestTypeEntities = getRequestTypeDetailsRepository().findAll();
         for (Iterator iterator = requestTypeEntities.iterator(); iterator.hasNext(); ) {
             RequestTypeEntity requestTypeEntity = (RequestTypeEntity) iterator.next();
-            requestTypes.add(requestTypeEntity.getRequestTypeCode());
+            if (!RecapConstants.BORROW_DIRECT.equals(requestTypeEntity.getRequestTypeCode())) {
+                requestTypes.add(requestTypeEntity.getRequestTypeCode());
+            }
         }
 
         Iterable<CustomerCodeEntity> customerCodeEntities = getCustomerCodeDetailsRepository().findAll();
@@ -290,7 +294,7 @@ public class RequestController {
         requestForm.setRequestingInstitutions(requestingInstitutions);
         requestForm.setRequestTypes(requestTypes);
         requestForm.setDeliveryLocations(deliveryLocations);
-        requestForm.setRequestType("RETRIEVAL");
+        requestForm.setRequestType(RecapConstants.RETRIEVAL);
         return requestForm;
     }
 

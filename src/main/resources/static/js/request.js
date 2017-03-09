@@ -191,7 +191,7 @@ $(function() {
     $('#requestTypeId').change(function(){
         $('.EDDdetails-section').hide();
         $('#' + $(this).val()).show();
-        if ($(this).find(':selected').val() === 'EDD' || $(this).find(':selected').val() === 'BORROW DIRECT') {
+        if ($(this).find(':selected').val() === 'EDD') {
             $('#deliverylocation_request').hide();
         } else {
             $('#deliverylocation_request').show();
@@ -253,7 +253,7 @@ function isValidInputs() {
         $('#requestTypeErrorMessage').hide();
     }
     if (isBlankValue(deliveryLocation)) {
-        if (!(requestType == 'EDD' || requestType == 'BORROW DIRECT')) {
+        if (!(requestType == 'EDD')) {
             $('#deliveryLocationErrorMessage').show();
             isValid = false;
         }

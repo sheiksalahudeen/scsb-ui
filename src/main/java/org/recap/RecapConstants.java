@@ -368,6 +368,7 @@ public class RecapConstants {
     public static final String PERMISSIONS_MAP ="PERMISSIONS_MAP";
 
     public static final String USER_AUTHENTICATION="isAuthenticated";
+    public static final String HTC = "HTC";
 
     public static final String USER_ISAUTHENTICATED ="true";
 
