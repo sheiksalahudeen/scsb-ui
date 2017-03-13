@@ -13,6 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,6 +48,9 @@ public class LoginController {
     private UserAuthUtil userAuthUtil;
 
 
+    @Autowired
+    private TokenStore tokenStore;
+
 
     @RequestMapping(value="/",method= RequestMethod.GET)
     public String loginScreen(HttpServletRequest request, Model model, @ModelAttribute UserForm userForm) {
@@ -59,7 +66,16 @@ public class LoginController {
 
     @RequestMapping(value = "/login-scsb", method = RequestMethod.GET)
     public String login(@Valid @ModelAttribute UserForm userForm, HttpServletRequest request, Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        OAuth2Authentication auth = (OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication();
+        String tokenString = "";
+        OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenString);
+
+        JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
+        Map<String, ?> stringMap = jwtAccessTokenConverter.convertAccessToken(accessToken, auth);
+
+        OAuth2Authentication oAuth2Authentication = tokenStore.readAuthentication(tokenString);
+
         String user = auth.getName();
         logger.info("passing in /login");
         model.addAttribute("user", user);
