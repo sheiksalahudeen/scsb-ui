@@ -6,6 +6,7 @@ import org.recap.RecapConstants;
 import org.recap.model.userManagement.LoginValidator;
 import org.recap.model.userManagement.UserForm;
 import org.recap.security.UserManagement;
+import org.recap.util.HelperUtil;
 import org.recap.util.UserAuthUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,15 +70,20 @@ public class LoginController {
     public String login(@Valid @ModelAttribute UserForm userForm, HttpServletRequest request, Model model) {
 
         OAuth2Authentication auth = (OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication();
-        String tokenString  = ((OAuth2AuthenticationDetails)auth.getDetails()).getTokenValue();
-        OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenString);
-
-        JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
-        Map<String, ?> stringMap = jwtAccessTokenConverter.convertAccessToken(accessToken, auth);
-
-        OAuth2Authentication oAuth2Authentication = tokenStore.readAuthentication(tokenString);
-
         String user = auth.getName();
+        String tokenString  = null;
+        OAuth2AccessToken accessToken = null;
+        if (StringUtils.equals(HelperUtil.getInstitutionFromRequest(request), "NYPL")) {
+            tokenString = ((OAuth2AuthenticationDetails)auth.getDetails()).getTokenValue();
+            accessToken = tokenStore.readAccessToken(tokenString);
+
+            Map<String, Object> additionalInformation = accessToken.getAdditionalInformation();
+            if(null != additionalInformation) {
+                user = (String) additionalInformation.get("sub");
+
+            }
+        }
+
         logger.info("passing in /login");
         model.addAttribute("user", user);
         final String loginScreen=RecapConstants.VIEW_LOGIN;
