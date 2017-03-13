@@ -47,10 +47,10 @@ public class LoginController {
 
     @RequestMapping(value="/",method= RequestMethod.GET)
     public String loginScreen(HttpServletRequest request, Model model, @ModelAttribute UserForm userForm) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(null != auth && !isAnonymousUser(auth)) {
-            return "redirect:/searchPage";
-        }
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        if(null != auth && !isAnonymousUser(auth)) {
+//            return "redirect:/searchPage";
+//        }
         logger.info("Login Screen called");
         return RecapConstants.VIEW_LOGIN;
     }
