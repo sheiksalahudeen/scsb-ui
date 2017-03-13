@@ -15,6 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.stereotype.Controller;
@@ -68,7 +69,7 @@ public class LoginController {
     public String login(@Valid @ModelAttribute UserForm userForm, HttpServletRequest request, Model model) {
 
         OAuth2Authentication auth = (OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication();
-        String tokenString = "";
+        String tokenString  = ((OAuth2AuthenticationDetails)auth.getDetails()).getTokenValue();
         OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenString);
 
         JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
