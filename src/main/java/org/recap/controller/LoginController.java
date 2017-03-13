@@ -68,19 +68,17 @@ public class LoginController {
 
     @RequestMapping(value = "/login-scsb", method = RequestMethod.GET)
     public String login(@Valid @ModelAttribute UserForm userForm, HttpServletRequest request, Model model) {
-
-        OAuth2Authentication auth = (OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        SecurityContextHolder.getContext().getAuthentication();
         String user = auth.getName();
-        String tokenString  = null;
-        OAuth2AccessToken accessToken = null;
         if (StringUtils.equals(HelperUtil.getInstitutionFromRequest(request), "NYPL")) {
-            tokenString = ((OAuth2AuthenticationDetails)auth.getDetails()).getTokenValue();
-            accessToken = tokenStore.readAccessToken(tokenString);
+            OAuth2Authentication oauth = (OAuth2Authentication)auth;
+            String tokenString = ((OAuth2AuthenticationDetails)oauth.getDetails()).getTokenValue();
+            OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenString);
 
             Map<String, Object> additionalInformation = accessToken.getAdditionalInformation();
             if(null != additionalInformation) {
                 user = (String) additionalInformation.get("sub");
-
             }
         }
 
