@@ -54,6 +54,7 @@ public class MultiCASAndOAuthSecurityConfiguration extends WebSecurityConfigurer
         // @formatter:off
 
         OAuth2SsoProperties sso = getApplicationContext().getBean(OAuth2SsoProperties.class);
+        sso.setLoginPath("/search");
 
         LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint = new LoginUrlAuthenticationEntryPoint(sso.getLoginPath());
         ReCAPExceptionTranslationFilter reCAPExceptionTranslationFilter = new ReCAPExceptionTranslationFilter(casPropertyProvider, loginUrlAuthenticationEntryPoint);

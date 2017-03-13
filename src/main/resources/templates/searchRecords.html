@@ -26,8 +26,8 @@
         <div class="row">
             <div class="dashboard-content col-sm-12">
                 <ul th:unless="${session == null}" id="search-content-tab" class="nav nav-tabs" role="tablist">
-                    <li th:if="${session.isSearchAllowed}"  role="presentation" class="tab-search-holder" th:classappend="${#httpServletRequest.getRequestURI() == '/search' ? 'active':''}">
-                        <a href="/search" aria-controls="search" class="tab-search"><span class="icons"></span><span>Search</span></a>
+                    <li th:if="${session.isSearchAllowed}"  role="presentation" class="tab-search-holder" th:classappend="${#httpServletRequest.getRequestURI() == '/searchPage' ? 'active':''}">
+                        <a href="/searchPage" aria-controls="search" class="tab-search"><span class="icons"></span><span>Search</span></a>
                     </li>
                     <li th:if="${session.isCollectionAllowed || session.isDeaccessionAllowed}" role="presentation" class="tab-collection-holder" th:classappend="${#httpServletRequest.getRequestURI() == '/collection' ? 'active':''}">
                         <a href="/collection" aria-controls="collection" class="tab-collection"><span class="icons"></span><span>Collection</span></a>

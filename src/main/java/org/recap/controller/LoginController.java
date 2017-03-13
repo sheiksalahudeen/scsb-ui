@@ -49,7 +49,7 @@ public class LoginController {
     public String loginScreen(HttpServletRequest request, Model model, @ModelAttribute UserForm userForm) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if(null != auth && !isAnonymousUser(auth)) {
-            return "redirect:/search";
+            return "redirect:/searchPage";
         }
         logger.info("Login Screen called");
         return RecapConstants.VIEW_LOGIN;
@@ -90,7 +90,7 @@ public class LoginController {
         }
 
 
-        return "redirect:/search";
+        return "redirect:/searchPage";
     }
 
 
@@ -136,7 +136,7 @@ public class LoginController {
             logger.error("{} : {}",e.getLocalizedMessage(),resultmap.get(UserManagement.USER_AUTH_ERRORMSG));
             return loginScreen;
         }
-        return "redirect:/search";
+        return "redirect:/searchPage";
 
     }
 

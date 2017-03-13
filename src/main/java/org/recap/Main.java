@@ -43,7 +43,7 @@ public class Main {
 	public FilterRegistrationBean getFileterRegisteredBean(){
 		FilterRegistrationBean filterRegistrationBean= new FilterRegistrationBean();
 		Set<String> urlPatterns=new HashSet<>();
-		urlPatterns.add("/search");
+		urlPatterns.add("/searchPage");
 		urlPatterns.add("/request");
 		urlPatterns.add("/collection");
 		urlPatterns.add("/reports");

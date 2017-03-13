@@ -18,7 +18,7 @@ public class RecapConstants {
     public static final String HOLDINGS_ID = "HoldingsId";
     public static final String HOLDING_ID = "HoldingId";
     public static final String ITEM_ID = "ItemId";
-    public static final String SEARCH = "search";
+    public static final String SEARCH = "searchPage";
     public static final String BIB_OWNING_INSTITUTION = "BibOwningInstitution";
     public static final String HOLDINGS_OWNING_INSTITUTION = "HoldingsOwningInstitution";
     public static final String ITEM_OWNING_INSTITUTION = "ItemOwningInstitution";

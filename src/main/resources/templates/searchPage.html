@@ -7,7 +7,7 @@
     <script type="text/javascript" th:src="@{../js/bootstrap-add-clear.min.js}"></script>
     <div id="searchFormDivId" name="searchFormDivName" th:fragment="search-form" xmlns:th="http://www.thymeleaf.org" th:remove="tag">
         <form id="search-form" name="search-form" class="form-horizontal"
-              th:action="@{/search}"
+              th:action="@{/searchPage}"
               th:object="${searchRecordsRequest}" method="post">
             <input type="hidden"  th:name="${_csrf.parameterName}"   th:value="${_csrf.token}"/>
             <fieldset>
