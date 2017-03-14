@@ -1,26 +1,28 @@
 package org.recap.util;
 
+import com.csvreader.CsvReader;
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.recap.BaseTestCase;
 import org.recap.model.jpa.*;
 import org.recap.model.search.DeaccessionItemResultsRow;
+import org.recap.model.search.IncompleteReportResultsRow;
 import org.recap.model.search.ReportsForm;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.File;
+import java.io.FileReader;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -333,5 +335,33 @@ public class ReportsUtilUT extends BaseTestCase {
         return new File(resource.toURI());
     }
 
+    @Test
+    public void exportIncompleteRecords() throws Exception{
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        List<IncompleteReportResultsRow> incompleteReportResultsRows = new ArrayList<>();
+        IncompleteReportResultsRow incompleteReportResult = new IncompleteReportResultsRow();
+        incompleteReportResult.setCreatedDate("02/22/2016");
+        incompleteReportResult.setOwningInstitution("PUL");
+        incompleteReportResult.setAuthor("Dummy");
+        incompleteReportResult.setBarcode("1234");
+        incompleteReportResult.setTitle("Dummy Title");
+        incompleteReportResult.setCustomerCode("PU");
+        incompleteReportResultsRows.add(incompleteReportResult);
+        String fileNameWithExtension =  "ExportIncompleteRecords_" + dateFormat.format(new Date()) + ".csv";
+        File file = reportsUtil.exportIncompleteRecords(incompleteReportResultsRows, fileNameWithExtension);
+        CsvReader csvReader = new CsvReader(new FileReader(file), ',');
+        assertNotNull(file);
+        assertTrue(file.exists());
+        assertEquals(fileNameWithExtension, file.getName());
+        assertTrue(csvReader.readHeaders());
+        assertTrue(csvReader.readRecord());
+        assertEquals(csvReader.get("Author"), incompleteReportResult.getAuthor());
+        assertEquals(csvReader.get("Owning Institution"), incompleteReportResult.getOwningInstitution());
+        assertEquals(csvReader.get("Customer code"),incompleteReportResult.getCustomerCode());
+        assertEquals(csvReader.get("Title"),incompleteReportResult.getTitle());
+        assertEquals(csvReader.get("Barcode"),incompleteReportResult.getBarcode());
+        assertEquals(csvReader.get("Accession Date"),incompleteReportResult.getCreatedDate());
 
+
+    }
 }
