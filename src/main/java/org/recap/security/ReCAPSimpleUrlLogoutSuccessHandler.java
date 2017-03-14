@@ -60,7 +60,7 @@ public class ReCAPSimpleUrlLogoutSuccessHandler extends SimpleUrlLogoutSuccessHa
         String institution = (String)((ServletRequestAttributes) requestAttributes).getRequest().getAttribute(RecapConstants.RECAP_INSTITUTION_CODE);
 
         String casLogoutUrl;
-        if (StringUtils.equals(institution, "NYPL")) {
+        if (StringUtils.equals(institution, RecapConstants.NYPL)) {
             casLogoutUrl = "/"; // Todo : Need to get the corresponding logout url from NYPL
         } else {
             String urlProperty = RecapConstants.CAS + institution + RecapConstants.SERVICE_LOGOUT;

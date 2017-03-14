@@ -13,6 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,13 +48,16 @@ public class LoginController {
     private UserAuthUtil userAuthUtil;
 
 
+    @Autowired
+    private TokenStore tokenStore;
+
 
     @RequestMapping(value="/",method= RequestMethod.GET)
     public String loginScreen(HttpServletRequest request, Model model, @ModelAttribute UserForm userForm) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(null != auth && !isAnonymousUser(auth)) {
-            return "redirect:/search";
-        }
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        if(null != auth && !isAnonymousUser(auth)) {
+//            return "redirect:/search";
+//        }
         logger.info("Login Screen called");
         return RecapConstants.VIEW_LOGIN;
     }
@@ -61,6 +68,18 @@ public class LoginController {
     public String login(@Valid @ModelAttribute UserForm userForm, HttpServletRequest request, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String user = auth.getName();
+        String institutionFromRequest = userForm.getInstitution();
+        if (StringUtils.equals(institutionFromRequest, RecapConstants.NYPL)) {
+            OAuth2Authentication oauth = (OAuth2Authentication)auth;
+            String tokenString = ((OAuth2AuthenticationDetails)oauth.getDetails()).getTokenValue();
+            OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenString);
+
+            Map<String, Object> additionalInformation = accessToken.getAdditionalInformation();
+            if(null != additionalInformation) {
+                user = (String) additionalInformation.get("sub");
+            }
+        }
+
         logger.info("passing in /login");
         model.addAttribute("user", user);
         final String loginScreen=RecapConstants.VIEW_LOGIN;
