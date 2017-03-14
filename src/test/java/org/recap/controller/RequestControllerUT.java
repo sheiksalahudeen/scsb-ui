@@ -297,8 +297,8 @@ public class RequestControllerUT extends BaseControllerUT {
         requestForm.setItemOwningInstitution("PUL");
         requestForm.setRequestType("recall");
         requestForm.setRequestNotes("test");
-        requestForm.setStartPage(2);
-        requestForm.setEndPage(5);
+        requestForm.setStartPage("2");
+        requestForm.setEndPage("5");
         requestForm.setArticleAuthor("john");
         requestForm.setArticleTitle("test");
         requestForm.setDeliveryLocationInRequest("PB");
@@ -317,8 +317,8 @@ public class RequestControllerUT extends BaseControllerUT {
         itemRequestInformation.setItemOwningInstitution("PUL");
         itemRequestInformation.setRequestType("recall");
         itemRequestInformation.setRequestNotes("test");
-        itemRequestInformation.setStartPage(2);
-        itemRequestInformation.setEndPage(5);
+        itemRequestInformation.setStartPage("2");
+        itemRequestInformation.setEndPage("5");
         itemRequestInformation.setAuthor("john");
         itemRequestInformation.setChapterTitle("test");
         itemRequestInformation.setDeliveryLocation("PB");
