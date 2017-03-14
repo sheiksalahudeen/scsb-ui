@@ -1,6 +1,7 @@
 package org.recap.model.reports;
 
 import org.recap.model.search.DeaccessionItemResultsRow;
+import org.recap.model.search.IncompleteReportResultsRow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,10 @@ public class ReportsResponse {
     private Integer totalPageCount = 0;
     private String message;
     private List<DeaccessionItemResultsRow> deaccessionItemResultsRows = new ArrayList<>();
+
+    private String incompleteTotalRecordsCount = "0";
+    private Integer incompleteTotalPageCount = 0;
+    private List<IncompleteReportResultsRow> incompleteReportResultsRows = new ArrayList<>();
 
     public long getAccessionPrivatePulCount() {
         return accessionPrivatePulCount;
@@ -291,5 +296,29 @@ public class ReportsResponse {
 
     public void setDeaccessionItemResultsRows(List<DeaccessionItemResultsRow> deaccessionItemResultsRows) {
         this.deaccessionItemResultsRows = deaccessionItemResultsRows;
+    }
+
+    public String getIncompleteTotalRecordsCount() {
+        return incompleteTotalRecordsCount;
+    }
+
+    public void setIncompleteTotalRecordsCount(String incompleteTotalRecordsCount) {
+        this.incompleteTotalRecordsCount = incompleteTotalRecordsCount;
+    }
+
+    public Integer getIncompleteTotalPageCount() {
+        return incompleteTotalPageCount;
+    }
+
+    public void setIncompleteTotalPageCount(Integer incompleteTotalPageCount) {
+        this.incompleteTotalPageCount = incompleteTotalPageCount;
+    }
+
+    public List<IncompleteReportResultsRow> getIncompleteReportResultsRows() {
+        return incompleteReportResultsRows;
+    }
+
+    public void setIncompleteReportResultsRows(List<IncompleteReportResultsRow> incompleteReportResultsRows) {
+        this.incompleteReportResultsRows = incompleteReportResultsRows;
     }
 }

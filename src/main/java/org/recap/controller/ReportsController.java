@@ -1,9 +1,13 @@
 package org.recap.controller;
 
+import org.apache.commons.compress.utils.IOUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
+import org.recap.model.jpa.InstitutionEntity;
 import org.recap.model.search.DeaccessionItemResultsRow;
+import org.recap.model.search.IncompleteReportResultsRow;
 import org.recap.model.search.ReportsForm;
+import org.recap.repository.jpa.InstitutionDetailsRepository;
 import org.recap.security.UserManagement;
 import org.recap.util.ReportsUtil;
 import org.recap.util.UserAuthUtil;
@@ -19,9 +23,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.io.File;
+import java.io.FileInputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -40,6 +50,9 @@ public class ReportsController {
     @Autowired
     private UserAuthUtil userAuthUtil;
 
+    @Autowired
+    InstitutionDetailsRepository institutionDetailsRepository;
+
     public UserAuthUtil getUserAuthUtil() {
         return userAuthUtil;
     }
@@ -54,16 +67,15 @@ public class ReportsController {
 
     @RequestMapping("/reports")
     public String collection(Model model, HttpServletRequest request) {
-        HttpSession session=request.getSession();
-        boolean authenticated=getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REPORT_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
-        if(authenticated)
-        {
+        HttpSession session = request.getSession();
+        boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REPORT_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
+        if (authenticated) {
             ReportsForm reportsForm = new ReportsForm();
             model.addAttribute(RecapConstants.REPORTS_FORM, reportsForm);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
             return RecapConstants.VIEW_SEARCH_RECORDS;
-        }else{
-            return UserManagement.unAuthorizedUser(session,"Reports",logger);
+        } else {
+            return UserManagement.unAuthorizedUser(session, "Reports", logger);
         }
 
 
@@ -120,21 +132,30 @@ public class ReportsController {
     @RequestMapping(value = "/reports/first", method = RequestMethod.GET)
     public ModelAndView searchFirst(@Valid ReportsForm reportsForm,
                                     Model model) throws Exception {
-        reportsForm.setPageNumber(0);
-        List<DeaccessionItemResultsRow> deaccessionItemResultsRowList = reportsUtil.deaccessionReportFieldsInformation(reportsForm);
-        reportsForm.setDeaccessionItemResultsRows(deaccessionItemResultsRowList);
-        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
-        return new ModelAndView(RecapConstants.REPORTS_VIEW_DEACCESSION_INFORMARION, RecapConstants.REPORTS_FORM, reportsForm);
+        if ((RecapConstants.REPORTS_INCOMPLETE_RECORDS).equals(reportsForm.getRequestType())) {
+            reportsForm.setIncompletePageNumber(0);
+            return getIncompleteRecords(reportsForm, model);
+        } else {
+            reportsForm.setPageNumber(0);
+            List<DeaccessionItemResultsRow> deaccessionItemResultsRowList = reportsUtil.deaccessionReportFieldsInformation(reportsForm);
+            reportsForm.setDeaccessionItemResultsRows(deaccessionItemResultsRowList);
+            model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
+            return new ModelAndView(RecapConstants.REPORTS_VIEW_DEACCESSION_INFORMARION, RecapConstants.REPORTS_FORM, reportsForm);
+        }
     }
 
     @ResponseBody
     @RequestMapping(value = "/reports/previous", method = RequestMethod.GET)
     public ModelAndView searchPrevious(@Valid ReportsForm reportsForm,
                                        Model model) throws Exception {
-        List<DeaccessionItemResultsRow> deaccessionItemResultsRowList = reportsUtil.deaccessionReportFieldsInformation(reportsForm);
-        reportsForm.setDeaccessionItemResultsRows(deaccessionItemResultsRowList);
-        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
-        return new ModelAndView(RecapConstants.REPORTS_VIEW_DEACCESSION_INFORMARION, RecapConstants.REPORTS_FORM, reportsForm);
+        if ((RecapConstants.REPORTS_INCOMPLETE_RECORDS).equals(reportsForm.getRequestType())) {
+            return getIncompleteRecords(reportsForm, model);
+        } else {
+            List<DeaccessionItemResultsRow> deaccessionItemResultsRowList = reportsUtil.deaccessionReportFieldsInformation(reportsForm);
+            reportsForm.setDeaccessionItemResultsRows(deaccessionItemResultsRowList);
+            model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
+            return new ModelAndView(RecapConstants.REPORTS_VIEW_DEACCESSION_INFORMARION, RecapConstants.REPORTS_FORM, reportsForm);
+        }
     }
 
 
@@ -142,10 +163,14 @@ public class ReportsController {
     @RequestMapping(value = "/reports/next", method = RequestMethod.GET)
     public ModelAndView searchNext(@Valid ReportsForm reportsForm,
                                    Model model) throws Exception {
-        List<DeaccessionItemResultsRow> deaccessionItemResultsRowList = reportsUtil.deaccessionReportFieldsInformation(reportsForm);
-        reportsForm.setDeaccessionItemResultsRows(deaccessionItemResultsRowList);
-        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
-        return new ModelAndView(RecapConstants.REPORTS_VIEW_DEACCESSION_INFORMARION, RecapConstants.REPORTS_FORM, reportsForm);
+        if ((RecapConstants.REPORTS_INCOMPLETE_RECORDS).equals(reportsForm.getRequestType())) {
+            return getIncompleteRecords(reportsForm, model);
+        } else {
+            List<DeaccessionItemResultsRow> deaccessionItemResultsRowList = reportsUtil.deaccessionReportFieldsInformation(reportsForm);
+            reportsForm.setDeaccessionItemResultsRows(deaccessionItemResultsRowList);
+            model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
+            return new ModelAndView(RecapConstants.REPORTS_VIEW_DEACCESSION_INFORMARION, RecapConstants.REPORTS_FORM, reportsForm);
+        }
     }
 
 
@@ -153,10 +178,82 @@ public class ReportsController {
     @RequestMapping(value = "/reports/last", method = RequestMethod.GET)
     public ModelAndView searchLast(@Valid ReportsForm reportsForm,
                                    Model model) throws Exception {
-        reportsForm.setPageNumber(reportsForm.getTotalPageCount() - 1);
-        List<DeaccessionItemResultsRow> deaccessionItemResultsRowList = reportsUtil.deaccessionReportFieldsInformation(reportsForm);
-        reportsForm.setDeaccessionItemResultsRows(deaccessionItemResultsRowList);
-        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
-        return new ModelAndView(RecapConstants.REPORTS_VIEW_DEACCESSION_INFORMARION, RecapConstants.REPORTS_FORM, reportsForm);
+        if ((RecapConstants.REPORTS_INCOMPLETE_RECORDS).equals(reportsForm.getRequestType())) {
+            reportsForm.setIncompletePageNumber(reportsForm.getIncompleteTotalPageCount() - 1);
+            return getIncompleteRecords(reportsForm, model);
+        } else {
+            reportsForm.setPageNumber(reportsForm.getTotalPageCount() - 1);
+            List<DeaccessionItemResultsRow> deaccessionItemResultsRowList = reportsUtil.deaccessionReportFieldsInformation(reportsForm);
+            reportsForm.setDeaccessionItemResultsRows(deaccessionItemResultsRowList);
+            model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
+            return new ModelAndView(RecapConstants.REPORTS_VIEW_DEACCESSION_INFORMARION, RecapConstants.REPORTS_FORM, reportsForm);
+        }
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/reports/incompleteRecords", method = RequestMethod.POST)
+    public ModelAndView incompleteRecordsReport(ReportsForm reportsForm,
+                                                Model model) throws Exception {
+        reportsForm.setIncompletePageNumber(0);
+        return getIncompleteRecords(reportsForm, model);
+
+    }
+
+    @RequestMapping(value = "/reports/getInstitutions", method = RequestMethod.GET)
+    public ModelAndView getInstitutionForIncompletereport(HttpServletRequest request, ReportsForm reportsForm) {
+        HttpSession session = request.getSession();
+        Object isSuperAdmin = session.getAttribute(UserManagement.SUPER_ADMIN_USER);
+        if ((boolean) isSuperAdmin == true) {
+            List<String> instList = new ArrayList<>();
+            List<InstitutionEntity> institutionCodeForSuperAdmin = institutionDetailsRepository.getInstitutionCodeForSuperAdmin();
+            for (InstitutionEntity institutionEntity : institutionCodeForSuperAdmin) {
+                instList.add(institutionEntity.getInstitutionCode());
+            }
+            reportsForm.setIncompleteShowByInst(instList);
+        } else {
+            Object userInstitution = session.getAttribute(UserManagement.USER_INSTITUTION);
+            reportsForm.setIncompleteShowByInst(Arrays.asList((String) userInstitution));
+
+        }
+        return new ModelAndView(RecapConstants.REPORTS_INCOMPLETE_SHOW_BY_VIEW, RecapConstants.REPORTS_FORM, reportsForm);
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value = "/reports/export", method = RequestMethod.POST)
+    public byte[] exportIncompleteRecords(ReportsForm reportsForm, HttpServletResponse response, Model model) throws Exception {
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        String fileNameWithExtension = RecapConstants.REPORTS_INCOMPLETE_EXPORT_FILE_NAME + dateFormat.format(new Date()) + ".csv";
+        reportsForm.setExport(true);
+        List<IncompleteReportResultsRow> incompleteReportResultsRows = reportsUtil.incompleteRecordsReportFieldsInformation(reportsForm);
+        File csvFile = reportsUtil.exportIncompleteRecords(incompleteReportResultsRows, fileNameWithExtension);
+        byte[] fileContent = IOUtils.toByteArray(new FileInputStream(csvFile));
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileNameWithExtension + "\"");
+        response.setContentLength(fileContent.length);
+        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
+        return fileContent;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/reports/incompleteReportPageSizeChange", method = RequestMethod.POST)
+    public ModelAndView incompleteReportPageSizeChange(ReportsForm reportsForm,
+                                                       Model model) throws Exception {
+        reportsForm.setIncompletePageNumber(0);
+        return getIncompleteRecords(reportsForm, model);
+    }
+
+    private ModelAndView getIncompleteRecords(ReportsForm reportsForm, Model model) throws Exception {
+        List<IncompleteReportResultsRow> incompleteReportResultsRows = getReportsUtil().incompleteRecordsReportFieldsInformation(reportsForm);
+        reportsForm.setIncompleteReportResultsRows(incompleteReportResultsRows);
+        if (incompleteReportResultsRows.isEmpty()) {
+            reportsForm.setShowIncompleteResults(false);
+            reportsForm.setErrorMessage(RecapConstants.REPORTS_INCOMPLETE_RECORDS_NOT_FOUND);
+        } else {
+            reportsForm.setShowIncompleteResults(true);
+            reportsForm.setShowIncompletePagination(true);
+        }
+        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
+        return new ModelAndView(RecapConstants.REPORTS_INCOMPLETE_RECORDS_VIEW, RecapConstants.REPORTS_FORM, reportsForm);
+    }
+
 }

@@ -8,6 +8,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.recap.RecapConstants;
 import org.recap.model.search.DeaccessionItemResultsRow;
+import org.recap.model.search.IncompleteReportResultsRow;
 import org.recap.model.search.ReportsForm;
 import org.recap.repository.jpa.RequestItemDetailsRepository;
 import org.recap.security.UserManagement;
@@ -233,5 +234,64 @@ public class ReportsControllerUT extends BaseControllerUT {
         ModelAndView modelAndView = reportsControllerWired.searchLast(reportsForm,model);
         assertNotNull(modelAndView);
         assertEquals("reports :: #deaccessionInformation",modelAndView.getViewName());
+    }
+
+    @Test
+    public void incompleteRecordsReport() throws Exception{
+        ReportsForm reportsForm = new ReportsForm();
+        reportsForm.setIncompleteRequestingInstitution("PUL");
+        List<IncompleteReportResultsRow> incompleteReportResultsRows = new ArrayList<>();
+        Mockito.when(mockedReportsController.getReportsUtil()).thenReturn(reportsUtil);
+        IncompleteReportResultsRow incompleteReportResult = new IncompleteReportResultsRow();
+        incompleteReportResult.setBarcode("12345");
+        incompleteReportResult.setOwningInstitution("PUl");
+        incompleteReportResult.setCreatedDate("03/22/2016");
+        incompleteReportResult.setAuthor("dummy");
+        incompleteReportResult.setTitle("dummy");
+        incompleteReportResult.setCustomerCode("PU");
+        incompleteReportResultsRows.add(incompleteReportResult);
+        Mockito.when(mockedReportsController.getReportsUtil().incompleteRecordsReportFieldsInformation(reportsForm)).thenReturn(incompleteReportResultsRows);
+        Mockito.when(mockedReportsController.incompleteRecordsReport(reportsForm,model)).thenCallRealMethod();
+        ModelAndView modelAndView = mockedReportsController.incompleteRecordsReport(reportsForm, model);
+        assertNotNull(modelAndView);
+        assertEquals("reports :: #IncompleteReporttableview",modelAndView.getViewName());
+    }
+
+    @Test
+    public void getInstitutionForIncompletereport() throws Exception{
+        ReportsForm reportsForm = new ReportsForm();
+        when(request.getSession()).thenReturn(session);
+        when(session.getAttribute(UserManagement.SUPER_ADMIN_USER)).thenReturn(false);
+        when(session.getAttribute(UserManagement.USER_INSTITUTION)).thenReturn("CUL");
+        ModelAndView modelAndView = reportsControllerWired.getInstitutionForIncompletereport(request, reportsForm);
+        assertNotNull(modelAndView);
+        List<String> incompleteShowByInst = reportsForm.getIncompleteShowByInst();
+        assertNotNull(incompleteShowByInst);
+        for (String inst : incompleteShowByInst) {
+            assertEquals("CUL",inst);
+        }
+        assertEquals("reports :: #incompleteShowBy",modelAndView.getViewName());
+    }
+
+    @Test
+    public void incompleteReportPageSizeChange() throws Exception{
+        ReportsForm reportsForm = new ReportsForm();
+        reportsForm.setIncompleteRequestingInstitution("PUL");
+        reportsForm.setIncompletePageSize(10);
+        List<IncompleteReportResultsRow> incompleteReportResultsRows = new ArrayList<>();
+        Mockito.when(mockedReportsController.getReportsUtil()).thenReturn(reportsUtil);
+        IncompleteReportResultsRow incompleteReportResult = new IncompleteReportResultsRow();
+        incompleteReportResult.setBarcode("12345");
+        incompleteReportResult.setOwningInstitution("PUl");
+        incompleteReportResult.setCreatedDate("03/22/2016");
+        incompleteReportResult.setAuthor("dummy");
+        incompleteReportResult.setTitle("dummy");
+        incompleteReportResult.setCustomerCode("PU");
+        incompleteReportResultsRows.add(incompleteReportResult);
+        Mockito.when(mockedReportsController.getReportsUtil().incompleteRecordsReportFieldsInformation(reportsForm)).thenReturn(incompleteReportResultsRows);
+        Mockito.when(mockedReportsController.incompleteReportPageSizeChange(reportsForm,model)).thenCallRealMethod();
+        ModelAndView modelAndView = mockedReportsController.incompleteReportPageSizeChange(reportsForm, model);
+        assertNotNull(modelAndView);
+        assertEquals("reports :: #IncompleteReporttableview",modelAndView.getViewName());
     }
 }
