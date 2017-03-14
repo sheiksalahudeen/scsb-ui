@@ -1,14 +1,22 @@
 package org.recap.util;
 
+import com.csvreader.CsvWriter;
+import org.apache.commons.collections.CollectionUtils;
 import org.recap.RecapConstants;
 import org.recap.model.reports.ReportsResponse;
 import org.recap.model.search.DeaccessionItemResultsRow;
+import org.recap.model.search.IncompleteReportResultsRow;
 import org.recap.model.search.ReportsForm;
 import org.recap.repository.jpa.ItemChangeLogDetailsRepository;
 import org.recap.repository.jpa.RequestItemDetailsRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +35,8 @@ public class ReportsUtil {
 
     @Autowired
     ItemChangeLogDetailsRepository itemChangeLogDetailsRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(ReportsUtil.class);
 
 
     public void populateILBDCountsForRequest(ReportsForm reportsForm, Date requestFromDate, Date requestToDate) {
@@ -125,4 +135,58 @@ public class ReportsUtil {
         return reportsResponse.getDeaccessionItemResultsRows();
     }
 
+    public List<IncompleteReportResultsRow> incompleteRecordsReportFieldsInformation(ReportsForm reportsForm) throws Exception {
+        ReportsResponse reportsResponse = reportsServiceUtil.requestIncompleteRecords(reportsForm);
+        if(!reportsForm.isExport()){
+            reportsForm.setIncompleteTotalPageCount(reportsResponse.getIncompleteTotalPageCount());
+            reportsForm.setIncompleteTotalRecordsCount(reportsResponse.getIncompleteTotalRecordsCount());
+            reportsForm.setIncompletePageNumber(reportsForm.getIncompletePageNumber());
+            reportsForm.setIncompletePageSize(reportsForm.getIncompletePageSize());
+        }
+        return reportsResponse.getIncompleteReportResultsRows();
+    }
+
+    public File exportIncompleteRecords(List<IncompleteReportResultsRow> incompleteReportResultsRows, String fileNameWithExtension) {
+        File file = new File(fileNameWithExtension);
+        CsvWriter csvOutput = null;
+        if (CollectionUtils.isNotEmpty(incompleteReportResultsRows)){
+            try {
+                csvOutput = new CsvWriter(new FileWriter(file), ',');
+                writeHeader(csvOutput);
+                for (IncompleteReportResultsRow incompleteReportResultsRow : incompleteReportResultsRows) {
+                    if(CollectionUtils.isNotEmpty(incompleteReportResultsRows)){
+                        writeRow(incompleteReportResultsRow,csvOutput);
+                    }
+                }
+            } catch (Exception e) {
+                logger.error(RecapConstants.LOG_ERROR,e);
+            }
+            finally {
+                csvOutput.flush();
+                csvOutput.close();
+            }
+        }
+        return file;
+    }
+
+    private void writeRow(IncompleteReportResultsRow incompleteReportResultsRow, CsvWriter csvOutput) throws IOException {
+        csvOutput.write(incompleteReportResultsRow.getOwningInstitution());
+        csvOutput.write(incompleteReportResultsRow.getCustomerCode());
+        csvOutput.write(incompleteReportResultsRow.getTitle());
+        csvOutput.write(incompleteReportResultsRow.getAuthor());
+        csvOutput.write(incompleteReportResultsRow.getBarcode());
+        csvOutput.write(incompleteReportResultsRow.getCreatedDate());
+        csvOutput.endRecord();
+    }
+
+    private void writeHeader(CsvWriter csvOutput) throws Exception{
+        csvOutput.write("Owning Institution");
+        csvOutput.write("Customer code");
+        csvOutput.write("Title");
+        csvOutput.write("Author");
+        csvOutput.write("Barcode");
+        csvOutput.write("Accession Date");
+        csvOutput.endRecord();
+
+    }
 }

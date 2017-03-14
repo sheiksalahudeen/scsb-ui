@@ -24,8 +24,8 @@ public class RequestForm {
     private String requestingInstitution;
     private String requestType;
     private String requestNotes;
-    private Integer startPage;
-    private Integer endPage;
+    private String startPage;
+    private String endPage;
     private Integer volumeNumber;
     private String issue;
     private String articleAuthor;
@@ -156,19 +156,19 @@ public class RequestForm {
         this.requestNotes = requestNotes;
     }
 
-    public Integer getStartPage() {
+    public String getStartPage() {
         return startPage;
     }
 
-    public void setStartPage(Integer startPage) {
+    public void setStartPage(String startPage) {
         this.startPage = startPage;
     }
 
-    public Integer getEndPage() {
+    public String getEndPage() {
         return endPage;
     }
 
-    public void setEndPage(Integer endPage) {
+    public void setEndPage(String endPage) {
         this.endPage = endPage;
     }
 

@@ -456,4 +456,12 @@ public class RecapConstants {
         headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
         return headers;
     }
+
+    //Incomplete Record Reports
+    public static final String SCSB_REPORTS_INCOMPLETE_RESULTS_URL = "reportsService/incompleteRecords";
+    public static final String REPORTS_INCOMPLETE_RECORDS="IncompleteRecordsReport";
+    public static final String REPORTS_INCOMPLETE_RECORDS_NOT_FOUND="No Records Found";
+    public static final String REPORTS_INCOMPLETE_RECORDS_VIEW="reports :: #IncompleteReporttableview";
+    public static final String REPORTS_INCOMPLETE_SHOW_BY_VIEW="reports :: #incompleteShowBy";
+    public static final String REPORTS_INCOMPLETE_EXPORT_FILE_NAME="ExportIncompleteRecords_";
 }

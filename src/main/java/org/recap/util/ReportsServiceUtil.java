@@ -4,6 +4,7 @@ import org.recap.RecapConstants;
 import org.recap.model.reports.ReportsRequest;
 import org.recap.model.reports.ReportsResponse;
 import org.recap.model.search.ReportsForm;
+import org.recap.model.search.SearchRecordsRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Arrays;
 
 /**
  * Created by rajeshbabuk on 13/1/17.
@@ -96,4 +99,37 @@ public class ReportsServiceUtil {
             return reportsResponse;
         }
     }
+
+    public ReportsResponse requestIncompleteRecords(ReportsForm reportsForm) {
+        ReportsRequest reportsRequest = new ReportsRequest();
+        reportsRequest.setIncompleteRequestingInstitution(reportsForm.getIncompleteRequestingInstitution());
+        reportsRequest.setIncompletePageNumber(reportsForm.getIncompletePageNumber());
+        reportsRequest.setIncompletePageSize(reportsForm.getIncompletePageSize());
+        reportsRequest.setExport(reportsForm.isExport());
+        SearchRecordsRequest searchRecordsRequest = new SearchRecordsRequest();
+        searchRecordsRequest.setFieldName("ItemCatalogingStatus");
+        searchRecordsRequest.setFieldValue("Incomplete");
+        searchRecordsRequest.setOwningInstitutions(Arrays.asList(reportsForm.getIncompleteRequestingInstitution()));
+        if(!reportsForm.isExport()){
+            searchRecordsRequest.setPageSize(reportsForm.getIncompletePageSize());
+            searchRecordsRequest.setPageNumber(reportsForm.getIncompletePageNumber());
+        }
+        ReportsResponse reportsResponse = new ReportsResponse();
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
+            HttpEntity<ReportsRequest> httpEntity = new HttpEntity<>(reportsRequest, headers);
+            ResponseEntity<ReportsResponse> responseEntity = restTemplate.exchange(serverProtocol + scsbUrl + RecapConstants.SCSB_REPORTS_INCOMPLETE_RESULTS_URL, HttpMethod.POST, httpEntity, ReportsResponse.class);
+            reportsResponse = responseEntity.getBody();
+            return reportsResponse;
+        } catch (Exception e) {
+            logger.error(RecapConstants.LOG_ERROR,e);
+            reportsResponse.setMessage(e.getMessage());
+            return reportsResponse;
+        }
+    }
+
+
+
 }

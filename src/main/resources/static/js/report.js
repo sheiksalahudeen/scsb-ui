@@ -106,6 +106,7 @@ jQuery(document).ready(function ($) {
         $('#requestFromDateErrorText').hide();
         $('#requestToDateErrorText').hide();
         $('#accessionErrorText').hide();
+        $('#ReportIncompleteRecordsview').hide();
 
     }
 
@@ -116,7 +117,7 @@ jQuery(document).ready(function ($) {
         $('#requestFromDateErrorText').hide();
         $('#requestToDateErrorText').hide();
         $('#accessionErrorText').hide();
-
+        $('#ReportIncompleteRecordsview').hide();
     }
 
     function CollectionGroupDesignationOption() {
@@ -126,6 +127,7 @@ jQuery(document).ready(function ($) {
         $('#requestFromDateErrorText').hide();
         $('#requestToDateErrorText').hide();
         $('#accessionErrorText').hide();
+        $('#ReportIncompleteRecordsview').hide();
     }
 
 
@@ -207,10 +209,14 @@ jQuery(document).ready(function ($) {
                 $('#ReportAccessionDeaccessionclickview').show();
                 $('#ReportRequestclickview').hide();
                 $('#showReportResultsText').hide();
+                $('#ReportIncompleteRecordsview').hide();
+
             }
             else {
                 $('#ReportRequestclickview').show();
                 $('#showReportResultsText').hide();
+                $('#ReportIncompleteRecordsview').hide();
+
             }
         }
     }
@@ -314,7 +320,6 @@ jQuery(document).ready(function ($) {
     $("a[href='https://htcrecap.atlassian.net/wiki/display/RTG/Search']").attr('href',
         'https://htcrecap.atlassian.net/wiki/display/RTG/Reports');
 
-
 });
 
 function cgd() {
@@ -392,7 +397,12 @@ function first() {
         type: 'get',
         data: $form.serialize(),
         success: function (response) {
-            $('#deaccessionInformation').html(response);
+            if($('#ReportIncompleteRadio').is(':checked')){
+                $('#IncompleteReporttableview').html(response);
+            }
+            else{
+                $('#deaccessionInformation').html(response);
+            }
         }
     });
 }
@@ -405,7 +415,12 @@ function previous() {
         type: 'get',
         data: $form.serialize(),
         success: function (response) {
-            $('#deaccessionInformation').html(response);
+            if($('#ReportIncompleteRadio').is(':checked')){
+                $('#IncompleteReporttableview').html(response);
+            }
+            else{
+                $('#deaccessionInformation').html(response);
+            }
         }
     });
 }
@@ -418,7 +433,12 @@ function next() {
         type: 'get',
         data: $form.serialize(),
         success: function (response) {
-            $('#deaccessionInformation').html(response);
+            if($('#ReportIncompleteRadio').is(':checked')){
+                $('#IncompleteReporttableview').html(response);
+            }
+            else{
+                $('#deaccessionInformation').html(response);
+            }
         }
     });
 }
@@ -431,7 +451,109 @@ function last() {
         type: 'get',
         data: $form.serialize(),
         success: function (response) {
-            $('#deaccessionInformation').html(response);
+            if($('#ReportIncompleteRadio').is(':checked')){
+                $('#IncompleteReporttableview').html(response);
+            }
+            else{
+                $('#deaccessionInformation').html(response);
+            }
+        }
+    });
+}
+
+function incompleteRecords(){
+    $('#ReportIncompleteRecordsview').show();
+    $('#recapreports #ReportRequestclickview').hide();
+    $('#recapreports #ReportAccessionDeaccessionclickview').hide();
+    $('#recapreports #ReportCollectionGroupDesignationclickview').hide();
+    $('#IncompleteReporttableview').hide();
+    $('#incompleteShowRecords').val(10);
+    var url = "/reports/getInstitutions";
+    $.ajax({
+        url: url,
+        type: 'get',
+        success: function (response) {
+            $('#incompleteShowBy').html(response);
+        }
+    });
+}
+
+function submitIncompleterequest(){
+    var $form = $('#reports-form');
+    $('#incompleteShowRecords').val(10);
+    var url = "/reports/incompleteRecords";
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: $form.serialize(),
+        success: function (response) {
+            $('#IncompleteReporttableview').html(response);
+            $('#IncompleteReporttableview').show();
+
+        }
+    });
+}
+
+function exportRecords(){
+    var $form = $('#reports-form');
+    var url = "/reports/export";
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: $form.serialize(),
+        success: function (response,status, xhr) {
+            var filename = "";
+            var disposition = xhr.getResponseHeader('Content-Disposition');
+            if (disposition && disposition.indexOf('attachment') !== -1) {
+                var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                var matches = filenameRegex.exec(disposition);
+                if (matches != null && matches[1]) filename = matches[1].replace(/['"]/g, '');
+            }
+
+            var type = xhr.getResponseHeader('Content-Type');
+            var blob = new Blob([response], { type: type });
+
+            if (typeof window.navigator.msSaveBlob !== 'undefined') {
+                // IE workaround for "HTML7007: One or more blob URLs were revoked by closing the blob for which they were created. These URLs will no longer resolve as the data backing the URL has been freed."
+                window.navigator.msSaveBlob(blob, filename);
+            } else {
+                var URL = window.URL || window.webkitURL;
+                var downloadUrl = URL.createObjectURL(blob);
+
+                if (filename) {
+                    // use HTML5 a[download] attribute to specify filename
+                    var a = document.createElement("a");
+                    // safari doesn't support this yet
+                    if (typeof a.download === 'undefined') {
+                        window.location = downloadUrl;
+                    } else {
+                        a.href = downloadUrl;
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.click();
+                    }
+                } else {
+                    window.location = downloadUrl;
+                }
+
+                setTimeout(function () { URL.revokeObjectURL(downloadUrl); }, 100); // cleanup
+            }
+        }
+    });
+}
+
+
+function incompletePageSizeRequest(){
+    var $form = $('#reports-form');
+    var url = "/reports/incompleteReportPageSizeChange";
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: $form.serialize(),
+        success: function (response) {
+            $('#IncompleteReporttableview').html(response);
+            $('#IncompleteReporttableview').show();
+
         }
     });
 }

@@ -58,6 +58,17 @@
                                                     <span class="cr"><i class="cr-icon radio-dot"></i></span>
                                                 </label>
                                             </div>
+                                            <div class="radio-inline radio padding-left-0 margin-left-0"
+                                                 style="padding-left: 60px">
+                                                <label>
+                                                    <input type="radio" name="ReportTypeoption"
+                                                           id="ReportIncompleteRadio"
+                                                           value="IncompleteRecordsReport" th:field="*{requestType}"
+                                                           th:onclick="'javascript:incompleteRecords();'"/>
+                                                   Incomplete Records
+                                                    <span class="cr"><i class="cr-icon radio-dot"></i></span>
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -65,7 +76,7 @@
                                 <div id="ReportRequestclickview" style="display: none">
                                     <div class="search-bar">
                                         <div class="buscador-principal">
-                                            <form id="ReportRequestsection">
+                                            <div id="ReportRequestsection">
                                                 <div class="row" style="padding-left: 20px">
                                                     <div class="col-md-3 col-sm-3 padding-right-50">
                                                         <div class="form-group">
@@ -154,7 +165,7 @@
                                                 <div class="" id="note-requesttype" style="padding-left:5px;margin-top:4px;">
                                                     <strong>Note:</strong> Count of retrievals and/or recalls for each partner institution.
                                                 </div>
-                                            </form>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -715,6 +726,180 @@
 
                         </div>
                     </div>
+
+                    <!--IncompleteRecordsReport view -->
+                    <div id="ReportIncompleteRecordsview" class="" style="display:none">
+                        <div class="search-bar">
+                            <div class="buscador-principal">
+                                <div class="row">
+                                    <div class="col-md-5 col-sm-5">
+                                        <div class="col-md-4">
+                                            <div class="row" style="padding-left: 20px">
+                                                <div class="form-group">
+                                                    <label for="incompleteShowBy">Show By
+                                                        <span class="error-color">*</span> </label>
+                                                    <div class="select-holder">
+                                                    <select id="incompleteShowBy"
+                                                            name="incompleteShowBy"
+                                                            class="themed-input themed-select"
+                                                            style="border: 1px solid #888988;color: #555555;outline: none;height: 50px;box-shadow: none;" th:field="${reportsForm.incompleteRequestingInstitution}">
+                                                        <option th:each="institutions : ${reportsForm.incompleteShowByInst}" th:value="${institutions}" th:text="${institutions}"></option>
+                                                    </select>
+                                                </div>
+                                                    <p id="incompleteErrorText"
+                                                       style="display: none;color: red">This Field is
+                                                        Required</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3">
+                                        <button class="btn themed-button themed-button-search" type="button"
+                                                id="incompleteSubmitBtn" onclick="submitIncompleterequest()">Generate Report
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xs-12 margin-top-less-10" style="margin-top: 5px;padding-left: 20px;">Fields marked with
+                                        asterisk(<span class="error-color">*</span>) are mandatory.
+                                    </div>
+                                </div>
+
+                                <div class="" style="padding-left: 5px;">
+                                    <strong>Note:</strong>
+                                    <ul class="" style="list-style-type:disc;">
+                                        <li>Incomplete Records are those bibliographic records that were found lacking crucial information
+                                            such as CGD or Use Restriction or were not available in the ILS at the time of accession.
+                                        </li>
+                                        <li> The 'Export Records' button generates a CSV file with all incomplete records.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!--IncompleteRecordsReport Report Table Section-->
+                        <div class="row" id="IncompleteReporttableview">
+                            <div id="errorMessageId" class="row margin-btm-10" data-th-if="${reportsForm.errorMessage ne null &amp;&amp; reportsForm.errorMessage ne ''}">
+                                <div class="col-sm-12" style="padding-left:45px;padding-right:45px;margin-top:10px;">
+                                    <div class="bg-danger text-danger padding-10"><span class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span id="errorMessageSpanId" th:text="${reportsForm.errorMessage}"></span></div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12" data-th-if="${reportsForm.showIncompleteResults}" style="padding-left:30px;padding-right:30px;">
+                                <h4>Report Results</h4>
+                                <h4 class="pull-right" style="margin-top: -20px;">Total Records Found:<span th:text="${#numbers.formatInteger(reportsForm.incompleteTotalRecordsCount,0,'COMMA')}"></span></h4>
+                                <div class="col-sm-offset-2 show-entries-section" style="margin-top: -30px;">
+                                    <div class="">
+                                        <span class="show-title">Show Entries</span>
+                                        <select id="incompleteShowRecords" name="numOfRecordsName"
+                                                class="themed-input" onchange="incompletePageSizeRequest()" th:field="${reportsForm.incompletePageSize}">
+                                            <option value="10">10</option>
+                                            <option value="25">25</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="divider-horizontal margin-top-10 margin-btm-10"></div>
+                                <div>
+                                    <div class="table-wrapper">
+                                        <table class="table table-striped text-center margin-btm-0"
+                                               id="IncompleteRecordsReportTable">
+                                            <thead class="tablesorter-headerRow">
+                                            <tr>
+                                                <th width="15%" style="font-family:sans-serif;font-size: 120%">Owning Institution</th>
+                                                <th width="10%" style="font-family:sans-serif;font-size: 120%">Customer code</th>
+                                                <th width="20%" style="font-family:sans-serif;font-size: 120%">Title</th>
+                                                <th width="15%" style="font-family:sans-serif;font-size: 120%">Author</th>
+                                                <th width="20%" style="font-family:sans-serif;font-size: 120%">Barcode</th>
+                                                <th width="20%" style="font-family:sans-serif;font-size: 120%">Accession Date</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr data-th-id="'incompleteResults-'+ ${incompleteResultStat.index}"
+                                                th:each="incompleteResult,incompleteResultStat : ${reportsForm.incompleteReportResultsRows}"
+                                                class="parentRow">
+                                                <td data-th-id="'incompleteResults'+ ${incompleteResultStat.index}">
+                                                <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].owningInstitution}"/>
+                                                <span data-th-id="'incompleteResults'+ ${incompleteResultStat.index}"
+                                                      th:text="${incompleteResult.owningInstitution}"></span>
+                                                </td>
+                                                <td data-th-id="'incompleteResults'+ ${incompleteResultStat.index}">
+                                                <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].customerCode}"/>
+                                                <span data-th-id="'incompleteResults'+ ${incompleteResultStat.index}"
+                                                      th:text="${incompleteResult.customerCode}"></span>
+                                                </td>
+                                                <td data-th-id="'incompleteResults'+ ${incompleteResultStat.index}">
+                                                <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].title}"/>
+                                                <span data-th-id="'incompleteResults'+ ${incompleteResultStat.index}"
+                                                      th:text="${incompleteResult.title}"></span>
+                                                </td>
+                                                <td data-th-id="'incompleteResults'+ ${incompleteResultStat.index}">
+                                                <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].author}"/>
+                                                <span data-th-id="'incompleteResults'+ ${incompleteResultStat.index}"
+                                                      th:text="${incompleteResult.author}"></span>
+                                                </td>
+                                                <td data-th-id="'incompleteResults'+ ${incompleteResultStat.index}">
+                                                <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].barcode}"/>
+                                                <span data-th-id="'incompleteResults'+ ${incompleteResultStat.index}"
+                                                      th:text="${incompleteResult.barcode}"></span>
+                                                </td>
+                                                <td data-th-id="'incompleteResults'+ ${incompleteResultStat.index}">
+                                                <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].createdDate}"/>
+                                                 <span data-th-id="'incompleteResults'+ ${incompleteResultStat.index}"
+                                                       th:text="${incompleteResult.createdDate}"></span>
+                                               <!-- <span data-th-id="'incompleteResults'+ ${incompleteResultStat.index}"
+                                                      th:text="${#dates.format(incompleteResult.createdDate, 'MM/dd/yyyy')}"></span>-->
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--IncompleteRecordsReport Pagination-->
+
+                            <input id="incompletePageNumber" name="incompletePageNumber" type="text" th:field="${reportsForm.incompletePageNumber}"
+                                   hidden="hidden"/>
+                            <input id="incompletetotalPageCount" name="incompletetotalPageCount" type="text"
+                                   th:field="${reportsForm.incompleteTotalPageCount}" hidden="hidden"/>
+                            <div id="incompletePaginationId" name="reportPaginationName" class="pull-left" style="margin-top: -10px;padding-left:35px;" data-th-if="${reportsForm.showIncompletePagination}">
+                                <ul class="pagination" id="incompletePaginationUl">
+                                    <li th:class="${reportsForm.incompletePageNumber == 0} ? 'disabled' : ''">
+                                        <span th:if="${reportsForm.incompletePageNumber == 0}">First</span>
+                                        <a th:if="${reportsForm.incompletePageNumber != 0}" href="#"
+                                           title="Go to first page"
+                                           onclick="first();">First</a>
+                                    </li>
+                                    <li th:class="${(reportsForm.incompletePageNumber != 0) &amp;&amp; (reportsForm.incompleteTotalPageCount &gt; 1)}? '' : 'disabled'">
+                                        <span th:if="${reportsForm.incompletePageNumber == 0}">Previous</span>
+                                        <a th:if="${reportsForm.incompletePageNumber != 0}" href="#"
+                                           title="Go to previous page"
+                                           onclick="document.getElementById('incompletePageNumber').value = parseInt(document.getElementById('incompletePageNumber').value) - 1; previous();">Previous</a>
+                                    </li>
+                                    <li th:class="${(reportsForm.incompletePageNumber+1 != reportsForm.incompleteTotalPageCount) &amp;&amp; (reportsForm.incompleteTotalPageCount &gt; 1)}? '' : 'disabled'">
+                                        <span th:if="${reportsForm.incompletePageNumber+1 == reportsForm.incompleteTotalPageCount}">Next</span>
+                                        <a th:if="${reportsForm.incompletePageNumber+1 != reportsForm.incompleteTotalPageCount}"
+                                           href="#" title="Go to next page"
+                                           onclick="document.getElementById('incompletePageNumber').value = parseInt(document.getElementById('incompletePageNumber').value) + 1; next();">Next</a>
+                                    </li>
+                                    <li th:class="${reportsForm.incompletePageNumber+1 == reportsForm.incompleteTotalPageCount}? 'disabled' : ''">
+                                        <span th:if="${reportsForm.incompletePageNumber+1 == reportsForm.incompleteTotalPageCount}">Last</span>
+                                        <a th:if="${reportsForm.incompletePageNumber+1 != reportsForm.incompleteTotalPageCount}"
+                                           href="#"
+                                           onclick="last();">Last</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!--IncompletePagination Ends-->
+                            <div data-th-if="${reportsForm.showIncompletePagination}" style="padding-right:35px;">
+                                <button id="export" name="action" value="export" type="button"
+                                        class="btn btn-md btn-danger pull-right" style="margin-top: 10px" onclick="exportRecords();">Export Records
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--IncompleteRecordsReport view ends-->
                 </div>
             </fieldset>
         </form>

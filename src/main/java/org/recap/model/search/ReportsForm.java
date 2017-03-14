@@ -103,6 +103,18 @@ public class ReportsForm {
     private Integer totalPageCount = 0;
     private String deaccessionOwnInst;
 
+    //IncompleteRecordsReport
+    private String incompleteRequestingInstitution;
+    private Integer incompletePageNumber = 0;
+    private Integer incompletePageSize = 10;
+    private String incompleteTotalRecordsCount = "0";
+    private Integer incompleteTotalPageCount = 0;
+    private List<IncompleteReportResultsRow> incompleteReportResultsRows = new ArrayList<>();
+    private List<String> incompleteShowByInst =  new ArrayList<>();
+    private boolean showIncompleteResults = false;
+    private String errorMessage;
+    private boolean showIncompletePagination = false;
+    private boolean export = false;
 
     public ReportsForm() {
         this.getOwningInstitutions().add("NYPL");
@@ -742,5 +754,93 @@ public class ReportsForm {
 
     public void setDeaccessionOwnInst(String deaccessionOwnInst) {
         this.deaccessionOwnInst = deaccessionOwnInst;
+    }
+
+    public String getIncompleteRequestingInstitution() {
+        return incompleteRequestingInstitution;
+    }
+
+    public void setIncompleteRequestingInstitution(String incompleteRequestingInstitution) {
+        this.incompleteRequestingInstitution = incompleteRequestingInstitution;
+    }
+
+    public Integer getIncompletePageNumber() {
+        return incompletePageNumber;
+    }
+
+    public void setIncompletePageNumber(Integer incompletePageNumber) {
+        this.incompletePageNumber = incompletePageNumber;
+    }
+
+    public Integer getIncompletePageSize() {
+        return incompletePageSize;
+    }
+
+    public void setIncompletePageSize(Integer incompletePageSize) {
+        this.incompletePageSize = incompletePageSize;
+    }
+
+    public String getIncompleteTotalRecordsCount() {
+        return incompleteTotalRecordsCount;
+    }
+
+    public void setIncompleteTotalRecordsCount(String incompleteTotalRecordsCount) {
+        this.incompleteTotalRecordsCount = incompleteTotalRecordsCount;
+    }
+
+    public Integer getIncompleteTotalPageCount() {
+        return incompleteTotalPageCount;
+    }
+
+    public void setIncompleteTotalPageCount(Integer incompleteTotalPageCount) {
+        this.incompleteTotalPageCount = incompleteTotalPageCount;
+    }
+
+    public List<IncompleteReportResultsRow> getIncompleteReportResultsRows() {
+        return incompleteReportResultsRows;
+    }
+
+    public void setIncompleteReportResultsRows(List<IncompleteReportResultsRow> incompleteReportResultsRows) {
+        this.incompleteReportResultsRows = incompleteReportResultsRows;
+    }
+
+    public List<String> getIncompleteShowByInst() {
+        return incompleteShowByInst;
+    }
+
+    public void setIncompleteShowByInst(List<String> incompleteShowByInst) {
+        this.incompleteShowByInst = incompleteShowByInst;
+    }
+
+    public boolean isShowIncompleteResults() {
+        return showIncompleteResults;
+    }
+
+    public void setShowIncompleteResults(boolean showIncompleteResults) {
+        this.showIncompleteResults = showIncompleteResults;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    public boolean isShowIncompletePagination() {
+        return showIncompletePagination;
+    }
+
+    public void setShowIncompletePagination(boolean showIncompletePagination) {
+        this.showIncompletePagination = showIncompletePagination;
+    }
+
+    public boolean isExport() {
+        return export;
+    }
+
+    public void setExport(boolean export) {
+        this.export = export;
     }
 }
