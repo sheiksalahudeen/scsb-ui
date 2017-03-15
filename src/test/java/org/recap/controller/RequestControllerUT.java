@@ -227,7 +227,7 @@ public class RequestControllerUT extends BaseControllerUT {
         Mockito.when(requestController.getUserAuthUtil()).thenReturn(userAuthUtil);
         when(request.getSession()).thenReturn(session);
         Mockito.when(requestController.getUserAuthUtil().getUserDetails(request.getSession(),UserManagement.REQUEST_PRIVILEGE)).thenReturn(getUserDetails());
-        Mockito.when(requestController.getItemDetailsRepository().findByBarcodeAndIsDeletedFalse(barcode)).thenReturn(Arrays.asList(bibliographicEntity.getItemEntities().get(0)));
+        Mockito.when(requestController.getItemDetailsRepository().findByBarcodeAndCatalogingStatusAndIsDeletedFalse(barcode, RecapConstants.COMPLETE_STATUS)).thenReturn(Arrays.asList(bibliographicEntity.getItemEntities().get(0)));
         when(requestController.populateItem(requestForm, bindingResult, model,request)).thenCallRealMethod();
         String response = requestController.populateItem(requestForm, bindingResult, model,request);
         assertNotNull(response);

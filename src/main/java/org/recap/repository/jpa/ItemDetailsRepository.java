@@ -32,7 +32,7 @@ public interface ItemDetailsRepository extends PagingAndSortingRepository<ItemEn
 
     List<ItemEntity> findByBarcode(String barcode);
 
-    List<ItemEntity> findByBarcodeAndIsDeletedFalse(String barcode);
+    List<ItemEntity> findByBarcodeAndCatalogingStatusAndIsDeletedFalse(String barcode, String catalogingStatus);
 
     @Modifying
     @Transactional
