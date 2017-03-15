@@ -106,14 +106,6 @@ public class ReportsServiceUtil {
         reportsRequest.setIncompletePageNumber(reportsForm.getIncompletePageNumber());
         reportsRequest.setIncompletePageSize(reportsForm.getIncompletePageSize());
         reportsRequest.setExport(reportsForm.isExport());
-        SearchRecordsRequest searchRecordsRequest = new SearchRecordsRequest();
-        searchRecordsRequest.setFieldName("ItemCatalogingStatus");
-        searchRecordsRequest.setFieldValue("Incomplete");
-        searchRecordsRequest.setOwningInstitutions(Arrays.asList(reportsForm.getIncompleteRequestingInstitution()));
-        if(!reportsForm.isExport()){
-            searchRecordsRequest.setPageSize(reportsForm.getIncompletePageSize());
-            searchRecordsRequest.setPageNumber(reportsForm.getIncompletePageNumber());
-        }
         ReportsResponse reportsResponse = new ReportsResponse();
         try {
             RestTemplate restTemplate = new RestTemplate();

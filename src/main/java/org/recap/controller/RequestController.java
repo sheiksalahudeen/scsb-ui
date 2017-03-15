@@ -338,7 +338,7 @@ public class RequestController {
             for (String itemBarcode : itemBarcodes) {
                 String barcode = itemBarcode.trim();
                 if (StringUtils.isNotBlank(barcode)) {
-                    List<ItemEntity> itemEntities = getItemDetailsRepository().findByBarcodeAndIsDeletedFalse(barcode);
+                    List<ItemEntity> itemEntities = getItemDetailsRepository().findByBarcodeAndCatalogingStatusAndIsDeletedFalse(barcode, RecapConstants.COMPLETE_STATUS);
                     if (CollectionUtils.isNotEmpty(itemEntities)) {
                         for (ItemEntity itemEntity : itemEntities) {
                             if (null != itemEntity && CollectionUtils.isNotEmpty(itemEntity.getBibliographicEntities())) {

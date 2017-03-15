@@ -34,7 +34,7 @@ public class MarcRecordViewUtil {
     public BibliographicMarcForm buildBibliographicMarcForm(Integer bibId, Integer itemId,UserDetailsForm userDetailsForm) {
         BibliographicMarcForm bibliographicMarcForm = new BibliographicMarcForm();
         bibliographicMarcForm.setCollectionAction(RecapConstants.UPDATE_CGD);
-        BibliographicEntity bibliographicEntity = bibliographicDetailsRepository.findByBibliographicIdAndIsDeletedFalse(bibId);
+        BibliographicEntity bibliographicEntity = bibliographicDetailsRepository.findByBibliographicIdAndCatalogingStatusAndIsDeletedFalse(bibId, RecapConstants.COMPLETE_STATUS);
         if (null == bibliographicEntity) {
             bibliographicMarcForm.setErrorMessage(RecapConstants.RECORD_NOT_AVAILABLE);
         } else {
@@ -54,7 +54,7 @@ public class MarcRecordViewUtil {
                 if (null != institutionEntity) {
                     bibliographicMarcForm.setOwningInstitution(institutionEntity.getInstitutionCode());
                 }
-                List<ItemEntity> nonDeletedItemEntities = bibliographicDetailsRepository.getNonDeletedItemEntities(bibliographicEntity.getOwningInstitutionId(), bibliographicEntity.getOwningInstitutionBibId());
+                List<ItemEntity> nonDeletedItemEntities = bibliographicDetailsRepository.getNonDeletedItemEntities(bibliographicEntity.getOwningInstitutionId(), bibliographicEntity.getOwningInstitutionBibId(), RecapConstants.COMPLETE_STATUS);
                 if (CollectionUtils.isNotEmpty(nonDeletedItemEntities)) {
                     if (nonDeletedItemEntities.size() == 1 && RecapConstants.MONOGRAPH.equals(bibliographicMarcForm.getLeaderMaterialType())) {
                         CollectionGroupEntity collectionGroupEntity = nonDeletedItemEntities.get(0).getCollectionGroupEntity();

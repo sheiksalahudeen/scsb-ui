@@ -32,13 +32,13 @@ public interface BibliographicDetailsRepository extends JpaRepository<Bibliograp
 
     BibliographicEntity findByBibliographicId(@Param("bibliographicId") Integer bibliographicId);
 
-    BibliographicEntity findByBibliographicIdAndIsDeletedFalse(@Param("bibliographicId") Integer bibliographicId);
+    BibliographicEntity findByBibliographicIdAndCatalogingStatusAndIsDeletedFalse(@Param("bibliographicId") Integer bibliographicId, @Param("catalogingStatus") String catalogingStatus);
 
     List<BibliographicEntity> findByOwningInstitutionBibId(String owningInstitutionBibId);
 
     @Query(value = "select count(*) from bibliographic_t bib, institution_t inst where bib.OWNING_INST_ID = inst.INSTITUTION_ID AND inst.INSTITUTION_CODE=?1 limit 1", nativeQuery = true)
     Long countByOwningInstitutionCodeAndIsDeletedFalse(String institutionCode);
 
-    List<ItemEntity> getNonDeletedItemEntities(@Param("owningInstitutionId") Integer owningInstitutionId, @Param("owningInstitutionBibId") String owningInstitutionBibId);
+    List<ItemEntity> getNonDeletedItemEntities(@Param("owningInstitutionId") Integer owningInstitutionId, @Param("owningInstitutionBibId") String owningInstitutionBibId, @Param("catalogingStatus") String catalogingStatus);
 
 }
