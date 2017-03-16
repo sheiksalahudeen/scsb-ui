@@ -425,6 +425,12 @@ public class RequestController {
             itemRequestInformation.setEndPage(requestForm.getEndPage());
             itemRequestInformation.setAuthor(requestForm.getArticleAuthor());
             itemRequestInformation.setChapterTitle(requestForm.getArticleTitle());
+            itemRequestInformation.setIssue(requestForm.getIssue());
+            if(requestForm.getVolumeNumber() != null){
+                itemRequestInformation.setVolume(requestForm.getVolumeNumber().toString());
+            }
+
+
             if (StringUtils.isNotBlank(requestForm.getDeliveryLocationInRequest())) {
                 CustomerCodeEntity customerCodeEntity = getCustomerCodeDetailsRepository().findByCustomerCode(requestForm.getDeliveryLocationInRequest());
                 if (null != customerCodeEntity) {
