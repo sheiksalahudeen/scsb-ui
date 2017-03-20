@@ -159,7 +159,7 @@ public class RequestController {
     }
 
     @RequestMapping("/request")
-    public String request(Model model, HttpServletRequest request)throws JSONException{
+    public String request(Model model, HttpServletRequest request) throws JSONException {
         HttpSession session = request.getSession();
         boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REQUEST_URL, (UsernamePasswordToken) session.getAttribute(RecapConstants.USER_TOKEN));
         if (authenticated) {
@@ -324,7 +324,7 @@ public class RequestController {
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=populateItem")
     public String populateItem(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
                                BindingResult result,
-                               Model model, HttpServletRequest request)throws JSONException{
+                               Model model, HttpServletRequest request) throws JSONException {
         JSONObject jsonObject = new JSONObject();
 
         if (StringUtils.isNotBlank(requestForm.getItemBarcodeInRequest())) {
@@ -381,7 +381,7 @@ public class RequestController {
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=createRequest")
     public String createRequest(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
                                 BindingResult result,
-                                Model model, HttpServletRequest request) throws JSONException{
+                                Model model, HttpServletRequest request) throws JSONException {
         JSONObject jsonObject = new JSONObject();
         String customerCodeDescription = null;
         try {
@@ -420,6 +420,11 @@ public class RequestController {
             itemRequestInformation.setEndPage(requestForm.getEndPage());
             itemRequestInformation.setAuthor(requestForm.getArticleAuthor());
             itemRequestInformation.setChapterTitle(requestForm.getArticleTitle());
+            itemRequestInformation.setIssue(requestForm.getIssue());
+            if (requestForm.getVolumeNumber() != null) {
+                itemRequestInformation.setVolume(requestForm.getVolumeNumber().toString());
+            }
+
             if (StringUtils.isNotBlank(requestForm.getDeliveryLocationInRequest())) {
                 CustomerCodeEntity customerCodeEntity = getCustomerCodeDetailsRepository().findByCustomerCode(requestForm.getDeliveryLocationInRequest());
                 if (null != customerCodeEntity) {
