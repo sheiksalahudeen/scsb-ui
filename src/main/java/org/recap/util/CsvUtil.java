@@ -32,8 +32,8 @@ public class CsvUtil {
         File file = new File(fileNameWithExtension);
         CsvWriter csvOutput = null;
         if (!CollectionUtils.isEmpty(searchResultRows)) {
-            try {
-                csvOutput = new CsvWriter(new FileWriter(file), ',');
+            try (FileWriter fileWriter = new FileWriter(file)){
+                csvOutput = new CsvWriter(fileWriter, ',');
                 writeMainHeaderRow(csvOutput);
                 for (SearchResultRow searchResultRow : searchResultRows) {
                     if (searchResultRow.isSelected()) {
@@ -59,8 +59,10 @@ public class CsvUtil {
             } catch (Exception e) {
                 logger.error(RecapConstants.LOG_ERROR,e);
             } finally {
-                csvOutput.flush();
-                csvOutput.close();
+                if(csvOutput!=null) {
+                    csvOutput.flush();
+                    csvOutput.close();
+                }
             }
         }
         return file;

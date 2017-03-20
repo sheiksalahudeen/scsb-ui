@@ -1,4 +1,4 @@
-package org.recap.model.userManagement;
+package org.recap.model.usermanagement;
 
 import org.junit.Test;
 import org.mockito.Mock;

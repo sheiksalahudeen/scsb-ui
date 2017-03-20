@@ -124,16 +124,14 @@ public class MarcUtil {
 
         for (Iterator<VariableField> variableFieldIterator = dataFields.iterator(); variableFieldIterator.hasNext(); ) {
             DataField dataField = (DataField) variableFieldIterator.next();
-            if(dataField!=null){
-                if (doIndicatorsMatch(indicator1, indicator2, dataField)) {
-                    List<Subfield> subFields = dataField.getSubfields(subField);
-                    for (Iterator<Subfield> subfieldIterator = subFields.iterator(); subfieldIterator.hasNext(); ) {
-                        Subfield subfield = subfieldIterator.next();
-                        if (subField!=null){
-                            String data = subfield.getData();
-                            if (StringUtils.isNotBlank(data)) {
-                                values.add(data);
-                            }
+            if (dataField != null && doIndicatorsMatch(indicator1, indicator2, dataField)) {
+                List<Subfield> subFields = dataField.getSubfields(subField);
+                for (Iterator<Subfield> subfieldIterator = subFields.iterator(); subfieldIterator.hasNext(); ) {
+                    Subfield subfield = subfieldIterator.next();
+                    if (subField != null) {
+                        String data = subfield.getData();
+                        if (StringUtils.isNotBlank(data)) {
+                            values.add(data);
                         }
                     }
                 }
@@ -284,7 +282,7 @@ public class MarcUtil {
                         for (VariableField itemVariableField : itemVariableFields) {
                             DataField itemDataField = (DataField) itemVariableField;
                             String itemData = getDataFieldValue(itemDataField, '0');
-                            if (StringUtils.isNotBlank(itemData) && itemData.equalsIgnoreCase(holdingsData)) {
+                            if ((itemData!=null)&&StringUtils.isNotBlank(itemData) && itemData.equalsIgnoreCase(holdingsData)) {
                                 ItemMarcRecord itemMarcRecord = new ItemMarcRecord();
                                 Record itemRecord = marcFactory.newRecord();
                                 itemRecord.getDataFields().add(itemDataField);

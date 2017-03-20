@@ -1,4 +1,4 @@
-package org.recap.model.userManagement;
+package org.recap.model.usermanagement;
 
 import org.recap.model.jpa.UsersEntity;
 import org.springframework.data.domain.Page;

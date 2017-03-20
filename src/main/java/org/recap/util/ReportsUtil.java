@@ -150,8 +150,8 @@ public class ReportsUtil {
         File file = new File(fileNameWithExtension);
         CsvWriter csvOutput = null;
         if (CollectionUtils.isNotEmpty(incompleteReportResultsRows)){
-            try {
-                csvOutput = new CsvWriter(new FileWriter(file), ',');
+            try (FileWriter fileWriter = new FileWriter(file)){
+                csvOutput = new CsvWriter(fileWriter, ',');
                 writeHeader(csvOutput);
                 for (IncompleteReportResultsRow incompleteReportResultsRow : incompleteReportResultsRows) {
                     if(CollectionUtils.isNotEmpty(incompleteReportResultsRows)){
@@ -162,8 +162,10 @@ public class ReportsUtil {
                 logger.error(RecapConstants.LOG_ERROR,e);
             }
             finally {
-                csvOutput.flush();
-                csvOutput.close();
+                if(csvOutput!=null) {
+                    csvOutput.flush();
+                    csvOutput.close();
+                }
             }
         }
         return file;

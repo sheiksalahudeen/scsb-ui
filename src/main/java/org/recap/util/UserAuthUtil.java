@@ -2,8 +2,7 @@ package org.recap.util;
 
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
-import org.recap.model.userManagement.UserDetailsForm;
-import org.recap.security.UserManagement;
+import org.recap.model.usermanagement.UserDetailsForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,9 +53,9 @@ public class UserAuthUtil {
     public UserDetailsForm getUserDetails(HttpSession session,String recapPermission)
     {
         UserDetailsForm userDetailsForm=new UserDetailsForm();
-        userDetailsForm.setSuperAdmin((Boolean)session.getAttribute(UserManagement.SUPER_ADMIN_USER));
-        userDetailsForm.setRecapUser((Boolean)session.getAttribute(UserManagement.ReCAP_USER));
-        userDetailsForm.setLoginInstitutionId((Integer)session.getAttribute(UserManagement.USER_INSTITUTION));
+        userDetailsForm.setSuperAdmin((Boolean)session.getAttribute(RecapConstants.SUPER_ADMIN_USER));
+        userDetailsForm.setRecapUser((Boolean)session.getAttribute(RecapConstants.RECAP_USER));
+        userDetailsForm.setLoginInstitutionId((Integer)session.getAttribute(RecapConstants.USER_INSTITUTION));
         userDetailsForm.setRecapPermissionAllowed((Boolean) session.getAttribute(recapPermission));
         return userDetailsForm;
     }

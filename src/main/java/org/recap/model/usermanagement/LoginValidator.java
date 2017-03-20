@@ -1,4 +1,4 @@
-package org.recap.model.userManagement;
+package org.recap.model.usermanagement;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.Errors;

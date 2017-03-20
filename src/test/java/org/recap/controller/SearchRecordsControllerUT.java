@@ -10,7 +10,7 @@ import org.recap.model.search.SearchItemResultRow;
 import org.recap.model.search.SearchRecordsRequest;
 import org.recap.model.search.SearchRecordsResponse;
 import org.recap.model.search.SearchResultRow;
-import org.recap.security.UserManagement;
+import org.recap.security.UserManagementService;
 import org.recap.util.CsvUtil;
 import org.recap.util.SearchUtil;
 import org.recap.util.UserAuthUtil;
@@ -87,7 +87,7 @@ public class SearchRecordsControllerUT extends BaseControllerUT{
     public void searchRecords() throws Exception{
         when(request.getSession()).thenReturn(session);
         SearchRecordsResponse searchRecordsResponse=new SearchRecordsResponse();
-        when(userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_SEARCH_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN))).thenReturn(true);
+        when(userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_SEARCH_URL,(UsernamePasswordToken)session.getAttribute(RecapConstants.USER_TOKEN))).thenReturn(true);
         when(searchUtil.requestSearchResults(searchRecordsRequest)).thenReturn(searchRecordsResponse);
         when(searchRecordsController.getUserAuthUtil()).thenReturn(userAuthUtil);
         when(searchRecordsController.getSearchUtil()).thenReturn(searchUtil);
@@ -169,8 +169,8 @@ public class SearchRecordsControllerUT extends BaseControllerUT{
     @Test
     public void newSearch() throws Exception{
         searchRecordsRequest = new SearchRecordsRequest();
-        when(searchRecordsController.newSearch(searchRecordsRequest,bindingResult,model)).thenCallRealMethod();
-        ModelAndView modelAndView = searchRecordsController.newSearch(searchRecordsRequest,bindingResult,model);
+        when(searchRecordsController.newSearch(model)).thenCallRealMethod();
+        ModelAndView modelAndView = searchRecordsController.newSearch(model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
     }

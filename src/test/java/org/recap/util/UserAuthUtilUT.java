@@ -6,8 +6,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.recap.BaseTestCase;
 import org.recap.RecapConstants;
-import org.recap.model.userManagement.UserForm;
-import org.recap.security.UserManagement;
+import org.recap.model.usermanagement.UserForm;
+import org.recap.security.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
@@ -35,14 +35,14 @@ public class UserAuthUtilUT extends BaseTestCase {
         Map<String,Object> map = new HashMap<>();
         map.put("isAuthenticated",true);
         map.put("userName","john");
-        map.put(UserManagement.USER_ID,"CUL");
-        UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+"CUL",userForm.getPassword(),true);
+        map.put(RecapConstants.USER_ID,"CUL");
+        UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ RecapConstants.TOKEN_SPLITER +"CUL",userForm.getPassword(),true);
         Mockito.when((Map<String,Object>)userAuthUtil.doAuthentication(token)).thenReturn(map);
         Map<String,Object> resultmap=(Map<String,Object>)userAuthUtil.doAuthentication(token);
 
         assertTrue((Boolean) resultmap.get("isAuthenticated"));
         assertEquals(userForm.getUsername(),resultmap.get("userName"));
-        assertEquals(userForm.getInstitution(),resultmap.get(UserManagement.USER_ID));
+        assertEquals(userForm.getInstitution(),resultmap.get(RecapConstants.USER_ID));
         Mockito.when(userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_COLLECTION_URL,token)).thenReturn(true);
         authorized=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_COLLECTION_URL,token);
 

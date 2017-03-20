@@ -12,9 +12,9 @@ import org.recap.model.request.ItemRequestInformation;
 import org.recap.model.request.ItemResponseInformation;
 import org.recap.model.search.RequestForm;
 import org.recap.model.search.SearchResultRow;
-import org.recap.model.userManagement.UserDetailsForm;
+import org.recap.model.usermanagement.UserDetailsForm;
 import org.recap.repository.jpa.*;
-import org.recap.security.UserManagement;
+import org.recap.security.UserManagementService;
 import org.recap.util.BibJSONUtil;
 import org.recap.util.RequestServiceUtil;
 import org.recap.util.UserAuthUtil;
@@ -160,9 +160,9 @@ public class RequestController {
     @RequestMapping("/request")
     public String request(Model model, HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession();
-        boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REQUEST_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
+        boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REQUEST_URL, (UsernamePasswordToken) session.getAttribute(RecapConstants.USER_TOKEN));
         if (authenticated) {
-            UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(session, UserManagement.REQUEST_PRIVILEGE);
+            UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(session, RecapConstants.REQUEST_PRIVILEGE);
             RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm);
             Object requestedBarcode = ((BindingAwareModelMap) model).get(RecapConstants.REQUESTED_BARCODE);
             if (requestedBarcode != null) {
@@ -182,7 +182,7 @@ public class RequestController {
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
             return RecapConstants.VIEW_SEARCH_RECORDS;
         } else {
-            return UserManagement.unAuthorizedUser(session, "Request", logger);
+            return UserManagementService.unAuthorizedUser(session, "Request", logger);
         }
     }
 
@@ -248,8 +248,8 @@ public class RequestController {
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=requestPageSizeChange")
     public ModelAndView onRequestPageSizeChange(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
-                                         BindingResult result,
-                                         Model model) {
+                                                BindingResult result,
+                                                Model model) {
         requestForm.setPageNumber(getPageNumberOnPageSizeChange(requestForm));
         searchAndSetResults(requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
@@ -259,7 +259,7 @@ public class RequestController {
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=loadCreateRequest")
     public ModelAndView loadCreateRequest(Model model,HttpServletRequest request) {
-        UserDetailsForm userDetailsForm=getUserAuthUtil().getUserDetails(request.getSession(),UserManagement.REQUEST_PRIVILEGE);
+        UserDetailsForm userDetailsForm=getUserAuthUtil().getUserDetails(request.getSession(),RecapConstants.REQUEST_PRIVILEGE);
         RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm);
         model.addAttribute(RecapConstants.REQUEST_FORM, requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
@@ -292,10 +292,8 @@ public class RequestController {
         Iterable<InstitutionEntity> institutionEntities = getInstitutionDetailsRepository().findAll();
         for (Iterator iterator = institutionEntities.iterator(); iterator.hasNext(); ) {
             InstitutionEntity institutionEntity = (InstitutionEntity) iterator.next();
-            if (userDetailsForm.getLoginInstitutionId() == institutionEntity.getInstitutionId() || userDetailsForm.isRecapUser() || userDetailsForm.isSuperAdmin()) {
-                if (!RecapConstants.HTC.equals(institutionEntity.getInstitutionCode())) {
-                    requestingInstitutions.add(institutionEntity.getInstitutionCode());
-                }
+            if (userDetailsForm.getLoginInstitutionId() == institutionEntity.getInstitutionId() || userDetailsForm.isRecapUser() || userDetailsForm.isSuperAdmin() && (!RecapConstants.HTC.equals(institutionEntity.getInstitutionCode()))) {
+                requestingInstitutions.add(institutionEntity.getInstitutionCode());
             }
         }
 
@@ -342,7 +340,7 @@ public class RequestController {
                     if (CollectionUtils.isNotEmpty(itemEntities)) {
                         for (ItemEntity itemEntity : itemEntities) {
                             if (null != itemEntity && CollectionUtils.isNotEmpty(itemEntity.getBibliographicEntities())) {
-                                userDetailsForm = getUserAuthUtil().getUserDetails(request.getSession(),UserManagement.REQUEST_PRIVILEGE);
+                                userDetailsForm = getUserAuthUtil().getUserDetails(request.getSession(),RecapConstants.REQUEST_PRIVILEGE);
                                 if (itemEntity.getCollectionGroupId()==RecapConstants.CGD_PRIVATE && !userDetailsForm.isSuperAdmin() && !userDetailsForm.isRecapUser() && !userDetailsForm.getLoginInstitutionId().equals(itemEntity.getOwningInstitutionId())) {
                                     jsonObject.put(RecapConstants.NO_PERMISSION_ERROR_MESSAGE, RecapConstants.REQUEST_PRIVATE_ERROR_USER_NOT_PERMITTED);
                                     return jsonObject.toString();
@@ -388,7 +386,7 @@ public class RequestController {
         String customerCodeDescription = null;
         try {
             HttpSession session = request.getSession();
-            String username = (String) session.getAttribute(UserManagement.USER_NAME);
+            String username = (String) session.getAttribute(RecapConstants.USER_NAME);
             String stringJson = populateItem(requestForm, null, model, request);
             if (stringJson != null) {
                 JSONObject responseJsonObject = new JSONObject(stringJson);
@@ -404,8 +402,6 @@ public class RequestController {
                     return jsonObject.toString();
                 }
             }
-
-            RestTemplate restTemplate = new RestTemplate();
 
             String validateRequestItemUrl = getServerProtocol() + getScsbUrl() + RecapConstants.VALIDATE_REQUEST_ITEM_URL;
             String requestItemUrl = getServerProtocol() + getScsbUrl() + RecapConstants.REQUEST_ITEM_URL;
@@ -425,12 +421,6 @@ public class RequestController {
             itemRequestInformation.setEndPage(requestForm.getEndPage());
             itemRequestInformation.setAuthor(requestForm.getArticleAuthor());
             itemRequestInformation.setChapterTitle(requestForm.getArticleTitle());
-            itemRequestInformation.setIssue(requestForm.getIssue());
-            if(requestForm.getVolumeNumber() != null){
-                itemRequestInformation.setVolume(requestForm.getVolumeNumber().toString());
-            }
-
-
             if (StringUtils.isNotBlank(requestForm.getDeliveryLocationInRequest())) {
                 CustomerCodeEntity customerCodeEntity = getCustomerCodeDetailsRepository().findByCustomerCode(requestForm.getDeliveryLocationInRequest());
                 if (null != customerCodeEntity) {
@@ -476,9 +466,8 @@ public class RequestController {
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=cancelRequest")
     public String cancelRequest(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
-                                      BindingResult result,
-                                      Model model) throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
+                                BindingResult result,
+                                Model model) throws Exception {
         JSONObject jsonObject = new JSONObject();
         String requestStatus = null;
         try {

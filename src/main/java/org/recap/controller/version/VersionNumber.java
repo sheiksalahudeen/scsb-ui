@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class VersionNumber {
 
     @Value("${version.number}")
-    String versionNumber;
+    String versionNumberService;
 
-    public void setVersionNumber(String versionNumber) {
-        this.versionNumber = versionNumber;
+    public void setVersionNumberService(String versionNumberService) {
+        this.versionNumberService = versionNumberService;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/getVersionNumber")
+    @RequestMapping(method = RequestMethod.GET, value = "/getVersionNumberService")
     @ResponseBody
-    public String getVersionNumber() {
-        return versionNumber;
+    public String getVersionNumberService() {
+        return versionNumberService;
     }
 }

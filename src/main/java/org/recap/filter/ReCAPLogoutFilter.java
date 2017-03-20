@@ -1,6 +1,6 @@
 package org.recap.filter;
 
-import org.recap.security.UserManagement;
+import org.recap.RecapConstants;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -19,8 +19,8 @@ public class ReCAPLogoutFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpSession session = ((HttpServletRequest)request).getSession();
-        Object attribute = session.getAttribute(UserManagement.USER_TOKEN);
-        request.setAttribute(UserManagement.USER_TOKEN,attribute);
+        Object attribute = session.getAttribute(RecapConstants.USER_TOKEN);
+        request.setAttribute(RecapConstants.USER_TOKEN,attribute);
         chain.doFilter(request,response);
     }
 }

@@ -12,10 +12,10 @@ import org.recap.RecapConstants;
 import org.recap.model.jpa.*;
 import org.recap.model.search.BibliographicMarcForm;
 import org.recap.model.search.CollectionForm;
-import org.recap.model.userManagement.UserDetailsForm;
-import org.recap.model.userManagement.UserForm;
+import org.recap.model.usermanagement.UserDetailsForm;
+import org.recap.model.usermanagement.UserForm;
 import org.recap.repository.jpa.RequestItemDetailsRepository;
-import org.recap.security.UserManagement;
+import org.recap.security.UserManagementService;
 import org.recap.util.CollectionServiceUtil;
 import org.recap.util.MarcRecordViewUtil;
 import org.recap.util.UserAuthUtil;
@@ -120,7 +120,7 @@ public class CollectionControllerUT extends BaseControllerUT {
     @Test
     public void collection() throws Exception{
         when(request.getSession()).thenReturn(session);
-        Mockito.when(getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_COLLECTION_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN))).thenReturn(true);
+        Mockito.when(getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_COLLECTION_URL,(UsernamePasswordToken)session.getAttribute(RecapConstants.USER_TOKEN))).thenReturn(true);
         Mockito.when(getCollectionController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(getCollectionController.collection(model,request)).thenCallRealMethod();
         String response = getCollectionController.collection(model,request);
@@ -147,7 +147,7 @@ public class CollectionControllerUT extends BaseControllerUT {
         userDetailsForm.setRecapUser(false);
         when(request.getSession()).thenReturn(session);
         usersSessionAttributes();
-        Mockito.when(getUserAuthUtil().getUserDetails(request.getSession(),UserManagement.BARCODE_RESTRICTED_PRIVILEGE)).thenReturn(userDetailsForm);
+        Mockito.when(getUserAuthUtil().getUserDetails(request.getSession(),RecapConstants.BARCODE_RESTRICTED_PRIVILEGE)).thenReturn(userDetailsForm);
         Mockito.when(getCollectionController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(getCollectionController.getMarcRecordViewUtil()).thenReturn(marcRecordViewUtil);
         Mockito.when(getCollectionController.openMarcView(collectionForm, bindingResult, model,request)).thenCallRealMethod();
@@ -175,14 +175,14 @@ public class CollectionControllerUT extends BaseControllerUT {
         userForm.setUsername("SuperAdmin");
         userForm.setInstitution("1");
         userForm.setPassword("12345");
-        UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+userForm.getInstitution(),userForm.getPassword(),true);
-        when(session.getAttribute(UserManagement.USER_TOKEN)).thenReturn(token);
-        when(session.getAttribute(UserManagement.USER_ID)).thenReturn(3);
-        when(session.getAttribute(UserManagement.SUPER_ADMIN_USER)).thenReturn(false);
-        when(session.getAttribute(UserManagement.BARCODE_RESTRICTED_PRIVILEGE)).thenReturn(false);
-        when(session.getAttribute(UserManagement.REQUEST_ITEM_PRIVILEGE)).thenReturn(false);
-        when(session.getAttribute(UserManagement.USER_INSTITUTION)).thenReturn(1);
-        when(session.getAttribute(UserManagement.REQUEST_ALL_PRIVILEGE)).thenReturn(false);
+        UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ RecapConstants.TOKEN_SPLITER+userForm.getInstitution(),userForm.getPassword(),true);
+        when(session.getAttribute(RecapConstants.USER_TOKEN)).thenReturn(token);
+        when(session.getAttribute(RecapConstants.USER_ID)).thenReturn(3);
+        when(session.getAttribute(RecapConstants.SUPER_ADMIN_USER)).thenReturn(false);
+        when(session.getAttribute(RecapConstants.BARCODE_RESTRICTED_PRIVILEGE)).thenReturn(false);
+        when(session.getAttribute(RecapConstants.REQUEST_ITEM_PRIVILEGE)).thenReturn(false);
+        when(session.getAttribute(RecapConstants.USER_INSTITUTION)).thenReturn(1);
+        when(session.getAttribute(RecapConstants.REQUEST_ALL_PRIVILEGE)).thenReturn(false);
     }
 
     @Test
