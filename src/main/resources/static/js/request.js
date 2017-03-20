@@ -230,6 +230,7 @@ function isValidInputs() {
             var startPage = $('#StartPage').val();
             var endPage = $('#EndPage').val();
             var articleTitle = $('#ArticleChapterTitle').val();
+            var patronEmailId = $('#patronEmailId').val();
 
             if (isBlankValue(startPage)) {
                 $('#startPageErrorMessage').show();
@@ -248,6 +249,13 @@ function isValidInputs() {
                 isValid = false;
             } else {
                 $('#articleTitleErrorMessage').hide();
+            }
+            if(isBlankValue(patronEmailId)){
+                $('#EmailMandatoryErrorMessage').show();
+                isValid = false;
+            }
+            else {
+                $('#EmailMandatoryErrorMessage').hide();
             }
         }
         $('#requestTypeErrorMessage').hide();
@@ -352,6 +360,9 @@ function resetDefaults() {
     $('#Issue').val('');
     $('#ArticleAuthor').val('');
     $('#ArticleChapterTitle').val('');
+    $('#EmailMandatoryErrorMessage').hide();
+    $('#emailMandatory').hide();
+
 
 }
 
@@ -496,5 +507,30 @@ function toggleItemBarcodeSearch(){
     }
     else{
         $('#itemBarcodeSearchError').hide();
+    }
+}
+
+function toggleEmailAddress(){
+    var requestType = $('#requestTypeId').val();
+    if(requestType == 'EDD') {
+        var patronEmailId = $('#patronEmailId').val();
+        if (isBlankValue(patronEmailId)) {
+            $('#patronEmailIdErrorMessage').hide();
+            $('#EmailMandatoryErrorMessage').show();
+        }
+        else {
+            $('#EmailMandatoryErrorMessage').hide();
+        }
+    }
+}
+
+function emailMandatory(){
+    var requestType = $('#requestTypeId').val();
+    if(requestType == 'EDD'){
+        $('#emailMandatory').show();
+    }
+    else {
+        $('#emailMandatory').hide();
+        $('#EmailMandatoryErrorMessage').hide();
     }
 }

@@ -295,16 +295,18 @@
                                                 </div>
                                                 <div class="col-md-4 col-sm-6">
                                                     <div class="form-group">
-                                                        <div class="col-md-4 col-sm-6 text-right margin-top-05"><label for="patronEmailId" class="fontcolor-dark">Patron <br/>Email Address</label></div>
+                                                        <div class="col-md-4 col-sm-6 text-right margin-top-05"><label for="patronEmailId" class="fontcolor-dark">Patron <span id="emailMandatory" class="error-color" style="display: none">*</span><br/>Email Address</label></div>
                                                         <div class="col-md-8 col-sm-6">
                                                             <input type="email"
                                                                    id="patronEmailId"
                                                                    name="patronEmailName"
                                                                    class="form-control themed-input"
                                                                    th:field="${requestForm.patronEmailAddress}"
-                                                                   onblur="validateEmailAddress()">
+                                                                   onblur="validateEmailAddress()"
+                                                                   onkeyup="toggleEmailAddress()">
                                                             </input>
                                                             <span id="patronEmailIdErrorMessage" style="color: red;display: none">Email address is invalid.</span>
+                                                            <span id="EmailMandatoryErrorMessage" style="color: red;display: none;">Patron Email Address is required.</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -342,7 +344,7 @@
                                                                         name="requestTypeName"
                                                                         class="form-control themed-input themed-select"
                                                                         th:field="${requestForm.requestType}"
-                                                                        onchange="">
+                                                                        onchange="emailMandatory()">
                                                                     <option th:each="requestType : ${requestForm.requestTypes}" th:value="${requestType}" th:text="${requestType}"></option>
                                                                 </select>
                                                                 <span id="requestTypeErrorMessage" style="color: red;">Request type is required.</span>
