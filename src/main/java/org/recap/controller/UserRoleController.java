@@ -45,19 +45,19 @@ public class UserRoleController {
     private UserRoleService userRoleService;
 
     @Autowired
-    UserDetailsRepository userDetailsRepository;
+    private UserDetailsRepository userDetailsRepository;
 
     @Autowired
-    RolesDetailsRepositorty rolesDetailsRepositorty;
+    private RolesDetailsRepositorty rolesDetailsRepositorty;
 
     @Autowired
-    InstitutionDetailsRepository institutionDetailsRepository;
+    private InstitutionDetailsRepository institutionDetailsRepository;
 
     @Autowired
     private UserAuthUtil userAuthUtil;
 
     @Autowired
-    UserManagementService userManagementService;
+    private UserManagementService userManagementService;
 
     public Logger getLogger() {
         return logger;
@@ -75,32 +75,13 @@ public class UserRoleController {
         return userRoleService;
     }
 
-    public void setUserRoleService(UserRoleService userRoleService) {
-        this.userRoleService = userRoleService;
-    }
-
     public UserDetailsRepository getUserDetailsRepository() {
         return userDetailsRepository;
     }
 
-    public void setUserDetailsRepository(UserDetailsRepository userDetailsRepository) {
-        this.userDetailsRepository = userDetailsRepository;
-    }
 
-    public RolesDetailsRepositorty getRolesDetailsRepositorty() {
-        return rolesDetailsRepositorty;
-    }
-
-    public void setRolesDetailsRepositorty(RolesDetailsRepositorty rolesDetailsRepositorty) {
-        this.rolesDetailsRepositorty = rolesDetailsRepositorty;
-    }
-
-    public InstitutionDetailsRepository getInstitutionDetailsRepository() {
-        return institutionDetailsRepository;
-    }
-
-    public void setInstitutionDetailsRepository(InstitutionDetailsRepository institutionDetailsRepository) {
-        this.institutionDetailsRepository = institutionDetailsRepository;
+    public UserManagementService getUserManagementService() {
+        return userManagementService;
     }
 
     @RequestMapping(value = "/userRoles")
@@ -124,7 +105,7 @@ public class UserRoleController {
 
     private void getAndSetRolesAndInstitutions(UserRoleForm userRoleForm, UserDetailsForm userDetailsForm) {
 
-        List<Object> roles = getUserRoleService().getRoles(userManagementService.getSuperAdminRoleId());
+        List<Object> roles = getUserRoleService().getRoles(getUserManagementService().getSuperAdminRoleId());
         List<Object> institutions = getUserRoleService().getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId());
         userRoleForm.setRoles(roles);
         userRoleForm.setInstitutions(institutions);
