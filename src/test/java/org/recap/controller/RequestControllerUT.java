@@ -12,9 +12,9 @@ import org.recap.model.request.CancelRequestResponse;
 import org.recap.model.request.ItemRequestInformation;
 import org.recap.model.request.ItemResponseInformation;
 import org.recap.model.search.RequestForm;
-import org.recap.model.userManagement.UserDetailsForm;
+import org.recap.model.usermanagement.UserDetailsForm;
 import org.recap.repository.jpa.*;
-import org.recap.security.UserManagement;
+import org.recap.security.UserManagementService;
 import org.recap.util.RequestServiceUtil;
 import org.recap.util.UserAuthUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -122,7 +122,7 @@ public class RequestControllerUT extends BaseControllerUT {
     @Test
     public void request() throws Exception{
         when(request.getSession()).thenReturn(session);
-        Mockito.when(userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_REQUEST_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN))).thenReturn(true);
+        Mockito.when(userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_REQUEST_URL,(UsernamePasswordToken)session.getAttribute(RecapConstants.USER_TOKEN))).thenReturn(true);
         Mockito.when(requestController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(requestController.getInstitutionDetailsRepository()).thenReturn(institutionDetailsRepository);
         Mockito.when(requestController.getCustomerCodeDetailsRepository()).thenReturn(customerCodeDetailsRepository);
@@ -208,7 +208,7 @@ public class RequestControllerUT extends BaseControllerUT {
         when(institutionDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
         when(requestTypeDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
         when(customerCodeDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
-        when(userAuthUtil.getUserDetails(request.getSession(),UserManagement.REQUEST_ITEM_PRIVILEGE)).thenReturn(getUserDetails());
+        when(userAuthUtil.getUserDetails(request.getSession(),RecapConstants.REQUEST_ITEM_PRIVILEGE)).thenReturn(getUserDetails());
 
         when(requestController.loadCreateRequest(model,request)).thenCallRealMethod();
         when(request.getSession()).thenReturn(session);
@@ -226,7 +226,7 @@ public class RequestControllerUT extends BaseControllerUT {
         Mockito.when(requestController.getItemDetailsRepository()).thenReturn(itemDetailsRepository);
         Mockito.when(requestController.getUserAuthUtil()).thenReturn(userAuthUtil);
         when(request.getSession()).thenReturn(session);
-        Mockito.when(requestController.getUserAuthUtil().getUserDetails(request.getSession(),UserManagement.REQUEST_PRIVILEGE)).thenReturn(getUserDetails());
+        Mockito.when(requestController.getUserAuthUtil().getUserDetails(request.getSession(),RecapConstants.REQUEST_PRIVILEGE)).thenReturn(getUserDetails());
         Mockito.when(requestController.getItemDetailsRepository().findByBarcodeAndCatalogingStatusAndIsDeletedFalse(barcode, RecapConstants.COMPLETE_STATUS)).thenReturn(Arrays.asList(bibliographicEntity.getItemEntities().get(0)));
         when(requestController.populateItem(requestForm, bindingResult, model,request)).thenCallRealMethod();
         String response = requestController.populateItem(requestForm, bindingResult, model,request);
@@ -247,7 +247,7 @@ public class RequestControllerUT extends BaseControllerUT {
         CustomerCodeEntity customerCodeEntity = new CustomerCodeEntity();
         customerCodeEntity.setCustomerCode("PB");
         Mockito.when(requestController.getItemRequestInformation()).thenReturn(itemRequestInformation);
-        Mockito.when((String) session.getAttribute(UserManagement.USER_NAME)).thenReturn("Admin");
+        Mockito.when((String) session.getAttribute(RecapConstants.USER_NAME)).thenReturn("Admin");
         Mockito.when(requestController.getRestTemplate()).thenReturn(restTemplate);
         Mockito.when(requestController.getServerProtocol()).thenReturn(serverProtocol);
         Mockito.when(requestController.getScsbShiro()).thenReturn(scsbShiro);

@@ -3,8 +3,6 @@ package org.recap.controller;
 import org.apache.commons.lang3.StringUtils;
 import org.recap.model.search.BibliographicMarcForm;
 import org.recap.util.MarcRecordViewUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,8 +16,6 @@ import javax.validation.Valid;
  */
 @Controller
 public class MarcRecordController {
-
-    private static final Logger logger = LoggerFactory.getLogger(MarcRecordController.class);
 
     @Autowired
     MarcRecordViewUtil marcRecordViewUtil;

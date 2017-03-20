@@ -1,4 +1,4 @@
-package org.recap.model.userManagement;
+package org.recap.model.usermanagement;
 
 import org.recap.RecapConstants;
 import org.recap.model.jpa.InstitutionEntity;
@@ -8,7 +8,6 @@ import org.recap.model.jpa.UsersEntity;
 import org.recap.repository.jpa.InstitutionDetailsRepository;
 import org.recap.repository.jpa.RolesDetailsRepositorty;
 import org.recap.repository.jpa.UserDetailsRepository;
-import org.recap.security.UserManagement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,7 +36,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public Page<UsersEntity> searchUsers(UserRoleForm userRoleForm, boolean superAdmin) {
-        Pageable pageable = new PageRequest(userRoleForm.getPageNumber(), userRoleForm.getPageSize(), Sort.Direction.ASC, UserManagement.USER_ID);
+        Pageable pageable = new PageRequest(userRoleForm.getPageNumber(), userRoleForm.getPageSize(), Sort.Direction.ASC, RecapConstants.USER_ID);
         if (superAdmin) {
             return userDetailsRepository.findAll(pageable);
         } else {
@@ -50,7 +49,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public Page<UsersEntity> searchByNetworkId(UserRoleForm userRoleForm, boolean superAdmin) {
-        Pageable pageable = new PageRequest(userRoleForm.getPageNumber(), userRoleForm.getPageSize(), Sort.Direction.ASC, UserManagement.USER_ID);
+        Pageable pageable = new PageRequest(userRoleForm.getPageNumber(), userRoleForm.getPageSize(), Sort.Direction.ASC, RecapConstants.USER_ID);
         if (superAdmin) {
             return userDetailsRepository.findByLoginId(userRoleForm.getSearchNetworkId(), pageable);
         } else {
@@ -62,7 +61,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public Page<UsersEntity> searchByUserEmailId(UserRoleForm userRoleForm, boolean superAdmin) {
-        Pageable pageable = new PageRequest(userRoleForm.getPageNumber(), userRoleForm.getPageSize(), Sort.Direction.ASC, UserManagement.USER_ID);
+        Pageable pageable = new PageRequest(userRoleForm.getPageNumber(), userRoleForm.getPageSize(), Sort.Direction.ASC, RecapConstants.USER_ID);
         if (superAdmin) {
             return userDetailsRepository.findByEmailId(userRoleForm.getUserEmailId(), pageable);
         } else {
@@ -74,7 +73,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public Page<UsersEntity> searchByNetworkIdAndUserEmailId(UserRoleForm userRoleForm, boolean superAdmin) {
-        Pageable pageable = new PageRequest(userRoleForm.getPageNumber(), userRoleForm.getPageSize(), Sort.Direction.ASC, UserManagement.USER_ID);
+        Pageable pageable = new PageRequest(userRoleForm.getPageNumber(), userRoleForm.getPageSize(), Sort.Direction.ASC, RecapConstants.USER_ID);
         if (superAdmin) {
             return userDetailsRepository.findByLoginIdAndEmailId(userRoleForm.getSearchNetworkId(), userRoleForm.getUserEmailId(), pageable);
         } else {

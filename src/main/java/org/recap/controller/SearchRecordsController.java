@@ -10,9 +10,9 @@ import org.recap.model.search.SearchItemResultRow;
 import org.recap.model.search.SearchRecordsRequest;
 import org.recap.model.search.SearchRecordsResponse;
 import org.recap.model.search.SearchResultRow;
-import org.recap.model.userManagement.UserDetailsForm;
+import org.recap.model.usermanagement.UserDetailsForm;
 import org.recap.repository.jpa.InstitutionDetailsRepository;
-import org.recap.security.UserManagement;
+import org.recap.security.UserManagementService;
 import org.recap.util.CsvUtil;
 import org.recap.util.SearchUtil;
 import org.recap.util.UserAuthUtil;
@@ -105,7 +105,7 @@ public class SearchRecordsController {
     @RequestMapping("/search")
     public String searchRecords(Model model, HttpServletRequest request) {
         HttpSession session=request.getSession();
-        boolean authenticated=getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_SEARCH_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
+        boolean authenticated=getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_SEARCH_URL,(UsernamePasswordToken)session.getAttribute(RecapConstants.USER_TOKEN));
         if(authenticated)
         {
             SearchRecordsRequest searchRecordsRequest = new SearchRecordsRequest();
@@ -113,7 +113,7 @@ public class SearchRecordsController {
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.SEARCH);
             return RecapConstants.VIEW_SEARCH_RECORDS;
         }else{
-            return UserManagement.unAuthorizedUser(session,"Search",logger);
+            return UserManagementService.unAuthorizedUser(session,"Search",logger);
         }
 
     }
@@ -190,10 +190,8 @@ public class SearchRecordsController {
 
     @ResponseBody
     @RequestMapping(value = "/search", method = RequestMethod.POST, params = "action=newSearch")
-    public ModelAndView newSearch(@Valid @ModelAttribute("searchRecordsRequest") SearchRecordsRequest searchRecordsRequest,
-                                  BindingResult result,
-                                  Model model) {
-        searchRecordsRequest = new SearchRecordsRequest();
+    public ModelAndView newSearch(Model model) {
+        SearchRecordsRequest searchRecordsRequest = new SearchRecordsRequest();
         model.addAttribute(RecapConstants.VIEW_SEARCH_RECORDS_REQUEST, searchRecordsRequest);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.SEARCH);
         return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS);
@@ -206,7 +204,7 @@ public class SearchRecordsController {
                                        Model model,
                                        HttpServletRequest request,
                                        RedirectAttributes redirectAttributes) {
-        UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(request.getSession(),UserManagement.REQUEST_PRIVILEGE);
+        UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(request.getSession(),RecapConstants.REQUEST_PRIVILEGE);
         processRequest(searchRecordsRequest, userDetailsForm, redirectAttributes);
         if (StringUtils.isNotBlank(searchRecordsRequest.getErrorMessage())) {
             searchRecordsRequest.setShowResults(true);
@@ -282,7 +280,6 @@ public class SearchRecordsController {
     }
 
     private void searchAndSetResults(SearchRecordsRequest searchRecordsRequest) {
-        boolean errorStatus=false;
         searchRecordsRequest.reset();
         searchRecordsRequest.setSearchResultRows(null);
         searchRecordsRequest.setShowResults(true);
@@ -301,13 +298,6 @@ public class SearchRecordsController {
             searchRecordsRequest.setTotalRecordsCount(String.valueOf(0));
             searchRecordsRequest.setTotalBibRecordsCount(String.valueOf(0));
             searchRecordsRequest.setTotalItemRecordsCount(String.valueOf(0));
-            if (errorStatus){
-                searchRecordsRequest.setErrorMessage(RecapConstants.SEARCH_RESULT_ERROR_INVALID_CHARACTERS);
-            }else{
-                if(searchRecordsRequest.getErrorMessage() == null ) {
-                    searchRecordsRequest.setErrorMessage(RecapConstants.SEARCH_RESULT_ERROR_NO_RECORDS_FOUND);
-                }
-            }
         }
     }
 

@@ -32,7 +32,7 @@ public class SessionFilter implements Filter{
             {
                 HttpServletRequest httpRequest=(HttpServletRequest)request;
                 HttpSession session=httpRequest.getSession();
-                UsernamePasswordToken token=(UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN);
+                UsernamePasswordToken token=(UsernamePasswordToken) session.getAttribute(RecapConstants.USER_TOKEN);
                 if(token==null || token.getUsername()==null)
                 {
                     throw new Exception("User Session Expired");

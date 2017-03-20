@@ -1,4 +1,4 @@
-package org.recap.model.userManagement;
+package org.recap.model.usermanagement;
 
 import java.util.ArrayList;
 import java.util.List;

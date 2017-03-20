@@ -11,7 +11,7 @@ import org.recap.model.search.DeaccessionItemResultsRow;
 import org.recap.model.search.IncompleteReportResultsRow;
 import org.recap.model.search.ReportsForm;
 import org.recap.repository.jpa.RequestItemDetailsRepository;
-import org.recap.security.UserManagement;
+import org.recap.security.UserManagementService;
 import org.recap.util.ReportsUtil;
 import org.recap.util.UserAuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +84,7 @@ public class ReportsControllerUT extends BaseControllerUT {
     @Test
     public void reports() throws Exception{
         when(request.getSession()).thenReturn(session);
-        Mockito.when(getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REPORT_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN))).thenReturn(true);
+        Mockito.when(getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REPORT_URL,(UsernamePasswordToken)session.getAttribute(RecapConstants.USER_TOKEN))).thenReturn(true);
         Mockito.when(reportsController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(reportsController.collection(model,request)).thenCallRealMethod();
         String response = reportsController.collection(model,request);
@@ -261,8 +261,8 @@ public class ReportsControllerUT extends BaseControllerUT {
     public void getInstitutionForIncompletereport() throws Exception{
         ReportsForm reportsForm = new ReportsForm();
         when(request.getSession()).thenReturn(session);
-        when(session.getAttribute(UserManagement.SUPER_ADMIN_USER)).thenReturn(false);
-        when(session.getAttribute(UserManagement.USER_INSTITUTION)).thenReturn("CUL");
+        when(session.getAttribute(RecapConstants.SUPER_ADMIN_USER)).thenReturn(false);
+        when(session.getAttribute(RecapConstants.USER_INSTITUTION)).thenReturn("CUL");
         ModelAndView modelAndView = reportsControllerWired.getInstitutionForIncompletereport(request, reportsForm);
         assertNotNull(modelAndView);
         List<String> incompleteShowByInst = reportsForm.getIncompleteShowByInst();

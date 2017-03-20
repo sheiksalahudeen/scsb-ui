@@ -15,15 +15,15 @@ public class SearchRecordsRequest implements Serializable {
 
     private String fieldName;
 
-    private List<String> owningInstitutions = null;
+    private List<String> owningInstitutions = new ArrayList<>();
 
-    private List<String> collectionGroupDesignations = null;
+    private List<String> collectionGroupDesignations = new ArrayList<>();
 
-    private List<String> availability = null;
+    private List<String> availability = new ArrayList<>();
 
-    private List<String> materialTypes = null;
+    private List<String> materialTypes = new ArrayList<>();
 
-    private List<String> useRestrictions = null;
+    private List<String> useRestrictions = new ArrayList<>();
 
     private List<SearchResultRow> searchResultRows = new ArrayList<>();
 
@@ -103,9 +103,6 @@ public class SearchRecordsRequest implements Serializable {
     }
 
     public List<String> getOwningInstitutions() {
-        if (null == owningInstitutions) {
-            owningInstitutions = new ArrayList<>();
-        }
         return owningInstitutions;
     }
 
@@ -114,9 +111,6 @@ public class SearchRecordsRequest implements Serializable {
     }
 
     public List<String> getCollectionGroupDesignations() {
-        if (null == collectionGroupDesignations) {
-            collectionGroupDesignations = new ArrayList<>();
-        }
         return collectionGroupDesignations;
     }
 
@@ -125,9 +119,6 @@ public class SearchRecordsRequest implements Serializable {
     }
 
     public List<String> getAvailability() {
-        if (null == availability) {
-            availability = new ArrayList<>();
-        }
         return availability;
     }
 
@@ -136,9 +127,6 @@ public class SearchRecordsRequest implements Serializable {
     }
 
     public List<String> getMaterialTypes() {
-        if (null == materialTypes) {
-            materialTypes = new ArrayList<>();
-        }
         return materialTypes;
     }
 
@@ -147,9 +135,6 @@ public class SearchRecordsRequest implements Serializable {
     }
 
     public List<String> getUseRestrictions() {
-        if(null == useRestrictions) {
-            useRestrictions = new ArrayList<>();
-        }
         return useRestrictions;
     }
 
@@ -158,9 +143,6 @@ public class SearchRecordsRequest implements Serializable {
     }
 
     public List<SearchResultRow> getSearchResultRows() {
-        if (null == searchResultRows) {
-            searchResultRows = new ArrayList<>();
-        }
         return searchResultRows;
     }
 

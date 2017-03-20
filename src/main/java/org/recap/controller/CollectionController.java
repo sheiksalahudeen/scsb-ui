@@ -6,9 +6,9 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
 import org.recap.model.jpa.RequestItemEntity;
 import org.recap.model.search.*;
-import org.recap.model.userManagement.UserDetailsForm;
+import org.recap.model.usermanagement.UserDetailsForm;
 import org.recap.repository.jpa.RequestItemDetailsRepository;
-import org.recap.security.UserManagement;
+import org.recap.security.UserManagementService;
 import org.recap.util.CollectionServiceUtil;
 import org.recap.util.MarcRecordViewUtil;
 import org.recap.util.SearchUtil;
@@ -97,7 +97,7 @@ public class CollectionController {
     @RequestMapping("/collection")
     public String collection(Model model,HttpServletRequest request) {
         HttpSession session=request.getSession();
-        boolean authenticated=getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_COLLECTION_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
+        boolean authenticated=getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_COLLECTION_URL,(UsernamePasswordToken)session.getAttribute(RecapConstants.USER_TOKEN));
         if(authenticated)
         {
             CollectionForm collectionForm = new CollectionForm();
@@ -105,7 +105,7 @@ public class CollectionController {
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.COLLECTION);
             return RecapConstants.VIEW_SEARCH_RECORDS;
         }else{
-            return UserManagement.unAuthorizedUser(session,"Collection",logger);
+            return UserManagementService.unAuthorizedUser(session,"Collection",logger);
         }
     }
 
@@ -125,7 +125,7 @@ public class CollectionController {
                                      BindingResult result,
                                      Model model,HttpServletRequest request) throws Exception {
 
-        UserDetailsForm userDetailsForm=getUserAuthUtil().getUserDetails(request.getSession(),UserManagement.BARCODE_RESTRICTED_PRIVILEGE);
+        UserDetailsForm userDetailsForm=getUserAuthUtil().getUserDetails(request.getSession(),RecapConstants.BARCODE_RESTRICTED_PRIVILEGE);
         BibliographicMarcForm bibliographicMarcForm = getMarcRecordViewUtil().buildBibliographicMarcForm(collectionForm.getBibId(), collectionForm.getItemId(),userDetailsForm);
         populateCollectionForm(collectionForm, bibliographicMarcForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.COLLECTION);
@@ -138,7 +138,7 @@ public class CollectionController {
                                          BindingResult result,
                                          Model model, HttpServletRequest request) throws Exception {
         HttpSession session = request.getSession();
-        String username = (String) session.getAttribute(UserManagement.USER_NAME);
+        String username = (String) session.getAttribute(RecapConstants.USER_NAME);
         collectionForm.setUsername(username);
         if (RecapConstants.UPDATE_CGD.equalsIgnoreCase(collectionForm.getCollectionAction())) {
             getCollectionServiceUtil().updateCGDForItem(collectionForm);

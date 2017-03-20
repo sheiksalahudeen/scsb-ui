@@ -8,7 +8,7 @@ import org.recap.model.jpa.BibliographicEntity;
 import org.recap.model.jpa.HoldingsEntity;
 import org.recap.model.jpa.ItemEntity;
 import org.recap.model.search.BibliographicMarcForm;
-import org.recap.model.userManagement.UserDetailsForm;
+import org.recap.model.usermanagement.UserDetailsForm;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.EntityManager;

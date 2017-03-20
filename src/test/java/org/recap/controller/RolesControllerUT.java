@@ -7,7 +7,7 @@ import org.recap.model.jpa.RoleEntity;
 import org.recap.model.search.RolesForm;
 import org.recap.repository.jpa.PermissionsDetailsRepository;
 import org.recap.repository.jpa.RolesDetailsRepositorty;
-import org.recap.security.UserManagement;
+import org.recap.security.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+
+import org.recap.RecapConstants;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -110,7 +112,7 @@ public class RolesControllerUT extends BaseTestCase {
         String[] permissionName ={"CreateUser"};
         when(request.getSession()).thenReturn(session);
         when(request.getParameterValues("permissionNames[]")).thenReturn(permissionName);
-        when(session.getAttribute(UserManagement.USER_NAME)).thenReturn("SuperAdmin");
+        when(session.getAttribute(RecapConstants.USER_NAME)).thenReturn("SuperAdmin");
         rolesForm.setEditPermissionName(Arrays.asList(permissionName));
         rolesForm.setEditRoleDescription("test desc");
         ModelAndView modelAndView = rolesController.saveEditedRole(rolesForm.getRoleId(),rolesForm.getEditRoleName(),rolesForm.getEditRoleName(),request);

@@ -32,7 +32,7 @@ public class ReCAPSimpleUrlLogoutSuccessHandler extends SimpleUrlLogoutSuccessHa
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        Object attribute = request.getAttribute(UserManagement.USER_TOKEN);
+        Object attribute = request.getAttribute(RecapConstants.USER_TOKEN);
         super.onLogoutSuccess(request, response, authentication);
         logger.info("Subject Logged out");
         try{
@@ -40,7 +40,7 @@ public class ReCAPSimpleUrlLogoutSuccessHandler extends SimpleUrlLogoutSuccessHa
         }catch (Exception e) {
             logger.error(RecapConstants.LOG_ERROR,e);
         }
-        request.removeAttribute(UserManagement.USER_TOKEN);
+        request.removeAttribute(RecapConstants.USER_TOKEN);
         request.removeAttribute(RecapConstants.RECAP_INSTITUTION_CODE);
 
         Cookie[] cookies = request.getCookies();

@@ -9,7 +9,7 @@ import org.recap.RecapConstants;
 import org.recap.model.jpa.*;
 import org.recap.model.search.BibDataField;
 import org.recap.model.search.BibliographicMarcForm;
-import org.recap.model.userManagement.UserDetailsForm;
+import org.recap.model.usermanagement.UserDetailsForm;
 import org.recap.repository.jpa.BibliographicDetailsRepository;
 import org.recap.repository.jpa.CustomerCodeDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;

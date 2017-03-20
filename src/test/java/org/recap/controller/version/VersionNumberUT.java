@@ -16,8 +16,8 @@ public class VersionNumberUT extends BaseTestCase{
 
     @Test
     public void testVersionNumber(){
-        versionNumber.setVersionNumber("1.0.0");
-        String version = versionNumber.getVersionNumber();
+        versionNumber.setVersionNumberService("1.0.0");
+        String version = versionNumber.getVersionNumberService();
         assertNotNull(version);
     }
 

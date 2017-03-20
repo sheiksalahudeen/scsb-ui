@@ -446,6 +446,31 @@ public class RecapConstants {
     //Logger
     public static final String LOG_ERROR="error-->";
 
+    //Incomplete Record Reports
+    public static final String SCSB_REPORTS_INCOMPLETE_RESULTS_URL = "reportsService/incompleteRecords";
+    public static final String REPORTS_INCOMPLETE_RECORDS="IncompleteRecordsReport";
+    public static final String REPORTS_INCOMPLETE_RECORDS_NOT_FOUND="No Records Found";
+    public static final String REPORTS_INCOMPLETE_RECORDS_VIEW="reports :: #IncompleteReporttableview";
+    public static final String REPORTS_INCOMPLETE_SHOW_BY_VIEW="reports :: #incompleteShowBy";
+    public static final String REPORTS_INCOMPLETE_EXPORT_FILE_NAME="ExportIncompleteRecords_";
+
+    //UserManagementService
+    public static final String USER_AUTH="user_auth";
+    public static final String ROLE_ID="roleId";
+    public static final String USER_TOKEN="token";
+    public static final String REQUEST_ALL_PRIVILEGE="isRequestAllAllowed";
+    public static final String REQUEST_ITEM_PRIVILEGE="isRequestItemAllowed";
+    public static final String BARCODE_RESTRICTED_PRIVILEGE="isBarcodeRestricted";
+    public static final String DEACCESSION_PRIVILEGE="isDeaccessionAllowed";
+    public static final String SUPER_ADMIN_USER="isSuperAdmin";
+    public static final String RECAP_USER ="isRecapUser";
+    public static final String USER_AUTH_ERRORMSG="authErrorMsg";
+    public static final String USER_NAME="userName";
+    public static final String ROLE_FOR_SUPER_ADMIN="isRoleAllowed";
+    public static final String TOKEN_SPLITER=":";
+
+    public static final String OCLC_NUMBER_PATTERN="[^0-9]";
+
     private RecapConstants(){
         //Do nothing
     }
@@ -456,12 +481,4 @@ public class RecapConstants {
         headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
         return headers;
     }
-
-    //Incomplete Record Reports
-    public static final String SCSB_REPORTS_INCOMPLETE_RESULTS_URL = "reportsService/incompleteRecords";
-    public static final String REPORTS_INCOMPLETE_RECORDS="IncompleteRecordsReport";
-    public static final String REPORTS_INCOMPLETE_RECORDS_NOT_FOUND="No Records Found";
-    public static final String REPORTS_INCOMPLETE_RECORDS_VIEW="reports :: #IncompleteReporttableview";
-    public static final String REPORTS_INCOMPLETE_SHOW_BY_VIEW="reports :: #incompleteShowBy";
-    public static final String REPORTS_INCOMPLETE_EXPORT_FILE_NAME="ExportIncompleteRecords_";
 }

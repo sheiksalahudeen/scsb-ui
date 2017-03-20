@@ -3,9 +3,8 @@ package org.recap.controller;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
-import org.recap.model.userManagement.LoginValidator;
-import org.recap.model.userManagement.UserForm;
-import org.recap.security.UserManagement;
+import org.recap.model.usermanagement.LoginValidator;
+import org.recap.model.usermanagement.UserForm;
 import org.recap.util.UserAuthUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,7 +87,7 @@ public class LoginController {
         userForm.setPassword("");
         try
         {
-            UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+userForm.getInstitution(),userForm.getPassword(),true);
+            UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ RecapConstants.TOKEN_SPLITER +userForm.getInstitution(),userForm.getPassword(),true);
             resultmap=userAuthUtil.doAuthentication(token);
 
             if(!(Boolean) resultmap.get("isAuthenticated"))
@@ -97,7 +96,7 @@ public class LoginController {
             }
             HttpSession session=request.getSession(true);
             session.setAttribute("token",token);
-            session.setAttribute(UserManagement.USER_AUTH,resultmap);
+            session.setAttribute(RecapConstants.USER_AUTH,resultmap);
             setValuesInSession(session,resultmap);
 
         }
@@ -128,7 +127,7 @@ public class LoginController {
                 logger.debug("Login Screen validation failed");
                 return loginScreen(request,model,userForm);
             }
-            UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ UserManagement.TOKEN_SPLITER.getValue()+userForm.getInstitution(),userForm.getPassword(),true);
+            UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ RecapConstants.TOKEN_SPLITER +userForm.getInstitution(),userForm.getPassword(),true);
             resultmap=userAuthUtil.doAuthentication(token);
 
             if(!(Boolean) resultmap.get("isAuthenticated"))
@@ -136,8 +135,8 @@ public class LoginController {
                 throw new Exception("Subject Authtentication Failed");
             }
             HttpSession session=request.getSession();
-            session.setAttribute(UserManagement.USER_TOKEN,token);
-            session.setAttribute(UserManagement.USER_AUTH,resultmap);
+            session.setAttribute(RecapConstants.USER_TOKEN,token);
+            session.setAttribute(RecapConstants.USER_AUTH,resultmap);
             setValuesInSession(session,resultmap);
         }
         catch(ConnectException|ResourceAccessException e)
@@ -149,10 +148,13 @@ public class LoginController {
         }
         catch(Exception e)
         {
+
             logger.error(RecapConstants.LOG_ERROR,e);
             error.rejectValue("wrongCredentials","error.invalid.credentials","Invalid Credentials");
-            logger.debug("Exception occured in authentication Process : {} ",resultmap.get(UserManagement.USER_AUTH_ERRORMSG));
-            logger.error("{} : {}",e.getLocalizedMessage(),resultmap.get(UserManagement.USER_AUTH_ERRORMSG));
+            if(resultmap!=null) {
+                logger.debug("Exception occured in authentication Process : {} ", resultmap.get(RecapConstants.USER_AUTH_ERRORMSG));
+                logger.error("{} : {}", e.getLocalizedMessage(), resultmap.get(RecapConstants.USER_AUTH_ERRORMSG));
+            }
             return loginScreen;
         }
         return "redirect:/search";
@@ -165,9 +167,11 @@ public class LoginController {
         HttpSession session=null;
         try{
             session=request.getSession();
-            userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_LOGOUT_URL,(UsernamePasswordToken)session.getAttribute(UserManagement.USER_TOKEN));
+            userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_LOGOUT_URL,(UsernamePasswordToken)session.getAttribute(RecapConstants.USER_TOKEN));
         }finally{
-            session.invalidate();
+            if(session!=null) {
+                session.invalidate();
+            }
             return "redirect:/";
         }
     }
@@ -175,25 +179,25 @@ public class LoginController {
     private void setValuesInSession(HttpSession session,Map<String,Object> authMap)
     {
         session.setAttribute("userName",(String)authMap.get("userName"));
-        session.setAttribute(UserManagement.USER_ID,(Integer)authMap.get(UserManagement.USER_ID));
-        session.setAttribute(UserManagement.USER_INSTITUTION,(Integer)authMap.get(UserManagement.USER_INSTITUTION));
-        session.setAttribute(UserManagement.SUPER_ADMIN_USER,(Boolean)authMap.get(UserManagement.SUPER_ADMIN_USER));
-        session.setAttribute(UserManagement.ReCAP_USER,(Boolean)authMap.get(UserManagement.ReCAP_USER));
-        session.setAttribute(UserManagement.REQUEST_PRIVILEGE,(Boolean)authMap.get(UserManagement.REQUEST_PRIVILEGE));
-        session.setAttribute(UserManagement.COLLECTION_PRIVILEGE,(Boolean)authMap.get(UserManagement.COLLECTION_PRIVILEGE));
-        session.setAttribute(UserManagement.REPORTS_PRIVILEGE,(Boolean)authMap.get(UserManagement.REPORTS_PRIVILEGE));
-        session.setAttribute(UserManagement.SEARCH_PRIVILEGE,(Boolean)authMap.get(UserManagement.SEARCH_PRIVILEGE));
-        session.setAttribute(UserManagement.USER_ROLE_PRIVILEGE,(Boolean)authMap.get(UserManagement.USER_ROLE_PRIVILEGE));
-        session.setAttribute(UserManagement.REQUEST_ALL_PRIVILEGE,(Boolean)authMap.get(UserManagement.REQUEST_ALL_PRIVILEGE));
-        session.setAttribute(UserManagement.REQUEST_ITEM_PRIVILEGE,(Boolean)authMap.get(UserManagement.REQUEST_ITEM_PRIVILEGE));
-        session.setAttribute(UserManagement.BARCODE_RESTRICTED_PRIVILEGE,(Boolean)authMap.get(UserManagement.BARCODE_RESTRICTED_PRIVILEGE));
-        session.setAttribute(UserManagement.DEACCESSION_PRIVILEGE,(Boolean)authMap.get(UserManagement.DEACCESSION_PRIVILEGE));
-        Object isSuperAdmin = session.getAttribute(UserManagement.SUPER_ADMIN_USER);
-        if((boolean)isSuperAdmin == true){
-            session.setAttribute(UserManagement.ROLE_FOR_SUPER_ADMIN,true);
+        session.setAttribute(RecapConstants.USER_ID,(Integer)authMap.get(RecapConstants.USER_ID));
+        session.setAttribute(RecapConstants.USER_INSTITUTION,(Integer)authMap.get(RecapConstants.USER_INSTITUTION));
+        session.setAttribute(RecapConstants.SUPER_ADMIN_USER,(Boolean)authMap.get(RecapConstants.SUPER_ADMIN_USER));
+        session.setAttribute(RecapConstants.RECAP_USER,(Boolean)authMap.get(RecapConstants.RECAP_USER));
+        session.setAttribute(RecapConstants.REQUEST_PRIVILEGE,(Boolean)authMap.get(RecapConstants.REQUEST_PRIVILEGE));
+        session.setAttribute(RecapConstants.COLLECTION_PRIVILEGE,(Boolean)authMap.get(RecapConstants.COLLECTION_PRIVILEGE));
+        session.setAttribute(RecapConstants.REPORTS_PRIVILEGE,(Boolean)authMap.get(RecapConstants.REPORTS_PRIVILEGE));
+        session.setAttribute(RecapConstants.SEARCH_PRIVILEGE,(Boolean)authMap.get(RecapConstants.SEARCH_PRIVILEGE));
+        session.setAttribute(RecapConstants.USER_ROLE_PRIVILEGE,(Boolean)authMap.get(RecapConstants.USER_ROLE_PRIVILEGE));
+        session.setAttribute(RecapConstants.REQUEST_ALL_PRIVILEGE,(Boolean)authMap.get(RecapConstants.REQUEST_ALL_PRIVILEGE));
+        session.setAttribute(RecapConstants.REQUEST_ITEM_PRIVILEGE,(Boolean)authMap.get(RecapConstants.REQUEST_ITEM_PRIVILEGE));
+        session.setAttribute(RecapConstants.BARCODE_RESTRICTED_PRIVILEGE,(Boolean)authMap.get(RecapConstants.BARCODE_RESTRICTED_PRIVILEGE));
+        session.setAttribute(RecapConstants.DEACCESSION_PRIVILEGE,(Boolean)authMap.get(RecapConstants.DEACCESSION_PRIVILEGE));
+        Object isSuperAdmin = session.getAttribute(RecapConstants.SUPER_ADMIN_USER);
+        if((boolean)isSuperAdmin){
+            session.setAttribute(RecapConstants.ROLE_FOR_SUPER_ADMIN,true);
         }
         else {
-            session.setAttribute(UserManagement.ROLE_FOR_SUPER_ADMIN,false);
+            session.setAttribute(RecapConstants.ROLE_FOR_SUPER_ADMIN,false);
         }
     }
 

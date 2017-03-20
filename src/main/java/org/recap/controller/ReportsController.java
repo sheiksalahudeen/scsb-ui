@@ -8,7 +8,7 @@ import org.recap.model.search.DeaccessionItemResultsRow;
 import org.recap.model.search.IncompleteReportResultsRow;
 import org.recap.model.search.ReportsForm;
 import org.recap.repository.jpa.InstitutionDetailsRepository;
-import org.recap.security.UserManagement;
+import org.recap.security.UserManagementService;
 import org.recap.util.ReportsUtil;
 import org.recap.util.UserAuthUtil;
 import org.slf4j.Logger;
@@ -68,14 +68,14 @@ public class ReportsController {
     @RequestMapping("/reports")
     public String collection(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-        boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REPORT_URL, (UsernamePasswordToken) session.getAttribute(UserManagement.USER_TOKEN));
+        boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REPORT_URL, (UsernamePasswordToken) session.getAttribute(RecapConstants.USER_TOKEN));
         if (authenticated) {
             ReportsForm reportsForm = new ReportsForm();
             model.addAttribute(RecapConstants.REPORTS_FORM, reportsForm);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
             return RecapConstants.VIEW_SEARCH_RECORDS;
         } else {
-            return UserManagement.unAuthorizedUser(session, "Reports", logger);
+            return UserManagementService.unAuthorizedUser(session, "Reports", logger);
         }
 
 
@@ -202,8 +202,8 @@ public class ReportsController {
     @RequestMapping(value = "/reports/getInstitutions", method = RequestMethod.GET)
     public ModelAndView getInstitutionForIncompletereport(HttpServletRequest request, ReportsForm reportsForm) {
         HttpSession session = request.getSession();
-        Object isSuperAdmin = session.getAttribute(UserManagement.SUPER_ADMIN_USER);
-        if ((boolean) isSuperAdmin == true) {
+        Object isSuperAdmin = session.getAttribute(RecapConstants.SUPER_ADMIN_USER);
+        if ((boolean) isSuperAdmin) {
             List<String> instList = new ArrayList<>();
             List<InstitutionEntity> institutionCodeForSuperAdmin = institutionDetailsRepository.getInstitutionCodeForSuperAdmin();
             for (InstitutionEntity institutionEntity : institutionCodeForSuperAdmin) {
@@ -211,7 +211,7 @@ public class ReportsController {
             }
             reportsForm.setIncompleteShowByInst(instList);
         } else {
-            Object userInstitution = session.getAttribute(UserManagement.USER_INSTITUTION);
+            Object userInstitution = session.getAttribute(RecapConstants.USER_INSTITUTION);
             reportsForm.setIncompleteShowByInst(Arrays.asList((String) userInstitution));
 
         }
