@@ -3,6 +3,7 @@ package org.recap.controller;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.marc4j.marc.Record;
 import org.recap.RecapConstants;
@@ -153,12 +154,12 @@ public class RequestController {
         return requestItemDetailsRepository;
     }
 
-    public RestTemplate getRestTemplate(){
+    public RestTemplate getRestTemplate() {
         return new RestTemplate();
     }
 
     @RequestMapping("/request")
-    public String request(Model model, HttpServletRequest request) throws Exception {
+    public String request(Model model, HttpServletRequest request)throws JSONException{
         HttpSession session = request.getSession();
         boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REQUEST_URL, (UsernamePasswordToken) session.getAttribute(RecapConstants.USER_TOKEN));
         if (authenticated) {
@@ -190,14 +191,13 @@ public class RequestController {
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=searchRequests")
     public ModelAndView searchRequests(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
                                        BindingResult result,
-                                       Model model) throws Exception {
+                                       Model model) {
         try {
             requestForm.resetPageNumber();
             searchAndSetResults(requestForm);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
-        }
-        catch (Exception exception){
-            logger.error(RecapConstants.LOG_ERROR,exception);
+        } catch (Exception exception) {
+            logger.error(RecapConstants.LOG_ERROR, exception);
             logger.debug(exception.getMessage());
         }
         return new ModelAndView(RecapConstants.VIEW_SEARCH_REQUESTS_SECTION, RecapConstants.REQUEST_FORM, requestForm);
@@ -258,8 +258,8 @@ public class RequestController {
 
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=loadCreateRequest")
-    public ModelAndView loadCreateRequest(Model model,HttpServletRequest request) {
-        UserDetailsForm userDetailsForm=getUserAuthUtil().getUserDetails(request.getSession(),RecapConstants.REQUEST_PRIVILEGE);
+    public ModelAndView loadCreateRequest(Model model, HttpServletRequest request) {
+        UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(request.getSession(), RecapConstants.REQUEST_PRIVILEGE);
         RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm);
         model.addAttribute(RecapConstants.REQUEST_FORM, requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
@@ -324,7 +324,7 @@ public class RequestController {
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=populateItem")
     public String populateItem(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
                                BindingResult result,
-                               Model model,HttpServletRequest request) throws Exception {
+                               Model model, HttpServletRequest request)throws JSONException{
         JSONObject jsonObject = new JSONObject();
 
         if (StringUtils.isNotBlank(requestForm.getItemBarcodeInRequest())) {
@@ -340,8 +340,8 @@ public class RequestController {
                     if (CollectionUtils.isNotEmpty(itemEntities)) {
                         for (ItemEntity itemEntity : itemEntities) {
                             if (null != itemEntity && CollectionUtils.isNotEmpty(itemEntity.getBibliographicEntities())) {
-                                userDetailsForm = getUserAuthUtil().getUserDetails(request.getSession(),RecapConstants.REQUEST_PRIVILEGE);
-                                if (itemEntity.getCollectionGroupId()==RecapConstants.CGD_PRIVATE && !userDetailsForm.isSuperAdmin() && !userDetailsForm.isRecapUser() && !userDetailsForm.getLoginInstitutionId().equals(itemEntity.getOwningInstitutionId())) {
+                                userDetailsForm = getUserAuthUtil().getUserDetails(request.getSession(), RecapConstants.REQUEST_PRIVILEGE);
+                                if (itemEntity.getCollectionGroupId() == RecapConstants.CGD_PRIVATE && !userDetailsForm.isSuperAdmin() && !userDetailsForm.isRecapUser() && !userDetailsForm.getLoginInstitutionId().equals(itemEntity.getOwningInstitutionId())) {
                                     jsonObject.put(RecapConstants.NO_PERMISSION_ERROR_MESSAGE, RecapConstants.REQUEST_PRIVATE_ERROR_USER_NOT_PERMITTED);
                                     return jsonObject.toString();
                                 } else if (!userDetailsForm.isRecapPermissionAllowed()) {
@@ -381,7 +381,7 @@ public class RequestController {
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=createRequest")
     public String createRequest(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
                                 BindingResult result,
-                                Model model, HttpServletRequest request) throws Exception {
+                                Model model, HttpServletRequest request) throws JSONException{
         JSONObject jsonObject = new JSONObject();
         String customerCodeDescription = null;
         try {
@@ -403,7 +403,6 @@ public class RequestController {
                 }
             }
 
-            String validateRequestItemUrl = getServerProtocol() + getScsbUrl() + RecapConstants.VALIDATE_REQUEST_ITEM_URL;
             String requestItemUrl = getServerProtocol() + getScsbUrl() + RecapConstants.REQUEST_ITEM_URL;
 
             ItemRequestInformation itemRequestInformation = getItemRequestInformation();
@@ -430,22 +429,17 @@ public class RequestController {
             }
 
             HttpEntity<ItemRequestInformation> requestEntity = new HttpEntity<>(itemRequestInformation, getHttpHeaders());
-
-            ResponseEntity<String> responseEntity = getRestTemplate().exchange(validateRequestItemUrl, HttpMethod.POST, requestEntity, String.class);
-            if (RecapConstants.VALID_REQUEST.equalsIgnoreCase(responseEntity.getBody())) {
-                ResponseEntity<ItemResponseInformation> itemResponseEntity = getRestTemplate().exchange(requestItemUrl, HttpMethod.POST, requestEntity, ItemResponseInformation.class);
-                ItemResponseInformation itemResponseInformation = itemResponseEntity.getBody();
-                if (null != itemResponseInformation && !itemResponseInformation.isSuccess()) {
-                    requestForm.setErrorMessage(itemResponseInformation.getScreenMessage());
-                }
+            ResponseEntity<ItemResponseInformation> itemResponseEntity = getRestTemplate().exchange(requestItemUrl, HttpMethod.POST, requestEntity, ItemResponseInformation.class);
+            ItemResponseInformation itemResponseInformation = itemResponseEntity.getBody();
+            if (null != itemResponseInformation && !itemResponseInformation.isSuccess()) {
+                requestForm.setErrorMessage(itemResponseInformation.getScreenMessage());
             }
-
         } catch (HttpClientErrorException httpException) {
-            logger.error(RecapConstants.LOG_ERROR,httpException);
+            logger.error(RecapConstants.LOG_ERROR, httpException);
             String responseBodyAsString = httpException.getResponseBodyAsString();
             requestForm.setErrorMessage(responseBodyAsString);
         } catch (Exception exception) {
-            logger.error(RecapConstants.LOG_ERROR,exception);
+            logger.error(RecapConstants.LOG_ERROR, exception);
             requestForm.setErrorMessage(exception.getMessage());
         }
 
@@ -467,13 +461,13 @@ public class RequestController {
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=cancelRequest")
     public String cancelRequest(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
                                 BindingResult result,
-                                Model model) throws Exception {
+                                Model model) {
         JSONObject jsonObject = new JSONObject();
         String requestStatus = null;
         try {
             HttpEntity requestEntity = new HttpEntity<>(getHttpHeaders());
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getServerProtocol() + getScsbUrl() + RecapConstants.URL_REQUEST_CANCEL).queryParam(RecapConstants.REQUEST_ID, requestForm.getRequestId());
-            HttpEntity<CancelRequestResponse> responseEntity  = getRestTemplate().exchange(builder.build().encode().toUri(), HttpMethod.POST, requestEntity, CancelRequestResponse.class);
+            HttpEntity<CancelRequestResponse> responseEntity = getRestTemplate().exchange(builder.build().encode().toUri(), HttpMethod.POST, requestEntity, CancelRequestResponse.class);
             CancelRequestResponse cancelRequestResponse = responseEntity.getBody();
             jsonObject.put(RecapConstants.MESSAGE, cancelRequestResponse.getScreenMessage());
             jsonObject.put(RecapConstants.STATUS, cancelRequestResponse.isSuccess());
@@ -522,7 +516,7 @@ public class RequestController {
                 searchResultRow.setStatus(requestItemEntity.getRequestStatusEntity().getRequestStatusDescription());
 
                 ItemEntity itemEntity = requestItemEntity.getItemEntity();
-                if (null != itemEntity && CollectionUtils.isNotEmpty(itemEntity.getBibliographicEntities()) ) {
+                if (null != itemEntity && CollectionUtils.isNotEmpty(itemEntity.getBibliographicEntities())) {
                     searchResultRow.setBibId(itemEntity.getBibliographicEntities().get(0).getBibliographicId());
                 }
                 searchResultRows.add(searchResultRow);
@@ -549,7 +543,7 @@ public class RequestController {
                 pageNumber = totalPagesCount - 1;
             }
         } catch (Exception e) {
-            logger.error(RecapConstants.LOG_ERROR,e);
+            logger.error(RecapConstants.LOG_ERROR, e);
         }
         return pageNumber;
     }
