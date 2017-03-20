@@ -8,11 +8,14 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.recap.BaseTestCase;
 import org.recap.RecapConstants;
+import org.recap.model.deaccession.DeAccessionRequest;
 import org.recap.model.jpa.BibliographicEntity;
+import org.recap.model.jpa.CustomerCodeEntity;
 import org.recap.model.jpa.HoldingsEntity;
 import org.recap.model.jpa.ItemEntity;
 import org.recap.model.search.BibliographicMarcForm;
 import org.recap.repository.jpa.BibliographicDetailsRepository;
+import org.recap.repository.jpa.CustomerCodeDetailsRepository;
 import org.recap.repository.jpa.ItemChangeLogDetailsRepository;
 import org.recap.repository.jpa.ItemDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +35,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -56,19 +56,22 @@ public class CollectionServiceUtilUT extends BaseTestCase {
     private EntityManager entityManager;
 
     @Autowired
-    CollectionServiceUtil collectionServiceUtil;
+    private CollectionServiceUtil collectionServiceUtil;
 
     @Autowired
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    BibliographicDetailsRepository bibliographicDetailsRepository;
+    private BibliographicDetailsRepository bibliographicDetailsRepository;
 
     @Mock
-    ItemChangeLogDetailsRepository mockedItemChangeLogDetailsRepository;
+    private ItemChangeLogDetailsRepository mockedItemChangeLogDetailsRepository;
 
     @Mock
-    ItemDetailsRepository mockedItemDetailsRepository;
+    private ItemDetailsRepository mockedItemDetailsRepository;
+
+    @Mock
+    private CustomerCodeDetailsRepository customerCodeDetailsRepository;
 
     @Value("${server.protocol}")
     String serverProtocol;
@@ -77,7 +80,7 @@ public class CollectionServiceUtilUT extends BaseTestCase {
     String scsbUrl;
 
     @Mock
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
     @Before
     public void setup() throws Exception {
@@ -170,6 +173,9 @@ public class CollectionServiceUtilUT extends BaseTestCase {
         assertNotNull(fetchedBibliographicEntity.getItemEntities().get(0));
         assertNotNull(fetchedBibliographicEntity.getItemEntities().get(0).getItemId());
 
+        CustomerCodeEntity customerCodeEntity = new CustomerCodeEntity();
+        customerCodeEntity.setCustomerCode("PB");
+
         Integer itemId = fetchedBibliographicEntity.getItemEntities().get(0).getItemId();
         ItemEntity fetchedItemEntity = itemDetailsRepository.findByItemId(itemId);
         entityManager.refresh(fetchedItemEntity);
@@ -178,18 +184,24 @@ public class CollectionServiceUtilUT extends BaseTestCase {
         assertEquals(itemId, fetchedItemEntity.getItemId());
         assertEquals(Boolean.FALSE, fetchedItemEntity.isDeleted());
 
+        DeAccessionRequest deAccessionRequest = new DeAccessionRequest();
+
         String barcode = fetchedBibliographicEntity.getItemEntities().get(0).getBarcode();
         BibliographicMarcForm bibliographicMarcForm = new BibliographicMarcForm();
         bibliographicMarcForm.setItemId(itemId);
+        bibliographicMarcForm.setUsername("test");
         bibliographicMarcForm.setBarcode(barcode);
         bibliographicMarcForm.setCgdChangeNotes("Notes for deaccession");
-
-        HttpEntity requestEntity = new HttpEntity<>(getHttpHeaders());
+        Map<String,String> map = new HashMap<>();
         collectionServiceUtil = Mockito.mock(CollectionServiceUtil.class);
+        Mockito.when(collectionServiceUtil.getDeAccessionRequest()).thenReturn(deAccessionRequest);
+        Mockito.when(collectionServiceUtil.getCustomerCodeDetailsRepository()).thenReturn(customerCodeDetailsRepository);
+        Mockito.when(collectionServiceUtil.getCustomerCodeDetailsRepository().findByDescription(bibliographicMarcForm.getDeliveryLocation())).thenReturn(customerCodeEntity);
+        HttpEntity<DeAccessionRequest> requestEntity = new HttpEntity<>(deAccessionRequest, getHttpHeaders());
         Mockito.when(collectionServiceUtil.getRestTemplate()).thenReturn(restTemplate);
         Mockito.when(collectionServiceUtil.getServerProtocol()).thenReturn(serverProtocol);
         Mockito.when(collectionServiceUtil.getScsbUrl()).thenReturn(scsbUrl);
-        Mockito.when(restTemplate.postForObject(serverProtocol + scsbUrl + RecapConstants.SCSB_DEACCESSION_URL, requestEntity, String.class)).thenReturn("Success");
+        Mockito.when(restTemplate.postForObject(serverProtocol + scsbUrl + RecapConstants.SCSB_DEACCESSION_URL, requestEntity, Map.class)).thenReturn(map);
         Mockito.doCallRealMethod().when(collectionServiceUtil).deAccessionItem(bibliographicMarcForm);
         collectionServiceUtil.deAccessionItem(bibliographicMarcForm);
 

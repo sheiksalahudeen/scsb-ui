@@ -41,13 +41,13 @@ public class CollectionServiceUtil {
     String scsbUrl;
 
     @Autowired
-    ItemChangeLogDetailsRepository itemChangeLogDetailsRepository;
+    private ItemChangeLogDetailsRepository itemChangeLogDetailsRepository;
 
     @Autowired
-    CustomerCodeDetailsRepository customerCodeDetailsRepository;
+    private CustomerCodeDetailsRepository customerCodeDetailsRepository;
 
     @Autowired
-    ItemDetailsRepository itemDetailsRepository;
+    private ItemDetailsRepository itemDetailsRepository;
 
     public String getServerProtocol() {
         return serverProtocol;
@@ -67,6 +67,18 @@ public class CollectionServiceUtil {
 
     public RestTemplate getRestTemplate(){
         return new RestTemplate();
+    }
+
+    public static Logger getLogger() {
+        return logger;
+    }
+
+    public CustomerCodeDetailsRepository getCustomerCodeDetailsRepository() {
+        return customerCodeDetailsRepository;
+    }
+
+    public ItemDetailsRepository getItemDetailsRepository() {
+        return itemDetailsRepository;
     }
 
     public void updateCGDForItem(BibliographicMarcForm bibliographicMarcForm) {
@@ -95,16 +107,20 @@ public class CollectionServiceUtil {
         }
     }
 
+    public DeAccessionRequest getDeAccessionRequest(){
+        return new DeAccessionRequest();
+    }
+
     public void deAccessionItem(BibliographicMarcForm bibliographicMarcForm) {
         try {
             String itemBarcode = bibliographicMarcForm.getBarcode();
             String deliveryLocation = null;
-            CustomerCodeEntity customerCodeEntity = customerCodeDetailsRepository.findByDescription(bibliographicMarcForm.getDeliveryLocation());
+            CustomerCodeEntity customerCodeEntity = getCustomerCodeDetailsRepository().findByDescription(bibliographicMarcForm.getDeliveryLocation());
             if (null != customerCodeEntity) {
                 deliveryLocation = customerCodeEntity.getCustomerCode();
             }
             String userName = bibliographicMarcForm.getUsername();
-            DeAccessionRequest deAccessionRequest = new DeAccessionRequest();
+            DeAccessionRequest deAccessionRequest =getDeAccessionRequest();
             DeAccessionItem deAccessionItem = new DeAccessionItem();
             deAccessionItem.setItemBarcode(itemBarcode);
             deAccessionItem.setDeliveryLocation(deliveryLocation);
@@ -116,7 +132,7 @@ public class CollectionServiceUtil {
             if (StringUtils.isNotBlank(resultMessage)) {
                 if (resultMessage.contains(RecapConstants.SUCCESS)) {
                     Date lastUpdatedDate = new Date();
-                    List<ItemEntity> itemEntities = itemDetailsRepository.findByBarcode(itemBarcode);
+                    List<ItemEntity> itemEntities = getItemDetailsRepository().findByBarcode(itemBarcode);
                     saveItemChangeLogEntity(itemEntities, userName, lastUpdatedDate, RecapConstants.DEACCESSION, bibliographicMarcForm.getDeaccessionNotes());
                     bibliographicMarcForm.setSubmitted(true);
                     bibliographicMarcForm.setMessage(RecapConstants.DEACCESSION_SUCCESSFUL);

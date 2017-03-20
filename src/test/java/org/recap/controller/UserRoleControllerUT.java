@@ -44,19 +44,16 @@ public class UserRoleControllerUT extends BaseTestCase {
     private static final Logger logger = LoggerFactory.getLogger(UserRoleController.class);
 
     @Autowired
-    UserRoleController userRoleController;
+    private UserRoleController userRoleController;
 
     @Mock
-    UserRoleController mockedUserRoleController;
+    private UserRoleController mockedUserRoleController;
 
     @Mock
-    UserDetailsRepository userDetailsRepository;
+    private UserDetailsRepository userDetailsRepository;
 
     @Autowired
-    RolesDetailsRepositorty rolesDetailsRepositorty;
-
-    @Autowired
-    InstitutionDetailsRepository institutionDetailsRepository;
+    private InstitutionDetailsRepository institutionDetailsRepository;
 
     @Mock
     private UserAuthUtil userAuthUtil;
@@ -65,19 +62,28 @@ public class UserRoleControllerUT extends BaseTestCase {
     private UserRoleService userRoleService;
 
     @Mock
-    Model model;
+    private UserManagementService userManagementService;
 
     @Mock
-    BindingResult bindingResult;
-
-    @Mock
-    HttpServletRequest request;
-
-    @Mock
-    HttpSession session;
+    private RolesDetailsRepositorty mockedRolesDetailsRepositorty;
 
     @Autowired
-    LoginController loginController;
+    private RolesDetailsRepositorty rolesDetailsRepositorty;
+
+    @Mock
+    private Model model;
+
+    @Mock
+    private BindingResult bindingResult;
+
+    @Mock
+    private HttpServletRequest request;
+
+    @Mock
+    private HttpSession session;
+
+    @Autowired
+    private LoginController loginController;
 
     @Test
     public void showUserRoles() throws Exception{
@@ -86,8 +92,13 @@ public class UserRoleControllerUT extends BaseTestCase {
         UserDetailsForm userDetailsForm = new UserDetailsForm();
         userDetailsForm.setSuperAdmin(true);
         userDetailsForm.setLoginInstitutionId(1);
+        List<Object> roles = new ArrayList<>();
+        List<Object> institution = new ArrayList<>();
         Mockito.when(mockedUserRoleController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(mockedUserRoleController.getUserRoleService()).thenReturn(userRoleService);
+        Mockito.when(mockedUserRoleController.getUserManagementService()).thenReturn(userManagementService);
+        Mockito.when(mockedUserRoleController.getUserRoleService().getRoles(Mockito.any())).thenReturn(roles);
+        Mockito.when(mockedUserRoleController.getUserRoleService().getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId())).thenReturn(institution);
         Mockito.when(mockedUserRoleController.getLogger()).thenReturn(logger);
         Mockito.when(mockedUserRoleController.getUserAuthUtil().getUserDetails(session, RecapConstants.BARCODE_RESTRICTED_PRIVILEGE)).thenReturn(userDetailsForm);
         Mockito.when(mockedUserRoleController.getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(RecapConstants.USER_TOKEN))).thenReturn(true);
@@ -131,12 +142,17 @@ public class UserRoleControllerUT extends BaseTestCase {
         usersEntity.setUserRole(Arrays.asList(new RoleEntity()));
         usersEntity.setInstitutionId(1);
         Integer userId = 3;
+        List<Object> roles = new ArrayList<>();
+        List<Object> institution = new ArrayList<>();
+        Mockito.when(mockedUserRoleController.getUserManagementService()).thenReturn(userManagementService);
         Mockito.when(mockedUserRoleController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(mockedUserRoleController.getUserRoleService()).thenReturn(userRoleService);
         Mockito.when(mockedUserRoleController.getLogger()).thenReturn(logger);
         Mockito.when(mockedUserRoleController.getUserDetailsRepository()).thenReturn(userDetailsRepository);
         Mockito.when(mockedUserRoleController.getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(RecapConstants.USER_TOKEN))).thenReturn(true);
         Mockito.when(mockedUserRoleController.getUserDetailsRepository().findByUserId(userId)).thenReturn(usersEntity);
+        Mockito.when(mockedUserRoleController.getUserRoleService().getRoles(Mockito.any())).thenReturn(roles);
+        Mockito.when(mockedUserRoleController.getUserRoleService().getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId())).thenReturn(institution);
         Mockito.when(mockedUserRoleController.getUserAuthUtil().getUserDetails(request.getSession(), RecapConstants.BARCODE_RESTRICTED_PRIVILEGE)).thenReturn(userDetailsForm);
         Mockito.when(mockedUserRoleController.deleteUserRole(userRoleForm.getSearchNetworkId(),3,request,10,1,2)).thenCallRealMethod();
         ModelAndView modelAndView = mockedUserRoleController.deleteUserRole(userRoleForm.getSearchNetworkId(),3,request,10,1,2);
@@ -281,6 +297,19 @@ public class UserRoleControllerUT extends BaseTestCase {
         ModelAndView modelAndView = mockedUserRoleController.saveEditUserDetails(3, "test", "test description", 2, "test@mail.com", request);
         assertNotNull(modelAndView);
         assertEquals("userRolesSearch",modelAndView.getViewName());
+
+    }
+
+    public RoleEntity saveRole(){
+        RoleEntity roleEntity = new RoleEntity();
+        roleEntity.setRoleName("test role");
+        roleEntity.setRoleDescription("test role");
+        roleEntity.setCreatedBy("test");
+        roleEntity.setCreatedDate(new Date());
+        roleEntity.setLastUpdatedDate(new Date());
+        roleEntity.setLastUpdatedBy("test");
+        RoleEntity savedRoleEntity = rolesDetailsRepositorty.save(roleEntity);
+        return savedRoleEntity;
 
     }
 
