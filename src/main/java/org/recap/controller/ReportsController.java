@@ -201,20 +201,12 @@ public class ReportsController {
 
     @RequestMapping(value = "/reports/getInstitutions", method = RequestMethod.GET)
     public ModelAndView getInstitutionForIncompletereport(HttpServletRequest request, ReportsForm reportsForm) {
-        HttpSession session = request.getSession();
-        Object isSuperAdmin = session.getAttribute(RecapConstants.SUPER_ADMIN_USER);
-        if ((boolean) isSuperAdmin) {
             List<String> instList = new ArrayList<>();
             List<InstitutionEntity> institutionCodeForSuperAdmin = institutionDetailsRepository.getInstitutionCodeForSuperAdmin();
             for (InstitutionEntity institutionEntity : institutionCodeForSuperAdmin) {
                 instList.add(institutionEntity.getInstitutionCode());
             }
             reportsForm.setIncompleteShowByInst(instList);
-        } else {
-            Object userInstitution = session.getAttribute(RecapConstants.USER_INSTITUTION);
-            reportsForm.setIncompleteShowByInst(Arrays.asList((String) userInstitution));
-
-        }
         return new ModelAndView(RecapConstants.REPORTS_INCOMPLETE_SHOW_BY_VIEW, RecapConstants.REPORTS_FORM, reportsForm);
     }
 
