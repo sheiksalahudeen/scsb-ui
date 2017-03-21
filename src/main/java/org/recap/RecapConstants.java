@@ -367,7 +367,7 @@ public class RecapConstants {
 
     public static final String PERMISSIONS_MAP ="PERMISSIONS_MAP";
 
-    public static final String USER_AUTHENTICATION="isAuthenticated";
+    public static final String IS_USER_AUTHENTICATED = "isAuthenticated";
     public static final String HTC = "HTC";
 
     public static final String USER_ISAUTHENTICATED ="true";
@@ -470,6 +470,9 @@ public class RecapConstants {
     public static final String TOKEN_SPLITER=":";
 
     public static final String OCLC_NUMBER_PATTERN="[^0-9]";
+
+    public static final String TOKEN = "token";
+    public static final String ERROR_CODE_ERROR_MESSAGE= "error.code.exception";
 
     private RecapConstants(){
         //Do nothing
