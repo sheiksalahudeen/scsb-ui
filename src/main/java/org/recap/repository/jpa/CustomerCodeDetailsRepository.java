@@ -18,4 +18,6 @@ public interface CustomerCodeDetailsRepository extends JpaRepository<CustomerCod
     CustomerCodeEntity findByDescription(@Param("description") String description);
 
     List<CustomerCodeEntity> findByCustomerCodeIn(List<String> customerCodes);
+
+    CustomerCodeEntity findByCustomerCodeAndOwningInstitutionId(@Param("customerCode") String customerCode,@Param("owningInstitutionId") Integer owningInstitutionId);
 }
