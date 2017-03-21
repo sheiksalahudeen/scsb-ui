@@ -61,53 +61,43 @@ public class LoginController {
         return RecapConstants.VIEW_LOGIN;
     }
 
-
-
     @RequestMapping(value = "/login-scsb", method = RequestMethod.GET)
-    public String login(@Valid @ModelAttribute UserForm userForm, HttpServletRequest request, Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String user = auth.getName();
-        String institutionFromRequest = userForm.getInstitution();
-        if (StringUtils.equals(institutionFromRequest, RecapConstants.NYPL)) {
-            OAuth2Authentication oauth = (OAuth2Authentication)auth;
-            String tokenString = ((OAuth2AuthenticationDetails)oauth.getDetails()).getTokenValue();
-            OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenString);
+    public String login(@Valid @ModelAttribute UserForm userForm, HttpServletRequest request, Model model, BindingResult error) {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String username = auth.getName();
+            String institutionFromRequest = userForm.getInstitution();
+            if (StringUtils.equals(institutionFromRequest, RecapConstants.NYPL)) {
+                OAuth2Authentication oauth = (OAuth2Authentication) auth;
+                String tokenString = ((OAuth2AuthenticationDetails) oauth.getDetails()).getTokenValue();
+                OAuth2AccessToken accessToken = tokenStore.readAccessToken(tokenString);
 
-            Map<String, Object> additionalInformation = accessToken.getAdditionalInformation();
-            if(null != additionalInformation) {
-                user = (String) additionalInformation.get("sub");
+                Map<String, Object> additionalInformation = accessToken.getAdditionalInformation();
+                if (null != additionalInformation) {
+                    username = (String) additionalInformation.get("sub");
+                }
             }
-        }
-
-        logger.info("passing in /login");
-        model.addAttribute("user", user);
-        final String loginScreen=RecapConstants.VIEW_LOGIN;
-        Map<String,Object> resultmap=null;
-        userForm.setUsername(user);
-        userForm.setPassword("");
-        try
-        {
-            UsernamePasswordToken token=new UsernamePasswordToken(userForm.getUsername()+ RecapConstants.TOKEN_SPLITER +userForm.getInstitution(),userForm.getPassword(),true);
-            resultmap=userAuthUtil.doAuthentication(token);
-
-            if(!(Boolean) resultmap.get("isAuthenticated"))
-            {
-                throw new Exception("Subject Authtentication Failed");
+            logger.info("passing in /login");
+            userForm.setUsername(username);
+            userForm.setPassword("");
+            UsernamePasswordToken token = new UsernamePasswordToken(userForm.getUsername() + RecapConstants.TOKEN_SPLITER + userForm.getInstitution(), userForm.getPassword(), true);
+            Map<String, Object> resultMap = userAuthUtil.doAuthentication(token);
+            if (!(Boolean) resultMap.get(RecapConstants.IS_USER_AUTHENTICATED)) {
+                String errorMessage = (String) resultMap.get(RecapConstants.USER_AUTH_ERRORMSG);
+                error.rejectValue(RecapConstants.ERROR_MESSAGE, RecapConstants.ERROR_CODE_ERROR_MESSAGE, errorMessage);
+                logger.error(RecapConstants.LOG_ERROR + errorMessage);
+                return RecapConstants.VIEW_LOGIN;
             }
-            HttpSession session=request.getSession(true);
-            session.setAttribute("token",token);
-            session.setAttribute(RecapConstants.USER_AUTH,resultmap);
-            setValuesInSession(session,resultmap);
-
+            HttpSession session = request.getSession(true);
+            session.setAttribute(RecapConstants.TOKEN, token);
+            session.setAttribute(RecapConstants.USER_AUTH, resultMap);
+            setValuesInSession(session, resultMap);
+        } catch (Exception exception) {
+            logger.error(RecapConstants.LOG_ERROR, exception);
+            logger.error("Exception occurred in authentication : " + exception.getLocalizedMessage());
+            error.rejectValue(RecapConstants.ERROR_MESSAGE, RecapConstants.ERROR_CODE_ERROR_MESSAGE, exception.getMessage());
+            return RecapConstants.VIEW_LOGIN;
         }
-        catch(Exception e)
-        {
-            logger.error(RecapConstants.LOG_ERROR,e);
-            logger.error("Exception occured in authentication : "+e.getLocalizedMessage());
-            return loginScreen;
-        }
-
-
         return "redirect:/search";
     }
 

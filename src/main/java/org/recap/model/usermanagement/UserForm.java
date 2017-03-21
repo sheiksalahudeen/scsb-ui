@@ -23,6 +23,8 @@ public class UserForm implements Serializable {
 
     private String institution;
 
+    private String errorMessage;
+
     private Set<String> permissions=new HashSet<>();
 
     public boolean isPasswordMatcher() {
@@ -87,5 +89,13 @@ public class UserForm implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 }
