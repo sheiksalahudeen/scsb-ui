@@ -298,7 +298,11 @@ public class SearchRecordsController {
             searchRecordsRequest.setTotalRecordsCount(String.valueOf(0));
             searchRecordsRequest.setTotalBibRecordsCount(String.valueOf(0));
             searchRecordsRequest.setTotalItemRecordsCount(String.valueOf(0));
+            if (searchRecordsRequest.getErrorMessage() == null) {
+                searchRecordsRequest.setErrorMessage(RecapConstants.SEARCH_RESULT_ERROR_NO_RECORDS_FOUND);
+            }
         }
+
     }
 
     private void processRequest(SearchRecordsRequest searchRecordsRequest, UserDetailsForm userDetailsForm, RedirectAttributes redirectAttributes) {
