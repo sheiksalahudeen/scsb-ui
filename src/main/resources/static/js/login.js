@@ -1,6 +1,11 @@
 /**
  * Created by rajeshbabuk on 29/12/16.
  */
+
+$(document).ready(function() {
+    loginErrorModal();
+});
+
 function toggleUsernameValidation() {
     var username = $('#networkloginid').val();
     if (isBlankValue(username)) {
@@ -21,6 +26,14 @@ function togglePasswordValidation() {
     }
 }
 
+
+function loginErrorModal() {
+    var data = $("#errorMsgs").text();
+    if(data !== '') {
+        $('#loginModal').modal('show');
+    }
+}
+
 function toggleInstitutionValidation() {
     var institution = $('#institution').val();
     if (isBlankValue(institution)) {
@@ -36,4 +49,8 @@ function isBlankValue(value) {
         return true;
     }
     return false;
-}  
+}
+
+function manualLogout() {
+    document.getElementById("logoutButton").click();
+}

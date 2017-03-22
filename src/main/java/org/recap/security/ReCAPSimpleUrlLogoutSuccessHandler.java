@@ -35,10 +35,12 @@ public class ReCAPSimpleUrlLogoutSuccessHandler extends SimpleUrlLogoutSuccessHa
         Object attribute = request.getAttribute(RecapConstants.USER_TOKEN);
         super.onLogoutSuccess(request, response, authentication);
         logger.info("Subject Logged out");
-        try{
-            userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_LOGOUT_URL,(UsernamePasswordToken) attribute);
-        }catch (Exception e) {
-            logger.error(RecapConstants.LOG_ERROR,e);
+        if (null != attribute) {
+            try{
+                userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_LOGOUT_URL,(UsernamePasswordToken) attribute);
+            }catch (Exception e) {
+                logger.error(RecapConstants.LOG_ERROR,e);
+            }
         }
         request.removeAttribute(RecapConstants.USER_TOKEN);
         request.removeAttribute(RecapConstants.RECAP_INSTITUTION_CODE);
