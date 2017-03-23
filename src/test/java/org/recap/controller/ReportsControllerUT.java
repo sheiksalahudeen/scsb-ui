@@ -11,7 +11,6 @@ import org.recap.model.search.DeaccessionItemResultsRow;
 import org.recap.model.search.IncompleteReportResultsRow;
 import org.recap.model.search.ReportsForm;
 import org.recap.repository.jpa.RequestItemDetailsRepository;
-import org.recap.security.UserManagementService;
 import org.recap.util.ReportsUtil;
 import org.recap.util.UserAuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -260,16 +260,12 @@ public class ReportsControllerUT extends BaseControllerUT {
     @Test
     public void getInstitutionForIncompletereport() throws Exception{
         ReportsForm reportsForm = new ReportsForm();
-        when(request.getSession()).thenReturn(session);
-        when(session.getAttribute(RecapConstants.SUPER_ADMIN_USER)).thenReturn(false);
-        when(session.getAttribute(RecapConstants.USER_INSTITUTION)).thenReturn("CUL");
         ModelAndView modelAndView = reportsControllerWired.getInstitutionForIncompletereport(request, reportsForm);
         assertNotNull(modelAndView);
         List<String> incompleteShowByInst = reportsForm.getIncompleteShowByInst();
         assertNotNull(incompleteShowByInst);
-        for (String inst : incompleteShowByInst) {
-            assertEquals("CUL",inst);
-        }
+        boolean instutions = incompleteShowByInst.containsAll(Arrays.asList("PUL", "CUL", "NYPL"));
+        assertEquals(true,instutions);
         assertEquals("reports :: #incompleteShowBy",modelAndView.getViewName());
     }
 
