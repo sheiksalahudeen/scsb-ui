@@ -1,11 +1,12 @@
 package org.recap.util;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
 import org.recap.spring.ApplicationContextProvider;
+import org.recap.spring.PropertyValueProvider;
 import org.springframework.context.ApplicationContext;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -27,17 +28,32 @@ public class HelperUtil {
         if(StringUtils.isBlank(institution)) {
             institution = (String) request.getAttribute(RecapConstants.RECAP_INSTITUTION_CODE);
         }
-        if(StringUtils.isBlank(institution)) {
-            Cookie[] cookies = request.getCookies();
-            if (null != cookies) {
-                for(Cookie cookie : cookies) {
-                    if(StringUtils.equals(cookie.getName(), RecapConstants.RECAP_INSTITUTION_CODE)) {
-                        institution = cookie.getValue();
-                    }
-                }
+        return institution;
+    }
+
+    public static String getLogoutUrl(String institutionCode) {
+        String casLogoutUrl;
+        if (StringUtils.equals(institutionCode, RecapConstants.NYPL)) {
+            casLogoutUrl = RecapConstants.VIEW_HOME; // Todo : Need to get the corresponding logout url from NYPL
+        } else {
+            String urlProperty = RecapConstants.CAS + institutionCode + RecapConstants.SERVICE_LOGOUT;
+            PropertyValueProvider propertyValueProvider = HelperUtil.getBean(PropertyValueProvider.class);
+            String url = propertyValueProvider.getProperty(urlProperty);
+            String redirectUri= propertyValueProvider.getProperty(RecapConstants.REDIRECT_URI);
+            casLogoutUrl = url + redirectUri;
+        }
+        return casLogoutUrl;
+    }
+
+    public static void logoutFromShiro(Object attribute) {
+        if (null != attribute) {
+            try{
+                UserAuthUtil userAuthUtil = HelperUtil.getBean(UserAuthUtil.class);
+                userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_LOGOUT_URL,(UsernamePasswordToken) attribute);
+            }catch (Exception e) {
+                e.printStackTrace();
             }
         }
-        return institution;
     }
 }
 

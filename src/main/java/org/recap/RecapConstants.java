@@ -433,6 +433,7 @@ public class RecapConstants {
 
     //UserRoleController
     public static final String VIEW_LOGIN="login";
+    public static final String VIEW_HOME="/";
     public static final String VIEW_REQUEST_RESULT_TABLE="userRolesSearch :: #request-result-table";
     public static final String USER_ROLE_FORM="userRoleForm";
 

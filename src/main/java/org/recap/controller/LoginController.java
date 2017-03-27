@@ -53,10 +53,10 @@ public class LoginController {
 
     @RequestMapping(value="/",method= RequestMethod.GET)
     public String loginScreen(HttpServletRequest request, Model model, @ModelAttribute UserForm userForm) {
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        if(null != auth && !isAnonymousUser(auth)) {
-//            return "redirect:/search";
-//        }
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(null != auth && !isAnonymousUser(auth)) {
+            return "redirect:/search";
+        }
         logger.info("Login Screen called");
         return RecapConstants.VIEW_LOGIN;
     }
@@ -88,7 +88,7 @@ public class LoginController {
                 logger.error(RecapConstants.LOG_ERROR + errorMessage);
                 return RecapConstants.VIEW_LOGIN;
             }
-            HttpSession session = request.getSession(true);
+            HttpSession session = request.getSession(false);
             session.setAttribute(RecapConstants.TOKEN, token);
             session.setAttribute(RecapConstants.USER_AUTH, resultMap);
             setValuesInSession(session, resultMap);

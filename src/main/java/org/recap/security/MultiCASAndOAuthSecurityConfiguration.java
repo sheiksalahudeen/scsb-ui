@@ -139,5 +139,11 @@ public class MultiCASAndOAuthSecurityConfiguration extends WebSecurityConfigurer
         web.ignoring().antMatchers("/fonts/**").antMatchers("/images/**").antMatchers("/js/**")
                 .antMatchers("/css/**").antMatchers("/lib/**");
     }
+
+    @Bean
+    public ReCAPHttpSessionEventPublisher httpSessionEventPublisher() {
+        return new ReCAPHttpSessionEventPublisher();
+    }
+
 }
 
