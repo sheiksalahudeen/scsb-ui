@@ -78,10 +78,12 @@
                                         <div class="buscador-principal">
                                             <div id="ReportRequestsection">
                                                 <div class="row" style="padding-left: 20px">
-                                                    <div class="col-md-3 col-sm-3 padding-right-50">
+                                                    <div class="col-md-3 col-sm-3 padding-right-50" style="margin-top:26px">
                                                         <div class="form-group">
+                                                            <div>
                                                             <label for="ReportShowBy">Show By <span
                                                                     class="error-color">*</span> </label>
+                                                            </div>
                                                             <div class="select-holder">
                                                                 <select class="form-control themed-input themed-select"
                                                                         id="ReportShowBy" name="ReportShowBy"
@@ -97,10 +99,11 @@
                                                                 This Field is Required</p>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-2 col-sm-2 col-lg-2">
+                                                    <div class="col-md-3 col-sm-3 col-lg-2 padding-right-50">
                                                             <div class="form-group">
                                                                 <label for="RequestDateRangefrom">Date Range <span
-                                                                        class="error-color">*</span> </label>
+                                                                        class="error-color">*</span> </label><br/>
+                                                                <label>From</label>
                                                                 <div class='input-group date'
                                                                      id="reportrequesdatepickerfrom">
                                                                     <input type='text' placeholder="MM/DD/YYYY"
@@ -118,15 +121,10 @@
                                                                     Required</p>
                                                             </div>
                                                     </div>
-                                                    <div class="col-md-1 col-sm-1 col-lg-1 padding-0 text-center" style="margin-top: 10px;">
-                                                        <label class="invisible show margin-btm-10 hidden-xs">to</label>
-                                                        <div class="form-group">to</div>
-                                                    </div>
-                                                    <div class="col-md-2 col-sm-2 col-lg-2">
-                                                            <label for="RequestDateRangeto"
-                                                                   class="invisible show hidden-xs">Date Range
-                                                                <span class="error-color">*</span> </label>
+                                                    <div class="col-md-3 col-sm-3 col-lg-2 padding-right-50" style="margin-top: 3px;">
                                                             <div class="form-group">
+                                                                <br/>
+                                                                <label>To</label>
                                                                 <div class='input-group date'
                                                                      id="reportrequesdatepickerto">
                                                                     <input type='text' placeholder="MM/DD/YYYY"
@@ -143,10 +141,8 @@
                                                                    style="display: none;color: red;">This Field is
                                                                     Required</p>
                                                             </div>
-                                                       <!-- <div class="col-md-4 col-sm-5">
-                                                        </div>-->
                                                     </div>
-                                                    <div class="col-lg-1 col-md-1 col-md-offset-1 col-sm-1" style="margin-top: -5px;margin-left: 15px;">
+                                                    <div class="col-lg-1 col-md-3 col-sm-3" style="margin-top: 18px;">
                                                         <button class="btn themed-button themed-button-search"
                                                                 id="searchButton"
                                                                 type="submit">Generate Report
@@ -371,12 +367,12 @@
                                     <div class="search-bar">
                                         <div class="buscador-principal">
                                             <div class="row">
-                                                <div class="col-md-5">
-                                                    <div class="col-md-4">
-                                                        <div class="row" style="padding-left: 20px">
+                                                <div class="col-md-6 col-sm-8">
+                                                    <div class="col-md-5 col-sm-5 padding-right-50">
                                                             <div class="form-group">
                                                                 <label for="AccessionDeaccessionDateRangefrom">Date Range
                                                                     <span class="error-color">*</span> </label>
+                                                                <br/><label>From</label>
                                                                 <div class='input-group date'
                                                                      id="reportaccessiondeaccessionsectiondatepickerfrom">
                                                                     <input type='text' class="form-control themed-input"
@@ -394,20 +390,12 @@
                                                                    style="display: none;color: red">This Field is
                                                                     Required</p>
                                                             </div>
-                                                        </div>
                                                     </div>
-                                                    <div class="col-md-1 col-sm-1 padding-0 text-center" style="margin-left: 15px">
-                                                        <label class="invisible show margin-btm-10 hidden-xs">to</label>
-                                                        <div class="form-group" style="margin-left: 5px;margin-top: 20px;">to</div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="row" style="padding-left: 20px">
-                                                            <label for="AccessionDeaccessionDateRangeto"
-                                                                   class="invisible show hidden-xs">Date Range to <span
-                                                                    class="error-color">*</span> </label>
+                                                    <div class="col-md-5 col-sm-5 padding-right-50" style="margin-top: 5px;">
                                                             <div class="form-group">
+                                                                <br/><label>To</label>
                                                                 <div class='input-group date'
-                                                                     id="reportaccessiondeaccessionsectiondatepickerto" style="margin-left: 15px">
+                                                                     id="reportaccessiondeaccessionsectiondatepickerto">
                                                                     <input type='text' class="form-control themed-input"
                                                                            placeholder="MM/DD/YYYY"
                                                                            id="AccessionDeaccessionDateRangeto"
@@ -419,16 +407,15 @@
                                                                             </span>
                                                                 </div>
                                                                 <p id="deaccessionErrorText"
-                                                                   style="display: none;color: red;margin-left: 15px;">This Field is
+                                                                   style="display: none;color: red;">This Field is
                                                                     Required</p>
                                                             </div>
-                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-3" style="margin-top: -5px;">
+                                                    <div class="col-md-2 col-sm-2" style="margin-top: 20px;">
                                                         <button class="btn themed-button themed-button-search" type="submit"
                                                                 id="accessionSearchButton">Generate Report
                                                         </button>
+                                                    </div>
                                                 </div>
                                             </div>
 
