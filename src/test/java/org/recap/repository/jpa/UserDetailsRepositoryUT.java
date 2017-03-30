@@ -69,7 +69,7 @@ public class UserDetailsRepositoryUT extends BaseTestCase {
         assertNotNull(usersEntity);
         InstitutionEntity institutionEntity = new InstitutionEntity();
         institutionEntity.setInstitutionId(1);
-        Page<UsersEntity> usersEntity1 = userDetailsRepository.findByInstitutionEntity(institutionEntity ,new PageRequest(1, 10));
+        Page<UsersEntity> usersEntity1 = userDetailsRepository.findByInstitutionEntity(1 ,new PageRequest(1, 10));
         assertNotNull(usersEntity1);
     }
 
@@ -87,7 +87,7 @@ public class UserDetailsRepositoryUT extends BaseTestCase {
         assertNotNull(usersEntity);
         InstitutionEntity institutionEntity = new InstitutionEntity();
         institutionEntity.setInstitutionId(1);
-        Page<UsersEntity> usersEntity1 = userDetailsRepository.findByLoginIdAndInstitutionEntity(usersEntity.getLoginId(),institutionEntity ,new PageRequest(1, 10));
+        Page<UsersEntity> usersEntity1 = userDetailsRepository.findByLoginIdAndInstitutionEntity(usersEntity.getLoginId(),1 ,new PageRequest(1, 10));
         assertNotNull(usersEntity1);
     }
 

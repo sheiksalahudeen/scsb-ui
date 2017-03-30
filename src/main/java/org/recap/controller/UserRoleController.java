@@ -427,48 +427,40 @@ public class UserRoleController {
         userRoleForm.setAllowCreateEdit(true);
         userRoleForm.setSubmitted(true);
 
-        searchAndSetResult(userRoleForm, userDetailsForm.isSuperAdmin(), userId);
+        searchAndSetResult(userRoleForm, userDetailsForm.isSuperAdmin(), userId,request);
     }
 
-    private void searchAndSetResult(UserRoleForm userRoleForm, boolean superAdmin, Integer userId) {
+    private void searchAndSetResult(UserRoleForm userRoleForm, boolean superAdmin, Integer userId,HttpServletRequest request) {
         if (StringUtils.isBlank(userRoleForm.getSearchNetworkId()) && StringUtils.isBlank(userRoleForm.getUserEmailId())) {
             logger.debug("Search All Users");
             Page<UsersEntity> usersEntities = getUserRoleService().searchUsers(userRoleForm, superAdmin);
-            userRoleForm.setUserRoleFormList(setFormValues(usersEntities.getContent(), userId));
+            userRoleForm.setUserRoleFormList(setFormValues(usersEntities.getContent(), userId,request));
             userRoleForm.setShowResults(true);
-            if(superAdmin){
-                userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements()));
-            }else{
-                userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements() - 1));
-            }
+            userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements()));
             userRoleForm.setTotalPageCount(usersEntities.getTotalPages());
         } else if (StringUtils.isNotBlank(userRoleForm.getSearchNetworkId()) && StringUtils.isBlank(userRoleForm.getUserEmailId())) {
             logger.debug("Search Users By NetworkId :" + userRoleForm.getSearchNetworkId());
             Page<UsersEntity> usersEntities = getUserRoleService().searchByNetworkId(userRoleForm, superAdmin);
-            getUsersInformation(userRoleForm, superAdmin, userId, usersEntities,RecapConstants.NETWORK_LOGIN_ID_DOES_NOT_EXIST);
+            getUsersInformation(userRoleForm, superAdmin, userId, usersEntities,RecapConstants.NETWORK_LOGIN_ID_DOES_NOT_EXIST,request);
         } else if (StringUtils.isBlank(userRoleForm.getSearchNetworkId()) && StringUtils.isNotBlank(userRoleForm.getUserEmailId())) {
             logger.debug("Search Users by Email Id:" + userRoleForm.getUserEmailId());
             Page<UsersEntity> usersEntities = getUserRoleService().searchByUserEmailId(userRoleForm, superAdmin);
-            getUsersInformation(userRoleForm, superAdmin, userId, usersEntities, RecapConstants.EMAILID_ID_DOES_NOT_EXIST);
+            getUsersInformation(userRoleForm, superAdmin, userId, usersEntities, RecapConstants.EMAILID_ID_DOES_NOT_EXIST,request);
         } else if (StringUtils.isNotBlank(userRoleForm.getSearchNetworkId()) && StringUtils.isNotBlank(userRoleForm.getUserEmailId())) {
             logger.debug("Search Users by Network Id : " + userRoleForm.getSearchNetworkId() + " and Email Id : " + userRoleForm.getUserEmailId());
             Page<UsersEntity> usersEntities = getUserRoleService().searchByNetworkIdAndUserEmailId(userRoleForm, superAdmin);
-            getUsersInformation(userRoleForm, superAdmin, userId, usersEntities,RecapConstants.NETWORK_LOGIN_ID_AND_EMAILID_ID_DOES_NOT_EXIST);
+            getUsersInformation(userRoleForm, superAdmin, userId, usersEntities,RecapConstants.NETWORK_LOGIN_ID_AND_EMAILID_ID_DOES_NOT_EXIST,request);
         } else {
             userRoleForm.setShowResults(false);
         }
     }
 
-    private void getUsersInformation(UserRoleForm userRoleForm, boolean superAdmin, Integer userId, Page<UsersEntity> usersEntities,String message) {
+    private void getUsersInformation(UserRoleForm userRoleForm, boolean superAdmin, Integer userId, Page<UsersEntity> usersEntities,String message,HttpServletRequest request) {
         List<UsersEntity> userEntity = usersEntities.getContent();
         if (userEntity != null && !userEntity.isEmpty()) {
-            userRoleForm.setUserRoleFormList(setFormValues(usersEntities.getContent(), userId));
+            userRoleForm.setUserRoleFormList(setFormValues(usersEntities.getContent(), userId,request));
             userRoleForm.setShowResults(true);
-            if(superAdmin){
-                userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements()));
-            }else{
-                userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements() - 1));
-            }
+            userRoleForm.setTotalRecordsCount(String.valueOf(usersEntities.getTotalElements()));
             userRoleForm.setTotalPageCount(usersEntities.getTotalPages());
         } else {
             userRoleForm.setMessage(message);
@@ -477,27 +469,46 @@ public class UserRoleController {
         }
     }
 
-    private List<UserRoleForm> setFormValues(List<UsersEntity> usersEntities, Integer userId) {
+    private List<UserRoleForm> setFormValues(List<UsersEntity> usersEntities, Integer userId,HttpServletRequest request) {
         List<UserRoleForm> userRoleFormList = new ArrayList<>();
-        appendValues(usersEntities, userRoleFormList, userId);
+        appendValues(usersEntities, userRoleFormList, userId,request);
         return userRoleFormList;
     }
 
-    private void appendValues(Collection<UsersEntity> usersEntities, List<UserRoleForm> userRoleFormList, Integer userId) {
+    private void appendValues(Collection<UsersEntity> usersEntities, List<UserRoleForm> userRoleFormList, Integer userId,HttpServletRequest request) {
         for (UsersEntity usersEntity : usersEntities) {
             InstitutionEntity institutionEntity = usersEntity.getInstitutionEntity();
-            if (!userId.equals(usersEntity.getUserId()) && !usersEntity.getUserId().equals(userManagementService.getSuperAdminRoleId())) {
-                UserRoleForm userRoleDeatailsForm = new UserRoleForm();
-                StringBuilder rolesBuffer = new StringBuilder();
-                userRoleDeatailsForm.setUserId(usersEntity.getUserId());
-                userRoleDeatailsForm.setInstitutionId(institutionEntity.getInstitutionId());
-                userRoleDeatailsForm.setInstitutionName(institutionEntity.getInstitutionName());
-                userRoleDeatailsForm.setNetworkLoginId(usersEntity.getLoginId());
-                for (RoleEntity roleEntity : usersEntity.getUserRole()) {
-                    rolesBuffer.append(roleEntity.getRoleName() + ",");
+            List<RoleEntity> userRole = usersEntity.getUserRole();
+            boolean addUsers = true;
+            boolean superAdminRole = false;
+            HttpSession session = request.getSession();
+            Object isSuperAdmin = session.getAttribute(RecapConstants.SUPER_ADMIN_USER);
+            String userName = (String) session.getAttribute(RecapConstants.USER_NAME);
+            if(!(boolean)isSuperAdmin){
+                for (RoleEntity superAdminCheck : userRole) {
+                    if(superAdminCheck.getRoleName().equals(RecapConstants.ROLES_SUPER_ADMIN)){
+                        addUsers = false;
+                    }
                 }
-                userRoleDeatailsForm.setRoleName(roles(rolesBuffer.toString(), ","));
-                userRoleFormList.add(userRoleDeatailsForm);//Added all user's details
+            }
+            if (addUsers) {
+                    UserRoleForm userRoleDeatailsForm = new UserRoleForm();
+                    StringBuilder rolesBuffer = new StringBuilder();
+                    userRoleDeatailsForm.setUserId(usersEntity.getUserId());
+                    userRoleDeatailsForm.setInstitutionId(institutionEntity.getInstitutionId());
+                    userRoleDeatailsForm.setInstitutionName(institutionEntity.getInstitutionName());
+                    userRoleDeatailsForm.setNetworkLoginId(usersEntity.getLoginId());
+                    for (RoleEntity roleEntity : usersEntity.getUserRole()) {
+                        superAdminRole = RecapConstants.ROLES_SUPER_ADMIN.equals(roleEntity.getRoleName());
+                        rolesBuffer.append(roleEntity.getRoleName() + ",");
+                    }
+                    userRoleDeatailsForm.setRoleName(roles(rolesBuffer.toString(), ","));
+                    if (userName.equals(userRoleDeatailsForm.getNetworkLoginId()) || superAdminRole) {
+                        userRoleDeatailsForm.setShowEditDeleteIcon(false);
+                    } else {
+                        userRoleDeatailsForm.setShowEditDeleteIcon(true);
+                    }
+                    userRoleFormList.add(userRoleDeatailsForm);//Added all user's details
             }
         }
     }

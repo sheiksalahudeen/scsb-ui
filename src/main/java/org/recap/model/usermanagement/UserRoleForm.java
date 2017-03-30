@@ -67,6 +67,8 @@ public class UserRoleForm {
     private List<Integer> editSelectedForCreate = new ArrayList<>();
     private List<UserRoleForm> userRoleFormList = new ArrayList<>();
 
+    private boolean showEditDeleteIcon=true;
+
     private String createdBy;
     private String lastUpdatedBy;
 
@@ -520,5 +522,13 @@ public class UserRoleForm {
 
     public void setShowUserSearchView(boolean showUserSearchView) {
         this.showUserSearchView = showUserSearchView;
+    }
+
+    public boolean isShowEditDeleteIcon() {
+        return showEditDeleteIcon;
+    }
+
+    public void setShowEditDeleteIcon(boolean showEditDeleteIcon) {
+        this.showEditDeleteIcon = showEditDeleteIcon;
     }
 }

@@ -42,7 +42,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         } else {
             InstitutionEntity institutionEntity = new InstitutionEntity();
             institutionEntity.setInstitutionId(userRoleForm.getInstitutionId());
-            return userDetailsRepository.findByInstitutionEntity(institutionEntity, pageable);
+            return userDetailsRepository.findByInstitutionEntity(userRoleForm.getInstitutionId(), pageable);
         }
 
     }
@@ -55,7 +55,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         } else {
             InstitutionEntity institutionEntity = new InstitutionEntity();
             institutionEntity.setInstitutionId(userRoleForm.getInstitutionId());
-            return userDetailsRepository.findByLoginIdAndInstitutionEntity(userRoleForm.getSearchNetworkId(), institutionEntity, pageable);
+            return userDetailsRepository.findByLoginIdAndInstitutionEntity(userRoleForm.getSearchNetworkId(), userRoleForm.getInstitutionId(), pageable);
         }
     }
 
