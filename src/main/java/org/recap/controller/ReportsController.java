@@ -78,7 +78,6 @@ public class ReportsController {
             return UserManagementService.unAuthorizedUser(session, "Reports", logger);
         }
 
-
     }
 
     @ResponseBody
@@ -129,7 +128,7 @@ public class ReportsController {
 
 
     @ResponseBody
-    @RequestMapping(value = "/reports/first", method = RequestMethod.GET)
+    @RequestMapping(value = "/reports/first", method = RequestMethod.POST)
     public ModelAndView searchFirst(@Valid ReportsForm reportsForm,
                                     Model model) throws Exception {
         if ((RecapConstants.REPORTS_INCOMPLETE_RECORDS).equals(reportsForm.getRequestType())) {
@@ -145,7 +144,7 @@ public class ReportsController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/reports/previous", method = RequestMethod.GET)
+    @RequestMapping(value = "/reports/previous", method = RequestMethod.POST)
     public ModelAndView searchPrevious(@Valid ReportsForm reportsForm,
                                        Model model) throws Exception {
         if ((RecapConstants.REPORTS_INCOMPLETE_RECORDS).equals(reportsForm.getRequestType())) {
@@ -160,7 +159,7 @@ public class ReportsController {
 
 
     @ResponseBody
-    @RequestMapping(value = "/reports/next", method = RequestMethod.GET)
+    @RequestMapping(value = "/reports/next", method = RequestMethod.POST)
     public ModelAndView searchNext(@Valid ReportsForm reportsForm,
                                    Model model) throws Exception {
         if ((RecapConstants.REPORTS_INCOMPLETE_RECORDS).equals(reportsForm.getRequestType())) {
@@ -175,7 +174,7 @@ public class ReportsController {
 
 
     @ResponseBody
-    @RequestMapping(value = "/reports/last", method = RequestMethod.GET)
+    @RequestMapping(value = "/reports/last", method = RequestMethod.POST)
     public ModelAndView searchLast(@Valid ReportsForm reportsForm,
                                    Model model) throws Exception {
         if ((RecapConstants.REPORTS_INCOMPLETE_RECORDS).equals(reportsForm.getRequestType())) {

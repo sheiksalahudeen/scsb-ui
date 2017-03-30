@@ -394,7 +394,7 @@ function first() {
     var url = "/reports/first";
     $.ajax({
         url: url,
-        type: 'get',
+        type: 'POST',
         data: $form.serialize(),
         success: function (response) {
             if($('#ReportIncompleteRadio').is(':checked')){
@@ -412,7 +412,7 @@ function previous() {
     var url = "/reports/previous";
     $.ajax({
         url: url,
-        type: 'get',
+        type: 'POST',
         data: $form.serialize(),
         success: function (response) {
             if($('#ReportIncompleteRadio').is(':checked')){
@@ -430,7 +430,7 @@ function next() {
     var url = "/reports/next";
     $.ajax({
         url: url,
-        type: 'get',
+        type: 'Post',
         data: $form.serialize(),
         success: function (response) {
             if($('#ReportIncompleteRadio').is(':checked')){
@@ -448,7 +448,7 @@ function last() {
     var url = "/reports/last";
     $.ajax({
         url: url,
-        type: 'get',
+        type: 'POST',
         data: $form.serialize(),
         success: function (response) {
             if($('#ReportIncompleteRadio').is(':checked')){

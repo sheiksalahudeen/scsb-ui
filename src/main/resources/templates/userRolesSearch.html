@@ -144,12 +144,12 @@
                                                     <td>
                                                         <span th:text="${userRolesL.roleName}"></span>
                                                     </td>
-                                                    <td class="text-center"><a id="userDataEdit" href="#"><span
-                                                            class="glyphicon glyphicon-pencil"
+                                                    <td class="text-center"><a id="userDataEdit" href="#">
+                                                        <span th:class="${userRolesL.showEditDeleteIcon} ? 'glyphicon glyphicon-pencil' : '' "
                                                             th:title="'Edit User'"
                                                             th:onclick="'editUser(\'' + ${userRolesL.userId} + '\',\'' + ${userRolesL.networkLoginId} + '\')'"></span></a>
-                                                        <a id="userDataDelete" href="#"><span
-                                                                class="glyphicon glyphicon-trash"
+                                                        <a id="userDataDelete" href="#">
+                                                            <span th:class="${userRolesL.showEditDeleteIcon} ? 'glyphicon glyphicon-trash' : '' "
                                                                 th:title="'Delete User'"
                                                                 th:onclick="'deleteUserRole(\'' + ${userRolesL.networkLoginId} + '\',\'' + ${userRolesL.userId} + '\')'"></span></a>
                                                     </td>
