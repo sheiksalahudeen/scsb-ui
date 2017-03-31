@@ -58,10 +58,6 @@ public class CollectionController {
         return marcRecordViewUtil;
     }
 
-    public void setMarcRecordViewUtil(MarcRecordViewUtil marcRecordViewUtil) {
-        this.marcRecordViewUtil = marcRecordViewUtil;
-    }
-
     public UserAuthUtil getUserAuthUtil() {
         return userAuthUtil;
     }
@@ -74,25 +70,10 @@ public class CollectionController {
         return collectionServiceUtil;
     }
 
-    public void setCollectionServiceUtil(CollectionServiceUtil collectionServiceUtil) {
-        this.collectionServiceUtil = collectionServiceUtil;
-    }
-
-    public SearchUtil getSearchUtil() {
-        return searchUtil;
-    }
-
-    public void setSearchUtil(SearchUtil searchUtil) {
-        this.searchUtil = searchUtil;
-    }
-
     public RequestItemDetailsRepository getRequestItemDetailsRepository() {
         return requestItemDetailsRepository;
     }
 
-    public void setRequestItemDetailsRepository(RequestItemDetailsRepository requestItemDetailsRepository) {
-        this.requestItemDetailsRepository = requestItemDetailsRepository;
-    }
 
     @RequestMapping("/collection")
     public String collection(Model model,HttpServletRequest request) {
