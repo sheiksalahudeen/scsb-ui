@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.recap.BaseTestCase;
 import org.recap.RecapConstants;
+import org.recap.model.deaccession.DeAccessionItem;
 import org.recap.model.deaccession.DeAccessionRequest;
 import org.recap.model.jpa.BibliographicEntity;
 import org.recap.model.jpa.CustomerCodeEntity;
@@ -185,14 +186,20 @@ public class CollectionServiceUtilUT extends BaseTestCase {
         assertEquals(Boolean.FALSE, fetchedItemEntity.isDeleted());
 
         DeAccessionRequest deAccessionRequest = new DeAccessionRequest();
+        DeAccessionItem deAccessionItem = new DeAccessionItem();
+        deAccessionItem.setDeliveryLocation("PB");
+        deAccessionItem.setItemBarcode("3324565886843358");
+        deAccessionRequest.setUsername("john");
+        deAccessionRequest.setDeAccessionItems(Arrays.asList(deAccessionItem));
 
-        String barcode = fetchedBibliographicEntity.getItemEntities().get(0).getBarcode();
+        String itemBarcode = fetchedBibliographicEntity.getItemEntities().get(0).getBarcode();
         BibliographicMarcForm bibliographicMarcForm = new BibliographicMarcForm();
         bibliographicMarcForm.setItemId(itemId);
         bibliographicMarcForm.setUsername("test");
-        bibliographicMarcForm.setBarcode(barcode);
+        bibliographicMarcForm.setBarcode(itemBarcode);
         bibliographicMarcForm.setCgdChangeNotes("Notes for deaccession");
         Map<String,String> map = new HashMap<>();
+        map.put(itemBarcode,RecapConstants.SUCCESS);
         collectionServiceUtil = Mockito.mock(CollectionServiceUtil.class);
         Mockito.when(collectionServiceUtil.getDeAccessionRequest()).thenReturn(deAccessionRequest);
         Mockito.when(collectionServiceUtil.getCustomerCodeDetailsRepository()).thenReturn(customerCodeDetailsRepository);
@@ -201,6 +208,9 @@ public class CollectionServiceUtilUT extends BaseTestCase {
         Mockito.when(collectionServiceUtil.getRestTemplate()).thenReturn(restTemplate);
         Mockito.when(collectionServiceUtil.getServerProtocol()).thenReturn(serverProtocol);
         Mockito.when(collectionServiceUtil.getScsbUrl()).thenReturn(scsbUrl);
+        Mockito.when(collectionServiceUtil.getItemDetailsRepository()).thenReturn(mockedItemDetailsRepository);
+        Mockito.when(collectionServiceUtil.getItemDetailsRepository().findByBarcode(itemBarcode)).thenReturn(Arrays.asList(fetchedItemEntity));
+        Mockito.when(collectionServiceUtil.getItemChangeLogDetailsRepository()).thenReturn(mockedItemChangeLogDetailsRepository);
         Mockito.when(restTemplate.postForObject(serverProtocol + scsbUrl + RecapConstants.SCSB_DEACCESSION_URL, requestEntity, Map.class)).thenReturn(map);
         Mockito.doCallRealMethod().when(collectionServiceUtil).deAccessionItem(bibliographicMarcForm);
         collectionServiceUtil.deAccessionItem(bibliographicMarcForm);
@@ -211,6 +221,10 @@ public class CollectionServiceUtilUT extends BaseTestCase {
         assertNotNull(fetchedItemEntityAfterDeaccession);
         assertNotNull(fetchedItemEntityAfterDeaccession.getItemId());
         assertEquals(itemId, fetchedItemEntityAfterDeaccession.getItemId());
+        assertNotNull(deAccessionItem.getDeliveryLocation());
+        assertNotNull(deAccessionItem.getItemBarcode());
+        assertNotNull(deAccessionRequest.getUsername());
+        assertNotNull(deAccessionRequest.getDeAccessionItems());
         //assertEquals(Boolean.TRUE, fetchedItemEntityAfterDeaccession.isDeleted());
     }
 

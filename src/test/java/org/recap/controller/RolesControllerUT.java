@@ -5,6 +5,7 @@ import org.mockito.Mock;
 import org.recap.BaseTestCase;
 import org.recap.model.jpa.RoleEntity;
 import org.recap.model.search.RolesForm;
+import org.recap.model.search.RolesSearchResult;
 import org.recap.repository.jpa.PermissionsDetailsRepository;
 import org.recap.repository.jpa.RolesDetailsRepositorty;
 import org.recap.security.UserManagementService;
@@ -203,10 +204,20 @@ public class RolesControllerUT extends BaseTestCase {
         rolesForm.setEditPermissionNames("");
         rolesForm.setErrorMessage("");
         rolesForm.setMessage("");
+        rolesForm.setRoleDescription("testing");
+        rolesForm.setNewRole(true);
+        rolesForm.setEditPermissionNames("Admin");
+        rolesForm.setPermissionNamesForDelete("admin");
+        rolesForm.setEditPermissionName(Arrays.asList("admin"));
         rolesForm.setSelectedPermissionNames(new ArrayList<String>());
         ModelAndView modelAndView = rolesController.clearPage(rolesForm,model);
         assertNotNull(modelAndView);
         assertEquals("roles",modelAndView.getViewName());
+        assertNotNull(rolesForm.isNewRole());
+        assertNotNull(rolesForm.getEditPermissionNames());
+        assertNotNull(rolesForm.getPermissionNamesForDelete());
+        assertNotNull(rolesForm.getEditPermissionName());
+        rolesForm.reset();
     }
 
     @Test
@@ -219,6 +230,20 @@ public class RolesControllerUT extends BaseTestCase {
         ModelAndView modelAndView = rolesController.onPageSizeChange(rolesForm,model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
+    }
+
+    @Test
+    public void testRolesSearchResult(){
+        RolesSearchResult rolesSearchResult = new RolesSearchResult();
+        rolesSearchResult.setRolesName("admin");
+        rolesSearchResult.setRolesDescription("admin");
+        rolesSearchResult.setPermissionName("admin");
+        rolesSearchResult.setRoleId(1);
+
+        assertNotNull(rolesSearchResult.getRolesDescription());
+        assertNotNull(rolesSearchResult.getRolesName());
+        assertNotNull(rolesSearchResult.getPermissionName());
+        assertNotNull(rolesSearchResult.getRoleId());
     }
 
 

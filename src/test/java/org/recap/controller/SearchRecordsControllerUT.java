@@ -4,12 +4,16 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.recap.RecapConstants;
+import org.recap.model.jpa.InstitutionEntity;
 import org.recap.model.search.SearchItemResultRow;
 import org.recap.model.search.SearchRecordsRequest;
 import org.recap.model.search.SearchRecordsResponse;
 import org.recap.model.search.SearchResultRow;
+import org.recap.model.usermanagement.UserDetailsForm;
+import org.recap.repository.jpa.InstitutionDetailsRepository;
 import org.recap.security.UserManagementService;
 import org.recap.util.CsvUtil;
 import org.recap.util.SearchUtil;
@@ -73,6 +77,9 @@ public class SearchRecordsControllerUT extends BaseControllerUT{
 
     @Mock
     RedirectAttributes redirectAttributes;
+
+    @Mock
+    InstitutionDetailsRepository institutionDetailsRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -178,9 +185,18 @@ public class SearchRecordsControllerUT extends BaseControllerUT{
     @Test
     public void requestRecords() throws Exception{
         searchRecordsRequest = new SearchRecordsRequest();
-        ModelAndView modelAndView1 = new ModelAndView();
-        modelAndView1.setViewName("searchRecords");
-        when(searchRecordsController.requestRecords(searchRecordsRequest,bindingResult,model, request, redirectAttributes)).thenReturn(modelAndView1);
+        searchRecordsRequest.setErrorMessage("test");
+        UserDetailsForm userDetailsForm = new UserDetailsForm();
+        userDetailsForm.setSuperAdmin(true);
+        userDetailsForm.setLoginInstitutionId(1);
+        InstitutionEntity institutionEntity = new InstitutionEntity();
+        institutionEntity.setInstitutionCode("UC");
+        institutionEntity.setInstitutionName("University of Chicago");
+        Mockito.when(searchRecordsController.getUserAuthUtil()).thenReturn(userAuthUtil);
+        Mockito.when(searchRecordsController.getInstitutionDetailsRepository()).thenReturn(institutionDetailsRepository);
+        Mockito.when(searchRecordsController.getInstitutionDetailsRepository().findByInstitutionId(userDetailsForm.getLoginInstitutionId())).thenReturn(institutionEntity);
+        Mockito.when(searchRecordsController.getUserAuthUtil().getUserDetails(request.getSession(),RecapConstants.REQUEST_PRIVILEGE)).thenReturn(userDetailsForm);
+        when(searchRecordsController.requestRecords(searchRecordsRequest,bindingResult,model, request, redirectAttributes)).thenCallRealMethod();
         ModelAndView modelAndView = searchRecordsController.requestRecords(searchRecordsRequest,bindingResult,model, request, redirectAttributes);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
@@ -194,7 +210,7 @@ public class SearchRecordsControllerUT extends BaseControllerUT{
 
     @Test
     public void onPageSizeChange() throws Exception{
-        SearchRecordsResponse searchRecordsResponse=new SearchRecordsResponse();
+        SearchRecordsResponse searchRecordsResponse=getSearchRecordsResponse();
         searchRecordsRequest = new SearchRecordsRequest();
         when(searchUtil.requestSearchResults(searchRecordsRequest)).thenReturn(searchRecordsResponse);
         when(searchRecordsController.getSearchUtil()).thenReturn(searchUtil);
@@ -202,6 +218,25 @@ public class SearchRecordsControllerUT extends BaseControllerUT{
         ModelAndView modelAndView = searchRecordsController.onPageSizeChange(searchRecordsRequest,bindingResult,model);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
+        assertNotNull(searchRecordsResponse.getSearchResultRows());
+        assertNotNull(searchRecordsResponse.getTotalPageCount());
+        assertNotNull(searchRecordsResponse.getTotalBibRecordsCount());
+        assertNotNull(searchRecordsResponse.getTotalItemRecordsCount());
+        assertNotNull(searchRecordsResponse.getTotalRecordsCount());
+        assertNotNull(searchRecordsResponse.isShowTotalCount());
+        assertNotNull(searchRecordsResponse.getErrorMessage());
+    }
+
+    private SearchRecordsResponse getSearchRecordsResponse(){
+        SearchRecordsResponse searchRecordsResponse = new SearchRecordsResponse();
+        searchRecordsResponse.setSearchResultRows(new ArrayList<>());
+        searchRecordsResponse.setTotalPageCount(1);
+        searchRecordsResponse.setTotalBibRecordsCount("1");
+        searchRecordsResponse.setTotalItemRecordsCount("1");
+        searchRecordsResponse.setTotalRecordsCount("1");
+        searchRecordsResponse.setShowTotalCount(false);
+        searchRecordsResponse.setErrorMessage("test");
+        return searchRecordsResponse;
     }
 
     private SearchRecordsRequest buildRequestWithResultRows() {

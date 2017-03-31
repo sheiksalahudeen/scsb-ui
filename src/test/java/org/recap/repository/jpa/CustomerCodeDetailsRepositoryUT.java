@@ -57,9 +57,9 @@ public class CustomerCodeDetailsRepositoryUT extends BaseTestCase {
         assertNotNull(byCustomerCodeIn);
         assertEquals(2, byCustomerCodeIn.size());
         assertNotNull(byCustomerCodeIn.get(0));
-        assertEquals("YY", byCustomerCodeIn.get(0).getCustomerCode());
+        assertEquals("ZZ", byCustomerCodeIn.get(0).getCustomerCode());
         assertNotNull(byCustomerCodeIn.get(1));
-        assertEquals("ZZ", byCustomerCodeIn.get(1).getCustomerCode());
+        assertEquals("YY", byCustomerCodeIn.get(1).getCustomerCode());
     }
 
     private CustomerCodeEntity getCustomerCodeEntity(String customerCode, String description, Integer institutionId, String deliveryRestrictions) {

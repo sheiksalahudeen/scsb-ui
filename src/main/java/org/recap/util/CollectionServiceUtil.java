@@ -53,16 +53,8 @@ public class CollectionServiceUtil {
         return serverProtocol;
     }
 
-    public void setServerProtocol(String serverProtocol) {
-        this.serverProtocol = serverProtocol;
-    }
-
     public String getScsbUrl() {
         return scsbUrl;
-    }
-
-    public void setScsbUrl(String scsbUrl) {
-        this.scsbUrl = scsbUrl;
     }
 
     public RestTemplate getRestTemplate(){
@@ -79,6 +71,10 @@ public class CollectionServiceUtil {
 
     public ItemDetailsRepository getItemDetailsRepository() {
         return itemDetailsRepository;
+    }
+
+    public ItemChangeLogDetailsRepository getItemChangeLogDetailsRepository() {
+        return itemChangeLogDetailsRepository;
     }
 
     public void updateCGDForItem(BibliographicMarcForm bibliographicMarcForm) {
@@ -160,7 +156,7 @@ public class CollectionServiceUtil {
                 itemChangeLogEntity.setOperationType(operationType);
                 itemChangeLogEntity.setRecordId(itemEntity.getItemId());
                 itemChangeLogEntity.setNotes(notes);
-                itemChangeLogDetailsRepository.save(itemChangeLogEntity);
+                getItemChangeLogDetailsRepository().save(itemChangeLogEntity);
             }
         }
     }
