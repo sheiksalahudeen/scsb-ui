@@ -153,12 +153,27 @@ public class ReportsControllerUT extends BaseControllerUT {
         reportsForm.setRequestFromDate("11/01/2016");
         reportsForm.setRequestToDate("12/01/2016");
         reportsForm.setShowBy(RecapConstants.REPORTS_ACCESSION_DEACCESSION);
+        reportsForm.setShowNoteILBD(true);
+        reportsForm.setShowNotePartners(true);
+        reportsForm.setReportRequestType(new ArrayList<>());
+        reportsForm.setOwningInstitutions(Arrays.asList("PUL"));
+        reportsForm.setCollectionGroupDesignations(Arrays.asList("Shared"));
+        reportsForm.setShowRequestTypeShow(true);
+        reportsForm.setShowDeaccessionInformationTable(true);
+        reportsForm.setDeaccessionOwnInst("CUL");
+        reportsForm.setShowNoteRequestType(true);
         String fromDate = reportsForm.getAccessionDeaccessionFromDate();
         String toDate = reportsForm.getAccessionDeaccessionToDate();
         ModelAndView modelAndView = reportsControllerWired.reportCounts(reportsForm,model);
         reportsUtil.populateAccessionDeaccessionItemCounts(reportsForm);
         assertNotNull(modelAndView);
         assertEquals("reports", modelAndView.getViewName());
+        assertNotNull(reportsForm.isShowNoteILBD());
+        assertNotNull(reportsForm.isShowNotePartners());
+        assertNotNull(reportsForm.isShowNoteRequestType());
+        assertNotNull(reportsForm.getReportRequestType());
+        assertNotNull(reportsForm.isShowRequestTypeShow());
+        assertNotNull(reportsForm.isShowDeaccessionInformationTable());
     }
 
 
@@ -192,16 +207,25 @@ public class ReportsControllerUT extends BaseControllerUT {
         Mockito.when(mockedReportsController.getReportsUtil()).thenReturn(reportsUtil);
         DeaccessionItemResultsRow deaccessionItemResultsRow = new DeaccessionItemResultsRow();
         deaccessionItemResultsRow.setItemBarcode("123456");
-
+        deaccessionItemResultsRow.setItemId(1);
         deaccessionItemResultsRow.setCgd("Shared");
         deaccessionItemResultsRow.setDeaccessionDate(new Date().toString());
         deaccessionItemResultsRow.setTitle("test");
+        deaccessionItemResultsRow.setDeaccessionNotes("test");
+        deaccessionItemResultsRow.setDeaccessionOwnInst("PUL");
         deaccessionItemResultsRowList.add(deaccessionItemResultsRow);
         Mockito.when(mockedReportsController.getReportsUtil().deaccessionReportFieldsInformation(reportsForm)).thenReturn(deaccessionItemResultsRowList);
         Mockito.when(mockedReportsController.deaccessionInformation(reportsForm,model)).thenCallRealMethod();
         ModelAndView modelAndView = mockedReportsController.deaccessionInformation(reportsForm,model);
         assertNotNull(modelAndView);
         assertEquals(modelAndView.getViewName(),"reports :: #deaccessionInformation");
+        assertNotNull(deaccessionItemResultsRow.getCgd());
+        assertNotNull(deaccessionItemResultsRow.getItemId());
+        assertNotNull(deaccessionItemResultsRow.getDeaccessionDate());
+        assertNotNull(deaccessionItemResultsRow.getTitle());
+        assertNotNull(deaccessionItemResultsRow.getDeaccessionOwnInst());
+        assertNotNull(deaccessionItemResultsRow.getItemBarcode());
+        assertNotNull(deaccessionItemResultsRow.getDeaccessionNotes());
     }
 
     @Test

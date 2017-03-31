@@ -209,4 +209,5 @@ public class BibJSONUtilUT extends BaseTestCase{
         number = StringUtils.stripStart(number, "0");
         assertEquals("23450", number);
     }
+
 }

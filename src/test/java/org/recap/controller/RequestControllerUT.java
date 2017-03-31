@@ -17,6 +17,7 @@ import org.recap.repository.jpa.*;
 import org.recap.security.UserManagementService;
 import org.recap.util.RequestServiceUtil;
 import org.recap.util.UserAuthUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -96,6 +97,9 @@ public class RequestControllerUT extends BaseControllerUT {
 
     @Mock
     RequestItemDetailsRepository requestItemDetailsRepository;
+
+    @Autowired
+    RequestStatusDetailsRepository requestStatusDetailsRepository;
 
     @Before
     public void setUp() {
@@ -287,8 +291,33 @@ public class RequestControllerUT extends BaseControllerUT {
         assertTrue(response.contains("Request cancelled."));
     }
 
+    @Test
+    public void testLoadSearchRequest(){
+        Mockito.when(requestController.getRequestStatusDetailsRepository()).thenReturn(requestStatusDetailsRepository);
+        Mockito.when(requestController.loadSearchRequest(model,request)).thenCallRealMethod();
+        ModelAndView modelAndView = requestController.loadSearchRequest(model,request);
+        assertNotNull(modelAndView);
+        assertEquals(modelAndView.getViewName(),"request");
+    }
+
     private RequestForm getRequestForm(){
         RequestForm requestForm = new RequestForm();
+        requestForm.setRequestId(1);
+        requestForm.setPatronBarcode("43265854");
+        requestForm.setSubmitted(true);
+        requestForm.setItemBarcode("3324545547568535");
+        requestForm.setStatus("Success");
+        requestForm.setDeliveryLocation("PB");
+        requestForm.setVolumeNumber(1);
+        requestForm.setMessage("testing");
+        requestForm.setErrorMessage("testing");
+        requestForm.setIssue("test");
+        requestForm.setTotalPageCount(1);
+        requestForm.setTotalRecordsCount("10");
+        requestForm.setPageSize(1);
+        requestForm.setPageNumber(1);
+        requestForm.setRequestingInstitutions(Arrays.asList("PUL"));
+        requestForm.setRequestTypes(Arrays.asList("Recall"));
         requestForm.setItemBarcodeInRequest("123");
         requestForm.setPatronBarcodeInRequest("46259871");
         requestForm.setRequestingInstitution("PUL");

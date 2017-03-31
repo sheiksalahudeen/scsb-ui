@@ -90,49 +90,30 @@ public class RequestController {
         return requestServiceUtil;
     }
 
-    public void setRequestServiceUtil(RequestServiceUtil requestServiceUtil) {
-        this.requestServiceUtil = requestServiceUtil;
-    }
 
     public UserAuthUtil getUserAuthUtil() {
         return userAuthUtil;
-    }
-
-    public void setUserAuthUtil(UserAuthUtil userAuthUtil) {
-        this.userAuthUtil = userAuthUtil;
     }
 
     public InstitutionDetailsRepository getInstitutionDetailsRepository() {
         return institutionDetailsRepository;
     }
 
-    public void setInstitutionDetailsRepository(InstitutionDetailsRepository institutionDetailsRepository) {
-        this.institutionDetailsRepository = institutionDetailsRepository;
-    }
 
     public RequestTypeDetailsRepository getRequestTypeDetailsRepository() {
         return requestTypeDetailsRepository;
     }
 
-    public void setRequestTypeDetailsRepository(RequestTypeDetailsRepository requestTypeDetailsRepository) {
-        this.requestTypeDetailsRepository = requestTypeDetailsRepository;
-    }
 
     public CustomerCodeDetailsRepository getCustomerCodeDetailsRepository() {
         return customerCodeDetailsRepository;
     }
 
-    public void setCustomerCodeDetailsRepository(CustomerCodeDetailsRepository customerCodeDetailsRepository) {
-        this.customerCodeDetailsRepository = customerCodeDetailsRepository;
-    }
 
     public ItemDetailsRepository getItemDetailsRepository() {
         return itemDetailsRepository;
     }
 
-    public void setItemDetailsRepository(ItemDetailsRepository itemDetailsRepository) {
-        this.itemDetailsRepository = itemDetailsRepository;
-    }
 
     public String getServerProtocol() {
         return serverProtocol;
@@ -146,16 +127,16 @@ public class RequestController {
         return scsbUrl;
     }
 
-    public RequestStatusDetailsRepository getRequestStatusDetailsRepository() {
-        return requestStatusDetailsRepository;
-    }
-
     public RequestItemDetailsRepository getRequestItemDetailsRepository() {
         return requestItemDetailsRepository;
     }
 
     public RestTemplate getRestTemplate() {
         return new RestTemplate();
+    }
+
+    public RequestStatusDetailsRepository getRequestStatusDetailsRepository() {
+        return requestStatusDetailsRepository;
     }
 
     @RequestMapping("/request")
@@ -284,7 +265,7 @@ public class RequestController {
     public ModelAndView loadSearchRequest(Model model, HttpServletRequest request) {
         RequestForm requestForm = new RequestForm();
         List<String> requestStatuses = new ArrayList<>();
-        Iterable<RequestStatusEntity> requestStatusEntities = requestStatusDetailsRepository.findAll();
+        Iterable<RequestStatusEntity> requestStatusEntities = getRequestStatusDetailsRepository().findAll();
         for (Iterator iterator = requestStatusEntities.iterator(); iterator.hasNext(); ) {
             RequestStatusEntity requestStatusEntity = (RequestStatusEntity) iterator.next();
             requestStatuses.add(requestStatusEntity.getRequestStatusDescription());

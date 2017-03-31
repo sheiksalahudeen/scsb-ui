@@ -135,6 +135,7 @@ public class UserDetailsRepositoryUT extends BaseTestCase {
         institutionEntity.setInstitutionId(1);
         Page<UsersEntity> usersEntity1 = userDetailsRepository.findByLoginIdAndEmailIdAndInstitutionEntity(usersEntity.getLoginId(),usersEntity.getEmailId(),institutionEntity,new PageRequest(1, 10));
         assertNotNull(usersEntity1);
+        assertNotNull(usersEntity1);
     }
 
 
@@ -168,6 +169,10 @@ public class UserDetailsRepositoryUT extends BaseTestCase {
         assertEquals(usersEntity.getInstitutionId(),usersEntity1.getInstitutionId());
         assertEquals(usersEntity.getUserRole(),usersEntity1.getUserRole());
         assertEquals(usersEntity.getEmailId(),usersEntity1.getEmailId());
+        assertNotNull(usersEntity1.getCreatedBy());
+        assertNotNull(usersEntity1.getCreatedDate());
+        assertNotNull(usersEntity1.getLastUpdatedDate());
+        assertNotNull(usersEntity1.getLastUpdatedBy());
     }
 
 

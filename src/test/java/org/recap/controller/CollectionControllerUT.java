@@ -26,6 +26,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -188,12 +189,33 @@ public class CollectionControllerUT extends BaseControllerUT {
     @Test
     public void checkCrossInstitutionBorrowed() throws Exception {
         String itemBarcode = "123";
-        CollectionForm collectionForm = new CollectionForm();
+        CollectionForm collectionForm = getCollectionForm();
         collectionForm.setBarcode(itemBarcode);
         when(getRequestItemDetailsRepository().findByItemBarcodeAndRequestStaCode(itemBarcode, RecapConstants.REQUEST_STATUS_RETRIEVAL_ORDER_PLACED)).thenReturn(getMockRequestItemEntity());
         ModelAndView modelAndView = collectionController.checkCrossInstitutionBorrowed(collectionForm, bindingResult, model);
         assertNotNull(modelAndView);
         assertEquals("collection :: #itemDetailsSection", modelAndView.getViewName());
+        assertNotNull(collectionForm.getErrorMessage());
+        assertNotNull(collectionForm.getItemBarcodes());
+        assertNotNull(collectionForm.isShowResults());
+        assertNotNull(collectionForm.isSelectAll());
+        assertNotNull(collectionForm.getBarcodesNotFoundErrorMessage());
+        assertNotNull(collectionForm.getIgnoredBarcodesErrorMessage());
+        assertNotNull(collectionForm.getSearchResultRows());
+        assertNotNull(collectionForm.isShowModal());
+    }
+
+    private CollectionForm getCollectionForm(){
+        CollectionForm collectionForm = new CollectionForm();
+        collectionForm.setErrorMessage("test");
+        collectionForm.setItemBarcodes("335454575437");
+        collectionForm.setShowResults(false);
+        collectionForm.setSelectAll(false);
+        collectionForm.setBarcodesNotFoundErrorMessage("test");
+        collectionForm.setIgnoredBarcodesErrorMessage("test");
+        collectionForm.setSearchResultRows(new ArrayList<>());
+        collectionForm.setShowModal(false);
+        return collectionForm;
     }
 
     private RequestItemEntity getMockRequestItemEntity() {

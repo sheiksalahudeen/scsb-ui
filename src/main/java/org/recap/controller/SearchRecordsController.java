@@ -69,22 +69,9 @@ public class SearchRecordsController {
     @Autowired
     InstitutionDetailsRepository institutionDetailsRepository;
 
-    public CsvUtil getCsvUtil() {
-        return csvUtil;
-    }
-
-    public void setCsvUtil(CsvUtil csvUtil) {
-        this.csvUtil = csvUtil;
-    }
-
     public SearchUtil getSearchUtil() {
         return searchUtil;
     }
-
-    public void setSearchUtil(SearchUtil searchUtil) {
-        this.searchUtil = searchUtil;
-    }
-
 
     public UserAuthUtil getUserAuthUtil() {
         return userAuthUtil;
@@ -96,10 +83,6 @@ public class SearchRecordsController {
 
     public InstitutionDetailsRepository getInstitutionDetailsRepository() {
         return institutionDetailsRepository;
-    }
-
-    public void setInstitutionDetailsRepository(InstitutionDetailsRepository institutionDetailsRepository) {
-        this.institutionDetailsRepository = institutionDetailsRepository;
     }
 
     @RequestMapping("/search")
