@@ -89,7 +89,7 @@
                                                                         id="ReportShowBy" name="ReportShowBy"
                                                                         th:field="*{showBy}"
                                                                         th:onchange="'javascript:ReportRequestTabOption();'">
-                                                                    <option value="IL_BD">Cross Partner/Borrow Direct</option>
+                                                                    <option value="IL_BD">Cross Partner</option>
                                                                     <option value="Partners">Partners</option>
                                                                     <option value="RequestType">Request Type
                                                                     </option>
@@ -194,25 +194,6 @@
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.ilRequestNyplCount,0,'COMMA')}"></span>
                                                             </td>
 
-                                                        </tr>
-                                                        <tr class="border-style-top-white">
-                                                            <td class="gray-dark fontcolor-white large-font" style="font-family:sans-serif;">Borrow Direct</td>
-                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.bdRequestPulCount,0,'COMMA')}"></span>
-                                                            </td>
-                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.bdRequestCulCount,0,'COMMA')}"></span>
-                                                            </td>
-                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.bdRequestNyplCount,0,'COMMA')}"></span>
-                                                            </td>
-
-                                                        </tr>
-                                                        <tr class="fontcolor-dark large-font bgcolored border-style-top-white">
-                                                            <td class="gray-dark fontcolor-white" style="font-family:sans-serif;">TOTAL</td>
-                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.ilRequestPulCount + reportsForm.bdRequestPulCount,0,'COMMA')}"></span>
-                                                            </td>
-                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.ilRequestCulCount + reportsForm.bdRequestCulCount,0,'COMMA')}"></span>
-                                                            </td>
-                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.ilRequestNyplCount + reportsForm.bdRequestNyplCount,0,'COMMA')}"></span>
-                                                            </td>
                                                         </tr>
                                                     </table>
                                                 </div>

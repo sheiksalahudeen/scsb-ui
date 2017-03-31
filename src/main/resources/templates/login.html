@@ -99,7 +99,7 @@
                                         <div class="modal-body">
                                             <div class="row">
                                                 <div class="col-sm-12">
-                                                    <span  id="errorMsgs" name="errorMsgs" th:errors="*{errorMessage}"></span>
+                                                    <span  id="errorMsgs" name="errorMsgs" th:utext="*{errorMessage}"></span>
                                                 </div>
                                             </div>
                                         </div>

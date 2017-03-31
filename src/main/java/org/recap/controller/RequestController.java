@@ -305,6 +305,9 @@ public class RequestController {
         Iterable<InstitutionEntity> institutionEntities = getInstitutionDetailsRepository().findAll();
         for (Iterator iterator = institutionEntities.iterator(); iterator.hasNext(); ) {
             InstitutionEntity institutionEntity = (InstitutionEntity) iterator.next();
+            if (userDetailsForm.getLoginInstitutionId() == institutionEntity.getInstitutionId()) {
+                requestForm.setRequestingInstitution(institutionEntity.getInstitutionCode());
+            }
             if ((userDetailsForm.getLoginInstitutionId() == institutionEntity.getInstitutionId() || userDetailsForm.isRecapUser() || userDetailsForm.isSuperAdmin()) && (!RecapConstants.HTC.equals(institutionEntity.getInstitutionCode()))) {
                 requestingInstitutions.add(institutionEntity.getInstitutionCode());
             }
@@ -345,7 +348,7 @@ public class RequestController {
             List<String> invalidBarcodes = new ArrayList<>();
             Set<String> itemTitles = new HashSet<>();
             Set<String> itemOwningInstitutions = new HashSet<>();
-            Map<String,String> deliveryLocationsMap = new HashMap<>();
+            Map<String,String> deliveryLocationsMap = new LinkedHashMap<>();
             UserDetailsForm userDetailsForm;
             for (String itemBarcode : itemBarcodes) {
                 String barcode = itemBarcode.trim();
@@ -378,9 +381,10 @@ public class RequestController {
                                         String deliveryRestrictions = customerCodeEntity.getDeliveryRestrictions();
                                         if (StringUtils.isNotBlank(deliveryRestrictions)) {
                                             String[] deliveryLocationsArray = deliveryRestrictions.split(",");
-                                            for (String deliveryLocation : deliveryLocationsArray) {
-                                                CustomerCodeEntity byCustomerCode = customerCodeDetailsRepository.findByCustomerCodeAndOwningInstitutionId(deliveryLocation, institutionId);
-                                                if (byCustomerCode != null) {
+                                            List<CustomerCodeEntity> customerCodeEntities = customerCodeDetailsRepository.findByCustomerCodeIn(Arrays.asList(deliveryLocationsArray));
+                                            if (CollectionUtils.isNotEmpty(customerCodeEntities)) {
+                                                Collections.sort(customerCodeEntities);
+                                                for (CustomerCodeEntity byCustomerCode : customerCodeEntities) {
                                                     deliveryLocationsMap.put(byCustomerCode.getCustomerCode(), byCustomerCode.getDescription());
                                                 }
                                             }
@@ -458,6 +462,8 @@ public class RequestController {
             itemRequestInformation.setIssue(requestForm.getIssue());
             if (requestForm.getVolumeNumber() != null) {
                 itemRequestInformation.setVolume(requestForm.getVolumeNumber().toString());
+            } else {
+                itemRequestInformation.setVolume("");
             }
 
             if (StringUtils.isNotBlank(requestForm.getDeliveryLocationInRequest())) {

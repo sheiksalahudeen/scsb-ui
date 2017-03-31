@@ -258,7 +258,7 @@
                                                         <div id="collectionUpdateErrorMessage" class="row margin-btm-10" th:if="${collectionForm.errorMessage ne null &amp;&amp; collectionForm.errorMessage ne ''}">
                                                             <div class="col-sm-12">
                                                                 <div class="bg-danger text-danger padding-10">
-                                                                    <span class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span th:text="${collectionForm.errorMessage}"></span>
+                                                                    <span class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span th:utext="${collectionForm.errorMessage}"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -400,7 +400,7 @@
                                                                             th:disabled="${collectionForm.availability != 'Available'}"
                                                                             th:onchange="'javascript:toggleDeliveryLocationValidation()'">
                                                                         <option value=""></option>
-                                                                        <option th:each="location : ${collectionForm.deliveryLocations}" th:value="${location}" th:text="${location}"></option>
+                                                                        <option th:each="location : ${collectionForm.deliveryLocations}" th:value="${location.getCustomerCode()}" th:text="${location.getDescription()}"></option>
                                                                     </select>
                                                                 </div>
                                                                 <span id="locationErrorMessage" style="color: red;">This is a mandatory field.</span>

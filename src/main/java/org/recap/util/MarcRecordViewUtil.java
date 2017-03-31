@@ -15,9 +15,7 @@ import org.recap.repository.jpa.CustomerCodeDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by rajeshbabuk on 17/10/16.
@@ -92,13 +90,12 @@ public class MarcRecordViewUtil {
                                 }
                                 CustomerCodeEntity customerCodeEntity = customerCodeDetailsRepository.findByCustomerCode(bibliographicMarcForm.getCustomerCode());
                                 if (null != customerCodeEntity && StringUtils.isNotBlank(customerCodeEntity.getDeliveryRestrictions())) {
-                                    List<String> deliveryLocations = new ArrayList<>();
+                                    List<CustomerCodeEntity> deliveryLocations = new ArrayList<>();
                                     List<CustomerCodeEntity> customerCodeEntities = customerCodeDetailsRepository.findByCustomerCodeIn(Arrays.asList(customerCodeEntity.getDeliveryRestrictions().split(",")));
                                     if (CollectionUtils.isNotEmpty(customerCodeEntities)) {
-                                        for (CustomerCodeEntity custCodeEntity : customerCodeEntities) {
-                                            deliveryLocations.add(custCodeEntity.getDescription());
-                                        }
+                                        deliveryLocations.addAll(customerCodeEntities);
                                     }
+                                    Collections.sort(deliveryLocations);
                                     bibliographicMarcForm.setDeliveryLocations(deliveryLocations);
                                 }
                             }

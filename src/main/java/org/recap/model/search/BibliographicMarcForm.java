@@ -1,5 +1,6 @@
 package org.recap.model.search;
 
+import org.recap.model.jpa.CustomerCodeEntity;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class BibliographicMarcForm {
     private String customerCode;
     private String deaccessionType;
     private String deaccessionNotes;
-    private List<String> deliveryLocations = new ArrayList<>();
+    private List<CustomerCodeEntity> deliveryLocations = new ArrayList<>();
     private String deliveryLocation;
     private boolean shared = false;
     private boolean submitted = false;
@@ -256,11 +257,11 @@ public class BibliographicMarcForm {
         this.deaccessionNotes = deaccessionNotes;
     }
 
-    public List<String> getDeliveryLocations() {
+    public List<CustomerCodeEntity> getDeliveryLocations() {
         return deliveryLocations;
     }
 
-    public void setDeliveryLocations(List<String> deliveryLocations) {
+    public void setDeliveryLocations(List<CustomerCodeEntity> deliveryLocations) {
         this.deliveryLocations = deliveryLocations;
     }
 
