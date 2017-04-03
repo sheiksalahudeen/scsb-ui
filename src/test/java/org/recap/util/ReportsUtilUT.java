@@ -71,9 +71,6 @@ public class ReportsUtilUT extends BaseTestCase {
         assertEquals(1, reportsForm.getIlRequestPulCount());
         assertEquals(1, reportsForm.getIlRequestCulCount());
         assertEquals(1, reportsForm.getIlRequestNyplCount());
-        assertEquals(1, reportsForm.getBdRequestPulCount());
-        assertEquals(1, reportsForm.getBdRequestCulCount());
-        assertEquals(1, reportsForm.getBdRequestNyplCount());
     }
 
     @Test
@@ -356,7 +353,6 @@ public class ReportsUtilUT extends BaseTestCase {
         assertTrue(csvReader.readHeaders());
         assertTrue(csvReader.readRecord());
         assertEquals(csvReader.get("Author"), incompleteReportResult.getAuthor());
-        assertEquals(csvReader.get("Owning Institution"), incompleteReportResult.getOwningInstitution());
         assertEquals(csvReader.get("Customer code"),incompleteReportResult.getCustomerCode());
         assertEquals(csvReader.get("Title"),incompleteReportResult.getTitle());
         assertEquals(csvReader.get("Barcode"),incompleteReportResult.getBarcode());
