@@ -348,13 +348,13 @@
                                                         </div>
 
                                                         <div class="row form-group">
-                                                            <div class="col-sm-4 text-right padding-right-30 margin-top-05">
+                                                            <div class="col-sm-4 text-right padding-right-30">
                                                                 <label for="CGDChangeNotes" class="fontcolor-dark">CGD Change Notes <span class="error-color" th:if="${!collectionForm.submitted &amp;&amp; collectionForm.collectionGroupDesignation eq 'Shared'}">*</span></label>
                                                             </div>
                                                             <div class="col-sm-8 padding-left-0">
                                                                 <textarea class="form-control themed-input" name="CGDChangeNotes" id="CGDChangeNotes" th:field="${collectionForm.cgdChangeNotes}" th:if="${!collectionForm.submitted}" th:onkeyup="'javascript:toggleCgdNotesValidation()'"></textarea>
                                                                 <span id="cgdNotesErrorMessage" style="color: red;">Please enter CGD Change Notes.</span>
-                                                                <div class="form-group padding-top-10">
+                                                                <div class="form-group">
                                                                     <span id="CGDNoteReadOnly" th:if="${collectionForm.submitted}" th:text="${collectionForm.cgdChangeNotes}"></span>
                                                                 </div>
                                                             </div>
