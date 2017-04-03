@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "customer_code_t", schema = "recap", catalog = "")
-public class CustomerCodeEntity implements Serializable {
+public class CustomerCodeEntity implements Serializable, Comparable<CustomerCodeEntity> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -78,5 +78,37 @@ public class CustomerCodeEntity implements Serializable {
 
     public void setInstitutionEntity(InstitutionEntity institutionEntity) {
         this.institutionEntity = institutionEntity;
+    }
+
+    @Override
+    public int compareTo(CustomerCodeEntity customerCodeEntity) {
+        if (null != this.getDescription() && null !=  customerCodeEntity && null != customerCodeEntity.getDescription()) {
+            return this.getDescription().compareTo(customerCodeEntity.getDescription());
+        }
+        return 0;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+
+        CustomerCodeEntity customerCodeEntity = (CustomerCodeEntity) object;
+
+        if (customerCodeId != null ? !customerCodeId.equals(customerCodeEntity.customerCodeId) : customerCodeEntity.customerCodeId != null)
+            return false;
+        if (customerCode != null ? !customerCode.equals(customerCodeEntity.customerCode) : customerCodeEntity.customerCode != null) return false;
+        if (description != null ? !description.equals(customerCodeEntity.description) : customerCodeEntity.description != null) return false;
+        return owningInstitutionId != null ? owningInstitutionId.equals(customerCodeEntity.owningInstitutionId) : customerCodeEntity.owningInstitutionId == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = customerCodeId != null ? customerCodeId.hashCode() : 0;
+        result = 31 * result + (customerCode != null ? customerCode.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (owningInstitutionId != null ? owningInstitutionId.hashCode() : 0);
+        return result;
     }
 }

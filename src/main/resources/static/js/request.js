@@ -171,18 +171,20 @@ function populateItemDetails() {
                 $('#itemOwningInstitutionId').val(jsonResponse['itemOwningInstitution']);
                 var errorMessage = jsonResponse['errorMessage'];
                 var noPermissionErrorMessage = jsonResponse['noPermissionErrorMessage'];
-                var delivery = jsonResponse['deliveryLocation'];
-                $('#deliveryLocationId').empty();
-                $('#deliveryLocationId').append($("<option/>", {
-                    value: "",
-                    text: ""
-                }));
-                $.each(delivery, function(key, value) {
+                var deliveryLocation = jsonResponse['deliveryLocation'];
+                if (deliveryLocation != null && deliveryLocation != '') {
+                    $('#deliveryLocationId').empty();
                     $('#deliveryLocationId').append($("<option/>", {
-                        value: key,
-                        text: value
+                        value: "",
+                        text: ""
                     }));
-                });
+                    $.each(deliveryLocation, function (key, value) {
+                        $('#deliveryLocationId').append($("<option/>", {
+                            value: key,
+                            text: value
+                        }));
+                    });
+                }
                 $('#itemBarcodeErrorMessage').hide();
                 if (errorMessage != null && errorMessage != '') {
                     $('#itemBarcodeNotFoundErrorMessage').html(errorMessage);

@@ -26,7 +26,7 @@ public class RequestForm {
     private String requestNotes;
     private String startPage;
     private String endPage;
-    private Integer volumeNumber=0;
+    private Integer volumeNumber;
     private String issue;
     private String articleAuthor;
     private String articleTitle;

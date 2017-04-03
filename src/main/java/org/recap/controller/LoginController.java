@@ -84,6 +84,7 @@ public class LoginController {
             Map<String, Object> resultMap = userAuthUtil.doAuthentication(token);
             if (!(Boolean) resultMap.get(RecapConstants.IS_USER_AUTHENTICATED)) {
                 String errorMessage = (String) resultMap.get(RecapConstants.USER_AUTH_ERRORMSG);
+                userForm.setErrorMessage(errorMessage);
                 error.rejectValue(RecapConstants.ERROR_MESSAGE, RecapConstants.ERROR_CODE_ERROR_MESSAGE, errorMessage);
                 logger.error(RecapConstants.LOG_ERROR + errorMessage);
                 return RecapConstants.VIEW_LOGIN;
