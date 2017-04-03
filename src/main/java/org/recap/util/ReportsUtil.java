@@ -169,20 +169,18 @@ public class ReportsUtil {
     }
 
     private void writeRow(IncompleteReportResultsRow incompleteReportResultsRow, CsvWriter csvOutput) throws IOException {
-        csvOutput.write(incompleteReportResultsRow.getOwningInstitution());
-        csvOutput.write(incompleteReportResultsRow.getCustomerCode());
         csvOutput.write(incompleteReportResultsRow.getTitle());
         csvOutput.write(incompleteReportResultsRow.getAuthor());
+        csvOutput.write(incompleteReportResultsRow.getCustomerCode());
         csvOutput.write(incompleteReportResultsRow.getBarcode());
         csvOutput.write(incompleteReportResultsRow.getCreatedDate());
         csvOutput.endRecord();
     }
 
     private void writeHeader(CsvWriter csvOutput) throws Exception{
-        csvOutput.write("Owning Institution");
-        csvOutput.write("Customer code");
         csvOutput.write("Title");
         csvOutput.write("Author");
+        csvOutput.write("Customer code");
         csvOutput.write("Barcode");
         csvOutput.write("Accession Date");
         csvOutput.endRecord();

@@ -555,9 +555,9 @@
                                                         <thead class="tablesorter-headerRow">
                                                         <tr>
                                                             <th width="20%"></th>
-                                                            <th width="20%" style="font-family:sans-serif;font-size: 120%">PUL</th>
-                                                            <th width="20%" style="font-family:sans-serif;font-size: 120%">CUL</th>
-                                                            <th width="20%" style="font-family:sans-serif;font-size: 120%">NYPL</th>
+                                                            <th width="20%" style="font-family:sans-serif;font-size: 120%">Princeton</th>
+                                                            <th width="20%" style="font-family:sans-serif;font-size: 120%">Columbia</th>
+                                                            <th width="20%" style="font-family:sans-serif;font-size: 120%">New York</th>
                                                         </tr>
                                                         </thead>
                                                         <tr class="border-style-top-white">
@@ -775,10 +775,9 @@
                                                id="IncompleteRecordsReportTable">
                                             <thead class="tablesorter-headerRow">
                                             <tr>
-                                                <th width="15%" style="font-family:sans-serif;font-size: 120%">Owning Institution</th>
+                                                <th width="30%" style="font-family:sans-serif;font-size: 120%">Title</th>
+                                                <th width="20%" style="font-family:sans-serif;font-size: 120%">Author</th>
                                                 <th width="10%" style="font-family:sans-serif;font-size: 120%">Customer code</th>
-                                                <th width="20%" style="font-family:sans-serif;font-size: 120%">Title</th>
-                                                <th width="15%" style="font-family:sans-serif;font-size: 120%">Author</th>
                                                 <th width="20%" style="font-family:sans-serif;font-size: 120%">Barcode</th>
                                                 <th width="20%" style="font-family:sans-serif;font-size: 120%">Accession Date</th>
                                             </tr>
@@ -788,16 +787,6 @@
                                                 th:each="incompleteResult,incompleteResultStat : ${reportsForm.incompleteReportResultsRows}"
                                                 class="parentRow">
                                                 <td data-th-id="'incompleteResults'+ ${incompleteResultStat.index}">
-                                                <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].owningInstitution}"/>
-                                                <span data-th-id="'incompleteResults'+ ${incompleteResultStat.index}"
-                                                      th:text="${incompleteResult.owningInstitution}"></span>
-                                                </td>
-                                                <td data-th-id="'incompleteResults'+ ${incompleteResultStat.index}">
-                                                <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].customerCode}"/>
-                                                <span data-th-id="'incompleteResults'+ ${incompleteResultStat.index}"
-                                                      th:text="${incompleteResult.customerCode}"></span>
-                                                </td>
-                                                <td data-th-id="'incompleteResults'+ ${incompleteResultStat.index}">
                                                 <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].title}"/>
                                                 <span data-th-id="'incompleteResults'+ ${incompleteResultStat.index}"
                                                       th:text="${incompleteResult.title}"></span>
@@ -806,6 +795,11 @@
                                                 <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].author}"/>
                                                 <span data-th-id="'incompleteResults'+ ${incompleteResultStat.index}"
                                                       th:text="${incompleteResult.author}"></span>
+                                                </td>
+                                                <td data-th-id="'incompleteResults'+ ${incompleteResultStat.index}">
+                                                    <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].customerCode}"/>
+                                                <span data-th-id="'incompleteResults'+ ${incompleteResultStat.index}"
+                                                      th:text="${incompleteResult.customerCode}"></span>
                                                 </td>
                                                 <td data-th-id="'incompleteResults'+ ${incompleteResultStat.index}">
                                                 <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].barcode}"/>
