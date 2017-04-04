@@ -312,6 +312,7 @@ public class RequestController {
 
         requestForm.setRequestingInstitutions(requestingInstitutions);
         requestForm.setRequestTypes(requestTypes);
+        Collections.sort(deliveryLocations);
         requestForm.setDeliveryLocations(deliveryLocations);
         requestForm.setRequestType(RecapConstants.RETRIEVAL);
         return requestForm;
