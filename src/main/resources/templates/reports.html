@@ -647,7 +647,8 @@
                                     <th width="10%" style="font-family:sans-serif;">OI</th>
                                     <th width="10%" style="font-family:sans-serif;">ITEM BARCODE</th>
                                     <th width="10%" style="font-family:sans-serif;">CGD</th>
-                                    <th width="40%" style="font-family:sans-serif;">DEACCESSION NOTES</th>
+                                    <th width="25%" style="font-family:sans-serif;">DEACCESSION NOTES</th>
+                                    <th width="15%" style="font-family:sans-serif;">DEACCESSION BY</th>
                                 </tr>
                                 </thead>
                                 <tr th:each="deaccessionRow:${reportsForm.deaccessionItemResultsRows}">
@@ -657,6 +658,7 @@
                                     <td class="text-left"><span th:text="${deaccessionRow.itemBarcode}"></span></td>
                                     <td><span th:text="${deaccessionRow.cgd}"></span></td>
                                     <td class="text-left"><span th:text="${deaccessionRow.deaccessionNotes}"></span></td>
+                                    <td class="text-left"><span th:text="${deaccessionRow.deaccessionCreatedBy}"></span></td>
                                 </tr>
                             </table>
                             <input id="reportsPageNumber" name="reportsPageNumber" type="text" th:field="${reportsForm.pageNumber}"
