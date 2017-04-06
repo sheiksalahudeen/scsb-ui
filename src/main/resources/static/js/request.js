@@ -6,7 +6,6 @@ $("a[href='https://htcrecap.atlassian.net/wiki/display/RTG/Search']").attr('href
     'https://htcrecap.atlassian.net/wiki/display/RTG/Request');
 
 function onChangeRequestStatus() {
-    console.log("change");
     var status = $('#requestStatus').val();
     if (status == 'active'){
         $('#noteActive').show();
@@ -215,7 +214,7 @@ $(function() {
 
 function isValidInputs() {
     var isValid = true;
-    
+
     var itemBarcode = $('#itemBarcodeId').val();
     var patronBarcode = $('#patronBarcodeId').val();
     var requestType = $('#requestTypeId').val();
@@ -342,7 +341,7 @@ function isBlankValue(value) {
         return true;
     }
     return false;
-}    
+}
 
 function resetDefaults() {
     $('#errorMessageId').hide();
@@ -366,6 +365,7 @@ function resetDefaults() {
     $('#requestingInstitutionId').val('');
     $('#requestNotesId').val('');
     $('#deliverylocation_request').show();
+    $('#deliveryLocationId').empty();
     //EDD
     $('#EDD').hide();
     $('#StartPage').val('');
@@ -385,6 +385,12 @@ function toggleItemBarcodeValidation() {
     if (isBlankValue(itemBarcode)) {
         $('#itemBarcodeErrorMessage').show();
         $('#itemBarcodeNotFoundErrorMessage').hide();
+        $('#itemTitleId').val('');
+        $('#itemOwningInstitutionId').val('');
+        $('#patronBarcodeId').val('');
+        $('#patronEmailId').val('');
+        $('#deliveryLocationId').val('');
+        $('#deliveryLocationId').empty();
     } else {
         $('#itemBarcodeErrorMessage').hide();
     }
@@ -455,11 +461,13 @@ function validateEmailAddress() {
 
 function createRequestSamePatron() {
     $('#createRequestModal').modal('hide');
+    $("requestingInstitutionId option").prop("disabled", false);
     $('#patronBarcodeId').val($('#patronBarcodeInRequest').html());
     $('#patronEmailId').val($('#patronEmailAddress').html());
     $('#requestingInstitutionId').val($('#requestingInstitution').html());
     $('.EDDdetails-section').hide();
     $('#deliverylocation_request').show();
+    $('#deliveryLocationId').empty();
 }
 
 function cancelRequest(index) {
@@ -547,4 +555,51 @@ function emailMandatory(){
         $('#emailMandatory').hide();
         $('#EmailMandatoryErrorMessage').hide();
     }
+}
+
+
+function populateDeliveryLocations(){
+    var requestingInstitutionId = $('#requestingInstitutionId').val();
+    if(!isBlankValue(requestingInstitutionId)){
+        toggleRequestingInstitutionValidation();
+    }
+    $('#onChangeOwnInst').val('true');
+    var $form = $('#request-form');
+    var url = $form.attr('action') + "?action=populateItem";
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: $form.serialize(),
+        success: function (response) {
+            var jsonResponse = JSON.parse(response);
+            $('#itemTitleId').val(jsonResponse['itemTitle']);
+            $('#itemOwningInstitutionId').val(jsonResponse['itemOwningInstitution']);
+            var errorMessage = jsonResponse['errorMessage'];
+            var noPermissionErrorMessage = jsonResponse['noPermissionErrorMessage'];
+            var deliveryLocation = jsonResponse['deliveryLocation'];
+            if (deliveryLocation != null && deliveryLocation != '') {
+                $('#deliveryLocationId').empty();
+                $('#deliveryLocationId').append($("<option/>", {
+                    value: "",
+                    text: ""
+                }));
+                $.each(deliveryLocation, function (key, value) {
+                    $('#deliveryLocationId').append($("<option/>", {
+                        value: key,
+                        text: value
+                    }));
+                });
+            }
+            $('#itemBarcodeErrorMessage').hide();
+            if (errorMessage != null && errorMessage != '') {
+                $('#itemBarcodeNotFoundErrorMessage').html(errorMessage);
+                $('#itemBarcodeNotFoundErrorMessage').show();
+            } else if (noPermissionErrorMessage != null && noPermissionErrorMessage != '') {
+                $('#itemBarcodeNotFoundErrorMessage').html(noPermissionErrorMessage);
+                $('#itemBarcodeNotFoundErrorMessage').show();
+            } else {
+                $('#itemBarcodeNotFoundErrorMessage').html('');
+            }
+        }
+    });
 }

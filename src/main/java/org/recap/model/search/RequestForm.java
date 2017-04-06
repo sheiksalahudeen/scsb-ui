@@ -43,6 +43,7 @@ public class RequestForm {
     private List<CustomerCodeEntity> deliveryLocations = new ArrayList<>();
     private List<SearchResultRow> searchResultRows = new ArrayList<>();
     private List<String> requestStatuses = new ArrayList<>();
+    private boolean disableRequestingInstitution = false;
 
     public Integer getRequestId() {
         return requestId;
@@ -310,5 +311,23 @@ public class RequestForm {
 
     public void resetPageNumber() {
         this.pageNumber = 0;
+    }
+
+    private String onChange;
+
+    public String getOnChange() {
+        return onChange;
+    }
+
+    public void setOnChange(String onChange) {
+        this.onChange = onChange;
+    }
+
+    public boolean isDisableRequestingInstitution() {
+        return disableRequestingInstitution;
+    }
+
+    public void setDisableRequestingInstitution(boolean disableRequestingInstitution) {
+        this.disableRequestingInstitution = disableRequestingInstitution;
     }
 }

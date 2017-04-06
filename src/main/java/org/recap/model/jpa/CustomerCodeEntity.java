@@ -2,6 +2,7 @@ package org.recap.model.jpa;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by rajeshbabuk on 18/10/16.
@@ -31,6 +32,14 @@ public class CustomerCodeEntity implements Serializable, Comparable<CustomerCode
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "OWNING_INST_ID", insertable = false, updatable = false)
     private InstitutionEntity institutionEntity;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "cross_partner_mapping_t", joinColumns = {
+            @JoinColumn(name = "CUSTOMER_CODE_ID", referencedColumnName = "CUSTOMER_CODE_ID")},
+            inverseJoinColumns = {
+                    @JoinColumn(name = "DELIVERY_RESTRICTION_CROSS_PARTNER_ID", referencedColumnName = "DELIVERY_RESTRICTION_CROSS_PARTNER_ID")})
+    private List<DeliveryRestrictionEntity> deliveryRestrictionEntityList;
+
 
     public Integer getCustomerCodeId() {
         return customerCodeId;
@@ -90,15 +99,19 @@ public class CustomerCodeEntity implements Serializable, Comparable<CustomerCode
 
     @Override
     public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
+        if (this == object)
+            return true;
+        if (object == null || getClass() != object.getClass())
+            return false;
 
         CustomerCodeEntity customerCodeEntity = (CustomerCodeEntity) object;
 
         if (customerCodeId != null ? !customerCodeId.equals(customerCodeEntity.customerCodeId) : customerCodeEntity.customerCodeId != null)
             return false;
-        if (customerCode != null ? !customerCode.equals(customerCodeEntity.customerCode) : customerCodeEntity.customerCode != null) return false;
-        if (description != null ? !description.equals(customerCodeEntity.description) : customerCodeEntity.description != null) return false;
+        if (customerCode != null ? !customerCode.equals(customerCodeEntity.customerCode) : customerCodeEntity.customerCode != null)
+            return false;
+        if (description != null ? !description.equals(customerCodeEntity.description) : customerCodeEntity.description != null)
+            return false;
         return owningInstitutionId != null ? owningInstitutionId.equals(customerCodeEntity.owningInstitutionId) : customerCodeEntity.owningInstitutionId == null;
 
     }
@@ -110,5 +123,13 @@ public class CustomerCodeEntity implements Serializable, Comparable<CustomerCode
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (owningInstitutionId != null ? owningInstitutionId.hashCode() : 0);
         return result;
+    }
+
+    public List<DeliveryRestrictionEntity> getDeliveryRestrictionEntityList() {
+        return deliveryRestrictionEntityList;
+    }
+
+    public void setDeliveryRestrictionEntityList(List<DeliveryRestrictionEntity> deliveryRestrictionEntityList) {
+        this.deliveryRestrictionEntityList = deliveryRestrictionEntityList;
     }
 }
