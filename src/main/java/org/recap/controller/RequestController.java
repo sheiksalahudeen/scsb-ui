@@ -145,7 +145,7 @@ public class RequestController {
         boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REQUEST_URL, (UsernamePasswordToken) session.getAttribute(RecapConstants.USER_TOKEN));
         if (authenticated) {
             UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(session, RecapConstants.REQUEST_PRIVILEGE);
-            RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm);
+            RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm,model);
             Object requestedBarcode = ((BindingAwareModelMap) model).get(RecapConstants.REQUESTED_BARCODE);
             if (requestedBarcode != null) {
                 requestForm.setOnChange("true");
@@ -255,7 +255,7 @@ public class RequestController {
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=loadCreateRequest")
     public ModelAndView loadCreateRequest(Model model, HttpServletRequest request) {
         UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(request.getSession(), RecapConstants.REQUEST_PRIVILEGE);
-        RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm);
+        RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm,model);
         model.addAttribute(RecapConstants.REQUEST_FORM, requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
         return new ModelAndView(RecapConstants.REQUEST, RecapConstants.REQUEST_FORM, requestForm);
@@ -277,8 +277,22 @@ public class RequestController {
         return new ModelAndView(RecapConstants.REQUEST, RecapConstants.REQUEST_FORM, requestForm);
     }
 
-    private RequestForm setDefaultsToCreateRequest(UserDetailsForm userDetailsForm) {
+    private RequestForm setDefaultsToCreateRequest(UserDetailsForm userDetailsForm,Model model) {
         RequestForm requestForm = new RequestForm();
+        Boolean addOnlyRecall = false;
+        Boolean addAllRequestType = false;
+        Object availabilty = ((BindingAwareModelMap) model).get(RecapConstants.REQUESTED_ITEM_AVAILABILITY);
+        if (availabilty != null){
+            HashSet<String> str = (HashSet<String>) availabilty;
+            for (String itemAvailability : str){
+                if(RecapConstants.NOT_AVAILABLE.equalsIgnoreCase(itemAvailability)){
+                    addOnlyRecall = true;
+                }
+                if(RecapConstants.AVAILABLE.equalsIgnoreCase(itemAvailability)){
+                    addAllRequestType = true;
+                }
+            }
+        }
 
         List<String> requestingInstitutions = new ArrayList<>();
         List<String> requestTypes = new ArrayList<>();
@@ -302,12 +316,20 @@ public class RequestController {
             }
         }
 
-        Iterable<RequestTypeEntity> requestTypeEntities = getRequestTypeDetailsRepository().findAll();
-        for (Iterator iterator = requestTypeEntities.iterator(); iterator.hasNext(); ) {
-            RequestTypeEntity requestTypeEntity = (RequestTypeEntity) iterator.next();
-            if (!RecapConstants.BORROW_DIRECT.equals(requestTypeEntity.getRequestTypeCode())) {
-                requestTypes.add(requestTypeEntity.getRequestTypeCode());
+        if(addOnlyRecall &&(addAllRequestType == false)){
+            RequestTypeEntity requestTypeEntity = getRequestTypeDetailsRepository().findByRequestTypeCode(RecapConstants.RECALL);
+            requestTypes.add(requestTypeEntity.getRequestTypeCode());
+            requestForm.setRequestType(requestTypeEntity.getRequestTypeCode());
+        }
+        if (!addOnlyRecall || addAllRequestType) {
+            Iterable<RequestTypeEntity> requestTypeEntities = getRequestTypeDetailsRepository().findAll();
+            for (Iterator iterator = requestTypeEntities.iterator(); iterator.hasNext(); ) {
+                RequestTypeEntity requestTypeEntity = (RequestTypeEntity) iterator.next();
+                if (!RecapConstants.BORROW_DIRECT.equals(requestTypeEntity.getRequestTypeCode())) {
+                    requestTypes.add(requestTypeEntity.getRequestTypeCode());
+                }
             }
+            requestForm.setRequestType(RecapConstants.RETRIEVAL);
         }
 
         Iterable<CustomerCodeEntity> customerCodeEntities = getCustomerCodeDetailsRepository().findAll();
@@ -318,7 +340,6 @@ public class RequestController {
             }
         }
         requestForm.setRequestTypes(requestTypes);
-        requestForm.setRequestType(RecapConstants.RETRIEVAL);
         return requestForm;
     }
 
