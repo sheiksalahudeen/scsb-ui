@@ -485,4 +485,6 @@ public class RecapConstants {
         headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
         return headers;
     }
+
+    public static final String REQUESTED_ITEM_AVAILABILITY="requestedItemAvailabilty";
 }
