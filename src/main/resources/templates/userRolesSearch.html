@@ -410,7 +410,7 @@
                                                 <select class="form-control themed-input themed-select" id="editroleId" th:onchange="'javascript:toggleEditRoleValidation()'"
                                                         name="editroleId" multiple="multiple"
                                                         th:field="${userRoleForm.editSelectedForCreate}">
-                                                    <option th:each="roleValues : ${userRoleForm.roles}"
+                                                    <option th:each="roleValues : ${userRoleForm.roles}" data-toggle="tooltip" th:title="${roleValues[3]}"
                                                             th:value="${roleValues[0]}" th:text="${roleValues[1]}"
                                                             th:selected="${userRoleForm.showSelectedForCreate.contains(roleValues)}"></option>
                                                 </select>

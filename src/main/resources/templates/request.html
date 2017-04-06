@@ -246,18 +246,25 @@
                                         </div>
                                         <div class="col-md-4 col-sm-6">
                                             <div class="form-group">
-                                                <div class="col-md-6 col-sm-6 text-right margin-top-15"><label for="itemOwningInstitutionId" class="fontcolor-dark">Item Owning Institution</label></div>
+                                                <div class="col-md-6 col-sm-6 text-right margin-top-15"><label for="requestingInstitutionId" class="fontcolor-dark">Requesting Institution <span class="error-color">*</span></label></div>
                                                 <div class="col-md-6 col-sm-6">
-                                                    <input type="text"
-                                                           id="itemOwningInstitutionId"
-                                                           name="itemOwningInstitutionName"
-                                                           class="form-control themed-input"
-                                                           th:field="${requestForm.itemOwningInstitution}"
-                                                           readonly="readonly">
-                                                    </input>
+                                                    <div class="select-holder">
+                                                        <select id="requestingInstitutionId"
+                                                                name="requestingInstitutionName"
+                                                                class="form-control themed-input themed-select"
+                                                                th:field="${requestForm.requestingInstitution}"
+                                                                onchange="populateDeliveryLocations()"
+                                                                th:disabled="${requestForm.disableRequestingInstitution}">
+                                                            <option value=""></option>
+                                                            <option th:each="requestingInstitution : ${requestForm.requestingInstitutions}" th:value="${requestingInstitution}" th:text="${requestingInstitution}"></option>
+                                                        </select>
+                                                        <span id="requestingInstitutionErrorMessage" style="color: red;">Requesting institution is required.</span>
+                                                    </div>
                                                 </div>
+                                                <input type="hidden" id="reqInst" th:field="${requestForm.requestingInstitution}"/>
                                             </div>
                                         </div>
+
                                     </div>
                                     <div class="row">
                                         <div class="col-md-8 col-sm-6">
@@ -271,6 +278,21 @@
                                                               th:field="${requestForm.itemTitle}"
                                                               readonly="readonly">
                                                     </textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-6">
+                                            <div class="form-group">
+                                                <div class="col-md-6 col-sm-6 text-right margin-top-15"><label for="itemOwningInstitutionId" class="fontcolor-dark">Item Owning Institution</label></div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <input type="text"
+                                                           id="itemOwningInstitutionId"
+                                                           name="itemOwningInstitutionName"
+                                                           class="form-control themed-input"
+                                                           th:field="${requestForm.itemOwningInstitution}"
+                                                           readonly="readonly">
+                                                    </input>
+                                                    <input type="hidden" id="onChangeOwnInst" th:field="${requestForm.onChange}"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -310,24 +332,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-4 col-sm-6">
-                                                    <div class="form-group">
-                                                        <div class="col-md-6 col-sm-6 text-right margin-top-15"><label for="requestingInstitutionId" class="fontcolor-dark">Requesting Institution <span class="error-color">*</span></label></div>
-                                                        <div class="col-md-6 col-sm-6">
-                                                            <div class="select-holder">
-                                                                <select id="requestingInstitutionId"
-                                                                        name="requestingInstitutionName"
-                                                                        class="form-control themed-input themed-select"
-                                                                        th:field="${requestForm.requestingInstitution}"
-                                                                        th:onchange="'javascript:toggleRequestingInstitutionValidation()'">
-                                                                    <option value=""></option>
-                                                                    <option th:each="requestingInstitution : ${requestForm.requestingInstitutions}" th:value="${requestingInstitution}" th:text="${requestingInstitution}"></option>
-                                                                </select>
-                                                                <span id="requestingInstitutionErrorMessage" style="color: red;">Requesting institution is required.</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+
                                             </div>
                                         </div>
                                         <div class="col-md-4"></div>
