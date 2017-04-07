@@ -298,7 +298,7 @@
                                         <div class="col-sm- col-sm-6">
                                             <input class="form-control themed-input" name="userDescription"
                                                    id="userDescription" th:field="${userRoleForm.userDescription}"
-                                                   placeholder="" type="text" maxlength="45" th:onkeyup="'javascript:toggleUserDescriptionValidation()'"/>
+                                                   placeholder="" type="text" th:onkeyup="'javascript:toggleUserDescriptionValidation()'"/>
                                             <span id="userDescriptionErrMsg" style="color: red;display: none">Please provide User Description </span>
                                             <span id="userDescriptionLengthErrMsg" style="color: red;display: none">Only 45 Characters allowed</span>
                                         </div>
@@ -429,7 +429,7 @@
                                             <input class="form-control themed-input" name="edituserDescription" th:onkeyup="'javascript:toggleEditUserDescriptionValidation()'"
                                                    id="edituserDescription"
                                                    th:field="${userRoleForm.editUserDescription}" placeholder=""
-                                                   type="text" maxlength="45"/>
+                                                   type="text"/>
                                             <span id="edituserDescriptionErrMsg" style="color: red;display: none">Please provide User Description </span>
                                             <span id="editUserDescriptionLengthErrMsg" style="color: red;display: none">Only 45 Characters allowed</span>
                                         </div>

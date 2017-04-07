@@ -222,7 +222,7 @@ function isValidInputs() {
     var deliveryLocation = $('#deliveryLocationId').val();
     var requestingInstitution = $('#requestingInstitutionId').val();
     var notesLength = $('#requestNotesId').val().length;
-    if (notesLength == 2000){
+    if (notesLength  > 2000){
         $('#notesLengthErrMsg').show();
         isValid = false;
     }else {
@@ -614,7 +614,7 @@ function populateDeliveryLocations(){
 
 function NotesLengthValidation(){
     var notesLength = $('#requestNotesId').val().length;
-    if (notesLength == 2000){
+    if (notesLength > 2000){
         $('#notesLengthErrMsg').show();
     }else {
         $('#notesLengthErrMsg').hide();

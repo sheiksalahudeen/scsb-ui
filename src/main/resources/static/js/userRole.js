@@ -353,7 +353,7 @@ function editUserDetailsValidation(){
     var roleId = $('#editroleId').val();
     var userDescription = $('#edituserDescription').val();
     var editDescLength = userDescription.length;
-    if(editDescLength == 45){
+    if(editDescLength > 45){
         isValid = false;
         $('#editUserDescriptionLengthErrMsg').show();
         $('#edituserDescriptionErrMsg').hide();
@@ -466,7 +466,7 @@ function validateForm() {
     var roleId = $('#roleId').val();
     var userDescription = $('#userDescription').val();
     var length = userDescription.length;
-    if(length == 45){
+    if(length > 45){
         isValid = false;
         $('#userDescriptionLengthErrMsg').show();
         $('#userDescriptionErrMsg').hide();
@@ -551,7 +551,7 @@ function toggleUserNetworkLoginIdValidation() {
 function toggleUserDescriptionValidation() {
     var userDescription = $('#userDescription').val();
     var length = userDescription.length;
-    if(length == 45){
+    if(length > 45){
         $('#userDescriptionLengthErrMsg').show();
         $('#userDescriptionErrMsg').hide();
     }
@@ -614,7 +614,7 @@ function toggleEditRoleValidation() {
 function toggleEditUserDescriptionValidation() {
     var edituserDescription = $('#edituserDescription').val();
     var editDescLength = edituserDescription.length;
-    if(editDescLength == 45){
+    if(editDescLength > 45){
         $('#editUserDescriptionLengthErrMsg').show();
         $('#edituserDescriptionErrMsg').hide();
     }
