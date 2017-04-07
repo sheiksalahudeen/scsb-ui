@@ -458,8 +458,11 @@
                                                               name="requestNotesName"
                                                               class="form-control themed-input"
                                                               th:field="${requestForm.requestNotes}"
-                                                              rows="5">
+                                                              onkeyup="NotesLengthValidation()"
+                                                              rows="5"
+                                                              maxlength="2000">
                                                     </textarea>
+                                                    <span id="notesLengthErrMsg" style="color: red;display: none">Only 2000 Characters Allowed.</span>
                                                 </div>
                                             </div>
                                         </div>

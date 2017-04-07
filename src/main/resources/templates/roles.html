@@ -236,12 +236,15 @@
                                                         <div class="col-sm-3 col-sm-4 text-right margin-top-15"><label for="roleDescriptionId" class="fontcolor-dark">Role Description <span class="error-color">*</span></label></div>
                                                         <div class="col-sm- col-sm-6">
                                                     <input type="text"
-                                                              id="roleDescriptionId" th:onkeyup="'javascript:toggleRoleDescriptionValidation()'"
-                                                              name="roleName"
+                                                              id="roleDescriptionId"
+                                                              onkeyup="toggleRoleDescriptionValidation()"
+                                                              name="roleDescriptionId"
                                                               class="form-control themed-input"
-                                                              th:field="*{newRoleDescription}">
+                                                              th:field="*{newRoleDescription}"
+                                                              maxlength="45">
                                                     </input>
                                                             <span id="roleDescriptionErrorMessage" style="color: red;">Role Description is required.</span>
+                                                            <span id="roleDescriptionLengthError" style="color: red;display: none">Only 45 Characters Allowed.</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -349,9 +352,12 @@
                                                               id="editRoleDescription"
                                                               name="roleName"
                                                               class="form-control themed-input"
-                                                              th:field="*{editRoleDescription}">
+                                                              onkeyup="editDescLengthValidation()"
+                                                              th:field="*{editRoleDescription}"
+                                                              maxlength="45">
                                                     </input>
                                                         <span id="editRoleDescriptionErrorMessage" style="color: red;">Role Description is required.</span>
+                                                        <span id="editRoleDescriptionLengthErrMsg" style="color: red;display: none">Only 45 Characters Allowed.</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -444,7 +450,7 @@
                                         <div class="row">
                                             <div class="col-md-8 col-sm-6">
                                                 <div class="form-group">
-                                                    <div class="col-sm-3 col-sm-4 text-right margin-top-15"><label for="roleDescriptionId" class="fontcolor-dark">Role Description <span class="error-color">*</span></label></div>
+                                                    <div class="col-sm-3 col-sm-4 text-right margin-top-15"><label for="deleteRoleDescriptionId" class="fontcolor-dark">Role Description <span class="error-color">*</span></label></div>
                                                     <div class="col-sm-6 col-sm-6">
                                                     <input type="text"
                                                               id="deleteRoleDescriptionId"
