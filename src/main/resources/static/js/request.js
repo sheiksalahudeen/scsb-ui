@@ -102,6 +102,7 @@ function clearRequests() {
     $('#itemBarcodeSearchError').hide();
     $('#noteAll').show();
     $('#noteActive').hide();
+    $('#notesLengthErrMsg').hide();
 }
 
 
@@ -220,7 +221,13 @@ function isValidInputs() {
     var requestType = $('#requestTypeId').val();
     var deliveryLocation = $('#deliveryLocationId').val();
     var requestingInstitution = $('#requestingInstitutionId').val();
-
+    var notesLength = $('#requestNotesId').val().length;
+    if (notesLength  > 2000){
+        $('#notesLengthErrMsg').show();
+        isValid = false;
+    }else {
+        $('#notesLengthErrMsg').hide();
+    }
     validateEmailAddress();
 
     if (isBlankValue(itemBarcode)) {
@@ -376,6 +383,7 @@ function resetDefaults() {
     $('#ArticleChapterTitle').val('');
     $('#EmailMandatoryErrorMessage').hide();
     $('#emailMandatory').hide();
+    $('#notesLengthErrMsg').hide();
 
 
 }
@@ -602,4 +610,13 @@ function populateDeliveryLocations(){
             }
         }
     });
+}
+
+function NotesLengthValidation(){
+    var notesLength = $('#requestNotesId').val().length;
+    if (notesLength > 2000){
+        $('#notesLengthErrMsg').show();
+    }else {
+        $('#notesLengthErrMsg').hide();
+    }
 }
