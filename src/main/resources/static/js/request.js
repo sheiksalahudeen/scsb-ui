@@ -469,7 +469,7 @@ function validateEmailAddress() {
 
 function createRequestSamePatron() {
     $('#createRequestModal').modal('hide');
-    $("requestingInstitutionId option").prop("disabled", false);
+    $("#requestingInstitutionId option").prop("disabled", false);
     $('#patronBarcodeId').val($('#patronBarcodeInRequest').html());
     $('#patronEmailId').val($('#patronEmailAddress').html());
     $('#requestingInstitutionId').val($('#requestingInstitution').html());
