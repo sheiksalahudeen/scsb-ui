@@ -52,7 +52,8 @@
                                                 <label>
                                                     <input type="radio" name="ReportTypeoption"
                                                            id="ReportCollectionGroupDesignationclick"
-                                                           value="CollectionGroupDesignation" th:field="*{requestType}"
+                                                           value="CollectionGroupDesignation"
+                                                           th:field="*{requestType}"
                                                            th:onclick="'javascript:cgd();'"/>
                                                     Collection Group Designation
                                                     <span class="cr"><i class="cr-icon radio-dot"></i></span>
@@ -110,6 +111,7 @@
                                                                            class="form-control themed-input"
                                                                            id="RequestDateRangefrom"
                                                                            name="RequestDateRangefrom"
+                                                                           onkeyup="ToggleRequestDateFrom()"
                                                                            th:field="*{requestFromDate}"/>
                                                                         <span class="input-group-addon">
                                                                             <span class="glyphicon glyphicon-calendar">
@@ -131,6 +133,7 @@
                                                                            class="form-control themed-input"
                                                                            id="RequestDateRangeto"
                                                                            name="RequestDateRangeto"
+                                                                           onkeyup="ToggleRequestDateTo()"
                                                                            th:field="*{requestToDate}"/>
                                                                             <span class="input-group-addon">
                                                                                 <span class="glyphicon glyphicon-calendar">
@@ -360,6 +363,7 @@
                                                                            placeholder="MM/DD/YYYY"
                                                                            id="AccessionDeaccessionDateRangefrom"
                                                                            name="AccessionDeaccessionDateRangefrom"
+                                                                           onkeyup="ToggleAccessionDateFrom()"
                                                                            th:field="${reportsForm.accessionDeaccessionFromDate}"/>
                                                                             <span class="input-group-addon">
                                                                                 <span class="glyphicon glyphicon-calendar">
@@ -381,6 +385,7 @@
                                                                            placeholder="MM/DD/YYYY"
                                                                            id="AccessionDeaccessionDateRangeto"
                                                                            name="AccessionDeaccessionDateRangeto"
+                                                                           onkeyup="ToggleAccessionDateTo()"
                                                                            th:field="${reportsForm.accessionDeaccessionToDate}"/>
                                                                             <span class="input-group-addon">
                                                                                 <span class="glyphicon glyphicon-calendar">
@@ -472,7 +477,7 @@
                                                             </td>
 
                                                         </tr>
-                                                        <tr class="border-style-bottom">
+                                                        <tr class="border-style-bottom bgcolored large-font fontcolor-dark border-style-top-white">
                                                             <td class="fontcolor-dark large-font">SUBTOTAL</td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.accessionPrivatePulCount + reportsForm.accessionSharedPulCount + reportsForm.accessionPrivatePulCount,0,'COMMA')}"></span>
                                                             </td>
@@ -514,7 +519,7 @@
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.deaccessionOpenNyplCount,0,'COMMA')}"></span>
                                                             </td>
                                                         </tr>
-                                                        <tr>
+                                                        <tr class="bgcolored large-font fontcolor-dark border-style-top-white">
                                                             <td class="fontcolor-dark large-font">SUBTOTAL</td>
 
                                                             <td><a href="#" class="Deaccession-tableshow" th:onclick="'javascript:deaccessionPul();'">

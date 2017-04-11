@@ -354,6 +354,7 @@
                                                             <div class="col-sm-8 padding-left-0">
                                                                 <textarea class="form-control themed-input" name="CGDChangeNotes" id="CGDChangeNotes" th:field="${collectionForm.cgdChangeNotes}" th:if="${!collectionForm.submitted}" th:onkeyup="'javascript:toggleCgdNotesValidation()'"></textarea>
                                                                 <span id="cgdNotesErrorMessage" style="color: red;">Please enter CGD Change Notes.</span>
+                                                                <span id="cgdNotesLengthErrMsg" style="color: red;display: none">Only 2000 Characters Allowed.</span>
                                                                 <div class="form-group">
                                                                     <span id="CGDNoteReadOnly" th:if="${collectionForm.submitted}" th:text="${collectionForm.cgdChangeNotes}"></span>
                                                                 </div>
@@ -414,6 +415,7 @@
                                                             <div class="col-sm-8 padding-left-0 padding-top-10">
                                                                 <textarea class="form-control themed-input" name="DeaccessionNotes" id="DeaccessionNotes" th:field="${collectionForm.deaccessionNotes}" th:if="${!collectionForm.submitted}" th:onkeyup="'javascript:toggleDeaccessionNotesValidation()'"></textarea>
                                                                 <span id="deaccessionNotesErrorMessage" style="color: red;">Please enter Deaccession Notes.</span>
+                                                                <span id="deaccessionNotesLengthErrMsg" style="color: red;display: none">Only 2000 Characters Allowed.</span>
                                                                 <span th:if="${collectionForm.submitted}" th:text="${collectionForm.deaccessionNotes}"></span>
                                                             </div>
                                                         </div>

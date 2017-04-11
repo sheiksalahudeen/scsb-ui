@@ -146,8 +146,6 @@ jQuery(document).ready(function ($) {
                 $('#showByErrorText').hide();
                 $('#requestFromDateErrorText').hide();
                 $('#requestToDateErrorText').hide();
-                $('#RequestDateRangefrom').val('');
-                $('#RequestDateRangeto').val('');
             } else if ($(this).find(':selected').val() === 'Partners') {
                 $('#showReportResultsText').hide();
                 $('#requesttype-tableview').hide();
@@ -159,8 +157,6 @@ jQuery(document).ready(function ($) {
                 $('#showByErrorText').hide();
                 $('#requestFromDateErrorText').hide();
                 $('#requestToDateErrorText').hide();
-                $('#RequestDateRangefrom').val('');
-                $('#RequestDateRangeto').val('');
             } else if ($(this).find(':selected').val() === 'RequestType') {
                 $('#showReportResultsText').hide();
                 $('#requesttype-tableview').hide();
@@ -172,10 +168,6 @@ jQuery(document).ready(function ($) {
                 $('#showByErrorText').hide();
                 $('#requestFromDateErrorText').hide();
                 $('#requestToDateErrorText').hide();
-                $('#RequestDateRangefrom').val('');
-                $('#RequestDateRangeto').val('');
-                $('#AccessionDeaccessionDateRangefrom').val('');
-                $('#AccessionDeaccessionDateRangeto').val('');
             }
         });
 
@@ -556,4 +548,97 @@ function incompletePageSizeRequest(){
 
         }
     });
+}
+
+
+function ToggleAccessionDateFrom(){
+    var dateFromLength = $('#AccessionDeaccessionDateRangefrom').val().length;
+    var dateFrom = $('#AccessionDeaccessionDateRangefrom').val();
+    var includes = dateFrom.includes('/');
+    if(dateFromLength == 8 && !includes){
+        var date = splitMMddYYYY(dateFrom);
+        $('#AccessionDeaccessionDateRangefrom').val(date.getMonth()+"/"+date.getDate()+"/"+date.getFullYear());
+    }
+    if(dateFromLength == 10 && includes){
+        var valid = isValidDate(dateFrom);
+        if(valid){
+            var split = dateFrom.split('/');
+            var dd = parseInt(split[0]);
+            var mm  = parseInt(split[1]);
+            var yyyy = parseInt(split[2]);
+            $('#AccessionDeaccessionDateRangefrom').val(dd+"/"+mm+"/"+yyyy);
+        }
+    }
+}
+
+function ToggleAccessionDateTo(){
+    var dateToLength = $('#AccessionDeaccessionDateRangeto').val().length;
+    var dateTo = $('#AccessionDeaccessionDateRangeto').val();
+    var includes = dateTo.includes('/');
+    if(dateToLength == 8 && !includes){
+        var date = splitMMddYYYY(dateTo);
+        $('#AccessionDeaccessionDateRangeto').val(date.getMonth()+"/"+date.getDate()+"/"+date.getFullYear());
+    }
+    if(dateToLength == 10 && includes){
+        var valid = isValidDate(dateTo);
+        if(valid){
+            var split = dateTo.split('/');
+            var dd = parseInt(split[0]);
+            var mm  = parseInt(split[1]);
+            var yyyy = parseInt(split[2]);
+            $('#AccessionDeaccessionDateRangeto').val(dd+"/"+mm+"/"+yyyy);
+        }
+    }
+}
+function ToggleRequestDateFrom(){
+    var dateFromLength = $('#RequestDateRangefrom').val().length;
+    var dateFrom = $('#RequestDateRangefrom').val();
+    var includes = dateFrom.includes('/');
+    if(dateFromLength == 8 && !includes){
+        var date = splitMMddYYYY(dateFrom);
+        $('#RequestDateRangefrom').val(date.getMonth()+"/"+date.getDate()+"/"+date.getFullYear());
+    }
+    else if(dateFromLength == 10 && includes){
+        var valid = isValidDate(dateFrom);
+        if(valid){
+            var split = dateFrom.split('/');
+            var dd = parseInt(split[0]);
+            var mm  = parseInt(split[1]);
+            var yyyy = parseInt(split[2]);
+            $('#RequestDateRangefrom').val(dd+"/"+mm+"/"+yyyy);
+        }
+    }
+}
+function ToggleRequestDateTo(){
+    var dateToLength = $('#RequestDateRangeto').val().length;
+    var dateTo = $('#RequestDateRangeto').val();
+    var includes = dateTo.includes('/');
+    if(dateToLength == 8 && !includes){
+        var date = splitMMddYYYY(dateTo);
+        $('#RequestDateRangeto').val(date.getMonth()+"/"+date.getDate()+"/"+date.getFullYear());
+    }
+    if(dateToLength == 10 && includes){
+        var valid = isValidDate(dateTo);
+        if(valid){
+            var split = dateTo.split('/');
+            var dd = parseInt(split[0]);
+            var mm  = parseInt(split[1]);
+            var yyyy = parseInt(split[2]);
+            $('#RequestDateRangeto').val(dd+"/"+mm+"/"+yyyy);
+        }
+    }
+}
+
+function splitMMddYYYY(dateFrom) {
+    var day = dateFrom.substring(2, 4);
+    var year = dateFrom.substring(4, 8);
+    var month = dateFrom.slice(0, 2);
+    var date = new Date(year, month, day);
+    return date;
+}
+
+function isValidDate(dateFrom) {
+    var formats = 'MM/DD/YYYY';
+    var valid = moment(dateFrom, formats).isValid();
+    return valid;
 }
