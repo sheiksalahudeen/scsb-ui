@@ -31,7 +31,7 @@ import java.io.FileInputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -88,12 +88,14 @@ public class ReportsController {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(RecapConstants.SIMPLE_DATE_FORMAT_REPORTS);
             Date requestFromDate = simpleDateFormat.parse(reportsForm.getRequestFromDate());
             Date requestToDate = simpleDateFormat.parse(reportsForm.getRequestToDate());
+            Date fromDate = getFromDate(requestFromDate);
+            Date toDate = getToDate(requestToDate);
             if (reportsForm.getShowBy().equalsIgnoreCase(RecapConstants.REPORTS_IL_BD)) {
-                reportsUtil.populateILBDCountsForRequest(reportsForm, requestFromDate, requestToDate);
+                reportsUtil.populateILBDCountsForRequest(reportsForm, fromDate, toDate);
             } else if (reportsForm.getShowBy().equalsIgnoreCase(RecapConstants.REPORTS_PARTNERS)) {
-                reportsUtil.populatePartnersCountForRequest(reportsForm, requestFromDate, requestToDate);
+                reportsUtil.populatePartnersCountForRequest(reportsForm, fromDate, toDate);
             } else if (reportsForm.getShowBy().equalsIgnoreCase(RecapConstants.REPORTS_REQUEST_TYPE)) {
-                reportsUtil.populateRequestTypeInformation(reportsForm, requestFromDate, requestToDate);
+                reportsUtil.populateRequestTypeInformation(reportsForm, fromDate, toDate);
             }
         } else if (reportsForm.getRequestType().equalsIgnoreCase(RecapConstants.REPORTS_ACCESSION_DEACCESSION)) {
             reportsUtil.populateAccessionDeaccessionItemCounts(reportsForm);
@@ -246,5 +248,24 @@ public class ReportsController {
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REPORTS);
         return new ModelAndView(RecapConstants.REPORTS_INCOMPLETE_RECORDS_VIEW, RecapConstants.REPORTS_FORM, reportsForm);
     }
+
+    public Date getFromDate(Date createdDate) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(createdDate);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        return  cal.getTime();
+    }
+
+    public Date getToDate(Date createdDate) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(createdDate);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        return cal.getTime();
+    }
+
 
 }
