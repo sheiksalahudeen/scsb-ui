@@ -72,6 +72,15 @@ public class LoginControllerUT extends BaseControllerUT{
         assertEquals(response,"login");
     }
 
+    @Test
+    public void testLogin(){
+        UserForm userForm = new UserForm();
+        userForm.setInstitution("PUL");
+        userForm.setUsername("test");
+        String response = loginController.login(userForm,request,model,error);
+        assertNotNull(response);
+    }
+
 
     private void usersSessionAttributes() throws Exception {
         when(request.getSession()).thenReturn(session);

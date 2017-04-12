@@ -90,49 +90,30 @@ public class RequestController {
         return requestServiceUtil;
     }
 
-    public void setRequestServiceUtil(RequestServiceUtil requestServiceUtil) {
-        this.requestServiceUtil = requestServiceUtil;
-    }
 
     public UserAuthUtil getUserAuthUtil() {
         return userAuthUtil;
-    }
-
-    public void setUserAuthUtil(UserAuthUtil userAuthUtil) {
-        this.userAuthUtil = userAuthUtil;
     }
 
     public InstitutionDetailsRepository getInstitutionDetailsRepository() {
         return institutionDetailsRepository;
     }
 
-    public void setInstitutionDetailsRepository(InstitutionDetailsRepository institutionDetailsRepository) {
-        this.institutionDetailsRepository = institutionDetailsRepository;
-    }
 
     public RequestTypeDetailsRepository getRequestTypeDetailsRepository() {
         return requestTypeDetailsRepository;
     }
 
-    public void setRequestTypeDetailsRepository(RequestTypeDetailsRepository requestTypeDetailsRepository) {
-        this.requestTypeDetailsRepository = requestTypeDetailsRepository;
-    }
 
     public CustomerCodeDetailsRepository getCustomerCodeDetailsRepository() {
         return customerCodeDetailsRepository;
     }
 
-    public void setCustomerCodeDetailsRepository(CustomerCodeDetailsRepository customerCodeDetailsRepository) {
-        this.customerCodeDetailsRepository = customerCodeDetailsRepository;
-    }
 
     public ItemDetailsRepository getItemDetailsRepository() {
         return itemDetailsRepository;
     }
 
-    public void setItemDetailsRepository(ItemDetailsRepository itemDetailsRepository) {
-        this.itemDetailsRepository = itemDetailsRepository;
-    }
 
     public String getServerProtocol() {
         return serverProtocol;
@@ -146,10 +127,6 @@ public class RequestController {
         return scsbUrl;
     }
 
-    public RequestStatusDetailsRepository getRequestStatusDetailsRepository() {
-        return requestStatusDetailsRepository;
-    }
-
     public RequestItemDetailsRepository getRequestItemDetailsRepository() {
         return requestItemDetailsRepository;
     }
@@ -158,15 +135,20 @@ public class RequestController {
         return new RestTemplate();
     }
 
+    public RequestStatusDetailsRepository getRequestStatusDetailsRepository() {
+        return requestStatusDetailsRepository;
+    }
+
     @RequestMapping("/request")
     public String request(Model model, HttpServletRequest request) throws JSONException {
         HttpSession session = request.getSession();
         boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REQUEST_URL, (UsernamePasswordToken) session.getAttribute(RecapConstants.USER_TOKEN));
         if (authenticated) {
             UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(session, RecapConstants.REQUEST_PRIVILEGE);
-            RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm);
+            RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm,model);
             Object requestedBarcode = ((BindingAwareModelMap) model).get(RecapConstants.REQUESTED_BARCODE);
             if (requestedBarcode != null) {
+                requestForm.setOnChange("true");
                 requestForm.setItemBarcodeInRequest((String) requestedBarcode);
                 String stringJson = populateItem(requestForm, null, model, request);
                 if (stringJson != null) {
@@ -273,7 +255,7 @@ public class RequestController {
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=loadCreateRequest")
     public ModelAndView loadCreateRequest(Model model, HttpServletRequest request) {
         UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(request.getSession(), RecapConstants.REQUEST_PRIVILEGE);
-        RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm);
+        RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm,model);
         model.addAttribute(RecapConstants.REQUEST_FORM, requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
         return new ModelAndView(RecapConstants.REQUEST, RecapConstants.REQUEST_FORM, requestForm);
@@ -284,7 +266,7 @@ public class RequestController {
     public ModelAndView loadSearchRequest(Model model, HttpServletRequest request) {
         RequestForm requestForm = new RequestForm();
         List<String> requestStatuses = new ArrayList<>();
-        Iterable<RequestStatusEntity> requestStatusEntities = requestStatusDetailsRepository.findAll();
+        Iterable<RequestStatusEntity> requestStatusEntities = getRequestStatusDetailsRepository().findAll();
         for (Iterator iterator = requestStatusEntities.iterator(); iterator.hasNext(); ) {
             RequestStatusEntity requestStatusEntity = (RequestStatusEntity) iterator.next();
             requestStatuses.add(requestStatusEntity.getRequestStatusDescription());
@@ -295,8 +277,22 @@ public class RequestController {
         return new ModelAndView(RecapConstants.REQUEST, RecapConstants.REQUEST_FORM, requestForm);
     }
 
-    private RequestForm setDefaultsToCreateRequest(UserDetailsForm userDetailsForm) {
+    private RequestForm setDefaultsToCreateRequest(UserDetailsForm userDetailsForm,Model model) {
         RequestForm requestForm = new RequestForm();
+        Boolean addOnlyRecall = false;
+        Boolean addAllRequestType = false;
+        Object availabilty = ((BindingAwareModelMap) model).get(RecapConstants.REQUESTED_ITEM_AVAILABILITY);
+        if (availabilty != null){
+            HashSet<String> str = (HashSet<String>) availabilty;
+            for (String itemAvailability : str){
+                if(RecapConstants.NOT_AVAILABLE.equalsIgnoreCase(itemAvailability)){
+                    addOnlyRecall = true;
+                }
+                if(RecapConstants.AVAILABLE.equalsIgnoreCase(itemAvailability)){
+                    addAllRequestType = true;
+                }
+            }
+        }
 
         List<String> requestingInstitutions = new ArrayList<>();
         List<String> requestTypes = new ArrayList<>();
@@ -305,17 +301,35 @@ public class RequestController {
         Iterable<InstitutionEntity> institutionEntities = getInstitutionDetailsRepository().findAll();
         for (Iterator iterator = institutionEntities.iterator(); iterator.hasNext(); ) {
             InstitutionEntity institutionEntity = (InstitutionEntity) iterator.next();
-            if ((userDetailsForm.getLoginInstitutionId() == institutionEntity.getInstitutionId() || userDetailsForm.isRecapUser() || userDetailsForm.isSuperAdmin()) && (!RecapConstants.HTC.equals(institutionEntity.getInstitutionCode()))) {
+            if (userDetailsForm.getLoginInstitutionId() == institutionEntity.getInstitutionId() && (!userDetailsForm.isRecapUser()) && (!userDetailsForm.isSuperAdmin()) && (!RecapConstants.HTC.equals(institutionEntity.getInstitutionCode())) ) {
                 requestingInstitutions.add(institutionEntity.getInstitutionCode());
+                requestForm.setRequestingInstitutions(requestingInstitutions);
+                requestForm.setRequestingInstitution(institutionEntity.getInstitutionCode());
+                requestForm.setDisableRequestingInstitution(true);
+                requestForm.setOnChange("true");
+            }
+            if ((userDetailsForm.isRecapUser() || userDetailsForm.isSuperAdmin()) && (!RecapConstants.HTC.equals(institutionEntity.getInstitutionCode()))) {
+                requestingInstitutions.add(institutionEntity.getInstitutionCode());
+                requestForm.setRequestingInstitutions(requestingInstitutions);
+                requestForm.setRequestingInstitution("");
+                requestForm.setDisableRequestingInstitution(false);
             }
         }
 
-        Iterable<RequestTypeEntity> requestTypeEntities = getRequestTypeDetailsRepository().findAll();
-        for (Iterator iterator = requestTypeEntities.iterator(); iterator.hasNext(); ) {
-            RequestTypeEntity requestTypeEntity = (RequestTypeEntity) iterator.next();
-            if (!RecapConstants.BORROW_DIRECT.equals(requestTypeEntity.getRequestTypeCode())) {
-                requestTypes.add(requestTypeEntity.getRequestTypeCode());
+        if(addOnlyRecall &&(addAllRequestType == false)){
+            RequestTypeEntity requestTypeEntity = getRequestTypeDetailsRepository().findByRequestTypeCode(RecapConstants.RECALL);
+            requestTypes.add(requestTypeEntity.getRequestTypeCode());
+            requestForm.setRequestType(requestTypeEntity.getRequestTypeCode());
+        }
+        if (!addOnlyRecall || addAllRequestType) {
+            Iterable<RequestTypeEntity> requestTypeEntities = getRequestTypeDetailsRepository().findAll();
+            for (Iterator iterator = requestTypeEntities.iterator(); iterator.hasNext(); ) {
+                RequestTypeEntity requestTypeEntity = (RequestTypeEntity) iterator.next();
+                if (!RecapConstants.BORROW_DIRECT.equals(requestTypeEntity.getRequestTypeCode())) {
+                    requestTypes.add(requestTypeEntity.getRequestTypeCode());
+                }
             }
+            requestForm.setRequestType(RecapConstants.RETRIEVAL);
         }
 
         Iterable<CustomerCodeEntity> customerCodeEntities = getCustomerCodeDetailsRepository().findAll();
@@ -325,11 +339,7 @@ public class RequestController {
                 deliveryLocations.add(customerCodeEntity);
             }
         }
-
-        requestForm.setRequestingInstitutions(requestingInstitutions);
         requestForm.setRequestTypes(requestTypes);
-        requestForm.setDeliveryLocations(deliveryLocations);
-        requestForm.setRequestType(RecapConstants.RETRIEVAL);
         return requestForm;
     }
 
@@ -339,13 +349,12 @@ public class RequestController {
                                BindingResult result,
                                Model model, HttpServletRequest request) throws JSONException {
         JSONObject jsonObject = new JSONObject();
-
+        Map<String,String> deliveryLocationsMap = new LinkedHashMap<>();
         if (StringUtils.isNotBlank(requestForm.getItemBarcodeInRequest())) {
             List<String> itemBarcodes = Arrays.asList(requestForm.getItemBarcodeInRequest().split(","));
             List<String> invalidBarcodes = new ArrayList<>();
             Set<String> itemTitles = new HashSet<>();
             Set<String> itemOwningInstitutions = new HashSet<>();
-            Map<String,String> deliveryLocationsMap = new HashMap<>();
             UserDetailsForm userDetailsForm;
             for (String itemBarcode : itemBarcodes) {
                 String barcode = itemBarcode.trim();
@@ -364,6 +373,7 @@ public class RequestController {
                                 } else {
                                     Integer institutionId = itemEntity.getInstitutionEntity().getInstitutionId();
                                     String institutionCode = itemEntity.getInstitutionEntity().getInstitutionCode();
+                                    requestForm.setItemOwningInstitution(institutionCode);
                                     for (BibliographicEntity bibliographicEntity : itemEntity.getBibliographicEntities()) {
                                         String bibContent = new String(bibliographicEntity.getContent());
                                         BibJSONUtil bibJSONUtil = new BibJSONUtil();
@@ -372,20 +382,54 @@ public class RequestController {
                                         itemTitles.add(bibJSONUtil.getTitle(marcRecord));
                                         itemOwningInstitutions.add(institutionCode);
                                     }
-                                    String customerCode = itemEntity.getCustomerCode();
-                                    CustomerCodeEntity customerCodeEntity = customerCodeDetailsRepository.findByCustomerCodeAndOwningInstitutionId(customerCode, institutionId);
-                                    if (customerCodeEntity != null) {
-                                        String deliveryRestrictions = customerCodeEntity.getDeliveryRestrictions();
-                                        if (StringUtils.isNotBlank(deliveryRestrictions)) {
-                                            String[] deliveryLocationsArray = deliveryRestrictions.split(",");
-                                            for (String deliveryLocation : deliveryLocationsArray) {
-                                                CustomerCodeEntity byCustomerCode = customerCodeDetailsRepository.findByCustomerCodeAndOwningInstitutionId(deliveryLocation, institutionId);
-                                                if (byCustomerCode != null) {
-                                                    deliveryLocationsMap.put(byCustomerCode.getCustomerCode(), byCustomerCode.getDescription());
+                                    String replaceReqInst = requestForm.getRequestingInstitution().replace(",", "");
+                                    requestForm.setRequestingInstitution(replaceReqInst);
+                                    if("true".equals(requestForm.getOnChange()) && StringUtils.isNotBlank(requestForm.getRequestingInstitution())){
+                                        String customerCode = itemEntity.getCustomerCode();
+                                        CustomerCodeEntity customerCodeEntity = customerCodeDetailsRepository.findByCustomerCodeAndOwningInstitutionId(customerCode, institutionId);
+                                        if(requestForm.getItemOwningInstitution().equals(requestForm.getRequestingInstitution())){
+                                            if (customerCodeEntity != null) {
+                                                String deliveryRestrictions = customerCodeEntity.getDeliveryRestrictions();
+                                                if (StringUtils.isNotBlank(deliveryRestrictions)) {
+                                                    String[] deliverLocationsArray = deliveryRestrictions.split(",");
+                                                    List<CustomerCodeEntity> customerCodeEntities = customerCodeDetailsRepository.findByCustomerCodeIn(Arrays.asList(deliverLocationsArray));
+                                                    if (CollectionUtils.isNotEmpty(customerCodeEntities)) {
+                                                        Collections.sort(customerCodeEntities);
+                                                        for (CustomerCodeEntity byCustomerCode : customerCodeEntities) {
+                                                            deliveryLocationsMap.put(byCustomerCode.getCustomerCode(), byCustomerCode.getDescription());
+                                                        }
+                                                    }
+                                                } else {
+                                                    deliveryLocationsMap.put(customerCodeEntity.getCustomerCode(), customerCodeEntity.getDescription());
                                                 }
                                             }
-                                        } else {
-                                            deliveryLocationsMap.put(customerCodeEntity.getCustomerCode(), customerCodeEntity.getDescription());
+                                        }
+                                        else{
+                                            if (customerCodeEntity != null) {
+                                                List<DeliveryRestrictionEntity> deliveryRestrictionEntityList = customerCodeEntity.getDeliveryRestrictionEntityList();
+                                                for (DeliveryRestrictionEntity deliveryRestrictionEntity : deliveryRestrictionEntityList) {
+                                                    if(requestForm.getRequestingInstitution().equals(deliveryRestrictionEntity.getInstitutionEntity().getInstitutionCode())){
+                                                        String deliveryRestriction = deliveryRestrictionEntity.getDeliveryRestriction();
+                                                        String[] splitDeliveryLocation = StringUtils.split(deliveryRestriction, ",");
+                                                        if(splitDeliveryLocation.length == 1){
+                                                            CustomerCodeEntity byCustomerCode = customerCodeDetailsRepository.findByCustomerCode(deliveryRestriction);
+                                                            if (byCustomerCode != null){
+                                                                deliveryLocationsMap.put(byCustomerCode.getCustomerCode(),byCustomerCode.getDescription());
+                                                            }
+                                                        }
+                                                        else {
+                                                            List<CustomerCodeEntity> customerCodeEntityList = customerCodeDetailsRepository.findByCustomerCodeIn(Arrays.asList(splitDeliveryLocation));
+                                                            Collections.sort(customerCodeEntityList);
+                                                            for (CustomerCodeEntity codeEntity : customerCodeEntityList) {
+                                                                if (codeEntity != null){
+                                                                    deliveryLocationsMap.put(codeEntity.getCustomerCode(),codeEntity.getDescription());
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+
+                                            }
                                         }
                                     }
                                 }
@@ -407,6 +451,13 @@ public class RequestController {
             }
             if (null != deliveryLocationsMap) {
                 jsonObject.put(RecapConstants.DELIVERY_LOCATION, deliveryLocationsMap);
+            }
+        }
+        else{
+            String replaceReqInst = requestForm.getRequestingInstitution().replace(",", "");
+            if(StringUtils.isBlank(replaceReqInst)){
+                deliveryLocationsMap.put("","");
+                jsonObject.put(RecapConstants.DELIVERY_LOCATION,deliveryLocationsMap);
             }
         }
         return jsonObject.toString();
@@ -458,6 +509,8 @@ public class RequestController {
             itemRequestInformation.setIssue(requestForm.getIssue());
             if (requestForm.getVolumeNumber() != null) {
                 itemRequestInformation.setVolume(requestForm.getVolumeNumber().toString());
+            } else {
+                itemRequestInformation.setVolume("");
             }
 
             if (StringUtils.isNotBlank(requestForm.getDeliveryLocationInRequest())) {

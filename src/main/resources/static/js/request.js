@@ -6,7 +6,6 @@ $("a[href='https://htcrecap.atlassian.net/wiki/display/RTG/Search']").attr('href
     'https://htcrecap.atlassian.net/wiki/display/RTG/Request');
 
 function onChangeRequestStatus() {
-    console.log("change");
     var status = $('#requestStatus').val();
     if (status == 'active'){
         $('#noteActive').show();
@@ -103,6 +102,7 @@ function clearRequests() {
     $('#itemBarcodeSearchError').hide();
     $('#noteAll').show();
     $('#noteActive').hide();
+    $('#notesLengthErrMsg').hide();
 }
 
 
@@ -171,18 +171,20 @@ function populateItemDetails() {
                 $('#itemOwningInstitutionId').val(jsonResponse['itemOwningInstitution']);
                 var errorMessage = jsonResponse['errorMessage'];
                 var noPermissionErrorMessage = jsonResponse['noPermissionErrorMessage'];
-                var delivery = jsonResponse['deliveryLocation'];
-                $('#deliveryLocationId').empty();
-                $('#deliveryLocationId').append($("<option/>", {
-                    value: "",
-                    text: ""
-                }));
-                $.each(delivery, function(key, value) {
+                var deliveryLocation = jsonResponse['deliveryLocation'];
+                if (deliveryLocation != null && deliveryLocation != '') {
+                    $('#deliveryLocationId').empty();
                     $('#deliveryLocationId').append($("<option/>", {
-                        value: key,
-                        text: value
+                        value: "",
+                        text: ""
                     }));
-                });
+                    $.each(deliveryLocation, function (key, value) {
+                        $('#deliveryLocationId').append($("<option/>", {
+                            value: key,
+                            text: value
+                        }));
+                    });
+                }
                 $('#itemBarcodeErrorMessage').hide();
                 if (errorMessage != null && errorMessage != '') {
                     $('#itemBarcodeNotFoundErrorMessage').html(errorMessage);
@@ -213,13 +215,19 @@ $(function() {
 
 function isValidInputs() {
     var isValid = true;
-    
+
     var itemBarcode = $('#itemBarcodeId').val();
     var patronBarcode = $('#patronBarcodeId').val();
     var requestType = $('#requestTypeId').val();
     var deliveryLocation = $('#deliveryLocationId').val();
     var requestingInstitution = $('#requestingInstitutionId').val();
-
+    var notesLength = $('#requestNotesId').val().length;
+    if (notesLength  > 2000){
+        $('#notesLengthErrMsg').show();
+        isValid = false;
+    }else {
+        $('#notesLengthErrMsg').hide();
+    }
     validateEmailAddress();
 
     if (isBlankValue(itemBarcode)) {
@@ -340,7 +348,7 @@ function isBlankValue(value) {
         return true;
     }
     return false;
-}    
+}
 
 function resetDefaults() {
     $('#errorMessageId').hide();
@@ -364,6 +372,7 @@ function resetDefaults() {
     $('#requestingInstitutionId').val('');
     $('#requestNotesId').val('');
     $('#deliverylocation_request').show();
+    $('#deliveryLocationId').empty();
     //EDD
     $('#EDD').hide();
     $('#StartPage').val('');
@@ -374,6 +383,7 @@ function resetDefaults() {
     $('#ArticleChapterTitle').val('');
     $('#EmailMandatoryErrorMessage').hide();
     $('#emailMandatory').hide();
+    $('#notesLengthErrMsg').hide();
 
 
 }
@@ -383,6 +393,12 @@ function toggleItemBarcodeValidation() {
     if (isBlankValue(itemBarcode)) {
         $('#itemBarcodeErrorMessage').show();
         $('#itemBarcodeNotFoundErrorMessage').hide();
+        $('#itemTitleId').val('');
+        $('#itemOwningInstitutionId').val('');
+        $('#patronBarcodeId').val('');
+        $('#patronEmailId').val('');
+        $('#deliveryLocationId').val('');
+        $('#deliveryLocationId').empty();
     } else {
         $('#itemBarcodeErrorMessage').hide();
     }
@@ -453,11 +469,13 @@ function validateEmailAddress() {
 
 function createRequestSamePatron() {
     $('#createRequestModal').modal('hide');
+    $("#requestingInstitutionId option").prop("disabled", false);
     $('#patronBarcodeId').val($('#patronBarcodeInRequest').html());
     $('#patronEmailId').val($('#patronEmailAddress').html());
     $('#requestingInstitutionId').val($('#requestingInstitution').html());
     $('.EDDdetails-section').hide();
     $('#deliverylocation_request').show();
+    $('#deliveryLocationId').empty();
 }
 
 function cancelRequest(index) {
@@ -544,5 +562,61 @@ function emailMandatory(){
     else {
         $('#emailMandatory').hide();
         $('#EmailMandatoryErrorMessage').hide();
+    }
+}
+
+
+function populateDeliveryLocations(){
+    var requestingInstitutionId = $('#requestingInstitutionId').val();
+    if(!isBlankValue(requestingInstitutionId)){
+        toggleRequestingInstitutionValidation();
+    }
+    $('#onChangeOwnInst').val('true');
+    var $form = $('#request-form');
+    var url = $form.attr('action') + "?action=populateItem";
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: $form.serialize(),
+        success: function (response) {
+            var jsonResponse = JSON.parse(response);
+            $('#itemTitleId').val(jsonResponse['itemTitle']);
+            $('#itemOwningInstitutionId').val(jsonResponse['itemOwningInstitution']);
+            var errorMessage = jsonResponse['errorMessage'];
+            var noPermissionErrorMessage = jsonResponse['noPermissionErrorMessage'];
+            var deliveryLocation = jsonResponse['deliveryLocation'];
+            if (deliveryLocation != null && deliveryLocation != '') {
+                $('#deliveryLocationId').empty();
+                $('#deliveryLocationId').append($("<option/>", {
+                    value: "",
+                    text: ""
+                }));
+                $.each(deliveryLocation, function (key, value) {
+                    $('#deliveryLocationId').append($("<option/>", {
+                        value: key,
+                        text: value
+                    }));
+                });
+            }
+            $('#itemBarcodeErrorMessage').hide();
+            if (errorMessage != null && errorMessage != '') {
+                $('#itemBarcodeNotFoundErrorMessage').html(errorMessage);
+                $('#itemBarcodeNotFoundErrorMessage').show();
+            } else if (noPermissionErrorMessage != null && noPermissionErrorMessage != '') {
+                $('#itemBarcodeNotFoundErrorMessage').html(noPermissionErrorMessage);
+                $('#itemBarcodeNotFoundErrorMessage').show();
+            } else {
+                $('#itemBarcodeNotFoundErrorMessage').html('');
+            }
+        }
+    });
+}
+
+function NotesLengthValidation(){
+    var notesLength = $('#requestNotesId').val().length;
+    if (notesLength > 2000){
+        $('#notesLengthErrMsg').show();
+    }else {
+        $('#notesLengthErrMsg').hide();
     }
 }

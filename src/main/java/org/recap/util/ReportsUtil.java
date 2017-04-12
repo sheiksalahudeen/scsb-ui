@@ -43,9 +43,6 @@ public class ReportsUtil {
         reportsForm.setIlRequestPulCount(requestItemDetailsRepository.getIlRequestCounts(requestFromDate, requestToDate, RecapConstants.PUL_INST_ID, Arrays.asList(RecapConstants.CUL_INST_ID, RecapConstants.NYPL_INST_ID)));
         reportsForm.setIlRequestCulCount(requestItemDetailsRepository.getIlRequestCounts(requestFromDate, requestToDate, RecapConstants.CUL_INST_ID, Arrays.asList(RecapConstants.PUL_INST_ID, RecapConstants.NYPL_INST_ID)));
         reportsForm.setIlRequestNyplCount(requestItemDetailsRepository.getIlRequestCounts(requestFromDate, requestToDate, RecapConstants.NYPL_INST_ID, Arrays.asList(RecapConstants.PUL_INST_ID, RecapConstants.CUL_INST_ID)));
-        reportsForm.setBdRequestPulCount(requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(requestFromDate, requestToDate, RecapConstants.PUL_INST_ID, RecapConstants.BORROW_DIRECT));
-        reportsForm.setBdRequestCulCount(requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(requestFromDate, requestToDate, RecapConstants.CUL_INST_ID, RecapConstants.BORROW_DIRECT));
-        reportsForm.setBdRequestNyplCount(requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(requestFromDate, requestToDate, RecapConstants.NYPL_INST_ID, RecapConstants.BORROW_DIRECT));
         reportsForm.setShowILBDResults(true);
         reportsForm.setShowReportResultsText(true);
         reportsForm.setShowNoteILBD(true);
@@ -172,20 +169,18 @@ public class ReportsUtil {
     }
 
     private void writeRow(IncompleteReportResultsRow incompleteReportResultsRow, CsvWriter csvOutput) throws IOException {
-        csvOutput.write(incompleteReportResultsRow.getOwningInstitution());
-        csvOutput.write(incompleteReportResultsRow.getCustomerCode());
         csvOutput.write(incompleteReportResultsRow.getTitle());
         csvOutput.write(incompleteReportResultsRow.getAuthor());
+        csvOutput.write(incompleteReportResultsRow.getCustomerCode());
         csvOutput.write(incompleteReportResultsRow.getBarcode());
         csvOutput.write(incompleteReportResultsRow.getCreatedDate());
         csvOutput.endRecord();
     }
 
     private void writeHeader(CsvWriter csvOutput) throws Exception{
-        csvOutput.write("Owning Institution");
-        csvOutput.write("Customer code");
         csvOutput.write("Title");
         csvOutput.write("Author");
+        csvOutput.write("Customer code");
         csvOutput.write("Barcode");
         csvOutput.write("Accession Date");
         csvOutput.endRecord();

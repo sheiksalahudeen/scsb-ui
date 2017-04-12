@@ -258,7 +258,7 @@
                                                         <div id="collectionUpdateErrorMessage" class="row margin-btm-10" th:if="${collectionForm.errorMessage ne null &amp;&amp; collectionForm.errorMessage ne ''}">
                                                             <div class="col-sm-12">
                                                                 <div class="bg-danger text-danger padding-10">
-                                                                    <span class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span th:text="${collectionForm.errorMessage}"></span>
+                                                                    <span class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span th:utext="${collectionForm.errorMessage}"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -348,13 +348,14 @@
                                                         </div>
 
                                                         <div class="row form-group">
-                                                            <div class="col-sm-4 text-right padding-right-30 margin-top-05">
+                                                            <div class="col-sm-4 text-right padding-right-30">
                                                                 <label for="CGDChangeNotes" class="fontcolor-dark">CGD Change Notes <span class="error-color" th:if="${!collectionForm.submitted &amp;&amp; collectionForm.collectionGroupDesignation eq 'Shared'}">*</span></label>
                                                             </div>
                                                             <div class="col-sm-8 padding-left-0">
                                                                 <textarea class="form-control themed-input" name="CGDChangeNotes" id="CGDChangeNotes" th:field="${collectionForm.cgdChangeNotes}" th:if="${!collectionForm.submitted}" th:onkeyup="'javascript:toggleCgdNotesValidation()'"></textarea>
                                                                 <span id="cgdNotesErrorMessage" style="color: red;">Please enter CGD Change Notes.</span>
-                                                                <div class="form-group padding-top-10">
+                                                                <span id="cgdNotesLengthErrMsg" style="color: red;display: none">Only 2000 Characters Allowed.</span>
+                                                                <div class="form-group">
                                                                     <span id="CGDNoteReadOnly" th:if="${collectionForm.submitted}" th:text="${collectionForm.cgdChangeNotes}"></span>
                                                                 </div>
                                                             </div>
@@ -369,7 +370,7 @@
                                                                         onclick="collectionUpdate()"
                                                                         class="btn btn-primary"
                                                                         th:if="${!collectionForm.submitted}">
-                                                                    Edit CGD
+                                                                    Save
                                                                 </button>
                                                             </div>
                                                         </div>
@@ -400,7 +401,7 @@
                                                                             th:disabled="${collectionForm.availability != 'Available'}"
                                                                             th:onchange="'javascript:toggleDeliveryLocationValidation()'">
                                                                         <option value=""></option>
-                                                                        <option th:each="location : ${collectionForm.deliveryLocations}" th:value="${location}" th:text="${location}"></option>
+                                                                        <option th:each="location : ${collectionForm.deliveryLocations}" th:value="${location.getCustomerCode()}" th:text="${location.getDescription()}"></option>
                                                                     </select>
                                                                 </div>
                                                                 <span id="locationErrorMessage" style="color: red;">This is a mandatory field.</span>
@@ -414,6 +415,7 @@
                                                             <div class="col-sm-8 padding-left-0 padding-top-10">
                                                                 <textarea class="form-control themed-input" name="DeaccessionNotes" id="DeaccessionNotes" th:field="${collectionForm.deaccessionNotes}" th:if="${!collectionForm.submitted}" th:onkeyup="'javascript:toggleDeaccessionNotesValidation()'"></textarea>
                                                                 <span id="deaccessionNotesErrorMessage" style="color: red;">Please enter Deaccession Notes.</span>
+                                                                <span id="deaccessionNotesLengthErrMsg" style="color: red;display: none">Only 2000 Characters Allowed.</span>
                                                                 <span th:if="${collectionForm.submitted}" th:text="${collectionForm.deaccessionNotes}"></span>
                                                             </div>
                                                         </div>
@@ -446,7 +448,7 @@
                             </div>
                             <div class="divider-horizontal margin-top-10 margin-btm-10"></div>
                             <div class="modal-footer">
-                                <button class="btn themed-button themed-button-cancel padding-left-30 padding-right-30" data-dismiss="modal" aria-label="Close">Cancel</button>
+                                <button class="btn themed-button themed-button-cancel padding-left-30 padding-right-30" data-dismiss="modal" aria-label="Close">Close</button>
                             </div>
                         </div>
                     </div>

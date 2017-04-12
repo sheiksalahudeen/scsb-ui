@@ -163,6 +163,7 @@ function isValidInputs() {
         var oldCgd = $('#cgdField').val();
         var newCgd = $('#newCGD').val();
         var cgdNotes = $('#CGDChangeNotes').val();
+        var cgdNoteLength = cgdNotes.length;
 
         if (isBlankValue(newCgd)) {
             $('#cgdErrorMessage').show();
@@ -173,6 +174,10 @@ function isValidInputs() {
         } else if (oldCgd == 'Shared' && newCgd != 'Shared' && (cgdNotes == null || cgdNotes == '')) {
             $('#cgdNotesErrorMessage').show();
             $('#cgdErrorMessage').hide();
+        }else if(cgdNoteLength > 2000){
+            $('#cgdNotesLengthErrMsg').show();
+            $('#cgdErrorMessage').hide();
+            $('#cgdNotesErrorMessage').hide();
         } else {
             return true;
         }
@@ -180,6 +185,7 @@ function isValidInputs() {
         var deaccessionType = $('#deaccessionType').val();
         var deliveryLocation = $('#DeliveryLocation').val();
         var deaccessionNotes = $('#DeaccessionNotes').val();
+        var deaccessionNotesLength = deaccessionNotes.length;
 
         if (deaccessionType == 'Permanent Withdrawal Direct (PWD)' && (deliveryLocation == null || deliveryLocation == '') && (deaccessionNotes == null || deaccessionNotes == '')) {
             $('#locationErrorMessage').show();
@@ -190,7 +196,13 @@ function isValidInputs() {
         } else if (deaccessionNotes == null || deaccessionNotes == '') {
             $('#deaccessionNotesErrorMessage').show();
             $('#locationErrorMessage').hide();
-        } else {
+        }
+        else if(deaccessionNotesLength > 2000){
+            $('#deaccessionNotesLengthErrMsg').show();
+            $('#deaccessionNotesErrorMessage').hide();
+            $('#locationErrorMessage').hide();
+        }
+        else {
             return true;
         }
     }
@@ -213,11 +225,21 @@ function toggleCgdNotesValidation() {
     var oldCgd = $('#cgdField').val();
     var newCgd = $('#newCGD').val();
     var CGDChangeNotes = $('#CGDChangeNotes').val();
+    var cgdNoteLength = CGDChangeNotes.length;
     if (isBlankValue(CGDChangeNotes)) {
         $('#cgdNotesErrorMessage').show();
+        $('#cgdNotesLengthErrMsg').hide();
     } else {
         $('#cgdNotesErrorMessage').hide();
     }
+    if(cgdNoteLength > 2000) {
+        $('#cgdNotesLengthErrMsg').show();
+        $('#cgdNotesErrorMessage').hide();
+    }
+    else{
+        $('#cgdNotesLengthErrMsg').hide();
+    }
+
 }
 
 function toggleDeliveryLocationValidation() {
@@ -232,11 +254,20 @@ function toggleDeliveryLocationValidation() {
 
 function toggleDeaccessionNotesValidation() {
     var DeaccessionNotes = $('#DeaccessionNotes').val();
+    var deaccessionNotesLength = DeaccessionNotes.length;
     if (isBlankValue(DeaccessionNotes)) {
         $('#deaccessionNotesErrorMessage').show();
+        $('#deaccessionNotesLengthErrMsg').hide();
     } else {
         $('#deaccessionNotesErrorMessage').hide();
     }
+    if(deaccessionNotesLength > 2000){
+        $('#deaccessionNotesLengthErrMsg').show();
+        $('#deaccessionNotesErrorMessage').hide();
+    }else{
+        $('#deaccessionNotesLengthErrMsg').hide();
+    }
+
 }
 
 function isBlankValue(value) {

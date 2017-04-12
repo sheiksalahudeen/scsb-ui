@@ -400,6 +400,7 @@ public class RecapConstants {
     public static final String DELETED_SUCCESSFULLY = " deleted successfully";
     public static final String ALREADY_EXISTS = " already exists";
     public static final String ADDED_SUCCESSFULLY = " added Successfully";
+    public static final String EDITED_SUCCESSFULLY = " edited Successfully";
     //USERS
     public static final String NETWORK_LOGIN_ID_DOES_NOT_EXIST = "Network Login Id does not exist";
     public static final String EMAILID_ID_DOES_NOT_EXIST = "User email ID does not exist";
@@ -487,4 +488,6 @@ public class RecapConstants {
         headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
         return headers;
     }
+
+    public static final String REQUESTED_ITEM_AVAILABILITY="requestedItemAvailabilty";
 }

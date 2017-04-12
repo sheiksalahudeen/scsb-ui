@@ -202,6 +202,8 @@ public class BibliographicEntityUT extends BaseTestCase {
         bibliographicEntity.setCreatedBy("tst");
         bibliographicEntity.setLastUpdatedBy("tst");
         bibliographicEntity.setOwningInstitutionId(1);
+        bibliographicEntity.setCatalogingStatus("Complete");
+        bibliographicEntity.setDeleted(false);
         bibliographicEntity.setOwningInstitutionBibId(String.valueOf(random.nextInt()));
 
 
@@ -229,6 +231,8 @@ public class BibliographicEntityUT extends BaseTestCase {
         BibliographicEntity savedBibliographicEntity = bibliographicDetailsRepository.saveAndFlush(bibliographicEntity);
         entityManager.refresh(savedBibliographicEntity);
         assertNotNull(savedBibliographicEntity);
+        assertEquals(savedBibliographicEntity.getCatalogingStatus(),"Complete");
+        assertTrue(!savedBibliographicEntity.isDeleted());
         assertNotNull(savedBibliographicEntity.getHoldingsEntities().get(0).getHoldingsId());
         assertNotNull(savedBibliographicEntity.getHoldingsEntities().get(1).getHoldingsId());
     }
@@ -261,6 +265,8 @@ public class BibliographicEntityUT extends BaseTestCase {
         holdingsEntity.setCreatedBy("tst");
         holdingsEntity.setLastUpdatedBy("tst");
         holdingsEntity.setOwningInstitutionHoldingsId(String.valueOf(random.nextInt()));
+        holdingsEntity.setDeleted(false);
+
 
         bibliographicEntity1.setHoldingsEntities(Arrays.asList(holdingsEntity));
         bibliographicEntity2.setHoldingsEntities(Arrays.asList(holdingsEntity));
@@ -289,6 +295,7 @@ public class BibliographicEntityUT extends BaseTestCase {
         holdingsEntity.setLastUpdatedBy("tst");
         holdingsEntity.setOwningInstitutionId(1);
         holdingsEntity.setOwningInstitutionHoldingsId(String.valueOf(random.nextInt()));
+        holdingsEntity.setDeleted(false);
 
         ItemEntity itemEntity = new ItemEntity();
         itemEntity.setLastUpdatedDate(new Date());
@@ -305,6 +312,7 @@ public class BibliographicEntityUT extends BaseTestCase {
         itemEntity.setItemAvailabilityStatusId(1);
         itemEntity.setHoldingsEntities(Arrays.asList(holdingsEntity));
 
+        holdingsEntity.setBibliographicEntities(Arrays.asList(bibliographicEntity));
         bibliographicEntity.setHoldingsEntities(Arrays.asList(holdingsEntity));
         bibliographicEntity.setItemEntities(Arrays.asList(itemEntity));
 
@@ -313,6 +321,7 @@ public class BibliographicEntityUT extends BaseTestCase {
         assertNotNull(savedBibliographicEntity);
         assertNotNull(savedBibliographicEntity.getHoldingsEntities());
         assertNotNull(savedBibliographicEntity.getItemEntities());
+        assertNotNull(savedBibliographicEntity.getHoldingsEntities().get(0).isDeleted());
 
     }
 
@@ -409,6 +418,36 @@ public class BibliographicEntityUT extends BaseTestCase {
     public File getUnicodeContentFile() throws URISyntaxException {
         URL resource = getClass().getResource("UnicodeBibContent.xml");
         return new File(resource.toURI());
+    }
+
+    @Test
+    public void testBibliographicPK(){
+        BibliographicPK bibliographicPK = new BibliographicPK();
+        BibliographicPK bibliographicPK1 = new BibliographicPK(1,".b000213654");
+        bibliographicPK.setOwningInstitutionBibId(".b000213654");
+        bibliographicPK.setOwningInstitutionId(1);
+        assertNotNull(bibliographicPK.getOwningInstitutionId());
+        assertNotNull(bibliographicPK.getOwningInstitutionBibId());
+    }
+
+    @Test
+    public void testHoldingsPK(){
+        HoldingsPK holdingsPK = new HoldingsPK();
+        HoldingsPK holdingsPK1 = new HoldingsPK(1,".b0000000001");
+        holdingsPK.setOwningInstitutionHoldingsId(".b0000000001");
+        holdingsPK.setOwningInstitutionId(1);
+        assertNotNull(holdingsPK.getOwningInstitutionHoldingsId());
+        assertNotNull(holdingsPK.getOwningInstitutionId());
+    }
+
+    @Test
+    public void testItemPK(){
+        ItemPK itemPK = new ItemPK();
+        itemPK.setOwningInstitutionId(1);
+        itemPK.setOwningInstitutionItemId(".b02314364");
+        ItemPK itemPK1 = new ItemPK(1,".b02314364");
+        assertNotNull(itemPK.getOwningInstitutionId());
+        assertNotNull(itemPK.getOwningInstitutionItemId());
     }
 
 }

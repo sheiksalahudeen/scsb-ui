@@ -69,22 +69,9 @@ public class SearchRecordsController {
     @Autowired
     InstitutionDetailsRepository institutionDetailsRepository;
 
-    public CsvUtil getCsvUtil() {
-        return csvUtil;
-    }
-
-    public void setCsvUtil(CsvUtil csvUtil) {
-        this.csvUtil = csvUtil;
-    }
-
     public SearchUtil getSearchUtil() {
         return searchUtil;
     }
-
-    public void setSearchUtil(SearchUtil searchUtil) {
-        this.searchUtil = searchUtil;
-    }
-
 
     public UserAuthUtil getUserAuthUtil() {
         return userAuthUtil;
@@ -96,10 +83,6 @@ public class SearchRecordsController {
 
     public InstitutionDetailsRepository getInstitutionDetailsRepository() {
         return institutionDetailsRepository;
-    }
-
-    public void setInstitutionDetailsRepository(InstitutionDetailsRepository institutionDetailsRepository) {
-        this.institutionDetailsRepository = institutionDetailsRepository;
     }
 
     @RequestMapping("/search")
@@ -315,6 +298,7 @@ public class SearchRecordsController {
         Set<String> barcodes = new HashSet<>();
         Set<String> itemTitles = new HashSet<>();
         Set<String> itemOwningInstitutions = new HashSet<>();
+        Set<String> itemAvailabilty = new HashSet<>();
         for (SearchResultRow searchResultRow : searchResultRows) {
             if (searchResultRow.isSelected()) {
                 if (RecapConstants.PRIVATE.equals(searchResultRow.getCollectionGroupDesignation()) && !userDetailsForm.isSuperAdmin() && !userDetailsForm.isRecapUser() && StringUtils.isNotBlank(userInstitution) && !userInstitution.equals(searchResultRow.getOwningInstitution())) {
@@ -324,7 +308,7 @@ public class SearchRecordsController {
                     searchRecordsRequest.setErrorMessage(RecapConstants.REQUEST_ERROR_USER_NOT_PERMITTED);
                     return;
                 } else {
-                    processBarcodesForSearchResultRow(barcodes, itemTitles, itemOwningInstitutions, searchResultRow);
+                    processBarcodesForSearchResultRow(barcodes, itemTitles, itemOwningInstitutions, searchResultRow,itemAvailabilty);
                 }
             } else if (!CollectionUtils.isEmpty(searchResultRow.getSearchItemResultRows())) {
                 for (SearchItemResultRow searchItemResultRow : searchResultRow.getSearchItemResultRows()) {
@@ -336,7 +320,7 @@ public class SearchRecordsController {
                             searchRecordsRequest.setErrorMessage(RecapConstants.REQUEST_ERROR_USER_NOT_PERMITTED);
                             return;
                         } else {
-                            processBarcodeForSearchItemResultRow(barcodes, itemTitles, itemOwningInstitutions, searchItemResultRow, searchResultRow);
+                            processBarcodeForSearchItemResultRow(barcodes, itemTitles, itemOwningInstitutions, searchItemResultRow, searchResultRow,itemAvailabilty);
                         }
                     }
                 }
@@ -345,21 +329,23 @@ public class SearchRecordsController {
         redirectAttributes.addFlashAttribute(RecapConstants.REQUESTED_BARCODE, StringUtils.join(barcodes, ","));
         redirectAttributes.addFlashAttribute(RecapConstants.REQUESTED_ITEM_TITLE, StringUtils.join(itemTitles, " || "));
         redirectAttributes.addFlashAttribute(RecapConstants.REQUESTED_ITEM_OWNING_INSTITUTION, StringUtils.join(itemOwningInstitutions, ","));
+        redirectAttributes.addFlashAttribute(RecapConstants.REQUESTED_ITEM_AVAILABILITY,itemAvailabilty);
     }
 
-    private void processBarcodeForSearchItemResultRow(Set<String> barcodes, Set<String> titles, Set<String> itemInstitutions, SearchItemResultRow searchItemResultRow, SearchResultRow searchResultRow) {
+    private void processBarcodeForSearchItemResultRow(Set<String> barcodes, Set<String> titles, Set<String> itemInstitutions, SearchItemResultRow searchItemResultRow, SearchResultRow searchResultRow,Set<String> itemAvailabilty) {
         String barcode = searchItemResultRow.getBarcode();
-        processTitleAndItemInstitution(barcodes, titles, itemInstitutions, searchResultRow, barcode);
+        processTitleAndItemInstitution(barcodes, titles, itemInstitutions, searchResultRow, barcode,itemAvailabilty);
     }
 
-    private void processBarcodesForSearchResultRow(Set<String> barcodes, Set<String> titles, Set<String> itemInstitutions, SearchResultRow searchResultRow) {
+    private void processBarcodesForSearchResultRow(Set<String> barcodes, Set<String> titles, Set<String> itemInstitutions, SearchResultRow searchResultRow,Set<String> itemAvailabilty) {
         String barcode = searchResultRow.getBarcode();
-        processTitleAndItemInstitution(barcodes, titles, itemInstitutions, searchResultRow, barcode);
+        processTitleAndItemInstitution(barcodes, titles, itemInstitutions, searchResultRow, barcode,itemAvailabilty);
     }
 
-    private void processTitleAndItemInstitution(Set<String> barcodes, Set<String> titles, Set<String> itemInstitutions, SearchResultRow searchResultRow, String barcode) {
+    private void processTitleAndItemInstitution(Set<String> barcodes, Set<String> titles, Set<String> itemInstitutions, SearchResultRow searchResultRow, String barcode,Set<String> itemAvailabilty) {
         String title = searchResultRow.getTitle();
         String owningInstitution = searchResultRow.getOwningInstitution();
+        itemAvailabilty.add(searchResultRow.getAvailability());
         if (StringUtils.isNotBlank(barcode)) {
             barcodes.add(barcode);
         }

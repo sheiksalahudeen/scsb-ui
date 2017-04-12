@@ -142,7 +142,7 @@ public class UserRoleServiceImpl implements UserRoleService {
             UsersEntity byUserIdUserEntity = userDetailsRepository.findByUserId(userId);
             if (byUserIdUserEntity.getInstitutionId().equals(institutionId)){
                 savedUsersEntity = userDetailsRepository.saveAndFlush(usersEntity);
-                userRoleForm.setMessage(networkLoginId + RecapConstants.ADDED_SUCCESSFULLY);
+                userRoleForm.setMessage(networkLoginId + RecapConstants.EDITED_SUCCESSFULLY);
             }
             else {
                 UsersEntity byLoginIdAndInstitutionIdUserEntity = userDetailsRepository.findByLoginIdAndInstitutionId(networkLoginId, institutionId);

@@ -82,7 +82,7 @@
                                                  data-th-if="${userRoleForm.deletedSuccessMsg}">
                                                 <div class="text-left">
                                                     <div class="alert alert-success" role="alert"><span
-                                                            class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span
+                                                            class="margin-right-05 glyphicon glyphicon-ok-sign"></span><span
                                                             th:text="${userRoleForm.message}"></span></div>
                                                 </div>
                                             </div>
@@ -213,7 +213,7 @@
                              data-th-if="${userRoleForm.showCreateSuccess}">
                             <div class="col-sm-12 text-left">
                                 <div class="alert alert-success" role="alert"><span
-                                        class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span
+                                        class="margin-right-05 glyphicon glyphicon-ok-sign"></span><span
                                         th:text="${userRoleForm.message}"></span></div>
                             </div>
                         </div>
@@ -237,10 +237,10 @@
                             <div class="col-xs-12 divider-horizontal margin-top-10 margin-btm-30"></div>
                         </div>
                         <div class="row buscador-principal">
-                            <div class="col-md-8 col-sm-6"></div>
-                            <div class="col-md-8 col-sm-6 fontcolor-dark">
+
                                 <form class="form-horizontal" id="users-createrequest" method="post"
                                       th:object="${userRoleForm}">
+                                    <div class="col-md-8 col-sm-6 fontcolor-dark">
                                     <div class="form-group">
                                         <div class="col-md-3 text-right col-sm-4">
                                             <label for="networkLoginId" class="margin-top-10">Network Login id <span
@@ -300,6 +300,7 @@
                                                    id="userDescription" th:field="${userRoleForm.userDescription}"
                                                    placeholder="" type="text" th:onkeyup="'javascript:toggleUserDescriptionValidation()'"/>
                                             <span id="userDescriptionErrMsg" style="color: red;display: none">Please provide User Description </span>
+                                            <span id="userDescriptionLengthErrMsg" style="color: red;display: none">Only 45 Characters allowed</span>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -316,21 +317,23 @@
                                                     class="error-color">*</span>) are mandatory.</p>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-xs-12 col-md-push-3 col-sm-pus-5 text-center" style="margin-top: -10px;">
-                                            <div class="margin-btm-10 users-createrequest-button">
-                                                <button id="createButton" type="button" onclick="submitForm()"
-                                                        class="btn btn-default themed-button btn-primary">Create User
-                                                </button>
-                                                <button id="reset" type="button"
-                                                        class="btn btn-default themed-button themed-button-cancel">
-                                                    Clear
-                                                </button>
-                                            </div>
+                                    </div>
+                                    <div class="col-xs-12 text-center"
+                                         style="margin-top: -10px;">
+                                        <div class="margin-btm-10 users-createrequest-button">
+                                            <button id="createButton" type="button" onclick="submitForm()"
+                                                    class="btn btn-default themed-button btn-primary text-center">Create User
+                                            </button>
+                                            <button id="reset" type="button"
+                                                    class="btn btn-default themed-button themed-button-cancel pull-right">
+                                                Clear
+                                            </button>
                                         </div>
                                     </div>
+
+
                                 </form>
-                            </div>
+
                             <div class="col-md-3 col-sm-3"></div>
                         </div>
                     </div>
@@ -349,7 +352,7 @@
                              data-th-if="${userRoleForm.showEditSuccess}">
                             <div class="col-sm-12 text-left">
                                 <div class="alert alert-success" role="alert"><span
-                                        class="margin-right-05 glyphicon glyphicon-warning-sign"></span><span
+                                        class="margin-right-05 glyphicon glyphicon-ok-sign"></span><span
                                         th:text="${userRoleForm.message}"></span></div>
                             </div>
                         </div>
@@ -365,10 +368,10 @@
                             <div class="col-xs-12 divider-horizontal margin-top-10 margin-btm-30"></div>
                         </div>
                         <div class="row buscador-principal">
-                            <div class="col-md-8 col-sm-6"></div>
-                            <div class="col-md-8 col-sm-6 fontcolor-dark">
+
                                 <form class="form-horizontal" id="editusers-createrequest" method="post"
                                       th:object="${userRoleForm}">
+                                    <div class="col-md-8 col-sm-6 fontcolor-dark">
                                     <div class="form-group">
                                         <input type="text" th:field="${userRoleForm.userId}" hidden="hidden" id="editUserId"/>
                                         <div class="col-md-3 text-right col-sm-4">
@@ -410,7 +413,7 @@
                                                 <select class="form-control themed-input themed-select" id="editroleId" th:onchange="'javascript:toggleEditRoleValidation()'"
                                                         name="editroleId" multiple="multiple"
                                                         th:field="${userRoleForm.editSelectedForCreate}">
-                                                    <option th:each="roleValues : ${userRoleForm.roles}"
+                                                    <option th:each="roleValues : ${userRoleForm.roles}" data-toggle="tooltip" th:title="${roleValues[3]}"
                                                             th:value="${roleValues[0]}" th:text="${roleValues[1]}"
                                                             th:selected="${userRoleForm.showSelectedForCreate.contains(roleValues)}"></option>
                                                 </select>
@@ -430,6 +433,7 @@
                                                    th:field="${userRoleForm.editUserDescription}" placeholder=""
                                                    type="text"/>
                                             <span id="edituserDescriptionErrMsg" style="color: red;display: none">Please provide User Description </span>
+                                            <span id="editUserDescriptionLengthErrMsg" style="color: red;display: none">Only 45 Characters allowed</span>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -447,19 +451,19 @@
                                                     class="error-color">*</span>) are mandatory.</p>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-xs-12 col-md-push-3 col-sm-pus-5 text-center" style="margin-top: -10px;">
+                                    </div>
+                                    <div class="col-xs-12 " style="margin-top: -10px;">
                                             <div class="margin-btm-10 users-createrequest-button">
                                                 <button id="editcreateButton" type="button" onclick="editUserDetails()"
-                                                        class="btn btn-default themed-button btn-primary">Edit User
+                                                        class="btn btn-default themed-button btn-primary text-center col-md-2 col-md-offset-5">Edit User
                                                 </button>
                                                 <button type="reset"
-                                                        class="btn btn-default themed-button themed-button-cancel"
+                                                        class="btn btn-default themed-button themed-button-cancel pull-right"
                                                         onclick="editclear();">Clear
                                                 </button>
                                             </div>
                                         </div>
-                                    </div>
+
                                 </form>
                             </div>
                         </div>
@@ -584,9 +588,6 @@
                             </div>
                         </div>
                     </div>
-
-                </div>
-
                 <!-- User Tab Ends-->
             </fieldset>
         </form>

@@ -44,9 +44,6 @@
                     <li th:if="${session.isUserRoleAllowed}" role="presentation" class="tab-users-holder" th:classappend="${#httpServletRequest.getRequestURI() == '/userRoles' ? 'active':''}">
                         <a href="/userRoles" aria-controls="users" class="tab-users"><span class="icons"></span><span>Users</span></a>
                     </li>
-                    <li  role="presentation" class="presentation" th:classappend="${#httpServletRequest.getRequestURI() == '/etl' ? 'active':''}">
-                        <a href="/etl" aria-controls="users" class="tab-users"><span class="icons"></span><span>EtlAdmin</span></a>
-                    </li>
                 </ul>
                 <div class="tab-content">
                     <div th:replace="${template} :: content"></div>

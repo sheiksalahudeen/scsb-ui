@@ -636,3 +636,9 @@ tr.shown td.details-control {background:url('../images/hide-icon.png') no-repeat
     #users-createrequest .users-createrequest-button {text-align:center}
     #users-createrequest .users-createrequest-button  .btn{margin:0 0 10px}
 }
+
+.report-hide-shadow{
+    box-shadow: none;
+    border: none;
+    outline: none
+}
