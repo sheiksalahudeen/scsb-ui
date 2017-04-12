@@ -475,6 +475,8 @@ public class RecapConstants {
     public static final String TOKEN = "token";
     public static final String ERROR_CODE_ERROR_MESSAGE= "error.code.exception";
 
+    public static final String LOGGED_IN_INSTITUTION= "loggedInInstitution";
+
     private RecapConstants(){
         //Do nothing
     }

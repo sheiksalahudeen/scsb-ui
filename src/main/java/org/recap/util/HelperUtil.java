@@ -6,8 +6,12 @@ import org.recap.RecapConstants;
 import org.recap.spring.ApplicationContextProvider;
 import org.recap.spring.PropertyValueProvider;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Created by sheiks on 20/01/17.
@@ -54,6 +58,19 @@ public class HelperUtil {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static boolean isAnonymousUser(Authentication auth) {
+        if(StringUtils.equals(auth.getName(), RecapConstants.ANONYMOUS_USER)) {
+            Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+            for (Iterator<? extends GrantedAuthority> iterator = authorities.iterator(); iterator.hasNext(); ) {
+                GrantedAuthority grantedAuthority = iterator.next();
+                if(StringUtils.equals(grantedAuthority.getAuthority(), RecapConstants.ROLE_ANONYMOUS)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
 

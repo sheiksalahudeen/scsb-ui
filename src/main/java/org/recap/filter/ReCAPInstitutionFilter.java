@@ -3,12 +3,13 @@ package org.recap.filter;
 import org.apache.commons.lang3.StringUtils;
 import org.recap.RecapConstants;
 import org.recap.security.UserInstitutionCache;
-import org.recap.spring.PropertyValueProvider;
 import org.recap.util.HelperUtil;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -26,29 +27,58 @@ public class ReCAPInstitutionFilter extends OncePerRequestFilter {
         UserInstitutionCache userInstitutionCache = HelperUtil.getBean(UserInstitutionCache.class);
 
         String requestedSessionId = request.getRequestedSessionId();
-        HttpSession session = request.getSession(false);
-        String sessionId = session.getId();
         String requestURI = request.getRequestURI();
-        if(!StringUtils.equals(requestURI, RecapConstants.VIEW_HOME) && !StringUtils.equals(requestedSessionId, sessionId)) {
-            institutionCode = userInstitutionCache.getInstitutionForRequestSessionId(requestedSessionId);
-            userInstitutionCache.removeSessionId(requestedSessionId);
-            String logoutUrl = HelperUtil.getLogoutUrl(institutionCode);
-            try {
-                response.sendRedirect(logoutUrl);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if(StringUtils.equals(requestURI, "/home")) {
+
+            Cookie[] cookies = request.getCookies();
+            cookiesOuter: for(Cookie cookie : cookies) {
+                if(StringUtils.equals(cookie.getName(), RecapConstants.IS_USER_AUTHENTICATED) && StringUtils.equals(cookie.getValue(), "Y")) {
+                    for(Cookie innerCookies : cookies) {
+                        if(StringUtils.equals(innerCookies.getName(), RecapConstants.LOGGED_IN_INSTITUTION)) {
+                            institutionCode = innerCookies.getValue();
+                            cookie.setValue(null);
+                            cookie.setMaxAge(0);
+                            response.addCookie(cookie);
+
+                            innerCookies.setValue(null);
+                            innerCookies.setMaxAge(0);
+                            response.addCookie(innerCookies);
+
+                            break cookiesOuter;
+                        }
+                    }
+                }
             }
+
+            if(StringUtils.isNotBlank(institutionCode)) {
+                userInstitutionCache.removeSessionId(requestedSessionId);
+                String logoutUrl = HelperUtil.getLogoutUrl(institutionCode);
+                try {
+                    response.sendRedirect(logoutUrl);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+
+                forwardChaining(request, response, filterChain, userInstitutionCache, requestedSessionId);
+
+            }
+
         } else {
             if(StringUtils.isNotBlank(institutionCode)) {
                 userInstitutionCache.addRequestSessionId(requestedSessionId, institutionCode);
             }
 
-            String institutionForCsrf = userInstitutionCache.getInstitutionForRequestSessionId(requestedSessionId);
-            if(StringUtils.isNotBlank(institutionForCsrf)) {
-                request.setAttribute(RecapConstants.RECAP_INSTITUTION_CODE, institutionForCsrf);
-            }
-            filterChain.doFilter(request, response);
+            forwardChaining(request, response, filterChain, userInstitutionCache, requestedSessionId);
         }
+    }
+
+    private void forwardChaining(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, UserInstitutionCache userInstitutionCache, String requestedSessionId) throws IOException, ServletException {
+        String institutionForCsrf = userInstitutionCache.getInstitutionForRequestSessionId(requestedSessionId);
+        if(StringUtils.isNotBlank(institutionForCsrf)) {
+            request.setAttribute(RecapConstants.RECAP_INSTITUTION_CODE, institutionForCsrf);
+        }
+        filterChain.doFilter(request, response);
     }
 
 }
