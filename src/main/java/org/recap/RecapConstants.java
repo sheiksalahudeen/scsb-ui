@@ -434,6 +434,7 @@ public class RecapConstants {
 
     //UserRoleController
     public static final String VIEW_LOGIN="login";
+    public static final String VIEW_HOME="/";
     public static final String VIEW_REQUEST_RESULT_TABLE="userRolesSearch :: #request-result-table";
     public static final String USER_ROLE_FORM="userRoleForm";
 
@@ -474,6 +475,8 @@ public class RecapConstants {
 
     public static final String TOKEN = "token";
     public static final String ERROR_CODE_ERROR_MESSAGE= "error.code.exception";
+
+    public static final String LOGGED_IN_INSTITUTION= "loggedInInstitution";
 
     private RecapConstants(){
         //Do nothing

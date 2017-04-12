@@ -1,15 +1,18 @@
 package org.recap.security;
 
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
+import org.recap.util.HelperUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.*;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -26,23 +29,34 @@ public class SessionFilter implements Filter{
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpServletResponse httpResponse=(HttpServletResponse)response;
-        try
-            {
-                HttpServletRequest httpRequest=(HttpServletRequest)request;
-                HttpSession session=httpRequest.getSession();
-                UsernamePasswordToken token=(UsernamePasswordToken) session.getAttribute(RecapConstants.USER_TOKEN);
-                if(token==null || token.getUsername()==null)
-                {
-                    throw new Exception("User Session Expired");
-                }
-                chain.doFilter(request,response);
-            }catch(Exception e)
-            {//if session time out redirects to login screen
-                logger.error(RecapConstants.LOG_ERROR,e);
-                httpResponse.sendRedirect("/");
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+
+        SecurityContext context = SecurityContextHolder.getContext();
+        if(null != context) {
+            Authentication authentication = context.getAuthentication();
+            if(null != authentication && !HelperUtil.isAnonymousUser(authentication)) {
+                HttpServletRequest request = (HttpServletRequest) req;
+                HttpServletResponse response = (HttpServletResponse) res;
+                Cookie cookie = new Cookie(RecapConstants.IS_USER_AUTHENTICATED, "Y");
+                cookie.setMaxAge(-1);
+                cookie.setHttpOnly(false);
+                cookie.setPath("/");
+                response.addCookie(cookie);
+
+                UserInstitutionCache userInstitutionCache = HelperUtil.getBean(UserInstitutionCache.class);
+
+                String requestedSessionId = request.getRequestedSessionId();
+
+                String institutionCode = userInstitutionCache.getInstitutionForRequestSessionId(requestedSessionId);
+
+                Cookie institutionCodeCookies = new Cookie(RecapConstants.LOGGED_IN_INSTITUTION, institutionCode);
+                institutionCodeCookies.setMaxAge(-1);
+                institutionCodeCookies.setHttpOnly(false);
+                institutionCodeCookies.setPath("/");
+                response.addCookie(institutionCodeCookies);
             }
+        }
+        chain.doFilter(req, res);
     }
 
     @Override

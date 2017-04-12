@@ -38,6 +38,10 @@ public class Main {
 		});
 		return factory;
 	}
+	public static void main(String[] args) {
+		SpringApplication.run(Main.class, args);
+	}
+
 
 	@Bean
 	public FilterRegistrationBean getFileterRegisteredBean(){
@@ -52,9 +56,5 @@ public class Main {
 		filterRegistrationBean.setUrlPatterns(urlPatterns);
 		filterRegistrationBean.setFilter(new SessionFilter());
 		return filterRegistrationBean;
-	}
-
-	public static void main(String[] args) {
-		SpringApplication.run(Main.class, args);
 	}
 }
