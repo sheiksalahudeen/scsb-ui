@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.recap.RecapConstants;
 import org.recap.model.deaccession.DeAccessionItem;
 import org.recap.model.deaccession.DeAccessionRequest;
-import org.recap.model.jpa.CustomerCodeEntity;
 import org.recap.model.jpa.ItemChangeLogEntity;
 import org.recap.model.jpa.ItemEntity;
 import org.recap.model.search.BibliographicMarcForm;
@@ -110,13 +109,9 @@ public class CollectionServiceUtil {
     public void deAccessionItem(BibliographicMarcForm bibliographicMarcForm) {
         try {
             String itemBarcode = bibliographicMarcForm.getBarcode();
-            String deliveryLocation = null;
-            CustomerCodeEntity customerCodeEntity = getCustomerCodeDetailsRepository().findByDescription(bibliographicMarcForm.getDeliveryLocation());
-            if (null != customerCodeEntity) {
-                deliveryLocation = customerCodeEntity.getCustomerCode();
-            }
+            String deliveryLocation = bibliographicMarcForm.getDeliveryLocation();
             String userName = bibliographicMarcForm.getUsername();
-            DeAccessionRequest deAccessionRequest =getDeAccessionRequest();
+            DeAccessionRequest deAccessionRequest = getDeAccessionRequest();
             DeAccessionItem deAccessionItem = new DeAccessionItem();
             deAccessionItem.setItemBarcode(itemBarcode);
             deAccessionItem.setDeliveryLocation(deliveryLocation);
