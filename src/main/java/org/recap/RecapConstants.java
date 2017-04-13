@@ -208,6 +208,7 @@ public class RecapConstants {
     public static final String FAILURE = "Failure";
     public static final String NO_RESULTS_FOUND = "No results found.";
     public static final String BARCODES_NOT_FOUND = "Barcode(s) not found";
+    public static final String BARCODES_NOT_AVAILABLE = "Barcode(s) not available";
     public static final String BARCODE_LIMIT_ERROR = "Only ten items can be processed. Items not processed:";
     public static final String CGD_UPDATE_SUCCESSFUL = "The CGD has been successfully updated.";
     public static final String CGD_UPDATE_FAILED = "Updating CGD failed";
@@ -289,6 +290,7 @@ public class RecapConstants {
     public static final String DELIVERY_LOCATION = "deliveryLocation";
     public static final String REQUEST_NOTES = "requestNotes";
     public static final String ERROR_MESSAGE = "errorMessage";
+    public static final String NOT_AVAILABLE_ERROR_MESSAGE = "notAvailableErrorMessage";
     public static final String NO_PERMISSION_ERROR_MESSAGE = "noPermissionErrorMessage";
 
     public static final String USER_ROLES_SEARCH ="userRolesSearch";

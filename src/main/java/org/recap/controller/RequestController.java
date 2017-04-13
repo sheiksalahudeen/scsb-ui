@@ -353,6 +353,7 @@ public class RequestController {
         if (StringUtils.isNotBlank(requestForm.getItemBarcodeInRequest())) {
             List<String> itemBarcodes = Arrays.asList(requestForm.getItemBarcodeInRequest().split(","));
             List<String> invalidBarcodes = new ArrayList<>();
+            List<String> notAvailableBarcodes = new ArrayList<>();
             Set<String> itemTitles = new HashSet<>();
             Set<String> itemOwningInstitutions = new HashSet<>();
             UserDetailsForm userDetailsForm;
@@ -370,6 +371,8 @@ public class RequestController {
                                 } else if (!userDetailsForm.isRecapPermissionAllowed()) {
                                     jsonObject.put(RecapConstants.NO_PERMISSION_ERROR_MESSAGE, RecapConstants.REQUEST_ERROR_USER_NOT_PERMITTED);
                                     return jsonObject.toString();
+                                } else if (null != itemEntity.getItemStatusEntity() && itemEntity.getItemStatusEntity().getStatusCode().equals(RecapConstants.NOT_AVAILABLE)) {
+                                    notAvailableBarcodes.add(itemEntity.getBarcode());
                                 } else {
                                     Integer institutionId = itemEntity.getInstitutionEntity().getInstitutionId();
                                     String institutionCode = itemEntity.getInstitutionEntity().getInstitutionCode();
@@ -428,7 +431,6 @@ public class RequestController {
                                                         }
                                                     }
                                                 }
-
                                             }
                                         }
                                     }
@@ -448,6 +450,9 @@ public class RequestController {
             }
             if (CollectionUtils.isNotEmpty(invalidBarcodes)) {
                 jsonObject.put(RecapConstants.ERROR_MESSAGE, RecapConstants.BARCODES_NOT_FOUND + " - " + StringUtils.join(invalidBarcodes, ","));
+            }
+            if (CollectionUtils.isNotEmpty(notAvailableBarcodes)) {
+                jsonObject.put(RecapConstants.NOT_AVAILABLE_ERROR_MESSAGE, RecapConstants.BARCODES_NOT_AVAILABLE + " - " + StringUtils.join(notAvailableBarcodes, ","));
             }
             if (null != deliveryLocationsMap) {
                 jsonObject.put(RecapConstants.DELIVERY_LOCATION, deliveryLocationsMap);
