@@ -17,10 +17,20 @@ jQuery(document).ready(function ($) {
         }
     });
 
+    $("#fieldValue").keyup(function() {
+        if ($("#fieldValue").val().length > 0) {
+            document.getElementById("resetSearch").disabled = false;
+        } else {
+            document.getElementById("resetSearch").disabled = true;
+        }
+    });
+    
     toggleFacets();
 
-    $(function(){
-        $("#fieldValue").addClear();
+    $(":input").addClear({
+        onClear: function(){
+            document.getElementById("resetSearch").disabled = true;
+        }
     });
 
 });
