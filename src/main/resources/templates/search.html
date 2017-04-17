@@ -402,7 +402,7 @@
                                             </td>
                                             <td data-th-id="'searchResultsDataSH-'+ ${searchResultStat.index}">
                                                 <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].summaryHoldings}"/>
-                                                <span data-th-id="'searchResultsDataSHS-'+ ${searchResultStat.index}" th:text="${searchResult.summaryHoldings}"></span>
+                                                <span data-th-id="'searchResultsDataSHS-'+ ${searchResultStat.index}" th:text="${searchResult.summaryHoldings.length() &gt; 7 ? #strings.substring(searchResult.summaryHoldings,0,7).concat('...') : #strings.substring(searchResult.summaryHoldings,0,searchResult.summaryHoldings.length())}" th:title="${searchResult.summaryHoldings}"></span>
                                             </td>
                                         <tr data-th-if="${searchResult.showItems}" data-th-id="'searchItemResultsRow-' + ${searchResultStat.index}" class="collapse childRow" th:classappend="'row' + ${searchResultStat.index}">
                                             <th></th>
