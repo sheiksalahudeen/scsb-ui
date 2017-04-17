@@ -506,13 +506,13 @@
                                                             <td class="fontcolor-dark large-font">SUBTOTAL</td>
 
                                                             <td><a href="#" class="Deaccession-tableshow" th:onclick="'javascript:deaccessionPul();'">
-                                                                <span th:text="${#numbers.formatInteger(reportsForm.deaccessionPrivatePulCount + reportsForm.deaccessionSharedPulCount + reportsForm.deaccessionOpenPulCount,0,'COMMA')}"></span></a>
+                                                                <button type="button" th:text="${#numbers.formatInteger(reportsForm.deaccessionPrivatePulCount + reportsForm.deaccessionSharedPulCount + reportsForm.deaccessionOpenPulCount,0,'COMMA')}"></button></a>
                                                             </td>
                                                             <td id="deacessionCulCount"><a href="#" id="deacessionCulCountHref" class="Deaccession-tableshow" th:onclick="'javascript:deaccessionCul();'">
-                                                                <span th:text="${#numbers.formatInteger(reportsForm.deaccessionPrivateCulCount + reportsForm.deaccessionSharedCulCount + reportsForm.deaccessionOpenCulCount,0,'COMMA')}"></span></a>
+                                                                <button type="button" th:text="${#numbers.formatInteger(reportsForm.deaccessionPrivateCulCount + reportsForm.deaccessionSharedCulCount + reportsForm.deaccessionOpenCulCount,0,'COMMA')}"></button></a>
                                                             </td>
                                                             <td><a href="#" class="Deaccession-tableshow" th:onclick="'javascript:deaccessionNypl();'">
-                                                                <span th:text="${#numbers.formatInteger(reportsForm.deaccessionPrivateNyplCount + reportsForm.deaccessionSharedNyplCount + reportsForm.deaccessionOpenNyplCount,0,'COMMA')}"></span></a>
+                                                                <button  type="button" th:text="${#numbers.formatInteger(reportsForm.deaccessionPrivateNyplCount + reportsForm.deaccessionSharedNyplCount + reportsForm.deaccessionOpenNyplCount,0,'COMMA')}"></button></a>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -545,7 +545,7 @@
                                                             <th width="20%"></th>
                                                             <th width="20%" style="font-family:sans-serif;font-size: 120%">Princeton</th>
                                                             <th width="20%" style="font-family:sans-serif;font-size: 120%">Columbia</th>
-                                                            <th width="20%" style="font-family:sans-serif;font-size: 120%">New York</th>
+                                                            <th width="20%" style="font-family:sans-serif;font-size: 120%">New York Public Library</th>
                                                         </tr>
                                                         </thead>
                                                         <tr class="border-style-top-white">
