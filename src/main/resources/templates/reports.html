@@ -505,14 +505,17 @@
                                                         <tr class="bgcolored large-font fontcolor-dark border-style-top-white">
                                                             <td class="fontcolor-dark large-font">SUBTOTAL</td>
 
-                                                            <td><a href="#" class="Deaccession-tableshow" th:onclick="'javascript:deaccessionPul();'">
+                                                            <td><a href="#" th:if="${(reportsForm.deaccessionPrivatePulCount + reportsForm.deaccessionSharedPulCount + reportsForm.deaccessionOpenPulCount) != 0}" class="Deaccession-tableshow" th:onclick="'javascript:deaccessionPul();'">
                                                                 <button type="button" th:text="${#numbers.formatInteger(reportsForm.deaccessionPrivatePulCount + reportsForm.deaccessionSharedPulCount + reportsForm.deaccessionOpenPulCount,0,'COMMA')}"></button></a>
+                                                                <span th:if="${(reportsForm.deaccessionPrivatePulCount + reportsForm.deaccessionSharedPulCount + reportsForm.deaccessionOpenPulCount) == 0}" th:text="${#numbers.formatInteger(reportsForm.deaccessionPrivatePulCount + reportsForm.deaccessionSharedPulCount + reportsForm.deaccessionOpenPulCount,0,'COMMA')}"/>
                                                             </td>
-                                                            <td id="deacessionCulCount"><a href="#" id="deacessionCulCountHref" class="Deaccession-tableshow" th:onclick="'javascript:deaccessionCul();'">
+                                                            <td id="deacessionCulCount"><a href="#" th:if="${(reportsForm.deaccessionPrivateCulCount + reportsForm.deaccessionSharedCulCount + reportsForm.deaccessionOpenCulCount) != 0}" id="deacessionCulCountHref" class="Deaccession-tableshow" th:onclick="'javascript:deaccessionCul();'">
                                                                 <button type="button" th:text="${#numbers.formatInteger(reportsForm.deaccessionPrivateCulCount + reportsForm.deaccessionSharedCulCount + reportsForm.deaccessionOpenCulCount,0,'COMMA')}"></button></a>
+                                                                <span th:if="${(reportsForm.deaccessionPrivateCulCount + reportsForm.deaccessionSharedCulCount + reportsForm.deaccessionOpenCulCount) == 0}" th:text="${#numbers.formatInteger(reportsForm.deaccessionPrivateCulCount + reportsForm.deaccessionSharedCulCount + reportsForm.deaccessionOpenCulCount,0,'COMMA')}"/>
                                                             </td>
-                                                            <td><a href="#" class="Deaccession-tableshow" th:onclick="'javascript:deaccessionNypl();'">
-                                                                <button  type="button" th:text="${#numbers.formatInteger(reportsForm.deaccessionPrivateNyplCount + reportsForm.deaccessionSharedNyplCount + reportsForm.deaccessionOpenNyplCount,0,'COMMA')}"></button></a>
+                                                            <td><a href="#" th:if="${(reportsForm.deaccessionPrivateNyplCount + reportsForm.deaccessionSharedNyplCount + reportsForm.deaccessionOpenNyplCount) != 0}" class="Deaccession-tableshow" th:onclick="'javascript:deaccessionNypl();'">
+                                                                <button type="button" th:text="${#numbers.formatInteger(reportsForm.deaccessionPrivateNyplCount + reportsForm.deaccessionSharedNyplCount + reportsForm.deaccessionOpenNyplCount,0,'COMMA')}"></button></a>
+                                                                <span th:if="${(reportsForm.deaccessionPrivateNyplCount + reportsForm.deaccessionSharedNyplCount + reportsForm.deaccessionOpenNyplCount) == 0}" th:text="${#numbers.formatInteger(reportsForm.deaccessionPrivateNyplCount + reportsForm.deaccessionSharedNyplCount + reportsForm.deaccessionOpenNyplCount,0,'COMMA')}"/>
                                                             </td>
                                                         </tr>
                                                     </table>
