@@ -27,7 +27,7 @@ jQuery(document).ready(function ($) {
     
     toggleFacets();
 
-    $(":input").addClear({
+    $("#fieldValue").addClear({
         onClear: function(){
             document.getElementById("resetSearch").disabled = true;
         }
