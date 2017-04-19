@@ -26,8 +26,15 @@ public class CustomerCodeEntity implements Serializable, Comparable<CustomerCode
     @Column(name = "OWNING_INST_ID")
     private Integer owningInstitutionId;
 
+    @Column(name = "PWD_DELIVERY_RESTRICTIONS")
+    private String pwdDeliveryRestrictions;
+
+    @Column(name = "RECAP_DELIVERY_RESTRICTIONS")
+    private String recapDeliveryRestrictions;
+
     @Column(name = "DELIVERY_RESTRICTIONS")
     private String deliveryRestrictions;
+
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "OWNING_INST_ID", insertable = false, updatable = false)
@@ -131,5 +138,21 @@ public class CustomerCodeEntity implements Serializable, Comparable<CustomerCode
 
     public void setDeliveryRestrictionEntityList(List<DeliveryRestrictionEntity> deliveryRestrictionEntityList) {
         this.deliveryRestrictionEntityList = deliveryRestrictionEntityList;
+    }
+
+    public String getPwdDeliveryRestrictions() {
+        return pwdDeliveryRestrictions;
+    }
+
+    public void setPwdDeliveryRestrictions(String pwdDeliveryRestrictions) {
+        this.pwdDeliveryRestrictions = pwdDeliveryRestrictions;
+    }
+
+    public String getRecapDeliveryRestrictions() {
+        return recapDeliveryRestrictions;
+    }
+
+    public void setRecapDeliveryRestrictions(String recapDeliveryRestrictions) {
+        this.recapDeliveryRestrictions = recapDeliveryRestrictions;
     }
 }

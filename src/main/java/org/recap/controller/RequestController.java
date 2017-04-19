@@ -401,6 +401,7 @@ public class RequestController {
                                                         for (CustomerCodeEntity byCustomerCode : customerCodeEntities) {
                                                             deliveryLocationsMap.put(byCustomerCode.getCustomerCode(), byCustomerCode.getDescription());
                                                         }
+                                                        addRecapDeliveryRestrictions(deliveryLocationsMap, userDetailsForm, customerCodeEntity);
                                                     }
                                                 } else {
                                                     deliveryLocationsMap.put(customerCodeEntity.getCustomerCode(), customerCodeEntity.getDescription());
@@ -419,6 +420,7 @@ public class RequestController {
                                                             if (byCustomerCode != null){
                                                                 deliveryLocationsMap.put(byCustomerCode.getCustomerCode(),byCustomerCode.getDescription());
                                                             }
+                                                            addRecapDeliveryRestrictions(deliveryLocationsMap, userDetailsForm, customerCodeEntity);
                                                         }
                                                         else {
                                                             List<CustomerCodeEntity> customerCodeEntityList = customerCodeDetailsRepository.findByCustomerCodeIn(Arrays.asList(splitDeliveryLocation));
@@ -428,6 +430,7 @@ public class RequestController {
                                                                     deliveryLocationsMap.put(codeEntity.getCustomerCode(),codeEntity.getDescription());
                                                                 }
                                                             }
+                                                            addRecapDeliveryRestrictions(deliveryLocationsMap, userDetailsForm, customerCodeEntity);
                                                         }
                                                     }
                                                 }
@@ -467,6 +470,7 @@ public class RequestController {
         }
         return jsonObject.toString();
     }
+
 
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=createRequest")
@@ -648,5 +652,19 @@ public class RequestController {
 
     public ItemRequestInformation getItemRequestInformation() {
         return new ItemRequestInformation();
+    }
+
+    private void addRecapDeliveryRestrictions(Map<String, String> deliveryLocationsMap, UserDetailsForm userDetailsForm, CustomerCodeEntity customerCodeEntity) {
+        if(userDetailsForm.isRecapUser()){
+            String recapDeliveryRestrictions = customerCodeEntity.getRecapDeliveryRestrictions();
+            String[] recapDeliveryRestrictionsArray = recapDeliveryRestrictions.split(",");
+            List<CustomerCodeEntity> recapDeliveryRestrictionsList = customerCodeDetailsRepository.findByCustomerCodeIn(Arrays.asList(recapDeliveryRestrictionsArray));
+            if (CollectionUtils.isNotEmpty(recapDeliveryRestrictionsList)) {
+                Collections.sort(recapDeliveryRestrictionsList);
+                for (CustomerCodeEntity byCustomerCode : recapDeliveryRestrictionsList) {
+                    deliveryLocationsMap.put(byCustomerCode.getCustomerCode(), byCustomerCode.getDescription());
+                }
+            }
+        }
     }
 }
