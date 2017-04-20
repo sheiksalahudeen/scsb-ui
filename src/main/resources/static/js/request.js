@@ -376,9 +376,6 @@ function createRequest() {
             success: function (response) {
                 $('#createRequestSection').unblock();
                 $('#createRequestSection').html(response);
-                $("input").css({"border":"0px","background-color":"white","-webkit-box-shadow":"none","box-shadow":"none"});
-                $("textarea").css({"border":"0px","background-color":"white","-webkit-box-shadow":"none","box-shadow":"none"});
-                $("select").css({"border":"0px","background-color":"white","-webkit-box-shadow":"none","box-shadow":"none"});
                 $("#textField").hide();
             }
         });
