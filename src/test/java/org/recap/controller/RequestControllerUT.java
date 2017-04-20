@@ -39,6 +39,7 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -98,7 +99,7 @@ public class RequestControllerUT extends BaseControllerUT {
     @Mock
     RequestItemDetailsRepository requestItemDetailsRepository;
 
-    @Autowired
+    @Mock
     RequestStatusDetailsRepository requestStatusDetailsRepository;
 
     @Before
@@ -261,8 +262,8 @@ public class RequestControllerUT extends BaseControllerUT {
         Mockito.when(requestController.getRestTemplate().exchange(requestItemUrl, HttpMethod.POST, requestEntity, ItemResponseInformation.class)).thenReturn(responseEntity1);
         Mockito.when(requestController.getRestTemplate().exchange(validateRequestItemUrl, HttpMethod.POST, requestEntity, String.class)).thenReturn(responseEntity);
         Mockito.when(requestController.createRequest(requestForm,bindingResult,model,request)).thenCallRealMethod();
-        String response = requestController.createRequest(requestForm,bindingResult,model,request);
-        assertNotNull(response);
+        ModelAndView modelAndView = requestController.createRequest(requestForm,bindingResult,model,request);
+        assertNotNull(modelAndView);
     }
 
     @Test
@@ -293,7 +294,14 @@ public class RequestControllerUT extends BaseControllerUT {
 
     @Test
     public void testLoadSearchRequest(){
+        RequestStatusEntity requestStatusEntity = new RequestStatusEntity();
+        requestStatusEntity.setRequestStatusDescription("RETRIEVAL ORDER PLACED");
+        InstitutionEntity institutionEntity = new InstitutionEntity();
+        institutionEntity.setInstitutionCode("PUL");
         Mockito.when(requestController.getRequestStatusDetailsRepository()).thenReturn(requestStatusDetailsRepository);
+        Mockito.when(requestController.getInstitutionDetailsRepository()).thenReturn(institutionDetailsRepository);
+        Mockito.when(requestController.getRequestStatusDetailsRepository().findAll()).thenReturn(Arrays.asList(requestStatusEntity));
+        Mockito.when(requestController.getInstitutionDetailsRepository().getInstitutionCodeForSuperAdmin()).thenReturn(Arrays.asList(institutionEntity));
         Mockito.when(requestController.loadSearchRequest(model,request)).thenCallRealMethod();
         ModelAndView modelAndView = requestController.loadSearchRequest(model,request);
         assertNotNull(modelAndView);
