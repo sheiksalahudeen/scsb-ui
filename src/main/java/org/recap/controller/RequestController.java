@@ -199,6 +199,38 @@ public class RequestController {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/request/goToSearchRequest", method = RequestMethod.GET)
+    public ModelAndView goToSearchRequest(@Valid @ModelAttribute("requestForm") RequestForm requestForm,String patronBarcodeInRequest,
+                                       BindingResult result,
+                                       Model model) {
+        try {
+            requestForm.resetPageNumber();
+            requestForm.setPatronBarcode(patronBarcodeInRequest);
+            List<String> requestStatuses = new ArrayList<>();
+            List<String> institutionList = new ArrayList<>();
+            Iterable<RequestStatusEntity> requestStatusEntities = getRequestStatusDetailsRepository().findAll();
+            for (Iterator iterator = requestStatusEntities.iterator(); iterator.hasNext(); ) {
+                RequestStatusEntity requestStatusEntity = (RequestStatusEntity) iterator.next();
+                requestStatuses.add(requestStatusEntity.getRequestStatusDescription());
+            }
+            requestForm.setRequestStatuses(requestStatuses);
+            Iterable<InstitutionEntity> institutionEntities = getInstitutionDetailsRepository().getInstitutionCodeForSuperAdmin();
+            for (Iterator iterator = institutionEntities.iterator();iterator.hasNext();) {
+                InstitutionEntity institutionEntity=(InstitutionEntity)iterator.next();
+                institutionList.add(institutionEntity.getInstitutionCode());
+            }
+            requestForm.setInstitutionList(institutionList);
+            requestForm.setStatus("active");
+            searchAndSetResults(requestForm);
+            model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
+        } catch (Exception exception) {
+            logger.error(RecapConstants.LOG_ERROR, exception);
+            logger.debug(exception.getMessage());
+        }
+        return new ModelAndView("request :: #requestContentId", RecapConstants.REQUEST_FORM, requestForm);
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=first")
     public ModelAndView searchFirst(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
                                     BindingResult result,
@@ -262,16 +294,34 @@ public class RequestController {
     }
 
     @ResponseBody
+    @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=loadCreateRequestForSamePatron")
+    public ModelAndView loadCreateRequestForSamePatron(Model model, HttpServletRequest request) {
+        UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(request.getSession(), RecapConstants.REQUEST_PRIVILEGE);
+        RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm,model);
+        requestForm.setOnChange("true");
+        model.addAttribute(RecapConstants.REQUEST_FORM, requestForm);
+        model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
+        return new ModelAndView(RecapConstants.REQUEST, RecapConstants.REQUEST_FORM, requestForm);
+    }
+
+    @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=loadSearchRequest")
     public ModelAndView loadSearchRequest(Model model, HttpServletRequest request) {
         RequestForm requestForm = new RequestForm();
         List<String> requestStatuses = new ArrayList<>();
+        List<String> institutionList = new ArrayList<>();
         Iterable<RequestStatusEntity> requestStatusEntities = getRequestStatusDetailsRepository().findAll();
         for (Iterator iterator = requestStatusEntities.iterator(); iterator.hasNext(); ) {
             RequestStatusEntity requestStatusEntity = (RequestStatusEntity) iterator.next();
             requestStatuses.add(requestStatusEntity.getRequestStatusDescription());
         }
         requestForm.setRequestStatuses(requestStatuses);
+        Iterable<InstitutionEntity> institutionEntities = getInstitutionDetailsRepository().getInstitutionCodeForSuperAdmin();
+        for (Iterator iterator = institutionEntities.iterator();iterator.hasNext();) {
+            InstitutionEntity institutionEntity=(InstitutionEntity)iterator.next();
+            institutionList.add(institutionEntity.getInstitutionCode());
+        }
+        requestForm.setInstitutionList(institutionList);
         model.addAttribute(RecapConstants.REQUEST_FORM, requestForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
         return new ModelAndView(RecapConstants.REQUEST, RecapConstants.REQUEST_FORM, requestForm);
@@ -304,6 +354,7 @@ public class RequestController {
             if (userDetailsForm.getLoginInstitutionId() == institutionEntity.getInstitutionId() && (!userDetailsForm.isRecapUser()) && (!userDetailsForm.isSuperAdmin()) && (!RecapConstants.HTC.equals(institutionEntity.getInstitutionCode())) ) {
                 requestingInstitutions.add(institutionEntity.getInstitutionCode());
                 requestForm.setRequestingInstitutions(requestingInstitutions);
+                requestForm.setInstitutionList(requestingInstitutions);
                 requestForm.setRequestingInstitution(institutionEntity.getInstitutionCode());
                 requestForm.setDisableRequestingInstitution(true);
                 requestForm.setOnChange("true");
@@ -311,6 +362,7 @@ public class RequestController {
             if ((userDetailsForm.isRecapUser() || userDetailsForm.isSuperAdmin()) && (!RecapConstants.HTC.equals(institutionEntity.getInstitutionCode()))) {
                 requestingInstitutions.add(institutionEntity.getInstitutionCode());
                 requestForm.setRequestingInstitutions(requestingInstitutions);
+                requestForm.setInstitutionList(requestingInstitutions);
                 requestForm.setRequestingInstitution("");
                 requestForm.setDisableRequestingInstitution(false);
             }
@@ -480,10 +532,10 @@ public class RequestController {
 
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=createRequest")
-    public String createRequest(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
+    public ModelAndView createRequest(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
                                 BindingResult result,
                                 Model model, HttpServletRequest request) throws JSONException {
-        JSONObject jsonObject = new JSONObject();
+
         String customerCodeDescription = null;
         try {
             HttpSession session = request.getSession();
@@ -493,14 +545,33 @@ public class RequestController {
                 JSONObject responseJsonObject = new JSONObject(stringJson);
                 Object errorMessage = responseJsonObject.has(RecapConstants.ERROR_MESSAGE) ? responseJsonObject.get(RecapConstants.ERROR_MESSAGE) : null;
                 Object noPermissionErrorMessage = responseJsonObject.has(RecapConstants.NO_PERMISSION_ERROR_MESSAGE) ? responseJsonObject.get(RecapConstants.NO_PERMISSION_ERROR_MESSAGE) : null;
+                Object itemTitle = responseJsonObject.has(RecapConstants.REQUESTED_ITEM_TITLE) ? responseJsonObject.get(RecapConstants.REQUESTED_ITEM_TITLE) : null;
+                Object itemOwningInstitution = responseJsonObject.has(RecapConstants.REQUESTED_ITEM_OWNING_INSTITUTION) ? responseJsonObject.get(RecapConstants.REQUESTED_ITEM_OWNING_INSTITUTION) : null;
+                Object deliveryLocations = responseJsonObject.has(RecapConstants.DELIVERY_LOCATION) ? responseJsonObject.get(RecapConstants.DELIVERY_LOCATION) : null;
+                List<CustomerCodeEntity> customerCodeEntities = new ArrayList<>();
+                if (itemTitle != null && itemOwningInstitution != null && deliveryLocations != null) {
+                    requestForm.setItemTitle((String) itemTitle);
+                    requestForm.setItemOwningInstitution((String) itemOwningInstitution);
+                    JSONObject deliveryLocationsJson = (JSONObject) deliveryLocations;
+                    Iterator iterator = deliveryLocationsJson.keys();
+                    while (iterator.hasNext()) {
+                        String customerCode = (String) iterator.next();
+                        String description = (String) deliveryLocationsJson.get(customerCode);
+                        CustomerCodeEntity customerCodeEntity = new CustomerCodeEntity();
+                        customerCodeEntity.setCustomerCode(customerCode);
+                        customerCodeEntity.setDescription(description);
+                        customerCodeEntities.add(customerCodeEntity);
+                    }
+                    requestForm.setDeliveryLocations(customerCodeEntities);
+                }
                 if (noPermissionErrorMessage != null) {
                     requestForm.setErrorMessage((String) noPermissionErrorMessage);
-                    jsonObject.put(RecapConstants.ERROR_MESSAGE, requestForm.getErrorMessage());
-                    return jsonObject.toString();
+                    requestForm.setShowRequestErrorMsg(true);
+                    return new ModelAndView("request :: #createRequestSection", RecapConstants.REQUEST_FORM, requestForm);
                 } else if (errorMessage != null) {
                     requestForm.setErrorMessage((String) errorMessage);
-                    jsonObject.put(RecapConstants.ERROR_MESSAGE, requestForm.getErrorMessage());
-                    return jsonObject.toString();
+                    requestForm.setShowRequestErrorMsg(true);
+                    return new ModelAndView("request :: #createRequestSection", RecapConstants.REQUEST_FORM, requestForm);
                 }
             }
 
@@ -541,30 +612,28 @@ public class RequestController {
             ItemResponseInformation itemResponseInformation = itemResponseEntity.getBody();
             if (null != itemResponseInformation && !itemResponseInformation.isSuccess()) {
                 requestForm.setErrorMessage(itemResponseInformation.getScreenMessage());
+                requestForm.setDisableRequestingInstitution(false);
+                requestForm.setShowRequestErrorMsg(true);
             }
         } catch (HttpClientErrorException httpException) {
             logger.error(RecapConstants.LOG_ERROR, httpException);
             String responseBodyAsString = httpException.getResponseBodyAsString();
             requestForm.setErrorMessage(responseBodyAsString);
+            requestForm.setShowRequestErrorMsg(true);
         } catch (Exception exception) {
             logger.error(RecapConstants.LOG_ERROR, exception);
             requestForm.setErrorMessage(exception.getMessage());
+            requestForm.setShowRequestErrorMsg(true);
         }
 
-        jsonObject.put(RecapConstants.ITEM_TITLE, requestForm.getItemTitle());
-        jsonObject.put(RecapConstants.ITEM_BARCODE, requestForm.getItemBarcodeInRequest());
-        jsonObject.put(RecapConstants.ITEM_OWNING_INSTITUTION, requestForm.getItemOwningInstitution());
-        jsonObject.put(RecapConstants.PATRON_BARCODE, requestForm.getPatronBarcodeInRequest());
-        jsonObject.put(RecapConstants.PATRON_EMAIL_ADDRESS, requestForm.getPatronEmailAddress());
-        jsonObject.put(RecapConstants.REQUESTING_INSTITUTION, requestForm.getRequestingInstitution());
-        jsonObject.put(RecapConstants.REQUEST_TYPE, requestForm.getRequestType());
-        jsonObject.put(RecapConstants.DELIVERY_LOCATION, customerCodeDescription);
-        jsonObject.put(RecapConstants.REQUEST_NOTES, requestForm.getRequestNotes());
-        jsonObject.put(RecapConstants.ERROR_MESSAGE, requestForm.getErrorMessage());
+        requestForm.setRequestingInstitutions(requestForm.getInstitutionList());
 
-        return jsonObject.toString();
+        if(requestForm.getErrorMessage()==null){
+        requestForm.setSubmitted(true);
+        requestForm.setDisableRequestingInstitution(true);
+        }
+        return new ModelAndView("request :: #createRequestSection", RecapConstants.REQUEST_FORM, requestForm);
     }
-
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=cancelRequest")
     public String cancelRequest(@Valid @ModelAttribute("requestForm") RequestForm requestForm,

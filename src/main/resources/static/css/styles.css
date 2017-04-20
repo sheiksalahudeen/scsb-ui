@@ -285,7 +285,7 @@ li.active a.tab-users span{color:#D38C0D;}
 select.themed-select{padding-left:8px;background:#fff;appearance: none;-webkit-appearance: none;-moz-appearance: none;}
 .select-holder{position:relative;}
 .select-holder:after,
-#recapreports .multiselect-native-select .btn-group .btn.btn-default .caret{position:absolute;content:"\e259";font-family:'Glyphicons Halflings';right:0px;top:1px;padding:7px 6px 6px;cursor:default;border-right:1px solid #717170;pointer-events: none;}
+#recapreports .multiselect-native-select .btn-group .btn.btn-default .caret{position:absolute;font-family:'Glyphicons Halflings';right:0px;top:1px;padding:7px 6px 6px;cursor:default;border-right:0px solid #717170;pointer-events: none;}
 textarea{resize:none;}
 /*************************/
 /************** Search Bar Styles Starts****************/
@@ -293,7 +293,7 @@ textarea{resize:none;}
 .input-group .form-control:not(:first-child):not(:last-child),
 .input-group-addon:not(:first-child):not(:last-child),
 .input-group-btn:not(:first-child):not(:last-child) {border-radius:0;}
-.buscador-principal .form-control {border:1px solid #888988;border-right:0;height:50px;}
+.buscador-principal .form-control {border:1px solid #888988;height:50px;}
 #search-filter{background:#699683;color:#ffffff;position:absolute;width:100%;z-index:999;padding:20px 0 30px;}
 #search-filter .allfacet label{padding-left:10px;display:block}
 #search-filter .allfacet span.facet-text{display:inline-block;width:80%;font-size:16px}

@@ -28,11 +28,11 @@ public interface RequestItemDetailsRepository extends JpaRepository<RequestItemE
     @Query(value = "select request from RequestItemEntity request inner join request.requestStatusEntity status where request.patronId = :patronBarcode and status.requestStatusCode in ('RETRIEVAL_ORDER_PLACED', 'RECALL_ORDER_PLACED', 'EDD_ORDER_PLACED')")
     Page<RequestItemEntity> findByPatronBarcodeAndActive(Pageable pageable, @Param("patronBarcode") String patronBarcode);
 
-    @Query(value = "select request from RequestItemEntity request inner join request.itemEntity item inner join request.requestStatusEntity status where request.patronId = :patronBarcode and item.barcode = :itemBarcode and status.requestStatusCode.requestStatusDescription = :status")
-    Page<RequestItemEntity> findByPatronBarcodeAndItemBarcodeAndStatus(Pageable pageable, @Param("patronBarcode") String patronBarcode, @Param("itemBarcode") String itemBarcode, @Param("status") String status);
+    @Query(value = "select request from RequestItemEntity request inner join request.itemEntity item inner join request.requestStatusEntity status where request.patronId = :patronBarcode and request.requestingInstitutionId = :institutionId and item.barcode = :itemBarcode and status.requestStatusCode.requestStatusDescription = :status")
+    Page<RequestItemEntity> findByPatronBarcodeAndItemBarcodeAndStatusAndInstitution(Pageable pageable, @Param("patronBarcode") String patronBarcode, @Param("itemBarcode") String itemBarcode, @Param("status") String status,@Param("institutionId")Integer institutionId);
 
-    @Query(value = "select request from RequestItemEntity request inner join request.itemEntity item inner join request.requestStatusEntity status where request.patronId = :patronBarcode and item.barcode = :itemBarcode and status.requestStatusCode in ('RETRIEVAL_ORDER_PLACED', 'RECALL_ORDER_PLACED', 'EDD_ORDER_PLACED')")
-    Page<RequestItemEntity> findByPatronBarcodeAndItemBarcodeAndActive(Pageable pageable, @Param("patronBarcode") String patronBarcode, @Param("itemBarcode") String itemBarcode);
+    @Query(value = "select request from RequestItemEntity request inner join request.itemEntity item inner join request.requestStatusEntity status where request.patronId = :patronBarcode and item.barcode = :itemBarcode and request.requestingInstitutionId = :institutionId and status.requestStatusCode in ('RETRIEVAL_ORDER_PLACED', 'RECALL_ORDER_PLACED', 'EDD_ORDER_PLACED')")
+    Page<RequestItemEntity> findByPatronBarcodeAndItemBarcodeAndActiveAndInstitution(Pageable pageable, @Param("patronBarcode") String patronBarcode, @Param("itemBarcode") String itemBarcode, @Param("institutionId")Integer institutionId);
 
     @Query(value = "select request from RequestItemEntity request inner join request.requestStatusEntity status where request.patronId = :patronBarcode and status.requestStatusDescription = :status")
     Page<RequestItemEntity> findByPatronBarcodeAndStatus(Pageable pageable, @Param("patronBarcode") String patronBarcode, @Param("status") String status);
@@ -88,4 +88,36 @@ public interface RequestItemDetailsRepository extends JpaRepository<RequestItemE
                                  @Param("collectionGroupIds") List<Integer> collectionGroupIds,
                                  @Param("requestTypeCodes") List<String> requestTypeCodes);
 
+    @Query(value = "select request from RequestItemEntity request inner join request.itemEntity item where request.patronId = :patronBarcode and request.requestingInstitutionId = :institutionId and item.barcode = :itemBarcode")
+    Page<RequestItemEntity> findByPatronBarcodeAndItemBarcodeAndInstitution(Pageable pageable, @Param("patronBarcode") String patronBarcode, @Param("itemBarcode") String itemBarcode,@Param("institutionId")Integer institutionId);
+
+    @Query(value = "select request from RequestItemEntity request inner join request.requestStatusEntity status where request.patronId = :patronBarcode and request.requestingInstitutionId = :institutionId and status.requestStatusCode in ('RETRIEVAL_ORDER_PLACED', 'RECALL_ORDER_PLACED', 'EDD_ORDER_PLACED')")
+    Page<RequestItemEntity> findByPatronBarcodeAndActiveAndInstitution(Pageable pageable, @Param("patronBarcode") String patronBarcode,@Param("institutionId")Integer institutionId);
+
+    @Query(value = "select request from RequestItemEntity request inner join request.requestStatusEntity status where request.patronId = :patronBarcode and request.requestingInstitutionId = :institutionId and status.requestStatusDescription = :status")
+    Page<RequestItemEntity> findByPatronBarcodeAndStatusAndInstitution(Pageable pageable, @Param("patronBarcode") String patronBarcode, @Param("status") String status,@Param("institutionId")Integer institutionId);
+
+    @Query(value = "select request from RequestItemEntity request inner join request.itemEntity item inner join request.requestStatusEntity status where request.patronId = :patronBarcode and item.barcode = :itemBarcode and status.requestStatusCode.requestStatusDescription = :status")
+    Page<RequestItemEntity> findByPatronBarcodeAndItemBarcodeAndStatus(Pageable pageable, @Param("patronBarcode") String patronBarcode, @Param("itemBarcode") String itemBarcode, @Param("status")String status);
+
+    @Query(value = "select request from RequestItemEntity request inner join request.itemEntity item inner join request.requestStatusEntity status where request.patronId = :patronBarcode and item.barcode = :itemBarcode and status.requestStatusCode in ('RETRIEVAL_ORDER_PLACED', 'RECALL_ORDER_PLACED', 'EDD_ORDER_PLACED')")
+    Page<RequestItemEntity> findByPatronBarcodeAndItemBarcodeAndActive(Pageable pageable, @Param("patronBarcode") String patronBarcode, @Param("itemBarcode") String itemBarcode);
+
+    @Query(value = "select request from RequestItemEntity request inner join request.itemEntity item inner join request.requestStatusEntity status where item.barcode = :itemBarcode and request.requestingInstitutionId = :institutionId and status.requestStatusCode in ('RETRIEVAL_ORDER_PLACED','RECALL_ORDER_PLACED', 'EDD_ORDER_PLACED')")
+    Page<RequestItemEntity> findByItemBarcodeAndActiveAndInstitution(Pageable pageable, @Param("itemBarcode") String itemBarcode,@Param("institutionId")Integer institutionId);
+
+    @Query(value = "select request from RequestItemEntity request inner join request.itemEntity item inner join request.requestStatusEntity status where item.barcode = :itemBarcode and request.requestingInstitutionId = :institutionId and status.requestStatusDescription = :status")
+    Page<RequestItemEntity> findByItemBarcodeAndStatusAndInstitution(Pageable pageable, @Param("itemBarcode") String itemBarcode, @Param("status") String status,@Param("institutionId")Integer institutionId);
+
+    @Query(value = "select request from RequestItemEntity request where request.patronId = :patronBarcode and request.requestingInstitutionId = :institutionId")
+    Page<RequestItemEntity> findByPatronBarcodeAndInstitution(Pageable pageable, @Param("patronBarcode") String patronBarcode,@Param("institutionId")Integer institutionId);
+
+    @Query(value = "select request from RequestItemEntity request inner join request.itemEntity item where item.barcode = :itemBarcode and request.requestingInstitutionId = :institutionId")
+    Page<RequestItemEntity> findByItemBarcodeAndInstitution(Pageable pageable, @Param("itemBarcode") String itemBarcode,@Param("institutionId")Integer institutionId);
+
+    @Query(value = "select request from RequestItemEntity request inner join request.requestStatusEntity status where request.requestingInstitutionId = :institutionId and status.requestStatusCode in ('RETRIEVAL_ORDER_PLACED', 'RECALL_ORDER_PLACED','EDD_ORDER_PLACED')")
+    Page<RequestItemEntity> findAllActiveAndInstitution(Pageable pageable,@Param("institutionId")Integer institutionId);
+
+    @Query(value = "select request from RequestItemEntity request inner join  request.requestStatusEntity status where request.requestingInstitutionId = :institutionId and status.requestStatusDescription = :status")
+    Page<RequestItemEntity> findByStatusAndInstitution(Pageable pageable, @Param("status") String status,@Param("institutionId")Integer institutionId);
 }
