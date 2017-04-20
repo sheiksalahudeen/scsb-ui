@@ -405,34 +405,40 @@ public class RequestController {
                                                     }
                                                 } else {
                                                     deliveryLocationsMap.put(customerCodeEntity.getCustomerCode(), customerCodeEntity.getDescription());
+                                                    addRecapDeliveryRestrictions(deliveryLocationsMap, userDetailsForm, customerCodeEntity);
                                                 }
                                             }
                                         }
                                         else{
                                             if (customerCodeEntity != null) {
                                                 List<DeliveryRestrictionEntity> deliveryRestrictionEntityList = customerCodeEntity.getDeliveryRestrictionEntityList();
-                                                for (DeliveryRestrictionEntity deliveryRestrictionEntity : deliveryRestrictionEntityList) {
-                                                    if(requestForm.getRequestingInstitution().equals(deliveryRestrictionEntity.getInstitutionEntity().getInstitutionCode())){
-                                                        String deliveryRestriction = deliveryRestrictionEntity.getDeliveryRestriction();
-                                                        String[] splitDeliveryLocation = StringUtils.split(deliveryRestriction, ",");
-                                                        if(splitDeliveryLocation.length == 1){
-                                                            CustomerCodeEntity byCustomerCode = customerCodeDetailsRepository.findByCustomerCode(deliveryRestriction);
-                                                            if (byCustomerCode != null){
-                                                                deliveryLocationsMap.put(byCustomerCode.getCustomerCode(),byCustomerCode.getDescription());
-                                                            }
-                                                            addRecapDeliveryRestrictions(deliveryLocationsMap, userDetailsForm, customerCodeEntity);
-                                                        }
-                                                        else {
-                                                            List<CustomerCodeEntity> customerCodeEntityList = customerCodeDetailsRepository.findByCustomerCodeIn(Arrays.asList(splitDeliveryLocation));
-                                                            Collections.sort(customerCodeEntityList);
-                                                            for (CustomerCodeEntity codeEntity : customerCodeEntityList) {
-                                                                if (codeEntity != null){
-                                                                    deliveryLocationsMap.put(codeEntity.getCustomerCode(),codeEntity.getDescription());
+                                                if(CollectionUtils.isNotEmpty(deliveryRestrictionEntityList)){
+                                                    for (DeliveryRestrictionEntity deliveryRestrictionEntity : deliveryRestrictionEntityList) {
+                                                        if(requestForm.getRequestingInstitution().equals(deliveryRestrictionEntity.getInstitutionEntity().getInstitutionCode())){
+                                                            String deliveryRestriction = deliveryRestrictionEntity.getDeliveryRestriction();
+                                                            String[] splitDeliveryLocation = StringUtils.split(deliveryRestriction, ",");
+                                                            if(splitDeliveryLocation.length == 1){
+                                                                CustomerCodeEntity byCustomerCode = customerCodeDetailsRepository.findByCustomerCode(deliveryRestriction);
+                                                                if (byCustomerCode != null){
+                                                                    deliveryLocationsMap.put(byCustomerCode.getCustomerCode(),byCustomerCode.getDescription());
                                                                 }
+                                                                addRecapDeliveryRestrictions(deliveryLocationsMap, userDetailsForm, customerCodeEntity);
                                                             }
-                                                            addRecapDeliveryRestrictions(deliveryLocationsMap, userDetailsForm, customerCodeEntity);
+                                                            else {
+                                                                List<CustomerCodeEntity> customerCodeEntityList = customerCodeDetailsRepository.findByCustomerCodeIn(Arrays.asList(splitDeliveryLocation));
+                                                                Collections.sort(customerCodeEntityList);
+                                                                for (CustomerCodeEntity codeEntity : customerCodeEntityList) {
+                                                                    if (codeEntity != null){
+                                                                        deliveryLocationsMap.put(codeEntity.getCustomerCode(),codeEntity.getDescription());
+                                                                    }
+                                                                }
+                                                                addRecapDeliveryRestrictions(deliveryLocationsMap, userDetailsForm, customerCodeEntity);
+                                                            }
                                                         }
                                                     }
+                                                }
+                                                else{
+                                                    addRecapDeliveryRestrictions(deliveryLocationsMap, userDetailsForm, customerCodeEntity);
                                                 }
                                             }
                                         }
