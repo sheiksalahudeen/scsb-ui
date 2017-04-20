@@ -285,7 +285,7 @@ li.active a.tab-users span{color:#D38C0D;}
 select.themed-select{padding-left:8px;background:#fff;appearance: none;-webkit-appearance: none;-moz-appearance: none;}
 .select-holder{position:relative;}
 .select-holder:after,
-#recapreports .multiselect-native-select .btn-group .btn.btn-default .caret{position:absolute;font-family:'Glyphicons Halflings';right:0px;top:1px;padding:7px 6px 6px;cursor:default;border-right:0px solid #717170;pointer-events: none;}
+#recapreports .multiselect-native-select .btn-group .btn.btn-default .caret{position:absolute;content:"\e259";font-family:'Glyphicons Halflings';right:0px;top:1px;padding:7px 6px 6px;cursor:default;border-right:0px solid #717170;pointer-events: none;}
 textarea{resize:none;}
 /*************************/
 /************** Search Bar Styles Starts****************/
