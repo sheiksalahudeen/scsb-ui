@@ -415,54 +415,6 @@ public class UserRoleControllerUT extends BaseTestCase {
         assertNotNull(modelAndView);
         assertEquals(modelAndView.getViewName(),"userRolesSearch");
     }
-
-    @Test
-    public void testClearPageFunctionality() throws Exception {
-        usersSessionAttributes();
-        List<Integer> editSelected = new ArrayList<>();
-        editSelected.add(1);
-        UserRoleForm userRoleForm = new UserRoleForm();
-        userRoleForm.setNetworkLoginId("test");
-        userRoleForm.setEmailId("test@gmail.com");
-        userRoleForm.setInstitutionId(2);
-        userRoleForm.setUserDescription("testdescription");
-        List<Integer> role = new ArrayList<>();
-        role.add(2);
-        userRoleForm.setSelectedForCreate(role);
-        userRoleForm.setUserId(1);
-        userRoleForm.setEditSelectedForCreate(editSelected);
-        UserDetailsForm userDetailsForm = new UserDetailsForm();
-        userDetailsForm.setSuperAdmin(true);
-        userDetailsForm.setLoginInstitutionId(1);
-        UsersEntity usersEntity = new UsersEntity();
-        usersEntity.setLoginId("1");
-        usersEntity.setUserDescription("test");
-        usersEntity.setEmailId("hemalatha.s@htcindia.com");
-        RoleEntity roleEntity = new RoleEntity();
-        roleEntity.setRoleId(1);
-        usersEntity.setUserRole(Arrays.asList(roleEntity));
-        usersEntity.setInstitutionId(1);
-        ModelAndView modelAndView1 = new ModelAndView();
-        modelAndView1.setViewName("userRolesSearch");
-        List<Object> roles = new ArrayList<>();
-        List<Object> institution = new ArrayList<>();
-        Integer userId = 3;
-        Mockito.when(mockedUserRoleController.getUserAuthUtil()).thenReturn(userAuthUtil);
-        Mockito.when(mockedUserRoleController.getUserRoleService()).thenReturn(userRoleService);
-        Mockito.when(mockedUserRoleController.getUserManagementService()).thenReturn(userManagementService);
-        Mockito.when(mockedUserRoleController.getUserDetailsRepository()).thenReturn(userDetailsRepository);
-        Mockito.when(mockedUserRoleController.getUserRoleService().getRoles(Mockito.any())).thenReturn(roles);
-        Mockito.when(mockedUserRoleController.getUserRoleService().getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId())).thenReturn(institution);
-        Mockito.when(mockedUserRoleController.getLogger()).thenReturn(logger);
-        Mockito.when(mockedUserRoleController.getUserAuthUtil().getUserDetails(session, RecapConstants.BARCODE_RESTRICTED_PRIVILEGE)).thenReturn(userDetailsForm);
-        Mockito.when(mockedUserRoleController.getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(RecapConstants.USER_TOKEN))).thenReturn(true);
-        Mockito.when(mockedUserRoleController.getUserDetailsRepository().findByUserId(userRoleForm.getUserId())).thenReturn(usersEntity);
-        Mockito.when(mockedUserRoleController.editClearPage(userRoleForm,request,model)).thenCallRealMethod();
-        ModelAndView modelAndView = mockedUserRoleController.editClearPage(userRoleForm,request,model);
-        assertNotNull(modelAndView);
-        assertEquals(modelAndView.getViewName(),"userRolesSearch");
-    }
-
     public RoleEntity saveRole(){
         RoleEntity roleEntity = new RoleEntity();
         roleEntity.setRoleName("test role");
