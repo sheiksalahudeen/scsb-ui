@@ -9,22 +9,6 @@ jQuery(document).ready(function ($) {
         $('#errormsg').hide();
     });
 
-    $('#reset').click(function () {
-        $('#networkLoginId').val('');
-        $('#institutionId').val('');
-        $('#userDescription').val('');
-        $('#roleId').multiselect('deselectAll', false);
-        $('#roleId').multiselect('refresh');
-        $('#emailId').val('');
-        $('#networkLoginIdErrMsg').hide();
-        $('#institutionIdErrMsg').hide();
-        $('#roleIdErrMsg').hide();
-        $('#userDescriptionErrMsg').hide();
-        $('#emailIdErrMsg').hide();
-        $('#successMsg').hide();
-        $('#userDescriptionLengthErrMsg').hide();
-    });
-
     $('#backLink').click(function () {
         $('#successMsg').hide();
         $('#failureMsg').hide();

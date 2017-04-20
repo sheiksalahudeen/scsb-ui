@@ -52,6 +52,32 @@ function loadCreateRequest() {
     });
 }
 
+function loadCreateRequestForSamePatron() {
+    var patronBarcode = $("#patronBarcodeId").val();
+    var patronEmailId = $("#patronEmailId").val();
+    var requestingInstitutionId = $("#requestingInstitutionId").val();
+    var $form = $('#request-form');
+    var url = $form.attr('action') + "?action=loadCreateRequestForSamePatron";
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: $form.serialize(),
+        success: function (response) {
+            $('#requestContentId').html(response);
+            $("#request .request-main-section").hide();
+            $("#goBackLink").hide();
+            $("#request .create-request-section").show();
+            $("#requestingInstitutionId option").prop("disabled", false);
+            $('#patronBarcodeId').val(patronBarcode);
+            $('#patronEmailId').val(patronEmailId);
+            $('#requestingInstitutionId').val(requestingInstitutionId);
+            $('.EDDdetails-section').hide();
+            $('#deliverylocation_request').show();
+            $('#deliveryLocationId').empty();
+        }
+    });
+}
+
 function loadSearchRequest() {
     var $form = $('#request-form');
     var url = $form.attr('action') + "?action=loadSearchRequest";
@@ -66,6 +92,36 @@ function loadSearchRequest() {
             $("#request .create-request-section").hide();
         }
     });
+}
+
+function goToSearchRequest(patronBarcodeInRequest){
+    var $form = $('#request-form');
+    var url = "/request/goToSearchRequest";
+    $.ajax({
+        url: url,
+        type: 'GET',
+        data: {patronBarcodeInRequest: patronBarcodeInRequest},
+        success: function (response) {
+            $('#requestContentId').html(response);
+            $("#goBackLink").show();
+            $("#request .request-main-section").show();
+            $("#request .create-request-section").hide();
+            var status = $('#requestStatus').val();
+            if (status == 'active'){
+                $('#noteActive').show();
+                $('#noteAll').hide();
+            }
+            else if (isBlankValue(status)){
+                $('#noteAll').show();
+                $('#noteActive').hide();
+            }
+            else {
+                $('#noteAll').hide();
+                $('#noteActive').hide();
+            }
+        }
+    });
+
 }
 
 function searchRequests(action) {
@@ -319,32 +375,11 @@ function createRequest() {
             },
             success: function (response) {
                 $('#createRequestSection').unblock();
-                var jsonResponse = JSON.parse(response);
-                var errorMessage = jsonResponse['errorMessage'];
-                $('#errorMessageSpanId').hide();
-                if (errorMessage != null && errorMessage != '') {
-                    $('#errorMessageSpanId').html(errorMessage);
-                    $('#errorMessageId').show();
-                    $('#errorMessageSpanId').show();
-                } else {
-                    $('#errorMessageSpanId').html('');
-                    $('#errorMessageId').hide();
-                    $('#itemTitleHead').html(jsonResponse['itemTitle']);
-                    $('#itemBarcodeInRequest').html(jsonResponse['ItemBarcode']);
-                    $('#itemTitle').html(jsonResponse['itemTitle']);
-                    $('#itemOwningInstitution').html(jsonResponse['ItemOwningInstitution']);
-                    $('#patronBarcodeInRequest').html(jsonResponse['patronBarcode']);
-                    $('#patronEmailAddress').html(jsonResponse['patronEmailAddress']);
-                    $('#requestingInstitution').html(jsonResponse['requestingInstitution']);
-                    $('#requestType').html(jsonResponse['requestType']);
-                    $('#deliveryLocationInRequest').html(jsonResponse['deliveryLocation']);
-                    $('#requestNotes').html(jsonResponse['requestNotes']);
-                    $('#patronBarcodeInRequestHdn').html(jsonResponse['patronBarcode']);
-                    $('#patronEmailIdHdn').html(jsonResponse['patronEmailAddress']);
-                    $('#requestingInstitutionHdn').html(jsonResponse['requestingInstitution']);
-                    $('#createrequestclear').click();
-                    $('#createRequestModal').modal('show');
-                }
+                $('#createRequestSection').html(response);
+                $("input").css({"border":"0px","background-color":"white","-webkit-box-shadow":"none","box-shadow":"none"});
+                $("textarea").css({"border":"0px","background-color":"white","-webkit-box-shadow":"none","box-shadow":"none"});
+                $("select").css({"border":"0px","background-color":"white","-webkit-box-shadow":"none","box-shadow":"none"});
+                $("#textField").hide();
             }
         });
     }
@@ -601,7 +636,7 @@ function populateDeliveryLocations(){
                 $.each(deliveryLocation, function (key, value) {
                     $('#deliveryLocationId').append($("<option/>", {
                         value: key,
-                        text: value
+                        text: value + "-" +key
                     }));
                 });
             }

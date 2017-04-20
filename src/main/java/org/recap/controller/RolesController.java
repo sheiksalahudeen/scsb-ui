@@ -263,27 +263,6 @@ public class RolesController {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=editClearPage")
-    public ModelAndView editClearPage(@Valid @ModelAttribute("rolesForm") RolesForm rolesForm,
-                                      Model model) {
-        RoleEntity roleEntity = rolesDetailsRepositorty.findByRoleId(rolesForm.getRoleId());
-        rolesForm.setEditRoleName(roleEntity.getRoleName());
-        rolesForm.setEditRoleDescription(roleEntity.getRoleDescription());
-        rolesForm.setEditPermissionNames("");
-        rolesForm.setPermissionNameList(getAllPermissionNames().getPermissionNameList());
-        rolesForm.setErrorMessage("");
-        rolesForm.setMessage("");
-        List<String> permissionEntityList = new ArrayList<>();
-        Set<PermissionEntity> permissions = roleEntity.getPermissions();
-        for(PermissionEntity permission : permissions){
-            permissionEntityList.add(permission.getPermissionName());
-        }
-        rolesForm.setSelectedPermissionNames(permissionEntityList);
-        rolesForm.setShowIntial(false);
-        return new ModelAndView(RecapConstants.ROLES, RecapConstants.ROLES_FORM, rolesForm);
-    }
-
-    @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=pageSizeChange")
     public ModelAndView onPageSizeChange(@Valid @ModelAttribute("rolesForm") RolesForm rolesForm,
                                          Model model) throws Exception {

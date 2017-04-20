@@ -94,31 +94,6 @@ function populatePermissionNames(){
 
 }
 
-function editResetDefault() {
-    var $form = $('#roles-form');
-    var url = $form.attr('action') + "?action=editClearPage";
-    $.ajax({
-        url: url,
-        type: 'post',
-        data: $form.serialize(),
-        success: function (response) {
-            $('#rolesContentId').html(response);
-            $("#recaprole .roles-main-section").hide();
-            $('#roleNameErrorMessage').hide();
-            $('#roleDescriptionErrorMessage').hide();
-            $('#permissionNamesErrorMessage').hide();
-            $('#editRoleNameErrorMessage').hide();
-            $('#editRoleDescriptionErrorMessage').hide();
-            $('#editPermissionNamesErrorMessage').hide();
-            $("#recaprole .edit-role-section").show();
-            $("#recaprole .create-role-section").hide();
-            $("#recaprole .delete-role-section").hide();
-            $('#editPermissionNameId').multiselect();
-            $('#editRoleDescriptionLengthErrMsg').hide();
-        }
-    });
-}
-
 function createResetDefault() {
     var $form = $('#roles-form');
     var url = $form.attr('action') + "?action=clearPage";

@@ -371,45 +371,6 @@ public class UserRoleController {
         return new ModelAndView("userRolesSearch", "userRoleForm", userRoleForm);
     }
 
-
-    @ResponseBody
-    @RequestMapping(value = "/userRoles", method = RequestMethod.POST, params = "action=editClearPage")
-    public ModelAndView editClearPage(@ModelAttribute("userRoleForm") UserRoleForm userRoleForm,HttpServletRequest request,
-                                      Model model) {
-        HttpSession session = request.getSession();
-        boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_USER_ROLE_URL, (UsernamePasswordToken) session.getAttribute(RecapConstants.USER_TOKEN));
-        if (authenticated) {
-            getLogger().info(RecapConstants.USERS_TAB_CLICKED);
-            UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(session, RecapConstants.BARCODE_RESTRICTED_PRIVILEGE);
-            List<Object> roles = getUserRoleService().getRoles(getUserManagementService().getSuperAdminRoleId());
-            List<Object> institutions = getUserRoleService().getInstitutions(userDetailsForm.isSuperAdmin(), userDetailsForm.getLoginInstitutionId());
-            userRoleForm.setRoles(roles);
-            userRoleForm.setInstitutions(institutions);
-            UsersEntity usersEntity = getUserDetailsRepository().findByUserId(userRoleForm.getUserId());
-            if (usersEntity != null){
-                userRoleForm.setEditNetworkLoginId(usersEntity.getLoginId());
-                userRoleForm.setEditUserDescription(usersEntity.getUserDescription());
-                userRoleForm.setUserId(userRoleForm.getUserId());
-                userRoleForm.setEditUserId(userRoleForm.getUserId());
-                List<RoleEntity> roleEntityList = usersEntity.getUserRole();
-                List<Integer> roleIdss = new ArrayList<>();
-                if (roleEntityList != null) {
-                    for (RoleEntity roleEntity : roleEntityList) {
-                        roleIdss.add(roleEntity.getRoleId());
-                    }
-                }
-                userRoleForm.setEditSelectedForCreate(roleIdss);
-                userRoleForm.setShowSelectedForCreate(userRoleForm.getEditSelectedForCreate());
-                userRoleForm.setEditInstitutionId(usersEntity.getInstitutionId());
-                userRoleForm.setEditEmailId(usersEntity.getEmailId());
-            }
-
-        }
-        userRoleForm.setShowUserSearchView(false);
-        return new ModelAndView("userRolesSearch", "userRoleForm", userRoleForm);
-    }
-
-
     private void priorSearch(UserRoleForm userRoleForm, HttpServletRequest request) {
         HttpSession session = request.getSession();
         Integer userId = (Integer) session.getAttribute(RecapConstants.USER_ID);
