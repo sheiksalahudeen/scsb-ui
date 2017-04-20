@@ -315,6 +315,7 @@ textarea{resize:none;}
 #recaprole .search-bar .buscador-principal .themed-input,
 #recapusers .search-bar .buscador-principal .themed-input {border:1px solid #888988}
 #recapusers .user-view .buscador-principal .themed-input {border:1px solid #888988}
+#scheduleJobs .buscador-principal .themed-input {border:1px solid #888988}
 #request .search-bar .buscador-principal .themed-button,
 #recapreports .search-bar .buscador-principal .themed-button,
 #recaprole .search-bar .buscador-principal .themed-button,
