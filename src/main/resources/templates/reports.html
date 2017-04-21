@@ -644,12 +644,12 @@
                                 </thead>
                                 <tr th:each="deaccessionRow:${reportsForm.deaccessionItemResultsRows}">
                                     <td><span th:text="${deaccessionRow.deaccessionDate}"></span></td>
-                                    <td class="text-left"><span th:text="${deaccessionRow.title}"></span></td>
+                                    <td><span th:text="${deaccessionRow.title}"></span></td>
                                     <td><span id="ownInstDeacc"  th:text="${deaccessionRow.deaccessionOwnInst}"></span></td>
-                                    <td class="text-left"><span th:text="${deaccessionRow.itemBarcode}"></span></td>
+                                    <td><span th:text="${deaccessionRow.itemBarcode}"></span></td>
                                     <td><span th:text="${deaccessionRow.cgd}"></span></td>
                                     <td class="text-left"><span th:text="${deaccessionRow.deaccessionNotes}"></span></td>
-                                    <td class="text-left"><span th:text="${deaccessionRow.deaccessionCreatedBy}"></span></td>
+                                    <td><span th:text="${deaccessionRow.deaccessionCreatedBy}"></span></td>
                                 </tr>
                             </table>
                             <input id="reportsPageNumber" name="reportsPageNumber" type="text" th:field="${reportsForm.pageNumber}"
