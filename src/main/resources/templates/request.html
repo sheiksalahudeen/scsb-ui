@@ -278,6 +278,7 @@
                                                             <option th:each="requestingInstitution : ${requestForm.requestingInstitutions}" th:value="${requestingInstitution}" th:text="${requestingInstitution}"></option>
                                                         </select>
                                                         <span id="requestingInstitutionErrorMessage" style="color: red;">Requesting institution is required.</span>
+                                                        <input type="hidden" id="reqInstituionHidden" th:field="${requestForm.requestingInstitution}"/>
                                                     </div>
                                                 </div>
 
