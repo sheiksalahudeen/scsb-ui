@@ -5,8 +5,10 @@
 jQuery(document).ready(function ($) {
     $("#search-result-table").tablesorter();
 
-    if ($("#fieldValue").val().length == 0) {
-        $("#clearSearchText").hide();
+    if ($("#fieldValue").val().length > 0) {
+        document.getElementById("resetSearch").disabled = false;
+    } else {
+        document.getElementById("resetSearch").disabled = true;
     }
 
     $("#fieldValue").keyup(function() {
@@ -18,6 +20,15 @@ jQuery(document).ready(function ($) {
     });
 
     $("#fieldValue").keyup(function() {
+        if ($("#fieldValue").val().length > 0) {
+            document.getElementById("resetSearch").disabled = false;
+        } else {
+            document.getElementById("resetSearch").disabled = true;
+        }
+    });
+
+
+    $('#fieldValue').on('input change',function () {
         if ($("#fieldValue").val().length > 0) {
             document.getElementById("resetSearch").disabled = false;
         } else {
