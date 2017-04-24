@@ -214,6 +214,7 @@ public class RecapConstants {
     public static final String CGD_UPDATE_FAILED = "Updating CGD failed";
     public static final String DEACCESSION_SUCCESSFUL = "The item has been successfully deaccessioned.";
     public static final String DEACCESSION_FAILED = "Deaccessioning the item failed";
+    public static final String DEACCESSION_ERROR_REQUEST_CANCEL = "The active request associated with the item has been cancelled.";
     public static final int BARCODE_LIMIT = 10;
 
     //Request
@@ -429,7 +430,12 @@ public class RecapConstants {
 
     public static final String SEARCH_REQUEST_ACTIVE = "active";
     public static final String REQUEST_STATUS_RETRIEVAL_ORDER_PLACED = "RETRIEVAL_ORDER_PLACED";
-    public static final String WARNING_MESSAGE_CROSS_BORROWED_ITEM = "Warning : This item has been borrowed by other institution";
+    public static final String REQUEST_STATUS_RECALLED = "RECALL_ORDER_PLACED";
+    public static final String WARNING_MESSAGE_RETRIEVAL_CROSS_BORROWED_ITEM = "Warning : This item has an active retrieval request made by other institution. Deaccessioning the item will cancel the request.";
+    public static final String WARNING_MESSAGE_RECALL_CROSS_BORROWED_ITEM = "Warning : This item has an active recall request made by other institution. Deaccessioning the item will cancel the request.";
+    public static final String WARNING_MESSAGE_RETRIEVAL_BORROWED_ITEM = "Warning : This item has an active retrieval request. Deaccessioning the item will cancel the request.";
+    public static final String WARNING_MESSAGE_RECALL_BORROWED_ITEM = "Warning : This item has an active recall request. Deaccessioning the item will cancel the request.";
+    public static final String WARNING_MESSAGE_REQUEST_BORROWED_ITEM = "Warning : This item has an active retrieval request and recall request. Deaccessioning the item will cancel the request.";
 
     public static final String PRIVATE = "Private";
 
@@ -501,4 +507,5 @@ public class RecapConstants {
     public static final String PURGE_EXCEPTION_REQUESTS = "PurgeExceptionRequests";
 
     public static final String REQUESTED_ITEM_AVAILABILITY="requestedItemAvailabilty";
+    public static final String LAS_REJECTED = "LAS has rejected";
 }

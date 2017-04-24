@@ -131,6 +131,10 @@ public class CollectionServiceUtil {
                     bibliographicMarcForm.setSubmitted(true);
                     String failureMessage = resultMessage.replace(RecapConstants.FAILURE + " -", "");
                     bibliographicMarcForm.setErrorMessage(RecapConstants.DEACCESSION_FAILED + " - " + failureMessage);
+                } else if (resultMessage.contains(RecapConstants.LAS_REJECTED) && StringUtils.isNotBlank(bibliographicMarcForm.getWarningMessage())) {
+                    bibliographicMarcForm.setSubmitted(true);
+                    String failureMessage = resultMessage.replace(RecapConstants.FAILURE + " -", "");
+                    bibliographicMarcForm.setErrorMessage(RecapConstants.DEACCESSION_FAILED + " - " + failureMessage + " " + RecapConstants.DEACCESSION_ERROR_REQUEST_CANCEL);
                 } else {
                     String failureMessage = resultMessage.replace(RecapConstants.FAILURE + " -", "");
                     bibliographicMarcForm.setErrorMessage(RecapConstants.DEACCESSION_FAILED + " - " + failureMessage);
