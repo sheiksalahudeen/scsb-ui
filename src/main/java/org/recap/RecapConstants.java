@@ -444,6 +444,7 @@ public class RecapConstants {
     public static final String VIEW_SEARCH_RECORDS="searchRecords";
     public static final String VIEW_SEARCH_RECORDS_REQUEST="searchRecordsRequest";
     public static final String VIEW_SEARCH_REQUESTS_SECTION="request :: #searchRequestsSection";
+    public static final String VIEW_SCHEDULE_JOB_SECTION="scheduleJobs :: #scheduleJobs";
 
     public static final String USERS_TAB_CLICKED = "Users Tab Clicked";
 
@@ -490,6 +491,14 @@ public class RecapConstants {
         headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
         return headers;
     }
+
+    public static final String SCHEDULE_JOBS = "scheduleJobs";
+    public static final String SCHEDULE_JOBS_FORM = "scheduleJobsForm";
+    public static final String URL_SCHEDULE_JOBS= "scheduleService/scheduleJob";
+    public static final String UNSCHEDULE= "Unschedule";
+    public static final String UNSCHEDULED= "Unscheduled";
+    public static final String SCHEDULED= "Scheduled";
+    public static final String PURGE_EXCEPTION_REQUESTS = "PurgeExceptionRequests";
 
     public static final String REQUESTED_ITEM_AVAILABILITY="requestedItemAvailabilty";
 }
