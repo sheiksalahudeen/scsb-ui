@@ -423,9 +423,10 @@ public class RequestController {
                                 } else if (!userDetailsForm.isRecapPermissionAllowed()) {
                                     jsonObject.put(RecapConstants.NO_PERMISSION_ERROR_MESSAGE, RecapConstants.REQUEST_ERROR_USER_NOT_PERMITTED);
                                     return jsonObject.toString();
-                                } else if (null != itemEntity.getItemStatusEntity() && itemEntity.getItemStatusEntity().getStatusCode().equals(RecapConstants.NOT_AVAILABLE)) {
-                                    notAvailableBarcodes.add(itemEntity.getBarcode());
                                 } else {
+                                    if (null != itemEntity.getItemStatusEntity() && itemEntity.getItemStatusEntity().getStatusCode().equals(RecapConstants.NOT_AVAILABLE)) {
+                                        notAvailableBarcodes.add(barcode);
+                                    }
                                     Integer institutionId = itemEntity.getInstitutionEntity().getInstitutionId();
                                     String institutionCode = itemEntity.getInstitutionEntity().getInstitutionCode();
                                     requestForm.setItemOwningInstitution(institutionCode);
