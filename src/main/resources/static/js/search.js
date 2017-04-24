@@ -5,6 +5,10 @@
 jQuery(document).ready(function ($) {
     $("#search-result-table").tablesorter();
 
+    if ($("#fieldValue").val().length == 0) {
+        $("#clearSearchText").hide();
+    }
+
     if ($("#fieldValue").val().length > 0) {
         document.getElementById("resetSearch").disabled = false;
     } else {
