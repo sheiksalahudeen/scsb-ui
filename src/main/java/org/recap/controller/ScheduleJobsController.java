@@ -1,6 +1,6 @@
 package org.recap.controller;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.recap.RecapConstants;
 import org.recap.model.jpa.JobEntity;
 import org.recap.model.schedule.ScheduleJobRequest;
