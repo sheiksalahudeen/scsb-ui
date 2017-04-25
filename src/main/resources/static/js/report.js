@@ -27,11 +27,12 @@ jQuery(document).ready(function ($) {
         $('#AccessionDeaccessionDateRangefrom').val('');
         $('#AccessionDeaccessionDateRangeto').val('');
         $('#showAccessionDeaccessionTable').hide();
-        $('#ILBD-tableview').hide();
         $('#partners-tableview').hide();
         $('#requesttype-tableview').hide();
         $('#showReportResultsText').hide();
-        $('#ReportShowBy').val('IL_BD');
+        $('#requestFromToError').hide();
+        $('#accessionFromToError').hide();
+        $('#ReportShowBy').val('Partners');
         if ($(this).is(':checked')) {
             RequestOption();
         }
@@ -43,6 +44,8 @@ jQuery(document).ready(function ($) {
         $('#AccessionDeaccessionDateRangeto').val('');
         $('#showAccessionDeaccessionTable').hide();
         $('#deaccessionErrorText').hide();
+        $('#requestFromToError').hide();
+        $('#accessionFromToError').hide();
         if ($(this).is(':checked')) {
             AccessionDeaccessionOption();
         }
@@ -53,6 +56,7 @@ jQuery(document).ready(function ($) {
         $('#AccessionDeaccessionDateRangefrom').val('');
         $('#AccessionDeaccessionDateRangeto').val('');
         $('#showAccessionDeaccessionTable').hide();
+        $('#requestFromToError').hide();
         if ($(this).is(':checked')) {
             CollectionGroupDesignationOption();
         }
@@ -62,18 +66,11 @@ jQuery(document).ready(function ($) {
     /** Request Type show and hide **/
     var reportShowBy = $('#ReportShowBy').val();
     if (reportShowBy == 'RequestType') {
-        $('#note-ILBD').hide();
         $('#note-partners').hide();
         $('#note-requesttype').show();
     }
     if (reportShowBy == 'Partners') {
-        $('#note-ILBD').hide();
         $('#note-partners').show();
-        $('#note-requesttype').hide();
-    }
-    if (reportShowBy == 'IL_BD') {
-        $('#note-ILBD').show();
-        $('#note-partners').hide();
         $('#note-requesttype').hide();
     }
 
@@ -102,7 +99,6 @@ jQuery(document).ready(function ($) {
         }
     });
 
-
     /****Report Tab RequestType Option Show/Hide*****/
     function ReportRequestTabOption() {
         $('#ReportRequestclickview').hide();
@@ -123,6 +119,8 @@ jQuery(document).ready(function ($) {
         $('#requestToDateErrorText').hide();
         $('#accessionErrorText').hide();
         $('#ReportIncompleteRecordsview').hide();
+        $('#requestFromToError').hide();
+        $('#accessionFromToError').hide();
 
     }
 
@@ -134,6 +132,8 @@ jQuery(document).ready(function ($) {
         $('#requestToDateErrorText').hide();
         $('#accessionErrorText').hide();
         $('#ReportIncompleteRecordsview').hide();
+        $('#requestFromToError').hide();
+        $('#accessionFromToError').hide();
     }
 
     function CollectionGroupDesignationOption() {
@@ -144,6 +144,8 @@ jQuery(document).ready(function ($) {
         $('#requestToDateErrorText').hide();
         $('#accessionErrorText').hide();
         $('#ReportIncompleteRecordsview').hide();
+        $('#requestFromToError').hide();
+        $('#accessionFromToError').hide();
     }
 
 
@@ -151,39 +153,28 @@ jQuery(document).ready(function ($) {
     $(function () {
         $('#ReportShowBy').change(function () {
             $('#' + $(this).val()).show();
-            if ($(this).find(':selected').val() === 'IL_BD') {
+            if ($(this).find(':selected').val() === 'Partners') {
                 $('#showReportResultsText').hide();
                 $('#requesttype-tableview').hide();
                 $('#partners-tableview').hide();
-                $('#ILBD-tableview').hide();
-                $('#note-ILBD').show();
-                $('#note-partners').hide();
-                $('#note-requesttype').hide();
-                $('#showByErrorText').hide();
-                $('#requestFromDateErrorText').hide();
-                $('#requestToDateErrorText').hide();
-            } else if ($(this).find(':selected').val() === 'Partners') {
-                $('#showReportResultsText').hide();
-                $('#requesttype-tableview').hide();
-                $('#partners-tableview').hide();
-                $('#ILBD-tableview').hide();
-                $('#note-ILBD').hide();
                 $('#note-partners').show();
                 $('#note-requesttype').hide();
                 $('#showByErrorText').hide();
                 $('#requestFromDateErrorText').hide();
                 $('#requestToDateErrorText').hide();
+                $('#requestFromToError').hide();
+                $('#accessionFromToError').hide();
             } else if ($(this).find(':selected').val() === 'RequestType') {
                 $('#showReportResultsText').hide();
                 $('#requesttype-tableview').hide();
                 $('#partners-tableview').hide();
-                $('#ILBD-tableview').hide();
-                $('#note-ILBD').hide();
                 $('#note-partners').hide();
                 $('#note-requesttype').show();
                 $('#showByErrorText').hide();
                 $('#requestFromDateErrorText').hide();
                 $('#requestToDateErrorText').hide();
+                $('#requestFromToError').hide();
+                $('#accessionFromToError').hide();
             }
         });
 
@@ -234,10 +225,15 @@ jQuery(document).ready(function ($) {
         var showBy = $('#ReportShowBy').val();
         var requestFromDate = $('#RequestDateRangefrom').val();
         var requestToDate = $('#RequestDateRangeto').val();
+        var requestStartDate = new Date(requestFromDate);
+        var requestEndDate = new Date(requestToDate);
         var isValid = true;
         if($('#recapreports #ReportAccessionDeaccessionclick').is(':checked')){
             var fromDate = $('#AccessionDeaccessionDateRangefrom').val();
             var toDate = $('#AccessionDeaccessionDateRangeto').val();
+            var accessionStartDate = new Date(fromDate);
+            var accessionEndDate = new Date(toDate);
+
             if (isBlankValue(fromDate)) {
                 $('#accessionErrorText').show();
                 isValid=false;
@@ -251,6 +247,13 @@ jQuery(document).ready(function ($) {
             }
             else {
                 $('#deaccessionErrorText').hide();
+            }
+            if(accessionStartDate > accessionEndDate){
+                $('#accessionFromToError').show();
+                $('#showAccessionDeaccessionTable').hide();
+                isValid=false;
+            }else {
+                $('#accessionFromToError').hide();
             }
         }
         else{
@@ -268,6 +271,14 @@ jQuery(document).ready(function ($) {
             else {
                 $('#requestToDateErrorText').hide();
             }
+            if(requestStartDate > requestEndDate){
+                $('#requestFromToError').show();
+                $('#requesttype-tableview').hide();
+                $('#partners-tableview').hide();
+                isValid=false;
+            }else {
+                $('#requestFromToError').hide();
+            }
         }
         return isValid;
     }
@@ -281,18 +292,22 @@ jQuery(document).ready(function ($) {
 
     $('#RequestDateRangefrom').click(function () {
         $('#requestFromDateErrorText').hide();
+        $('#requestFromToError').hide();
     });
 
     $('#RequestDateRangeto').click(function () {
         $('#requestToDateErrorText').hide();
+        $('#requestFromToError').hide();
     });
 
     $('#AccessionDeaccessionDateRangefrom').click(function () {
         $('#accessionErrorText').hide();
+        $('#accessionFromToError').hide();
     });
 
     $('#AccessionDeaccessionDateRangeto').click(function () {
         $('#deaccessionErrorText').hide();
+        $('#accessionFromToError').hide();
     });
 
 

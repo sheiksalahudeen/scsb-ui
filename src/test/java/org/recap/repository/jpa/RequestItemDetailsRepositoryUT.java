@@ -25,95 +25,6 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
     @Autowired
     RequestTypeDetailsRepository requestTypeDetailsRepository;
 
-    //Test for InterLibrary Requests
-
-    @Test
-    public void checkGetIlRequestCountsForPUL() throws Exception{
-        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 1, "PUL");
-        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        saveRequestEntity(itemEntity.getItemId(),1,2,String.valueOf(new Random().nextInt()));
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
-        Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
-        Integer[] requestingInstIds = {2,3};
-        List<Integer> requestingInstIdsList = new ArrayList<>(Arrays.asList(requestingInstIds));
-        long count = requestItemDetailsRepository.getIlRequestCounts(fromDate,toDate,1,requestingInstIdsList);
-        assertNotNull(count);
-        assertEquals(1,count);
-    }
-
-    @Test
-    public void checkGetIlRequestCountsForCUL() throws Exception{
-        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 2, 1, "CUL");
-        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        saveRequestEntity(itemEntity.getItemId(),1,3,String.valueOf(new Random().nextInt()));
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
-        Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
-        Integer[] requestingInstIds = {1,3};
-        List<Integer> requestingInstIdsList = new ArrayList<>(Arrays.asList(requestingInstIds));
-        long count = requestItemDetailsRepository.getIlRequestCounts(fromDate,toDate,2,requestingInstIdsList);
-        assertNotNull(count);
-        assertEquals(1,count);
-
-    }
-
-    @Test
-    public void checkGetIlRequestCountsForNYPL() throws Exception{
-        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 3, 1, "NYPL");
-        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        saveRequestEntity(itemEntity.getItemId(),1,2,String.valueOf(new Random().nextInt()));
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
-        Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
-        Integer[]requestingInstIds= {1,2};
-        List<Integer> requestingInstIdsList = new ArrayList<>(Arrays.asList(requestingInstIds));
-        long count = requestItemDetailsRepository.getIlRequestCounts(fromDate,toDate,3,requestingInstIdsList);
-        assertNotNull(count);
-        assertEquals(1,count);
-    }
-
-    //Test for Borrow Direct Requests
-
-    @Test
-    public void checkGetBDRequestCountsForPUL() throws Exception{
-        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 1, "PUL");
-        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        saveRequestEntity(itemEntity.getItemId(),4,2,String.valueOf(new Random().nextInt()));
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
-        Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
-        long count = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,1, RecapConstants.BORROW_DIRECT);
-        assertNotNull(count);
-        assertEquals(1,count);
-    }
-
-    @Test
-    public void checkGetBDRequestCountsForCUL() throws Exception{
-        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 2, 1, "CUL");
-        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        saveRequestEntity(itemEntity.getItemId(),4,3,String.valueOf(new Random().nextInt()));
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
-        Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
-        long count = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,2,RecapConstants.BORROW_DIRECT);
-        assertNotNull(count);
-        assertEquals(1,count);
-    }
-
-    @Test
-    public void checkGetBDRequestCountsForNYPL() throws Exception{
-        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 3, 1, "NYPL");
-        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        saveRequestEntity(itemEntity.getItemId(),4,2,String.valueOf(new Random().nextInt()));
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
-        Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
-        long count = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,3,RecapConstants.BORROW_DIRECT);
-        assertNotNull(count);
-        assertEquals(1,count);
-    }
-
     // Test for Physical Requests
 
     @Test
@@ -128,7 +39,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         List<Integer> cgdIdList = new ArrayList<>(Arrays.asList(cgdId));
         String[] requestTypeId = {"RETRIEVAL", "RECALL", "EDD"};
         List<String> requestTypeIdList = new ArrayList<>(Arrays.asList(requestTypeId));
-        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,1,cgdIdList,requestTypeIdList);
+        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(1),cgdIdList,requestTypeIdList);
         assertNotNull(count);
         assertEquals(1,count);
     }
@@ -145,7 +56,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         List<Integer> cgdIdList = new ArrayList<>(Arrays.asList(cgdId));
         String[] requestTypeId = {"RETRIEVAL", "RECALL", "BORROW DIRECT"};
         List<String> requestTypeIdList = new ArrayList<>(Arrays.asList(requestTypeId));
-        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,1,cgdIdList,requestTypeIdList);
+        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(1),cgdIdList,requestTypeIdList);
         assertNotNull(count);
         assertEquals(1,count);
     }
@@ -162,7 +73,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         List<Integer> cgdIdList = new ArrayList<>(Arrays.asList(cgdId));
         String[] requestTypeId = {"RETRIEVAL", "RECALL", "BORROW DIRECT"};
         List<String> requestTypeIdList = new ArrayList<>(Arrays.asList(requestTypeId));
-        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,2,cgdIdList,requestTypeIdList);
+        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(2),cgdIdList,requestTypeIdList);
         assertNotNull(count);
         assertEquals(1,count);
     }
@@ -180,7 +91,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         List<Integer> cgdIdList = new ArrayList<>(Arrays.asList(cgdId));
         String[] requestTypeId = {"RETRIEVAL", "RECALL", "BORROW DIRECT"};
         List<String> requestTypeIdList = new ArrayList<>(Arrays.asList(requestTypeId));
-        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,2,cgdIdList,requestTypeIdList);
+        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(2),cgdIdList,requestTypeIdList);
         assertNotNull(count);
         assertEquals(1,count);
     }
@@ -197,7 +108,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         List<Integer> cgdIdList = new ArrayList<>(Arrays.asList(cgdId));
         String[] requestTypeId = {"RETRIEVAL", "RECALL", "BORROW DIRECT"};
         List<String> requestTypeIdList = new ArrayList<>(Arrays.asList(requestTypeId));
-        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,3,cgdIdList,requestTypeIdList);
+        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(3),cgdIdList,requestTypeIdList);
         assertNotNull(count);
         assertEquals(1,count);
     }
@@ -214,7 +125,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         List<Integer> cgdIdList = new ArrayList<>(Arrays.asList(cgdId));
         String[] requestTypeId = {"RETRIEVAL", "RECALL", "BORROW DIRECT"};
         List<String> requestTypeIdList = new ArrayList<>(Arrays.asList(requestTypeId));
-        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,3,cgdIdList,requestTypeIdList);
+        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(3),cgdIdList,requestTypeIdList);
         assertNotNull(count);
         assertEquals(1,count);
     }
@@ -232,7 +143,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         List<Integer> cgdIdList = new ArrayList<>(Arrays.asList(cgdId));
         String[] requestTypeId = {"EDD"};
         List<String> requestTypeIdList = new ArrayList<>(Arrays.asList(requestTypeId));
-        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,1,cgdIdList,requestTypeIdList);
+        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(1),cgdIdList,requestTypeIdList);
         assertNotNull(count);
         assertEquals(1,count);
     }
@@ -251,7 +162,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         List<Integer> cgdIdList = new ArrayList<>(Arrays.asList(cgdId));
         String[] requestTypeId = {"EDD"};
         List<String> requestTypeIdList = new ArrayList<>(Arrays.asList(requestTypeId));
-        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,1,cgdIdList,requestTypeIdList);
+        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(1),cgdIdList,requestTypeIdList);
         assertNotNull(count);
         assertEquals(1,count);
     }
@@ -270,7 +181,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         List<Integer> cgdIdList = new ArrayList<>(Arrays.asList(cgdId));
         String[] requestTypeId = {"EDD"};
         List<String> requestTypeIdList = new ArrayList<>(Arrays.asList(requestTypeId));
-        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,2,cgdIdList,requestTypeIdList);
+        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(2),cgdIdList,requestTypeIdList);
         assertNotNull(count);
         assertEquals(1,count);
     }
@@ -287,7 +198,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         List<Integer> cgdIdList = new ArrayList<>(Arrays.asList(cgdId));
         String[] requestTypeId = {"EDD"};
         List<String> requestTypeIdList = new ArrayList<>(Arrays.asList(requestTypeId));
-        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,2,cgdIdList,requestTypeIdList);
+        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(2),cgdIdList,requestTypeIdList);
         assertNotNull(count);
         assertEquals(1,count);
     }
@@ -304,7 +215,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         List<Integer> cgdIdList = new ArrayList<>(Arrays.asList(cgdId));
         String[] requestTypeId = {"EDD"};
         List<String> requestTypeIdList = new ArrayList<>(Arrays.asList(requestTypeId));
-        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,3,cgdIdList,requestTypeIdList);
+        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(3),cgdIdList,requestTypeIdList);
         assertNotNull(count);
         assertEquals(1,count);
     }
@@ -321,7 +232,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         List<Integer> cgdIdList = new ArrayList<>(Arrays.asList(cgdId));
         String[] requestTypeId = {"EDD"};
         List<String> requestTypeIdList = new ArrayList<>(Arrays.asList(requestTypeId));
-        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,3,cgdIdList,requestTypeIdList);
+        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(3),cgdIdList,requestTypeIdList);
         assertNotNull(count);
         assertEquals(1,count);
     }
@@ -351,7 +262,7 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
-        long count = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,2, RecapConstants.RECALL);
+        long count = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,2,RecapConstants.RECALL);
         assertNotNull(count);
         assertEquals(1,count);
     }

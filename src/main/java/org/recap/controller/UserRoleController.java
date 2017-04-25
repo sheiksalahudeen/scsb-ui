@@ -437,7 +437,6 @@ public class UserRoleController {
             InstitutionEntity institutionEntity = usersEntity.getInstitutionEntity();
             List<RoleEntity> userRole = usersEntity.getUserRole();
             boolean addUsers = true;
-            boolean superAdminRole = false;
             HttpSession session = request.getSession();
             Object isSuperAdmin = session.getAttribute(RecapConstants.SUPER_ADMIN_USER);
             String userName = (String) session.getAttribute(RecapConstants.USER_NAME);
@@ -456,11 +455,10 @@ public class UserRoleController {
                     userRoleDeatailsForm.setInstitutionName(institutionEntity.getInstitutionName());
                     userRoleDeatailsForm.setNetworkLoginId(usersEntity.getLoginId());
                     for (RoleEntity roleEntity : usersEntity.getUserRole()) {
-                        superAdminRole = RecapConstants.ROLES_SUPER_ADMIN.equals(roleEntity.getRoleName());
                         rolesBuffer.append(roleEntity.getRoleName() + ",");
                     }
                     userRoleDeatailsForm.setRoleName(roles(rolesBuffer.toString(), ","));
-                    if (userName.equals(userRoleDeatailsForm.getNetworkLoginId()) || superAdminRole) {
+                    if (userRoleDeatailsForm.getUserId() == userId) {
                         userRoleDeatailsForm.setShowEditDeleteIcon(false);
                     } else {
                         userRoleDeatailsForm.setShowEditDeleteIcon(true);

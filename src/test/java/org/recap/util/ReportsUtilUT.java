@@ -37,43 +37,6 @@ public class ReportsUtilUT extends BaseTestCase {
     EntityManager entityManager;
 
     @Test
-    public void populateILBDCountsForRequest() throws Exception {
-        ReportsForm reportsForm = new ReportsForm();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
-        Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
-
-        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(1, 1, false);
-        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        saveRequestEntity(itemEntity.getItemId(), 4, 2, String.valueOf(new Random().nextInt()));
-
-        BibliographicEntity bibliographicEntity1 = saveBibHoldingItemEntity(2, 1, false);
-        ItemEntity itemEntity1 = bibliographicEntity1.getItemEntities().get(0);
-        saveRequestEntity(itemEntity1.getItemId(), 4, 3, String.valueOf(new Random().nextInt()));
-
-        BibliographicEntity bibliographicEntity2 = saveBibHoldingItemEntity(3, 1, false);
-        ItemEntity itemEntity2 = bibliographicEntity2.getItemEntities().get(0);
-        saveRequestEntity(itemEntity2.getItemId(), 4, 2, String.valueOf(new Random().nextInt()));
-
-        BibliographicEntity bibliographicEntity3 = saveBibHoldingItemEntity(1, 1, false);
-        ItemEntity itemEntity3 = bibliographicEntity3.getItemEntities().get(0);
-        saveRequestEntity(itemEntity3.getItemId(), 3, 2, String.valueOf(new Random().nextInt()));
-
-        BibliographicEntity bibliographicEntity4 = saveBibHoldingItemEntity(2, 1, false);
-        ItemEntity itemEntity4 = bibliographicEntity4.getItemEntities().get(0);
-        saveRequestEntity(itemEntity4.getItemId(), 3, 3, String.valueOf(new Random().nextInt()));
-
-        BibliographicEntity bibliographicEntity5 = saveBibHoldingItemEntity(3, 1, false);
-        ItemEntity itemEntity5 = bibliographicEntity5.getItemEntities().get(0);
-        saveRequestEntity(itemEntity5.getItemId(), 3, 1, String.valueOf(new Random().nextInt()));
-        
-        reportsUtil.populateILBDCountsForRequest(reportsForm, fromDate, toDate);
-        assertEquals(1, reportsForm.getIlRequestPulCount());
-        assertEquals(1, reportsForm.getIlRequestCulCount());
-        assertEquals(1, reportsForm.getIlRequestNyplCount());
-    }
-
-    @Test
     public void populatePartnersCountForRequest() throws Exception {
         ReportsForm reportsForm = new ReportsForm();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
