@@ -16,6 +16,7 @@ import org.recap.model.search.SearchResultRow;
 import org.recap.model.usermanagement.UserDetailsForm;
 import org.recap.repository.jpa.*;
 import org.recap.security.UserManagementService;
+import org.recap.service.RequestService;
 import org.recap.util.BibJSONUtil;
 import org.recap.util.RequestServiceUtil;
 import org.recap.util.UserAuthUtil;
@@ -86,6 +87,9 @@ public class RequestController {
     @Autowired
     private UserAuthUtil userAuthUtil;
 
+    @Autowired
+    RequestService requestService;
+
     public RequestServiceUtil getRequestServiceUtil() {
         return requestServiceUtil;
     }
@@ -137,6 +141,10 @@ public class RequestController {
 
     public RequestStatusDetailsRepository getRequestStatusDetailsRepository() {
         return requestStatusDetailsRepository;
+    }
+
+    public RequestService getRequestService() {
+        return requestService;
     }
 
     @RequestMapping("/request")
@@ -441,60 +449,7 @@ public class RequestController {
                                     String replaceReqInst = requestForm.getRequestingInstitution().replace(",", "");
                                     requestForm.setRequestingInstitution(replaceReqInst);
                                     if("true".equals(requestForm.getOnChange()) && StringUtils.isNotBlank(requestForm.getRequestingInstitution())){
-                                        String customerCode = itemEntity.getCustomerCode();
-                                        CustomerCodeEntity customerCodeEntity = customerCodeDetailsRepository.findByCustomerCodeAndOwningInstitutionId(customerCode, institutionId);
-                                        if(requestForm.getItemOwningInstitution().equals(requestForm.getRequestingInstitution())){
-                                            if (customerCodeEntity != null) {
-                                                String deliveryRestrictions = customerCodeEntity.getDeliveryRestrictions();
-                                                if (StringUtils.isNotBlank(deliveryRestrictions)) {
-                                                    String[] deliverLocationsArray = deliveryRestrictions.split(",");
-                                                    List<CustomerCodeEntity> customerCodeEntities = customerCodeDetailsRepository.findByCustomerCodeIn(Arrays.asList(deliverLocationsArray));
-                                                    if (CollectionUtils.isNotEmpty(customerCodeEntities)) {
-                                                        Collections.sort(customerCodeEntities);
-                                                        for (CustomerCodeEntity byCustomerCode : customerCodeEntities) {
-                                                            deliveryLocationsMap.put(byCustomerCode.getCustomerCode(), byCustomerCode.getDescription());
-                                                        }
-                                                        addRecapDeliveryRestrictions(deliveryLocationsMap, userDetailsForm, customerCodeEntity);
-                                                    }
-                                                } else {
-                                                    deliveryLocationsMap.put(customerCodeEntity.getCustomerCode(), customerCodeEntity.getDescription());
-                                                    addRecapDeliveryRestrictions(deliveryLocationsMap, userDetailsForm, customerCodeEntity);
-                                                }
-                                            }
-                                        }
-                                        else{
-                                            if (customerCodeEntity != null) {
-                                                List<DeliveryRestrictionEntity> deliveryRestrictionEntityList = customerCodeEntity.getDeliveryRestrictionEntityList();
-                                                if(CollectionUtils.isNotEmpty(deliveryRestrictionEntityList)){
-                                                    for (DeliveryRestrictionEntity deliveryRestrictionEntity : deliveryRestrictionEntityList) {
-                                                        if(requestForm.getRequestingInstitution().equals(deliveryRestrictionEntity.getInstitutionEntity().getInstitutionCode())){
-                                                            String deliveryRestriction = deliveryRestrictionEntity.getDeliveryRestriction();
-                                                            String[] splitDeliveryLocation = StringUtils.split(deliveryRestriction, ",");
-                                                            if(splitDeliveryLocation.length == 1){
-                                                                CustomerCodeEntity byCustomerCode = customerCodeDetailsRepository.findByCustomerCode(deliveryRestriction);
-                                                                if (byCustomerCode != null){
-                                                                    deliveryLocationsMap.put(byCustomerCode.getCustomerCode(),byCustomerCode.getDescription());
-                                                                }
-                                                                addRecapDeliveryRestrictions(deliveryLocationsMap, userDetailsForm, customerCodeEntity);
-                                                            }
-                                                            else {
-                                                                List<CustomerCodeEntity> customerCodeEntityList = customerCodeDetailsRepository.findByCustomerCodeIn(Arrays.asList(splitDeliveryLocation));
-                                                                Collections.sort(customerCodeEntityList);
-                                                                for (CustomerCodeEntity codeEntity : customerCodeEntityList) {
-                                                                    if (codeEntity != null){
-                                                                        deliveryLocationsMap.put(codeEntity.getCustomerCode(),codeEntity.getDescription());
-                                                                    }
-                                                                }
-                                                                addRecapDeliveryRestrictions(deliveryLocationsMap, userDetailsForm, customerCodeEntity);
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                else{
-                                                    addRecapDeliveryRestrictions(deliveryLocationsMap, userDetailsForm, customerCodeEntity);
-                                                }
-                                            }
-                                        }
+                                        getRequestService().processCustomerAndDeliveryCodes(requestForm,deliveryLocationsMap,userDetailsForm,itemEntity,institutionId);
                                     }
                                 }
                             }

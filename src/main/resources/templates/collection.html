@@ -402,7 +402,7 @@
                                                                             th:disabled="${collectionForm.availability != 'Available'}"
                                                                             th:onchange="'javascript:toggleDeliveryLocationValidation()'">
                                                                         <option value=""></option>
-                                                                        <option th:each="location : ${collectionForm.deliveryLocations}" th:value="${location.getCustomerCode()}" th:text="${location.getDescription()}"></option>
+                                                                        <option th:each="location : ${collectionForm.deliveryLocations}" th:value="${location.getCustomerCode()}" th:text="${location.getDescription()+'-'+location.getCustomerCode() }"></option>
                                                                     </select>
                                                                 </div>
                                                                 <span id="locationErrorMessage" style="color: red;">This is a mandatory field.</span>
