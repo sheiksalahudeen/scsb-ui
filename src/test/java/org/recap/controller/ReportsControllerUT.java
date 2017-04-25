@@ -93,24 +93,6 @@ public class ReportsControllerUT extends BaseControllerUT {
     }
 
     @Test
-    public void ilBdRequest() throws Exception {
-        ReportsForm reportsForm = new ReportsForm();
-        reportsForm.setRequestType(RecapConstants.REPORTS_REQUEST);
-        reportsForm.setRequestFromDate("11/01/2016");
-        reportsForm.setRequestToDate("12/01/2016");
-        reportsForm.setShowBy(RecapConstants.REPORTS_IL_BD);
-        ModelAndView modelAndView = reportsControllerWired.reportCounts(reportsForm,model);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(RecapConstants.SIMPLE_DATE_FORMAT_REPORTS);
-        String fromDate = reportsForm.getRequestFromDate();
-        String toDate = reportsForm.getRequestToDate();
-        Date requestFromDate = new Date();
-        Date requestToDate = new Date();
-        reportsUtil.populateILBDCountsForRequest(reportsForm, requestFromDate, requestToDate);
-        assertNotNull(modelAndView);
-        assertEquals("reports", modelAndView.getViewName());
-    }
-
-    @Test
     public void partnersRequest() throws Exception {
         ReportsForm reportsForm = new ReportsForm();
         reportsForm.setRequestType(RecapConstants.REPORTS_REQUEST);

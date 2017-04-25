@@ -25,12 +25,12 @@
                                         <h4 class="margin-top-0 margin-btm-10 inline-box">Report Type</h4> <span class="error-color">*</span>
                                         <div class="form-group" style="padding-left: 40px;">
                                             <label for="ReportRequestclick" accesskey="R" class="radio-inline report-hide-shadow" style="padding-right: 30px;" tabindex="0">
-                                                    <input type="radio" name="ReportTypeoption"
-                                                           id="ReportRequestclick" value="Request"
-                                                           th:field="*{requestType}"
-                                                           th:onclick="'javascript:ReportRequestTabOption();'"/>
-                                                    Request
-                                                </label>
+                                                <input type="radio" name="ReportTypeoption"
+                                                       id="ReportRequestclick" value="Request"
+                                                       th:field="*{requestType}"
+                                                       th:onclick="'javascript:ReportRequestTabOption();'"/>
+                                                Requests
+                                            </label>
                                             <label for="ReportAccessionDeaccessionclick" accesskey="A" class="radio-inline report-hide-shadow" style="padding-right: 30px;" tabindex="0">
                                                 <input type="radio" name="ReportTypeoption"
                                                        id="ReportAccessionDeaccessionclick" value="Accession/Deaccesion"
@@ -65,16 +65,15 @@
                                                     <div class="col-md-3 col-sm-3 padding-right-50" style="margin-top:26px">
                                                         <div class="form-group">
                                                             <div>
-                                                            <label for="ReportShowBy">Show By <span
-                                                                    class="error-color">*</span> </label>
+                                                                <label for="ReportShowBy">Show By <span
+                                                                        class="error-color">*</span> </label>
                                                             </div>
                                                             <div class="select-holder">
                                                                 <select class="form-control themed-input themed-select"
                                                                         id="ReportShowBy" name="ReportShowBy"
                                                                         th:field="*{showBy}"
                                                                         th:onchange="'javascript:ReportRequestTabOption();'">
-                                                                    <option value="IL_BD">Cross Partner</option>
-                                                                    <option value="Partners">Partners</option>
+                                                                    <option value="Partners">Owning Institution</option>
                                                                     <option value="RequestType">Request Type
                                                                     </option>
                                                                 </select>
@@ -84,49 +83,51 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-md-3 col-sm-3 col-lg-2 padding-right-50">
-                                                            <div class="form-group">
-                                                                <label for="RequestDateRangefrom">Date Range <span
-                                                                        class="error-color">*</span> </label><br/>
-                                                                <label>From</label>
-                                                                <div class='input-group date'
-                                                                     id="reportrequesdatepickerfrom">
-                                                                    <input type='text' placeholder="MM/DD/YYYY"
-                                                                           class="form-control themed-input"
-                                                                           id="RequestDateRangefrom"
-                                                                           name="RequestDateRangefrom"
-                                                                           onkeyup="ToggleRequestDateFrom()"
-                                                                           th:field="*{requestFromDate}"/>
+                                                        <div class="form-group">
+                                                            <label for="RequestDateRangefrom">Date Range <span
+                                                                    class="error-color">*</span> </label><br/>
+                                                            <label>From</label>
+                                                            <div class='input-group date'
+                                                                 id="reportrequesdatepickerfrom">
+                                                                <input type='text' placeholder="MM/DD/YYYY"
+                                                                       class="form-control themed-input"
+                                                                       id="RequestDateRangefrom"
+                                                                       name="RequestDateRangefrom"
+                                                                       onkeyup="ToggleRequestDateFrom()"
+                                                                       th:field="*{requestFromDate}"/>
                                                                         <span class="input-group-addon">
                                                                             <span class="glyphicon glyphicon-calendar">
                                                                             </span>
                                                                         </span>
-                                                                </div>
-                                                                <p id="requestFromDateErrorText"
-                                                                   style="display: none;color: red">This Field is
-                                                                    Required</p>
                                                             </div>
+                                                            <p id="requestFromDateErrorText"
+                                                               style="display: none;color: red">This Field is
+                                                                Required</p>
+                                                        </div>
                                                     </div>
                                                     <div class="col-md-3 col-sm-3 col-lg-2 padding-right-50" style="margin-top: 3px;">
-                                                            <div class="form-group">
-                                                                <br/>
-                                                                <label>To</label>
-                                                                <div class='input-group date'
-                                                                     id="reportrequesdatepickerto">
-                                                                    <input type='text' placeholder="MM/DD/YYYY"
-                                                                           class="form-control themed-input"
-                                                                           id="RequestDateRangeto"
-                                                                           name="RequestDateRangeto"
-                                                                           onkeyup="ToggleRequestDateTo()"
-                                                                           th:field="*{requestToDate}"/>
+                                                        <div class="form-group">
+                                                            <br/>
+                                                            <label>To</label>
+                                                            <div class='input-group date'
+                                                                 id="reportrequesdatepickerto">
+                                                                <input type='text' placeholder="MM/DD/YYYY"
+                                                                       class="form-control themed-input"
+                                                                       id="RequestDateRangeto"
+                                                                       name="RequestDateRangeto"
+                                                                       onkeyup="ToggleRequestDateTo()"
+                                                                       th:field="*{requestToDate}"/>
                                                                             <span class="input-group-addon">
                                                                                 <span class="glyphicon glyphicon-calendar">
                                                                                 </span>
                                                                             </span>
-                                                                </div>
-                                                                <p id="requestToDateErrorText"
-                                                                   style="display: none;color: red;">This Field is
-                                                                    Required</p>
                                                             </div>
+                                                            <p id="requestToDateErrorText"
+                                                               style="display: none;color: red;">This Field is
+                                                                Required</p>
+                                                            <p id="requestFromToError"
+                                                               style="display: none;color: red">To Date must be greater than or <br/>equal to the From Date</p>
+                                                        </div>
                                                     </div>
                                                     <div class="col-lg-1 col-md-3 col-sm-3" style="margin-top: 18px;">
                                                         <button class="btn themed-button themed-button-search"
@@ -138,11 +139,12 @@
                                                 <div  style="padding-left:5px;">Fields marked with
                                                     asterisk(<span class="error-color">*</span>) are mandatory.
                                                 </div>
-                                                <div class="" id="note-ILBD" style="padding-left:5px;margin-top:4px;">
-                                                    <strong>Note:</strong> Count of items requested by Borrow Direct Users per institution.
-                                                </div>
                                                 <div class="" id="note-partners" style="padding-left:5px;margin-top:4px;">
-                                                    <strong>Note:</strong>Count of requests (Physical and EDD) per Institution with Collection Group Designation.
+                                                    <strong>Note:</strong>
+                                                    <ul class="" style="list-style-type:disc;">
+                                                        <li>Count of requests (Physical and EDD) per Institution with Collection Group Designation.</li>
+                                                        <li> This report represents activity by the owning institution.</li>
+                                                    </ul>
                                                 </div>
                                                 <div class="" id="note-requesttype" style="padding-left:5px;margin-top:4px;">
                                                     <strong>Note:</strong> Count of retrievals and/or recalls for each partner institution.
@@ -159,31 +161,6 @@
                                                 <h4>Report Results</h4>
                                                 <div class="divider-horizontal margin-top-10 margin-btm-10"></div>
                                             </div>
-                                            <div id="ILBD-tableview" th:if="${reportsForm.showILBDResults}">
-                                                <div class="table-wrapper">
-                                                    <table class="table table-striped text-center margin-btm-0"
-                                                           id="reports-result-table">
-                                                        <thead class="tablesorter-headerRow">
-                                                        <tr>
-                                                            <th width="25%"></th>
-                                                            <th width="25%" style="font-family:sans-serif;font-size: 120%">PUL</th>
-                                                            <th width="25%" style="font-family:sans-serif;font-size: 120%">CUL</th>
-                                                            <th width="25%" style="font-family:sans-serif;font-size: 120%">NYPL</th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tr class="border-style-top-white">
-                                                            <td class="gray-dark fontcolor-white large-font" style="font-family:sans-serif;">Cross Partner</td>
-                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.ilRequestPulCount,0,'COMMA')}"></span>
-                                                            </td>
-                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.ilRequestCulCount,0,'COMMA')}"></span>
-                                                            </td>
-                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.ilRequestNyplCount,0,'COMMA')}"></span>
-                                                            </td>
-
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                            </div>
                                             <div id="partners-tableview" th:if="${reportsForm.showPartners}">
                                                 <div class="table-wrapper">
                                                     <table class="table table-striped text-center margin-btm-0"
@@ -193,17 +170,17 @@
                                                         <tr>
                                                             <th width="20%"></th>
                                                             <th width="20%"></th>
-                                                            <th width="20%" style="font-family:sans-serif;font-size: 120%">PUL</th>
-                                                            <th width="20%" style="font-family:sans-serif;font-size: 120%">CUL</th>
-                                                            <th width="20%" style="font-family:sans-serif;font-size: 120%">NYPL</th>
+                                                            <th width="20%" style="font-family:sans-serif;font-size: 120%">Princeton</th>
+                                                            <th width="20%" style="font-family:sans-serif;font-size: 120%">Columbia</th>
+                                                            <th width="20%" style="font-family:sans-serif;font-size: 120%">New York Public Library</th>
                                                         </tr>
                                                         </thead>
                                                         <tr>
-                                                            <td rowspan="3"
+                                                            <td rowspan="4"
                                                                 class="v-middle-data gray-light fontcolor-white large-font" style="font-family:sans-serif;">
-                                                                PHYSICAL
+                                                                Physical
                                                             </td>
-                                                            <td>PRIVATE</td>
+                                                            <td>Private</td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.physicalPrivatePulCount,0,'COMMA')}"></span>
                                                             </td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.physicalPrivateCulCount,0,'COMMA')}"></span>
@@ -212,7 +189,7 @@
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td>SHARED AND OPEN</td>
+                                                            <td>Shared and Open to Self</td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.physicalSharedPulCount,0,'COMMA')}"></span>
                                                             </td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.physicalSharedCulCount,0,'COMMA')}"></span>
@@ -220,21 +197,30 @@
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.physicalSharedNyplCount,0,'COMMA')}"></span>
                                                             </td>
                                                         </tr>
+                                                        <tr>
+                                                            <td>Shared and Open to Partner</td>
+                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.physicalPartnerSharedPulCount,0,'COMMA')}"></span>
+                                                            </td>
+                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.physicalPartnerSharedCulCount,0,'COMMA')}"></span>
+                                                            </td>
+                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.physicalPartnerSharedNyplCount,0,'COMMA')}"></span>
+                                                            </td>
+                                                        </tr>
                                                         <tr class="border-style-bottom">
-                                                            <td class="fontcolor-dark large-font">SUBTOTAL</td>
-                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.physicalPrivatePulCount + reportsForm.physicalSharedPulCount,0,'COMMA')}"></span>
+                                                            <td class="fontcolor-dark large-font text-right">Subtotal</td>
+                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.physicalPrivatePulCount + reportsForm.physicalSharedPulCount + reportsForm.physicalPartnerSharedPulCount,0,'COMMA')}"></span>
                                                             </td>
-                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.physicalPrivateCulCount + reportsForm.physicalSharedCulCount,0,'COMMA')}"></span>
+                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.physicalPrivateCulCount + reportsForm.physicalSharedCulCount + reportsForm.physicalPartnerSharedCulCount,0,'COMMA')}"></span>
                                                             </td>
-                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.physicalPrivateNyplCount + reportsForm.physicalSharedNyplCount,0,'COMMA')}"></span>
+                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.physicalPrivateNyplCount + reportsForm.physicalSharedNyplCount + reportsForm.physicalPartnerSharedNyplCount,0,'COMMA')}"></span>
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td rowspan="3"
+                                                            <td rowspan="4"
                                                                 class="v-middle-data gray-dark fontcolor-white large-font" style="font-family:sans-serif;">
                                                                 EDD
                                                             </td>
-                                                            <td>PRIVATE</td>
+                                                            <td>Private</td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.eddPrivatePulCount,0,'COMMA')}"></span>
                                                             </td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.eddPrivateCulCount,0,'COMMA')}"></span>
@@ -243,7 +229,7 @@
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td>SHARED AND OPEN</td>
+                                                            <td>Shared and Open to Self</td>
                                                             <td><span
                                                                     th:text="${#numbers.formatInteger(reportsForm.eddSharedOpenPulCount,0,'COMMA')}"></span>
                                                             </td>
@@ -255,28 +241,40 @@
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td class="fontcolor-dark large-font">SUBTOTAL</td>
+                                                            <td>Shared and Open to Partner</td>
                                                             <td><span
-                                                                    th:text="${#numbers.formatInteger(reportsForm.eddPrivatePulCount + reportsForm.eddSharedOpenPulCount,0,'COMMA')}"></span>
+                                                                    th:text="${#numbers.formatInteger(reportsForm.eddPartnerSharedOpenPulCount,0,'COMMA')}"></span>
                                                             </td>
                                                             <td><span
-                                                                    th:text="${#numbers.formatInteger(reportsForm.eddPrivateCulCount + reportsForm.eddSharedOpenCulCount,0,'COMMA')}"></span>
+                                                                    th:text="${#numbers.formatInteger(reportsForm.eddPartnerSharedOpenCulCount,0,'COMMA')}"></span>
                                                             </td>
                                                             <td><span
-                                                                    th:text="${#numbers.formatInteger(reportsForm.eddPrivateNyplCount + reportsForm.eddSharedOpenNyplCount,0,'COMMA')}"></span>
+                                                                    th:text="${#numbers.formatInteger(reportsForm.eddPartnerSharedOpenNyplCount,0,'COMMA')}"></span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="fontcolor-dark large-font text-right">Subtotal</td>
+                                                            <td><span
+                                                                    th:text="${#numbers.formatInteger(reportsForm.eddPrivatePulCount + reportsForm.eddSharedOpenPulCount + reportsForm.eddPartnerSharedOpenPulCount,0,'COMMA')}"></span>
+                                                            </td>
+                                                            <td><span
+                                                                    th:text="${#numbers.formatInteger(reportsForm.eddPrivateCulCount + reportsForm.eddSharedOpenCulCount + reportsForm.eddPartnerSharedOpenCulCount,0,'COMMA')}"></span>
+                                                            </td>
+                                                            <td><span
+                                                                    th:text="${#numbers.formatInteger(reportsForm.eddPrivateNyplCount + reportsForm.eddSharedOpenNyplCount + reportsForm.eddPartnerSharedOpenNyplCount,0,'COMMA')}"></span>
                                                             </td>
                                                         </tr>
                                                         <tr class="fontcolor-dark large-font bgcolored">
                                                             <td></td>
                                                             <td>TOTAL</td>
                                                             <td><span
-                                                                    th:text="${#numbers.formatInteger(reportsForm.physicalPrivatePulCount + reportsForm.physicalSharedPulCount + reportsForm.eddPrivatePulCount + reportsForm.eddSharedOpenPulCount,0,'COMMA')}"></span>
+                                                                    th:text="${#numbers.formatInteger(reportsForm.physicalPrivatePulCount + reportsForm.physicalSharedPulCount + reportsForm.eddPrivatePulCount + reportsForm.eddSharedOpenPulCount + reportsForm.physicalPartnerSharedPulCount + reportsForm.eddPartnerSharedOpenPulCount,0,'COMMA')}"></span>
                                                             </td>
                                                             <td><span
-                                                                    th:text="${#numbers.formatInteger(reportsForm.physicalPrivateCulCount + reportsForm.physicalSharedCulCount + reportsForm.eddPrivateCulCount + reportsForm.eddSharedOpenCulCount,0,'COMMA')}"></span>
+                                                                    th:text="${#numbers.formatInteger(reportsForm.physicalPrivateCulCount + reportsForm.physicalSharedCulCount + reportsForm.eddPrivateCulCount + reportsForm.eddSharedOpenCulCount + reportsForm.physicalPartnerSharedCulCount + reportsForm.eddPartnerSharedOpenCulCount,0,'COMMA')}"></span>
                                                             </td>
                                                             <td><span
-                                                                    th:text="${#numbers.formatInteger(reportsForm.physicalPrivateNyplCount + reportsForm.physicalSharedNyplCount + reportsForm.eddPrivateNyplCount + reportsForm.eddSharedOpenNyplCount,0,'COMMA')}"></span>
+                                                                    th:text="${#numbers.formatInteger(reportsForm.physicalPrivateNyplCount + reportsForm.physicalSharedNyplCount + reportsForm.eddPrivateNyplCount + reportsForm.eddSharedOpenNyplCount + reportsForm.physicalPartnerSharedNyplCount + reportsForm.eddPartnerSharedOpenNyplCount,0,'COMMA')}"></span>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -289,9 +287,9 @@
                                                         <thead class="tablesorter-headerRow">
                                                         <tr>
                                                             <th width="25%"></th>
-                                                            <th width="25%" style="font-family:sans-serif;font-size: 120%">PUL</th>
-                                                            <th width="25%" style="font-family:sans-serif;font-size: 120%">CUL</th>
-                                                            <th width="25%" style="font-family:sans-serif;font-size: 120%">NYPL</th>
+                                                            <th width="25%" style="font-family:sans-serif;font-size: 120%">Princeton</th>
+                                                            <th width="25%" style="font-family:sans-serif;font-size: 120%">Columbia</th>
+                                                            <th width="25%" style="font-family:sans-serif;font-size: 120%">New York Public Library</th>
                                                         </tr>
                                                         </thead>
                                                         <tr class="border-style-top-white"
@@ -322,6 +320,34 @@
                                                             </td>
 
                                                         </tr>
+                                                        <tr class="border-style-top-white"
+                                                            data-th-if="${reportsForm.showRecallTable}">
+                                                            <td class="gray-dark fontcolor-white large-font" style="font-family:sans-serif;">EDD</td>
+                                                            <td><span
+                                                                    th:text="${#numbers.formatInteger(reportsForm.eddRequestPulCount,0,'COMMA')}"></span>
+                                                            </td>
+                                                            <td><span
+                                                                    th:text="${#numbers.formatInteger(reportsForm.eddRequestCulCount,0,'COMMA')}"></span>
+                                                            </td>
+                                                            <td><span
+                                                                    th:text="${#numbers.formatInteger(reportsForm.eddRequestNyplCount,0,'COMMA')}"></span>
+                                                            </td>
+
+                                                        </tr>
+                                                        <tr class="fontcolor-dark large-font bgcolored"
+                                                            data-th-if="${reportsForm.showRecallTable}">
+                                                            <td>TOTAL</td>
+                                                            <td><span
+                                                                    th:text="${#numbers.formatInteger(reportsForm.retrievalRequestPulCount+reportsForm.eddRequestPulCount,0,'COMMA')}"></span>
+                                                            </td>
+                                                            <td><span
+                                                                    th:text="${#numbers.formatInteger(reportsForm.retrievalRequestCulCount+reportsForm.eddRequestCulCount,0,'COMMA')}"></span>
+                                                            </td>
+                                                            <td><span
+                                                                    th:text="${#numbers.formatInteger(reportsForm.retrievalRequestNyplCount+reportsForm.eddRequestNyplCount,0,'COMMA')}"></span>
+                                                            </td>
+
+                                                        </tr>
                                                     </table>
                                                 </div>
                                             </div>
@@ -336,49 +362,51 @@
                                             <div class="row">
                                                 <div class="col-md-6 col-sm-8">
                                                     <div class="col-md-5 col-sm-5 padding-right-50">
-                                                            <div class="form-group">
-                                                                <label for="AccessionDeaccessionDateRangefrom">Date Range
-                                                                    <span class="error-color">*</span> </label>
-                                                                <br/><label>From</label>
-                                                                <div class='input-group date'
-                                                                     id="reportaccessiondeaccessionsectiondatepickerfrom">
-                                                                    <input type='text' class="form-control themed-input"
-                                                                           placeholder="MM/DD/YYYY"
-                                                                           id="AccessionDeaccessionDateRangefrom"
-                                                                           name="AccessionDeaccessionDateRangefrom"
-                                                                           onkeyup="ToggleAccessionDateFrom()"
-                                                                           th:field="${reportsForm.accessionDeaccessionFromDate}"/>
+                                                        <div class="form-group">
+                                                            <label for="AccessionDeaccessionDateRangefrom">Date Range
+                                                                <span class="error-color">*</span> </label>
+                                                            <br/><label>From</label>
+                                                            <div class='input-group date'
+                                                                 id="reportaccessiondeaccessionsectiondatepickerfrom">
+                                                                <input type='text' class="form-control themed-input"
+                                                                       placeholder="MM/DD/YYYY"
+                                                                       id="AccessionDeaccessionDateRangefrom"
+                                                                       name="AccessionDeaccessionDateRangefrom"
+                                                                       onkeyup="ToggleAccessionDateFrom()"
+                                                                       th:field="${reportsForm.accessionDeaccessionFromDate}"/>
                                                                             <span class="input-group-addon">
                                                                                 <span class="glyphicon glyphicon-calendar">
                                                                                 </span>
                                                                             </span>
 
-                                                                </div>
-                                                                <p id="accessionErrorText"
-                                                                   style="display: none;color: red">This Field is
-                                                                    Required</p>
                                                             </div>
+                                                            <p id="accessionErrorText"
+                                                               style="display: none;color: red">This Field is
+                                                                Required</p>
+                                                        </div>
                                                     </div>
                                                     <div class="col-md-5 col-sm-5 padding-right-50" style="margin-top: 5px;">
-                                                            <div class="form-group">
-                                                                <br/><label>To</label>
-                                                                <div class='input-group date'
-                                                                     id="reportaccessiondeaccessionsectiondatepickerto">
-                                                                    <input type='text' class="form-control themed-input"
-                                                                           placeholder="MM/DD/YYYY"
-                                                                           id="AccessionDeaccessionDateRangeto"
-                                                                           name="AccessionDeaccessionDateRangeto"
-                                                                           onkeyup="ToggleAccessionDateTo()"
-                                                                           th:field="${reportsForm.accessionDeaccessionToDate}"/>
+                                                        <div class="form-group">
+                                                            <br/><label>To</label>
+                                                            <div class='input-group date'
+                                                                 id="reportaccessiondeaccessionsectiondatepickerto">
+                                                                <input type='text' class="form-control themed-input"
+                                                                       placeholder="MM/DD/YYYY"
+                                                                       id="AccessionDeaccessionDateRangeto"
+                                                                       name="AccessionDeaccessionDateRangeto"
+                                                                       onkeyup="ToggleAccessionDateTo()"
+                                                                       th:field="${reportsForm.accessionDeaccessionToDate}"/>
                                                                             <span class="input-group-addon">
                                                                                 <span class="glyphicon glyphicon-calendar">
                                                                                 </span>
                                                                             </span>
-                                                                </div>
-                                                                <p id="deaccessionErrorText"
-                                                                   style="display: none;color: red;">This Field is
-                                                                    Required</p>
                                                             </div>
+                                                            <p id="deaccessionErrorText"
+                                                               style="display: none;color: red;">This Field is
+                                                                Required</p>
+                                                            <p id="accessionFromToError"
+                                                               style="display: none;color: red">To Date must be greater than or <br/> equal to the From Date</p>
+                                                        </div>
                                                     </div>
                                                     <div class="col-md-2 col-sm-2" style="margin-top: 20px;">
                                                         <button class="btn themed-button themed-button-search" type="submit"
@@ -422,17 +450,17 @@
                                                         <tr>
                                                             <th width="20%"></th>
                                                             <th width="20%"></th>
-                                                            <th width="20%" style="font-family:sans-serif;font-size: 122%">PUL</th>
-                                                            <th width="20%" style="font-family:sans-serif;font-size: 122%">CUL</th>
-                                                            <th width="20%" style="font-family:sans-serif;font-size: 122%">NYPL</th>
+                                                            <th width="20%" style="font-family:sans-serif;font-size: 122%">Princeton</th>
+                                                            <th width="20%" style="font-family:sans-serif;font-size: 122%">Columbia</th>
+                                                            <th width="20%" style="font-family:sans-serif;font-size: 122%">New York Public Library</th>
                                                         </tr>
                                                         </thead>
                                                         <tr>
                                                             <td rowspan="4"
                                                                 class="v-middle-data gray-light fontcolor-white large-font" style="font-family:sans-serif;">
-                                                                ACCESSIONED
+                                                                Accessioned
                                                             </td>
-                                                            <td>PRIVATE</td>
+                                                            <td>Private</td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.accessionPrivatePulCount,0,'COMMA')}"></span>
                                                             </td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.accessionPrivateCulCount,0,'COMMA')}"></span>
@@ -442,7 +470,7 @@
 
                                                         </tr>
                                                         <tr>
-                                                            <td>SHARED</td>
+                                                            <td>Shared</td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.accessionSharedPulCount,0,'COMMA')}"></span>
                                                             </td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.accessionSharedCulCount,0,'COMMA')}"></span>
@@ -451,7 +479,7 @@
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td>OPEN</td>
+                                                            <td>Open</td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.accessionOpenPulCount,0,'COMMA')}"></span>
                                                             </td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.accessionOpenCulCount,0,'COMMA')}"></span>
@@ -461,7 +489,7 @@
 
                                                         </tr>
                                                         <tr class="border-style-bottom bgcolored large-font fontcolor-dark border-style-top-white">
-                                                            <td class="fontcolor-dark large-font">SUBTOTAL</td>
+                                                            <td class="fontcolor-dark large-font text-right">Subtotal</td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.accessionPrivatePulCount + reportsForm.accessionSharedPulCount + reportsForm.accessionPrivatePulCount,0,'COMMA')}"></span>
                                                             </td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.accessionPrivateCulCount + reportsForm.accessionSharedCulCount + reportsForm.accessionPrivateCulCount,0,'COMMA')}"></span>
@@ -472,9 +500,9 @@
                                                         <tr>
                                                             <td rowspan="4"
                                                                 class="v-middle-data gray-dark fontcolor-white large-font" style="font-family:sans-serif;">
-                                                                DEACCESSIONED
+                                                                Deaccessioned
                                                             </td>
-                                                            <td>PRIVATE</td>
+                                                            <td>Private</td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.deaccessionPrivatePulCount,0,'COMMA')}"></span>
                                                             </td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.deaccessionPrivateCulCount,0,'COMMA')}"></span>
@@ -484,7 +512,7 @@
 
                                                         </tr>
                                                         <tr>
-                                                            <td>SHARED</td>
+                                                            <td>Shared</td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.deaccessionSharedPulCount,0,'COMMA')}"></span>
                                                             </td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.deaccessionSharedCulCount,0,'COMMA')}"></span>
@@ -494,7 +522,7 @@
 
                                                         </tr>
                                                         <tr>
-                                                            <td>OPEN</td>
+                                                            <td>Open</td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.deaccessionOpenPulCount,0,'COMMA')}"></span>
                                                             </td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.deaccessionOpenCulCount,0,'COMMA')}"></span>
@@ -503,7 +531,7 @@
                                                             </td>
                                                         </tr>
                                                         <tr class="bgcolored large-font fontcolor-dark border-style-top-white">
-                                                            <td class="fontcolor-dark large-font">SUBTOTAL</td>
+                                                            <td class="fontcolor-dark large-font text-right">Subtotal</td>
 
                                                             <td><a href="#" th:if="${(reportsForm.deaccessionPrivatePulCount + reportsForm.deaccessionSharedPulCount + reportsForm.deaccessionOpenPulCount) != 0}" class="Deaccession-tableshow" th:onclick="'javascript:deaccessionPul();'">
                                                                 <button type="button" th:text="${#numbers.formatInteger(reportsForm.deaccessionPrivatePulCount + reportsForm.deaccessionSharedPulCount + reportsForm.deaccessionOpenPulCount,0,'COMMA')}"></button></a>
@@ -553,7 +581,7 @@
                                                         </thead>
                                                         <tr class="border-style-top-white">
                                                             <td class="v-middle-data gray-dark fontcolor-white large-font" style="font-family:sans-serif;">
-                                                                OPEN
+                                                                Open
                                                             </td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.openPulCgdCount,0,'COMMA')}"></span></td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.openCulCgdCount,0,'COMMA')}"></span></td>
@@ -561,7 +589,7 @@
                                                         </tr>
                                                         <tr class="border-style-top-white">
                                                             <td class="v-middle-data gray-dark fontcolor-white large-font" style="font-family:sans-serif;">
-                                                                SHARED
+                                                                Shared
                                                             </td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.sharedPulCgdCount,0,'COMMA')}"></span></td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.sharedCulCgdCount,0,'COMMA')}"></span></td>
@@ -570,7 +598,7 @@
                                                         </tr>
                                                         <tr class="border-style-top-white">
                                                             <td class="v-middle-data gray-dark fontcolor-white large-font" style="font-family:sans-serif;">
-                                                                PRIVATE
+                                                                Private
                                                             </td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.privatePulCgdCount,0,'COMMA')}"></span></td>
                                                             <td><span th:text="${#numbers.formatInteger(reportsForm.privateCulCgdCount,0,'COMMA')}"></span></td>
@@ -648,7 +676,7 @@
                                     <td><span id="ownInstDeacc"  th:text="${deaccessionRow.deaccessionOwnInst}"></span></td>
                                     <td><span th:text="${deaccessionRow.itemBarcode}"></span></td>
                                     <td><span th:text="${deaccessionRow.cgd}"></span></td>
-                                    <td class="text-left"><span th:text="${deaccessionRow.deaccessionNotes}"></span></td>
+                                    <td><span th:text="${deaccessionRow.deaccessionNotes}"></span></td>
                                     <td><span th:text="${deaccessionRow.deaccessionCreatedBy}"></span></td>
                                 </tr>
                             </table>
@@ -700,13 +728,13 @@
                                                     <label for="incompleteShowBy">Show By
                                                         <span class="error-color">*</span> </label>
                                                     <div class="select-holder">
-                                                    <select id="incompleteShowBy"
-                                                            name="incompleteShowBy"
-                                                            class="themed-input themed-select"
-                                                            style="border: 1px solid #888988;color: #555555;outline: none;height: 50px;box-shadow: none;" th:field="${reportsForm.incompleteRequestingInstitution}">
-                                                        <option th:each="institutions : ${reportsForm.incompleteShowByInst}" th:value="${institutions}" th:text="${institutions}"></option>
-                                                    </select>
-                                                </div>
+                                                        <select id="incompleteShowBy"
+                                                                name="incompleteShowBy"
+                                                                class="themed-input themed-select"
+                                                                style="border: 1px solid #888988;color: #555555;outline: none;height: 50px;box-shadow: none;" th:field="${reportsForm.incompleteRequestingInstitution}">
+                                                            <option th:each="institutions : ${reportsForm.incompleteShowByInst}" th:value="${institutions}" th:text="${institutions}"></option>
+                                                        </select>
+                                                    </div>
                                                     <p id="incompleteErrorText"
                                                        style="display: none;color: red">This Field is
                                                         Required</p>
@@ -780,12 +808,12 @@
                                                 th:each="incompleteResult,incompleteResultStat : ${reportsForm.incompleteReportResultsRows}"
                                                 class="parentRow">
                                                 <td data-th-id="'incompleteResults'+ ${incompleteResultStat.index}">
-                                                <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].title}"/>
+                                                    <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].title}"/>
                                                 <span data-th-id="'incompleteResults'+ ${incompleteResultStat.index}"
                                                       th:text="${incompleteResult.title}"></span>
                                                 </td>
                                                 <td data-th-id="'incompleteResults'+ ${incompleteResultStat.index}">
-                                                <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].author}"/>
+                                                    <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].author}"/>
                                                 <span data-th-id="'incompleteResults'+ ${incompleteResultStat.index}"
                                                       th:text="${incompleteResult.author}"></span>
                                                 </td>
@@ -795,16 +823,16 @@
                                                       th:text="${incompleteResult.customerCode}"></span>
                                                 </td>
                                                 <td data-th-id="'incompleteResults'+ ${incompleteResultStat.index}">
-                                                <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].barcode}"/>
+                                                    <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].barcode}"/>
                                                 <span data-th-id="'incompleteResults'+ ${incompleteResultStat.index}"
                                                       th:text="${incompleteResult.barcode}"></span>
                                                 </td>
                                                 <td data-th-id="'incompleteResults'+ ${incompleteResultStat.index}">
-                                                <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].createdDate}"/>
+                                                    <input type="hidden" th:field="${reportsForm.incompleteReportResultsRows[__${incompleteResultStat.index}__].createdDate}"/>
                                                  <span data-th-id="'incompleteResults'+ ${incompleteResultStat.index}"
                                                        th:text="${incompleteResult.createdDate}"></span>
-                                               <!-- <span data-th-id="'incompleteResults'+ ${incompleteResultStat.index}"
-                                                      th:text="${#dates.format(incompleteResult.createdDate, 'MM/dd/yyyy')}"></span>-->
+                                                    <!-- <span data-th-id="'incompleteResults'+ ${incompleteResultStat.index}"
+                                                           th:text="${#dates.format(incompleteResult.createdDate, 'MM/dd/yyyy')}"></span>-->
                                                 </td>
                                             </tr>
                                             </tbody>

@@ -15,17 +15,9 @@ public class ReportsForm {
     private String accessionDeaccessionFromDate;
     private String accessionDeaccessionToDate;
 
-    private long ilRequestPulCount;
-    private long ilRequestCulCount;
-    private long ilRequestNyplCount;
-    private long bdRequestPulCount;
-    private long bdRequestCulCount;
-    private long bdRequestNyplCount;
-
     private long retrievalRequestPulCount;
     private long retrievalRequestCulCount;
     private long retrievalRequestNyplCount;
-
 
     private long recallRequestPulCount;
     private long recallRequestCulCount;
@@ -116,6 +108,17 @@ public class ReportsForm {
     private boolean showIncompletePagination = false;
     private boolean export = false;
 
+    private long physicalPartnerSharedPulCount;
+    private long physicalPartnerSharedCulCount;
+    private long physicalPartnerSharedNyplCount;
+    private long eddPartnerSharedOpenPulCount;
+    private long eddPartnerSharedOpenCulCount;
+    private long eddPartnerSharedOpenNyplCount;
+    private long eddRequestPulCount;
+    private long eddRequestCulCount;
+    private long eddRequestNyplCount;
+
+
     public ReportsForm() {
         this.getOwningInstitutions().add("NYPL");
         this.getOwningInstitutions().add("CUL");
@@ -172,54 +175,6 @@ public class ReportsForm {
 
     public void setAccessionDeaccessionToDate(String accessionDeaccessionToDate) {
         this.accessionDeaccessionToDate = accessionDeaccessionToDate;
-    }
-
-    public long getIlRequestPulCount() {
-        return ilRequestPulCount;
-    }
-
-    public void setIlRequestPulCount(long ilRequestPulCount) {
-        this.ilRequestPulCount = ilRequestPulCount;
-    }
-
-    public long getIlRequestCulCount() {
-        return ilRequestCulCount;
-    }
-
-    public void setIlRequestCulCount(long ilRequestCulCount) {
-        this.ilRequestCulCount = ilRequestCulCount;
-    }
-
-    public long getBdRequestPulCount() {
-        return bdRequestPulCount;
-    }
-
-    public void setBdRequestPulCount(long bdRequestPulCount) {
-        this.bdRequestPulCount = bdRequestPulCount;
-    }
-
-    public long getIlRequestNyplCount() {
-        return ilRequestNyplCount;
-    }
-
-    public void setIlRequestNyplCount(long ilRequestNyplCount) {
-        this.ilRequestNyplCount = ilRequestNyplCount;
-    }
-
-    public long getBdRequestCulCount() {
-        return bdRequestCulCount;
-    }
-
-    public void setBdRequestCulCount(long bdRequestCulCount) {
-        this.bdRequestCulCount = bdRequestCulCount;
-    }
-
-    public long getBdRequestNyplCount() {
-        return bdRequestNyplCount;
-    }
-
-    public void setBdRequestNyplCount(long bdRequestNyplCount) {
-        this.bdRequestNyplCount = bdRequestNyplCount;
     }
 
     public long getRetrievalRequestPulCount() {
@@ -842,5 +797,77 @@ public class ReportsForm {
 
     public void setExport(boolean export) {
         this.export = export;
+    }
+
+    public long getPhysicalPartnerSharedPulCount() {
+        return physicalPartnerSharedPulCount;
+    }
+
+    public void setPhysicalPartnerSharedPulCount(long physicalPartnerSharedPulCount) {
+        this.physicalPartnerSharedPulCount = physicalPartnerSharedPulCount;
+    }
+
+    public long getPhysicalPartnerSharedCulCount() {
+        return physicalPartnerSharedCulCount;
+    }
+
+    public void setPhysicalPartnerSharedCulCount(long physicalPartnerSharedCulCount) {
+        this.physicalPartnerSharedCulCount = physicalPartnerSharedCulCount;
+    }
+
+    public long getPhysicalPartnerSharedNyplCount() {
+        return physicalPartnerSharedNyplCount;
+    }
+
+    public void setPhysicalPartnerSharedNyplCount(long physicalPartnerSharedNyplCount) {
+        this.physicalPartnerSharedNyplCount = physicalPartnerSharedNyplCount;
+    }
+
+    public long getEddPartnerSharedOpenPulCount() {
+        return eddPartnerSharedOpenPulCount;
+    }
+
+    public void setEddPartnerSharedOpenPulCount(long eddPartnerSharedOpenPulCount) {
+        this.eddPartnerSharedOpenPulCount = eddPartnerSharedOpenPulCount;
+    }
+
+    public long getEddPartnerSharedOpenCulCount() {
+        return eddPartnerSharedOpenCulCount;
+    }
+
+    public void setEddPartnerSharedOpenCulCount(long eddPartnerSharedOpenCulCount) {
+        this.eddPartnerSharedOpenCulCount = eddPartnerSharedOpenCulCount;
+    }
+
+    public long getEddPartnerSharedOpenNyplCount() {
+        return eddPartnerSharedOpenNyplCount;
+    }
+
+    public void setEddPartnerSharedOpenNyplCount(long eddPartnerSharedOpenNyplCount) {
+        this.eddPartnerSharedOpenNyplCount = eddPartnerSharedOpenNyplCount;
+    }
+
+    public long getEddRequestPulCount() {
+        return eddRequestPulCount;
+    }
+
+    public void setEddRequestPulCount(long eddRequestPulCount) {
+        this.eddRequestPulCount = eddRequestPulCount;
+    }
+
+    public long getEddRequestCulCount() {
+        return eddRequestCulCount;
+    }
+
+    public void setEddRequestCulCount(long eddRequestCulCount) {
+        this.eddRequestCulCount = eddRequestCulCount;
+    }
+
+    public long getEddRequestNyplCount() {
+        return eddRequestNyplCount;
+    }
+
+    public void setEddRequestNyplCount(long eddRequestNyplCount) {
+        this.eddRequestNyplCount = eddRequestNyplCount;
     }
 }

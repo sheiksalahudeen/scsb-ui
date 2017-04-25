@@ -90,9 +90,7 @@ public class ReportsController {
             Date requestToDate = simpleDateFormat.parse(reportsForm.getRequestToDate());
             Date fromDate = getFromDate(requestFromDate);
             Date toDate = getToDate(requestToDate);
-            if (reportsForm.getShowBy().equalsIgnoreCase(RecapConstants.REPORTS_IL_BD)) {
-                reportsUtil.populateILBDCountsForRequest(reportsForm, fromDate, toDate);
-            } else if (reportsForm.getShowBy().equalsIgnoreCase(RecapConstants.REPORTS_PARTNERS)) {
+            if (reportsForm.getShowBy().equalsIgnoreCase(RecapConstants.REPORTS_PARTNERS)) {
                 reportsUtil.populatePartnersCountForRequest(reportsForm, fromDate, toDate);
             } else if (reportsForm.getShowBy().equalsIgnoreCase(RecapConstants.REPORTS_REQUEST_TYPE)) {
                 reportsUtil.populateRequestTypeInformation(reportsForm, fromDate, toDate);
