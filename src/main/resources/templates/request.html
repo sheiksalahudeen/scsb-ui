@@ -278,7 +278,7 @@
                                                             <option th:each="requestingInstitution : ${requestForm.requestingInstitutions}" th:value="${requestingInstitution}" th:text="${requestingInstitution}"></option>
                                                         </select>
                                                         <span id="requestingInstitutionErrorMessage" style="color: red;">Requesting institution is required.</span>
-                                                        <input type="hidden" id="reqInstituionHidden" th:field="${requestForm.requestingInstitution}"/>
+                                                        <input type="hidden" id="reqInstituionHidden" th:field="${requestForm.requestingInstituionHidden}"/>
                                                     </div>
                                                 </div>
 
@@ -478,7 +478,8 @@
                                     <div class="row">
                                         <div class="col-md-8 col-sm-12">
                                             <div class="form-group">
-                                                <div class="col-md-3 col-sm-2 text-right margin-top-15"><label for="requestNotesId" class="fontcolor-dark">Request Notes</label></div>
+                                                <div class="col-md-3 col-sm-2 text-right margin-top-15"><label for="requestNotesId" class="fontcolor-dark">Request Notes</label>
+                                                    <a href="#"><span id="noteToolTip" class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Maximum of only 2000 characters allowed"></span></a></div>
                                                 <div class="col-md-9 col-sm-10">
                                                     <textarea type="text"
                                                               th:disabled="${requestForm.submitted}"
@@ -486,7 +487,8 @@
                                                               name="requestNotesName"
                                                               class="form-control themed-input"
                                                               th:field="${requestForm.requestNotes}"
-                                                              onkeyup="NotesLengthValidation()"
+                                                              onkeyup="NotesLengthValidation(this)"
+                                                              style="overflow:hidden"
                                                               rows="5"
                                                               maxlength="2000">
                                                     </textarea>
@@ -555,9 +557,7 @@
                             <div class="modal-body">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <div>
-                                            <textarea id="requestNotesData" class="form-control themed-input" rows="4" readonly="readonly" style="border: none;"></textarea>
-                                        </div>
+                                        <p id="requestNotesData" style="white-space: pre-wrap;"></p>
                                     </div>
                                 </div>
                             </div>

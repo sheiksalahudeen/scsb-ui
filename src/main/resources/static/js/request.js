@@ -650,7 +650,9 @@ function populateDeliveryLocations(){
     });
 }
 
-function NotesLengthValidation(){
+function NotesLengthValidation(o){
+    o.style.height = "1px";
+    o.style.height = (25+o.scrollHeight)+"px";
     var notesLength = $('#requestNotesId').val().length;
     if (notesLength == 2000){
         $('#notesLengthErrMsg').show();

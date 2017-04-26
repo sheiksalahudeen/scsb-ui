@@ -228,7 +228,7 @@ public class RequestController {
                 institutionList.add(institutionEntity.getInstitutionCode());
             }
             requestForm.setInstitutionList(institutionList);
-            requestForm.setStatus("active");
+            requestForm.setStatus("");
             searchAndSetResults(requestForm);
             model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.REQUEST);
         } catch (Exception exception) {
@@ -364,6 +364,7 @@ public class RequestController {
                 requestForm.setRequestingInstitutions(requestingInstitutions);
                 requestForm.setInstitutionList(requestingInstitutions);
                 requestForm.setRequestingInstitution(institutionEntity.getInstitutionCode());
+                requestForm.setRequestingInstituionHidden(institutionEntity.getInstitutionCode());
                 requestForm.setDisableRequestingInstitution(true);
                 requestForm.setOnChange("true");
             }
@@ -446,8 +447,10 @@ public class RequestController {
                                         itemTitles.add(bibJSONUtil.getTitle(marcRecord));
                                         itemOwningInstitutions.add(institutionCode);
                                     }
-                                    String replaceReqInst = requestForm.getRequestingInstitution().replace(",", "");
-                                    requestForm.setRequestingInstitution(replaceReqInst);
+                                    if(StringUtils.isNotBlank(requestForm.getRequestingInstituionHidden())){
+                                        String replaceReqInst = requestForm.getRequestingInstituionHidden();
+                                        requestForm.setRequestingInstitution(replaceReqInst);
+                                    }
                                     if("true".equals(requestForm.getOnChange()) && StringUtils.isNotBlank(requestForm.getRequestingInstitution())){
                                         getRequestService().processCustomerAndDeliveryCodes(requestForm,deliveryLocationsMap,userDetailsForm,itemEntity,institutionId);
                                     }

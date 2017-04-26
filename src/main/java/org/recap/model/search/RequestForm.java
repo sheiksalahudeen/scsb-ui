@@ -48,6 +48,7 @@ public class RequestForm {
     private String onChange;
     private String institution;
     private boolean showRequestErrorMsg;
+    private String requestingInstituionHidden;
 
     public Integer getRequestId() {
         return requestId;
@@ -355,5 +356,13 @@ public class RequestForm {
 
     public void setShowRequestErrorMsg(boolean showRequestErrorMsg) {
         this.showRequestErrorMsg = showRequestErrorMsg;
+    }
+
+    public String getRequestingInstituionHidden() {
+        return requestingInstituionHidden;
+    }
+
+    public void setRequestingInstituionHidden(String requestingInstituionHidden) {
+        this.requestingInstituionHidden = requestingInstituionHidden;
     }
 }

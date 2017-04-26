@@ -454,6 +454,7 @@ public class UserRoleController {
                     userRoleDeatailsForm.setInstitutionId(institutionEntity.getInstitutionId());
                     userRoleDeatailsForm.setInstitutionName(institutionEntity.getInstitutionName());
                     userRoleDeatailsForm.setNetworkLoginId(usersEntity.getLoginId());
+                    userRoleDeatailsForm.setUserDescription(usersEntity.getUserDescription());
                     for (RoleEntity roleEntity : usersEntity.getUserRole()) {
                         rolesBuffer.append(roleEntity.getRoleName() + ",");
                     }
