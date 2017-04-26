@@ -214,10 +214,6 @@ function requestsOnPageSizeChange() {
 
 function populateItemDetails() {
     var itemBarcode = $('#itemBarcodeId').val();
-    var reqInst = $('#requestingInstitutionId').is(':disabled');
-    if(true){
-        $('#onChangeOwnInst').val('true');
-    }
     if (!isBlankValue(itemBarcode)) {
         var $form = $('#request-form');
         var url = $form.attr('action') + "?action=populateItem";
@@ -610,7 +606,6 @@ function emailMandatory(){
 
 function populateDeliveryLocations(){
     var requestingInstitutionId = $('#requestingInstitutionId').val();
-    var reqInstHdn = $('#reqInstituionHidden').val('');
     if(!isBlankValue(requestingInstitutionId)){
         toggleRequestingInstitutionValidation();
     }
