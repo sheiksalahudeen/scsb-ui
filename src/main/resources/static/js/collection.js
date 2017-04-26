@@ -174,11 +174,8 @@ function isValidInputs() {
         } else if (oldCgd == 'Shared' && newCgd != 'Shared' && (cgdNotes == null || cgdNotes == '')) {
             $('#cgdNotesErrorMessage').show();
             $('#cgdErrorMessage').hide();
-        }else if(cgdNoteLength > 2000){
-            $('#cgdNotesLengthErrMsg').show();
-            $('#cgdErrorMessage').hide();
-            $('#cgdNotesErrorMessage').hide();
-        } else {
+        }
+        else {
             return true;
         }
     } else if (deaccession) {
@@ -195,11 +192,6 @@ function isValidInputs() {
             $('#deaccessionNotesErrorMessage').hide();
         } else if (deaccessionNotes == null || deaccessionNotes == '') {
             $('#deaccessionNotesErrorMessage').show();
-            $('#locationErrorMessage').hide();
-        }
-        else if(deaccessionNotesLength > 2000){
-            $('#deaccessionNotesLengthErrMsg').show();
-            $('#deaccessionNotesErrorMessage').hide();
             $('#locationErrorMessage').hide();
         }
         else {
@@ -232,7 +224,7 @@ function toggleCgdNotesValidation() {
     } else {
         $('#cgdNotesErrorMessage').hide();
     }
-    if(cgdNoteLength > 2000) {
+    if(cgdNoteLength == 2000) {
         $('#cgdNotesLengthErrMsg').show();
         $('#cgdNotesErrorMessage').hide();
     }
@@ -261,7 +253,7 @@ function toggleDeaccessionNotesValidation() {
     } else {
         $('#deaccessionNotesErrorMessage').hide();
     }
-    if(deaccessionNotesLength > 2000){
+    if(deaccessionNotesLength == 2000){
         $('#deaccessionNotesLengthErrMsg').show();
         $('#deaccessionNotesErrorMessage').hide();
     }else{
