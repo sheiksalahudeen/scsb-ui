@@ -355,7 +355,7 @@
                                                             <div class="col-sm-8 padding-left-0">
                                                                 <textarea class="form-control themed-input" name="CGDChangeNotes" id="CGDChangeNotes" th:field="${collectionForm.cgdChangeNotes}" th:if="${!collectionForm.submitted}" th:onkeyup="'javascript:toggleCgdNotesValidation()'" maxlength="2000"></textarea>
                                                                 <span id="cgdNotesErrorMessage" style="color: red;">Please enter CGD change notes.</span>
-                                                                <span id="cgdNotesLengthErrMsg" style="color: red;display: none">Only 2000 characters allowed.</span>
+                                                                <span id="cgdNotesLengthErrMsg" style="color: red;display: none">Only 2000 characters are allowed.</span>
                                                                 <div class="form-group">
                                                                     <span id="CGDNoteReadOnly" th:if="${collectionForm.submitted}" th:text="${collectionForm.cgdChangeNotes}"></span>
                                                                 </div>
@@ -416,7 +416,7 @@
                                                             <div class="col-sm-8 padding-left-0 padding-top-10">
                                                                 <textarea class="form-control themed-input" name="DeaccessionNotes" id="DeaccessionNotes" th:field="${collectionForm.deaccessionNotes}" th:if="${!collectionForm.submitted}" th:onkeyup="'javascript:toggleDeaccessionNotesValidation()'" maxlength="2000"></textarea>
                                                                 <span id="deaccessionNotesErrorMessage" style="color: red;">Please enter deaccession notes.</span>
-                                                                <span id="deaccessionNotesLengthErrMsg" style="color: red;display: none">Only 2000 characters allowed.</span>
+                                                                <span id="deaccessionNotesLengthErrMsg" style="color: red;display: none">Only 2000 characters are allowed.</span>
                                                                 <span th:if="${collectionForm.submitted}" th:text="${collectionForm.deaccessionNotes}"></span>
                                                             </div>
                                                         </div>
