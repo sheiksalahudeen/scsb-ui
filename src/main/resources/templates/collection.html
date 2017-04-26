@@ -353,7 +353,7 @@
                                                                 <label for="CGDChangeNotes" class="fontcolor-dark">CGD Change Notes <span class="error-color" th:if="${!collectionForm.submitted &amp;&amp; collectionForm.collectionGroupDesignation eq 'Shared'}">*</span></label>
                                                             </div>
                                                             <div class="col-sm-8 padding-left-0">
-                                                                <textarea class="form-control themed-input" name="CGDChangeNotes" id="CGDChangeNotes" th:field="${collectionForm.cgdChangeNotes}" th:if="${!collectionForm.submitted}" th:onkeyup="'javascript:toggleCgdNotesValidation()'"></textarea>
+                                                                <textarea class="form-control themed-input" name="CGDChangeNotes" id="CGDChangeNotes" th:field="${collectionForm.cgdChangeNotes}" th:if="${!collectionForm.submitted}" th:onkeyup="'javascript:toggleCgdNotesValidation()'" maxlength="2000"></textarea>
                                                                 <span id="cgdNotesErrorMessage" style="color: red;">Please enter CGD Change Notes.</span>
                                                                 <span id="cgdNotesLengthErrMsg" style="color: red;display: none">Only 2000 Characters Allowed.</span>
                                                                 <div class="form-group">
@@ -414,7 +414,7 @@
                                                         <div class="row form-group">
                                                             <div class="col-sm-4 text-right padding-right-30 margin-top-10"><label for="DeaccessionNotes" class="fontcolor-dark">Deaccession Notes <span class="error-color" th:if="${!collectionForm.submitted}">*</span></label></div>
                                                             <div class="col-sm-8 padding-left-0 padding-top-10">
-                                                                <textarea class="form-control themed-input" name="DeaccessionNotes" id="DeaccessionNotes" th:field="${collectionForm.deaccessionNotes}" th:if="${!collectionForm.submitted}" th:onkeyup="'javascript:toggleDeaccessionNotesValidation()'"></textarea>
+                                                                <textarea class="form-control themed-input" name="DeaccessionNotes" id="DeaccessionNotes" th:field="${collectionForm.deaccessionNotes}" th:if="${!collectionForm.submitted}" th:onkeyup="'javascript:toggleDeaccessionNotesValidation()'" maxlength="2000"></textarea>
                                                                 <span id="deaccessionNotesErrorMessage" style="color: red;">Please enter Deaccession Notes.</span>
                                                                 <span id="deaccessionNotesLengthErrMsg" style="color: red;display: none">Only 2000 Characters Allowed.</span>
                                                                 <span th:if="${collectionForm.submitted}" th:text="${collectionForm.deaccessionNotes}"></span>

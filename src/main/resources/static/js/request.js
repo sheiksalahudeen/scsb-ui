@@ -214,6 +214,10 @@ function requestsOnPageSizeChange() {
 
 function populateItemDetails() {
     var itemBarcode = $('#itemBarcodeId').val();
+    var reqInst = $('#requestingInstitutionId').is(':disabled');
+    if(true){
+        $('#onChangeOwnInst').val('true');
+    }
     if (!isBlankValue(itemBarcode)) {
         var $form = $('#request-form');
         var url = $form.attr('action') + "?action=populateItem";
@@ -238,7 +242,7 @@ function populateItemDetails() {
                     $.each(deliveryLocation, function (key, value) {
                         $('#deliveryLocationId').append($("<option/>", {
                             value: key,
-                            text: value
+                            text: value + "-" +key
                         }));
                     });
                 }
@@ -285,9 +289,8 @@ function isValidInputs() {
     var deliveryLocation = $('#deliveryLocationId').val();
     var requestingInstitution = $('#requestingInstitutionId').val();
     var notesLength = $('#requestNotesId').val().length;
-    if (notesLength  > 2000){
+    if (notesLength  == 2000){
         $('#notesLengthErrMsg').show();
-        isValid = false;
     }else {
         $('#notesLengthErrMsg').hide();
     }
@@ -607,6 +610,7 @@ function emailMandatory(){
 
 function populateDeliveryLocations(){
     var requestingInstitutionId = $('#requestingInstitutionId').val();
+    var reqInstHdn = $('#reqInstituionHidden').val('');
     if(!isBlankValue(requestingInstitutionId)){
         toggleRequestingInstitutionValidation();
     }
@@ -653,7 +657,7 @@ function populateDeliveryLocations(){
 
 function NotesLengthValidation(){
     var notesLength = $('#requestNotesId').val().length;
-    if (notesLength > 2000){
+    if (notesLength == 2000){
         $('#notesLengthErrMsg').show();
     }else {
         $('#notesLengthErrMsg').hide();

@@ -240,7 +240,8 @@
                                                               onkeyup="toggleRoleDescriptionValidation()"
                                                               name="roleDescriptionId"
                                                               class="form-control themed-input"
-                                                              th:field="*{newRoleDescription}">
+                                                              th:field="*{newRoleDescription}"
+                                                              maxlength="45">
                                                     </input>
                                                             <span id="roleDescriptionErrorMessage" style="color: red;">Role Description is required.</span>
                                                             <span id="roleDescriptionLengthError" style="color: red;display: none">Only 45 Characters Allowed.</span>
@@ -351,7 +352,8 @@
                                                               name="roleName"
                                                               class="form-control themed-input"
                                                               onkeyup="editDescLengthValidation()"
-                                                              th:field="*{editRoleDescription}">
+                                                              th:field="*{editRoleDescription}"
+                                                              maxlength="45">
                                                     </input>
                                                         <span id="editRoleDescriptionErrorMessage" style="color: red;">Role Description is required.</span>
                                                         <span id="editRoleDescriptionLengthErrMsg" style="color: red;display: none">Only 45 Characters Allowed.</span>

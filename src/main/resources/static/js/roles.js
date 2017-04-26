@@ -215,8 +215,7 @@ function isValidRole() {
     var roleDescription = $('#roleDescriptionId').val();
     var permissionName = $('#permissionNameId').val();
     var roleDescLength = roleDescription.length;
-    if(roleDescLength > 45){
-        isValid = false;
+    if(roleDescLength == 45){
         $('#roleDescriptionLengthError').show();
         $('#roleDescriptionErrorMessage').hide();
     }
@@ -250,8 +249,7 @@ function isValidEdit(){
     var roleDescription = $('#editRoleDescription').val();
     var permissionName = $('#editPermissionNameId').val();
     var roleDescLength = roleDescription.length;
-    if(roleDescLength > 45){
-        isValid = false;
+    if(roleDescLength == 45){
         $('#editRoleDescriptionLengthErrMsg').show();
         $('#editRoleDescriptionErrorMessage').hide();
     }
@@ -301,7 +299,7 @@ function toggleRoleNameValidation() {
 function toggleRoleDescriptionValidation() {
     var roleDescriptionId = $('#roleDescriptionId').val();
     var roleDescLength = roleDescriptionId.length;
-    if(roleDescLength > 45){
+    if(roleDescLength == 45){
         $('#roleDescriptionLengthError').show();
         $('#roleDescriptionErrorMessage').hide();
     }
@@ -328,7 +326,7 @@ function togglePermissionValidation() {
 function editDescLengthValidation(){
     var roleDescription = $('#editRoleDescription').val();
     var roleDescLength = roleDescription.length;
-    if(roleDescLength > 45){
+    if(roleDescLength == 45){
         $('#editRoleDescriptionLengthErrMsg').show();
         $('#editRoleDescriptionErrorMessage').hide();
     }
