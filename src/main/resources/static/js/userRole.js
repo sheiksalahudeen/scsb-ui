@@ -1,4 +1,7 @@
 jQuery(document).ready(function ($) {
+
+    $("#search-result-table-users").tablesorter();
+
     $('#createRequest').click(function () {
         $('#networkLoginId').val('');
         $('#institutionId').val('');
@@ -159,6 +162,7 @@ function userRolesFirstPage() {
         success: function (response) {
             $('.showEntriesOption').show();
             $('#request-result-table').html(response);
+            $("#search-result-table-users").tablesorter();
             $('#request-result-table').show();
             $('#userRolePaginationDivId').show();
 
@@ -176,6 +180,7 @@ function userRolesLastPage() {
         data: $form.serialize(),
         success: function (response) {
             $('#request-result-table').html(response);
+            $("#search-result-table-users").tablesorter();
             $('.showEntriesOption').show();
             $('#request-result-table').show();
             $('#userRolePaginationDivId').show();
@@ -194,6 +199,7 @@ function userRolesPreviousPage() {
         data: $form.serialize(),
         success: function (response) {
             $('#request-result-table').html(response);
+            $("#search-result-table-users").tablesorter();
             $('.showEntriesOption').show();
             $('#request-result-table').show();
             $('#userRolePaginationDivId').show();
@@ -212,6 +218,7 @@ function userRolesNextPage() {
         data: $form.serialize(),
         success: function (response) {
             $('#request-result-table').html(response);
+            $("#search-result-table-users").tablesorter();
             $('#showEntries').show();
             $('#request-result-table').show();
             $('#userRolePaginationDivId').show();
@@ -375,6 +382,7 @@ function searchUserRoles() {
         data: $form.serialize(),
         success: function (response) {
             $('#request-result-table').html(response);
+            $("#search-result-table-users").tablesorter();
             $('#showEntries').show();
             $('#request-result-table').show();
             $('#userRolePaginationDivId').show();
@@ -393,6 +401,7 @@ function showEntriesChange() {
         data: $form.serialize(),
         success: function (response) {
             $('#request-result-table').html(response);
+            $("#search-result-table-users").tablesorter();
             $('#request-result-table').show();
             $('#userRolePaginationDivId').show();
 
@@ -618,4 +627,11 @@ function toggleEditUserEmailValidation() {
     } else {
         $('#editEmailIdErrMsg').hide();
     }
+}
+
+function sortHeader() {
+    $("tr.childRow").removeClass('in');
+    $('[name=showItemsInput]').val("false");
+    $('[name=showItemsIcon]').removeClass("fa-minus-circle");
+    $('[name=showItemsIcon]').addClass("fa-plus-circle");
 }
