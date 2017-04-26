@@ -223,6 +223,47 @@ public class RequestControllerUT extends BaseControllerUT {
     }
 
     @Test
+    public void testLoadCreateRequestForSamePatron(){
+
+        Mockito.when(requestController.getInstitutionDetailsRepository()).thenReturn(institutionDetailsRepository);
+        Mockito.when(requestController.getCustomerCodeDetailsRepository()).thenReturn(customerCodeDetailsRepository);
+        Mockito.when(requestController.getRequestTypeDetailsRepository()).thenReturn(requestTypeDetailsRepository);
+        Mockito.when(requestController.getUserAuthUtil()).thenReturn(userAuthUtil);
+
+        when(institutionDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
+        when(requestTypeDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
+        when(customerCodeDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
+        when(userAuthUtil.getUserDetails(request.getSession(),RecapConstants.REQUEST_ITEM_PRIVILEGE)).thenReturn(getUserDetails());
+
+        when(requestController.loadCreateRequestForSamePatron(model,request)).thenCallRealMethod();
+        when(request.getSession()).thenReturn(session);
+        ModelAndView modelAndView = requestController.loadCreateRequestForSamePatron(model,request);
+        assertNotNull(modelAndView);
+        assertEquals("request", modelAndView.getViewName());
+    }
+
+    @Test
+    public void goToSearchRequest(){
+        RequestForm requestForm = new RequestForm();
+        Page<RequestItemEntity> requestItemEntities = new PageImpl<RequestItemEntity>(new ArrayList<>());
+        Mockito.when(requestController.getInstitutionDetailsRepository()).thenReturn(institutionDetailsRepository);
+        Mockito.when(requestController.getRequestStatusDetailsRepository()).thenReturn(requestStatusDetailsRepository);
+        Mockito.when(requestController.getRequestServiceUtil()).thenReturn(requestServiceUtil);
+        when(requestServiceUtil.searchRequests(requestForm)).thenReturn(requestItemEntities);
+        RequestStatusEntity requestStatusEntity = new RequestStatusEntity();
+        requestStatusEntity.setRequestStatusDescription("RETRIEVAL ORDER PLACED");
+        InstitutionEntity institutionEntity = new InstitutionEntity();
+        institutionEntity.setInstitutionCode("PUL");
+        Mockito.when(requestController.getRequestStatusDetailsRepository().findAll()).thenReturn(Arrays.asList(requestStatusEntity));
+        Mockito.when(requestController.getInstitutionDetailsRepository().getInstitutionCodeForSuperAdmin()).thenReturn(Arrays.asList(institutionEntity));
+        Mockito.when(requestController.goToSearchRequest(requestForm,"45678912",bindingResult, model)).thenCallRealMethod();
+        ModelAndView modelAndView = requestController.goToSearchRequest(requestForm,"45678912",bindingResult, model);
+        assertNotNull(modelAndView);
+        assertEquals(modelAndView.getViewName(),"request :: #requestContentId");
+    }
+
+
+    @Test
     public void populateItem() throws Exception {
         RequestForm requestForm = new RequestForm();
         BibliographicEntity bibliographicEntity = saveBibSingleHoldingsSingleItem();
