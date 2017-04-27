@@ -10,13 +10,8 @@ import org.recap.model.usermanagement.UserDetailsForm;
 import org.recap.repository.jpa.CustomerCodeDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
-import javax.validation.Valid;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by akulak on 20/4/17.
@@ -80,6 +75,27 @@ public class RequestService {
             String[] recapDeliveryRestrictionsArray = recapDeliveryRestrictions.split(",");
             addDeliveryLocations(deliveryLocationsMap, recapDeliveryRestrictionsArray);
         }
+    }
+
+    public Map<String,String> sortDeliveryLocations(Map<String, String> deliveryLocationsMap){
+        LinkedHashMap<String,String> sortedDeliverLocationMap = new LinkedHashMap<>();
+        Set<Map.Entry<String, String>> entries = deliveryLocationsMap.entrySet();
+        Comparator<Map.Entry<String, String>> valueComparator = (e1, e2) -> {
+            String v1 = e1.getValue();
+            String v2 = e2.getValue();
+            return v1.compareTo(v2);
+        };
+        List<Map.Entry<String, String>> listOfEntries = new ArrayList<>(entries);
+        Collections.sort(listOfEntries, valueComparator);
+        LinkedHashMap<String, String> sortedByValue = new LinkedHashMap<>(listOfEntries.size());
+        for (Map.Entry<String, String> entry : listOfEntries) {
+            sortedByValue.put(entry.getKey(), entry.getValue());
+        }
+        Set<Map.Entry<String, String>> entrySetSortedByValue = sortedByValue.entrySet();
+        for (Map.Entry<String, String> mapping : entrySetSortedByValue) {
+            sortedDeliverLocationMap.put(mapping.getKey(), mapping.getValue());
+        }
+        return sortedDeliverLocationMap;
     }
 
 }

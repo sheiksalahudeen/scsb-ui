@@ -354,7 +354,6 @@ public class RequestController {
 
         List<String> requestingInstitutions = new ArrayList<>();
         List<String> requestTypes = new ArrayList<>();
-        List<CustomerCodeEntity> deliveryLocations = new ArrayList<>();
 
         Iterable<InstitutionEntity> institutionEntities = getInstitutionDetailsRepository().findAll();
         for (Iterator iterator = institutionEntities.iterator(); iterator.hasNext(); ) {
@@ -391,14 +390,6 @@ public class RequestController {
                 }
             }
             requestForm.setRequestType(RecapConstants.RETRIEVAL);
-        }
-
-        Iterable<CustomerCodeEntity> customerCodeEntities = getCustomerCodeDetailsRepository().findAll();
-        for (Iterator iterator = customerCodeEntities.iterator(); iterator.hasNext(); ) {
-            CustomerCodeEntity customerCodeEntity = (CustomerCodeEntity) iterator.next();
-            if (userDetailsForm.getLoginInstitutionId() == customerCodeEntity.getOwningInstitutionId() || userDetailsForm.isRecapUser() || userDetailsForm.isSuperAdmin()) {
-                deliveryLocations.add(customerCodeEntity);
-            }
         }
         requestForm.setRequestTypes(requestTypes);
         return requestForm;
@@ -453,6 +444,7 @@ public class RequestController {
                                     }
                                     if("true".equals(requestForm.getOnChange()) && StringUtils.isNotBlank(requestForm.getRequestingInstitution())){
                                         getRequestService().processCustomerAndDeliveryCodes(requestForm,deliveryLocationsMap,userDetailsForm,itemEntity,institutionId);
+                                        deliveryLocationsMap = sortDeliveryLocationForRecapUser(deliveryLocationsMap, userDetailsForm);
                                     }
                                 }
                             }
@@ -487,7 +479,6 @@ public class RequestController {
         }
         return jsonObject.toString();
     }
-
 
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=createRequest")
@@ -688,17 +679,10 @@ public class RequestController {
         return new ItemRequestInformation();
     }
 
-    private void addRecapDeliveryRestrictions(Map<String, String> deliveryLocationsMap, UserDetailsForm userDetailsForm, CustomerCodeEntity customerCodeEntity) {
+    private Map<String, String> sortDeliveryLocationForRecapUser(Map<String, String> deliveryLocationsMap, UserDetailsForm userDetailsForm) {
         if(userDetailsForm.isRecapUser()){
-            String recapDeliveryRestrictions = customerCodeEntity.getRecapDeliveryRestrictions();
-            String[] recapDeliveryRestrictionsArray = recapDeliveryRestrictions.split(",");
-            List<CustomerCodeEntity> recapDeliveryRestrictionsList = customerCodeDetailsRepository.findByCustomerCodeIn(Arrays.asList(recapDeliveryRestrictionsArray));
-            if (CollectionUtils.isNotEmpty(recapDeliveryRestrictionsList)) {
-                Collections.sort(recapDeliveryRestrictionsList);
-                for (CustomerCodeEntity byCustomerCode : recapDeliveryRestrictionsList) {
-                    deliveryLocationsMap.put(byCustomerCode.getCustomerCode(), byCustomerCode.getDescription());
-                }
-            }
+            deliveryLocationsMap = getRequestService().sortDeliveryLocations(deliveryLocationsMap);
         }
+        return deliveryLocationsMap;
     }
 }
