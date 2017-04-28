@@ -345,11 +345,7 @@ function editUserDetailsValidation(){
     var userDescription = $('#edituserDescription').val();
     var editDescLength = userDescription.length;
     if(editDescLength == 45){
-        $('#editUserDescriptionLengthErrMsg').show();
         $('#edituserDescriptionErrMsg').hide();
-    }
-    else {
-        $('#editUserDescriptionLengthErrMsg').hide();
     }
     if (isBlankValue(institutionId)) {
         $('#editinstitutionIdErrMsg').show();
@@ -459,13 +455,8 @@ function validateForm() {
     var userDescription = $('#userDescription').val();
     var length = userDescription.length;
     if(length == 45){
-        $('#userDescriptionLengthErrMsg').show();
         $('#userDescriptionErrMsg').hide();
     }
-    else {
-        $('#userDescriptionLengthErrMsg').hide();
-    }
-
     if (isBlankValue(newNetworkLoginId)) {
         $('#networkLoginIdErrMsg').show();
         isValid = false;
@@ -532,26 +523,27 @@ function validateEditEmailAddress() {
 
 function toggleUserNetworkLoginIdValidation() {
     var networkLoginId = $('#networkLoginId').val();
-    if (isBlankValue(networkLoginId)) {
+    if (isBlankValue(networkLoginId) && !isBlankValue(networkLoginId)) {
         $('#networkLoginIdErrMsg').show();
     } else {
         $('#networkLoginIdErrMsg').hide();
     }
 }
 
-function toggleUserDescriptionValidation() {
+function toggleUserDescriptionValidation(val) {
     var userDescription = $('#userDescription').val();
     var length = userDescription.length;
+    var len = val.value.length;
+    if (len > 45) {
+        val.value = val.value.substring(0, 45);
+    } else {
+        $('#remainingCharacters').text(45 - len);
+    }
     if(length == 45){
-        $('#userDescriptionLengthErrMsg').show();
         $('#userDescriptionErrMsg').hide();
     }
-    else {
-        $('#userDescriptionLengthErrMsg').hide();
-    }
-    if (isBlankValue(userDescription)) {
+    if (isBlankValue(userDescription) && !isBlankValue(userDescription)) {
         $('#userDescriptionErrMsg').show();
-        $('#userDescriptionLengthErrMsg').hide();
     } else {
         $('#userDescriptionErrMsg').hide();
     }
@@ -602,19 +594,21 @@ function toggleEditRoleValidation() {
     }
 }
 
-function toggleEditUserDescriptionValidation() {
+function toggleEditUserDescriptionValidation(val) {
+    $("#editTextCharactersRemaining").show();
     var edituserDescription = $('#edituserDescription').val();
     var editDescLength = edituserDescription.length;
-    if(editDescLength == 45){
-        $('#editUserDescriptionLengthErrMsg').show();
-        $('#edituserDescriptionErrMsg').hide();
+    var len = val.value.length;
+    if (len > 45) {
+        val.value = val.value.substring(0, 45);
+    } else {
+        $('#editCharactersRemaining').text(45 - len);
     }
-    else {
-        $('#editUserDescriptionLengthErrMsg').hide();
+    if(editDescLength == 45){
+        $('#edituserDescriptionErrMsg').hide();
     }
     if (isBlankValue(edituserDescription)) {
         $('#edituserDescriptionErrMsg').show();
-        $('#editUserDescriptionLengthErrMsg').hide();
     } else {
         $('#edituserDescriptionErrMsg').hide();
     }

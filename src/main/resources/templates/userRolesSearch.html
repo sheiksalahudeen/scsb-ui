@@ -305,9 +305,9 @@
                                         <div class="col-sm- col-sm-6">
                                             <input class="form-control themed-input" name="userDescription"
                                                    id="userDescription" th:field="${userRoleForm.userDescription}"
-                                                   placeholder="" type="text" th:onkeyup="'javascript:toggleUserDescriptionValidation()'" maxlength="45"/>
-                                            <span id="userDescriptionErrMsg" style="color: red;display: none">Please provide user description </span>
-                                            <span id="userDescriptionLengthErrMsg" style="color: red;display: none">Only 45 characters are allowed</span>
+                                                   placeholder="" type="text" th:onkeyup="'javascript:toggleUserDescriptionValidation(this)'" maxlength="45"/>
+                                            <span id="userDescriptionErrMsg" style="color: red;display: none">Please provide User Name </span>
+                                            <p>Remaining Characters : <span id="remainingCharacters">45</span></p>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -431,12 +431,12 @@
                                                     class="error-color">*</span></label>
                                         </div>
                                         <div class="col-sm- col-sm-6">
-                                            <input class="form-control themed-input" name="edituserDescription" th:onkeyup="'javascript:toggleEditUserDescriptionValidation()'"
+                                            <input class="form-control themed-input" name="edituserDescription" th:onkeyup="'javascript:toggleEditUserDescriptionValidation(this)'"
                                                    id="edituserDescription"
                                                    th:field="${userRoleForm.editUserDescription}" placeholder=""
                                                    type="text" maxlength="45"/>
                                             <span id="edituserDescriptionErrMsg" style="color: red;display: none">Please provide user description </span>
-                                            <span id="editUserDescriptionLengthErrMsg" style="color: red;display: none">Only 45 characters are allowed</span>
+                                            <p id="editTextCharactersRemaining" style="display: none">Characters Remaining : <span id="editCharactersRemaining">45</span></p>
                                         </div>
                                     </div>
                                     <div class="form-group">

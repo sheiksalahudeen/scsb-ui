@@ -213,25 +213,25 @@ function toggleNewCgdValidation() {
     }
 }
 
-function toggleCgdNotesValidation() {
+function toggleCgdNotesValidation(val) {
     var oldCgd = $('#cgdField').val();
     var newCgd = $('#newCGD').val();
     var CGDChangeNotes = $('#CGDChangeNotes').val();
     var cgdNoteLength = CGDChangeNotes.length;
+    var len = val.value.length;
+    if (len > 2000) {
+        val.value = val.value.substring(0, 2000);
+    } else {
+        $('#cgdNotesRemainingCharacters').text(2000 - len);
+    }
     if (isBlankValue(CGDChangeNotes)) {
         $('#cgdNotesErrorMessage').show();
-        $('#cgdNotesLengthErrMsg').hide();
     } else {
         $('#cgdNotesErrorMessage').hide();
     }
     if(cgdNoteLength == 2000) {
-        $('#cgdNotesLengthErrMsg').show();
         $('#cgdNotesErrorMessage').hide();
     }
-    else{
-        $('#cgdNotesLengthErrMsg').hide();
-    }
-
 }
 
 function toggleDeliveryLocationValidation() {
@@ -244,22 +244,23 @@ function toggleDeliveryLocationValidation() {
     }
 }
 
-function toggleDeaccessionNotesValidation() {
+function toggleDeaccessionNotesValidation(val) {
     var DeaccessionNotes = $('#DeaccessionNotes').val();
     var deaccessionNotesLength = DeaccessionNotes.length;
+    var len = val.value.length;
+    if (len > 2000) {
+        val.value = val.value.substring(0, 2000);
+    } else {
+        $('#deaccessionNotesRemainingCharacters').text(2000 - len);
+    }
     if (isBlankValue(DeaccessionNotes)) {
         $('#deaccessionNotesErrorMessage').show();
-        $('#deaccessionNotesLengthErrMsg').hide();
     } else {
         $('#deaccessionNotesErrorMessage').hide();
     }
     if(deaccessionNotesLength == 2000){
-        $('#deaccessionNotesLengthErrMsg').show();
         $('#deaccessionNotesErrorMessage').hide();
-    }else{
-        $('#deaccessionNotesLengthErrMsg').hide();
     }
-
 }
 
 function isBlankValue(value) {
