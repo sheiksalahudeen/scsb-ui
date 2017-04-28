@@ -291,7 +291,7 @@
                                             <div class="form-group">
                                                 <div class="col-md-3 col-sm-4 text-right margin-top-15"><label for="itemTitleId" class="fontcolor-dark">Item Title</label></div>
                                                 <div class="col-md-9 col-sm-8">
-                                                    <textarea type="text"
+                                                    <textarea type="text" tabindex="-1"
                                                               th:disabled="${requestForm.submitted}"
                                                               id="itemTitleId"
                                                               name="itemTitleName"
@@ -306,7 +306,7 @@
                                             <div class="form-group">
                                                 <div class="col-md-6 col-sm-6 text-right margin-top-15"><label for="itemOwningInstitutionId" class="fontcolor-dark">Item Owning Institution</label></div>
                                                 <div class="col-md-6 col-sm-6">
-                                                    <input type="text"
+                                                    <input type="text" tabindex="-1"
                                                            th:disabled="${requestForm.submitted}"
                                                            id="itemOwningInstitutionId"
                                                            name="itemOwningInstitutionName"
@@ -479,7 +479,7 @@
                                         <div class="col-md-8 col-sm-12">
                                             <div class="form-group">
                                                 <div class="col-md-3 col-sm-2 text-right margin-top-15"><label for="requestNotesId" class="fontcolor-dark">Request Notes</label>
-                                                    <a href="#"><span id="noteToolTip" class="fa fa-question-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Maximum of only 2000 characters allowed"></span></a></div>
+                                                    <a href="#" tabindex="-1"><span id="noteToolTip" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Maximum of only 2000 characters allowed"></span></a></div>
                                                 <div class="col-md-9 col-sm-10">
                                                     <textarea type="text"
                                                               th:disabled="${requestForm.submitted}"
@@ -493,6 +493,7 @@
                                                               maxlength="2000">
                                                     </textarea>
                                                     <span id="notesLengthErrMsg" style="color: red;display: none">Only 2000 characters are allowed.</span>
+                                                    <p>Remaining Characters : <span id="remainingCharacters">2000</span></p>
                                                 </div>
                                             </div>
                                         </div>

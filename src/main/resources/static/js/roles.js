@@ -216,11 +216,7 @@ function isValidRole() {
     var permissionName = $('#permissionNameId').val();
     var roleDescLength = roleDescription.length;
     if(roleDescLength == 45){
-        $('#roleDescriptionLengthError').show();
         $('#roleDescriptionErrorMessage').hide();
-    }
-    else {
-        $('#roleDescriptionLengthError').hide();
     }
     if (isBlankValue(roleName)) {
         $('#roleNameErrorMessage').show();
@@ -250,11 +246,7 @@ function isValidEdit(){
     var permissionName = $('#editPermissionNameId').val();
     var roleDescLength = roleDescription.length;
     if(roleDescLength == 45){
-        $('#editRoleDescriptionLengthErrMsg').show();
         $('#editRoleDescriptionErrorMessage').hide();
-    }
-    else {
-        $('#editRoleDescriptionLengthErrMsg').hide();
     }
     if (isBlankValue(roleName)) {
         $('#editRoleNameErrorMessage').show();
@@ -289,26 +281,27 @@ function isBlankValue(value) {
 
 function toggleRoleNameValidation() {
     var roleNameId = $('#roleNameId').val();
-    if (isBlankValue(roleNameId)) {
+    if (isBlankValue(roleNameId) && !isBlankValue(roleNameId)) {
         $('#roleNameErrorMessage').show();
     } else {
         $('#roleNameErrorMessage').hide();
     }
 }
 
-function toggleRoleDescriptionValidation() {
+function toggleRoleDescriptionValidation(val) {
     var roleDescriptionId = $('#roleDescriptionId').val();
     var roleDescLength = roleDescriptionId.length;
+    var len = val.value.length;
+    if (len > 45) {
+        val.value = val.value.substring(0, 45);
+    } else {
+        $('#roleDescCharactersRemaining').text(45 - len);
+    }
     if(roleDescLength == 45){
-        $('#roleDescriptionLengthError').show();
         $('#roleDescriptionErrorMessage').hide();
     }
-    else {
-        $('#roleDescriptionLengthError').hide();
-    }
-    if (isBlankValue(roleDescriptionId)) {
+    if (isBlankValue(roleDescriptionId) && !isBlankValue(roleDescriptionId)) {
         $('#roleDescriptionErrorMessage').show();
-        $('#roleDescriptionLengthError').hide();
     } else {
         $('#roleDescriptionErrorMessage').hide();
     }
@@ -323,14 +316,17 @@ function togglePermissionValidation() {
     }
 }
 
-function editDescLengthValidation(){
+function editDescLengthValidation(val){
+    $("#charactersRemainingInRoleDesc").show();
     var roleDescription = $('#editRoleDescription').val();
     var roleDescLength = roleDescription.length;
-    if(roleDescLength == 45){
-        $('#editRoleDescriptionLengthErrMsg').show();
-        $('#editRoleDescriptionErrorMessage').hide();
+    var len = val.value.length;
+    if (len > 45) {
+        val.value = val.value.substring(0, 45);
+    } else {
+        $('#editRoleDescCharactersRemaining').text(45 - len);
     }
-    else {
-        $('#editRoleDescriptionLengthErrMsg').hide();
+    if(roleDescLength == 45){
+        $('#editRoleDescriptionErrorMessage').hide();
     }
 }

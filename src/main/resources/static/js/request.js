@@ -428,7 +428,7 @@ function resetDefaults() {
 
 function toggleItemBarcodeValidation() {
     var itemBarcode = $('#itemBarcodeId').val();
-    if (isBlankValue(itemBarcode)) {
+    if (isBlankValue(itemBarcode) && !isBlankValue(itemBarcode)) {
         $('#itemBarcodeErrorMessage').show();
         $('#itemBarcodeNotFoundErrorMessage').hide();
         $('#itemTitleId').val('');
@@ -453,7 +453,7 @@ function toggleRequestingInstitutionValidation() {
 
 function togglePatronBarcodeValidation() {
     var patronBarcode = $('#patronBarcodeId').val();
-    if (isBlankValue(patronBarcode)) {
+    if (isBlankValue(patronBarcode) && !isBlankValue(patronBarcode)) {
         $('#patronBarcodeErrorMessage').show();
     } else {
         $('#patronBarcodeErrorMessage').hide();
@@ -560,7 +560,7 @@ function showNotesPopup(index) {
 
 function togglePatronBarcodeSearch(){
     var patronBarcode = $('#patronBarcode').val();
-    if(isBlankValue(patronBarcode)){
+    if(isBlankValue(patronBarcode) && !isBlankValue(patronBarcode)){
         $('#patronBarcodeSearchError').show();
     }
     else{
@@ -570,7 +570,7 @@ function togglePatronBarcodeSearch(){
 
 function toggleItemBarcodeSearch(){
     var itemBarcode = $('#itemBarcode').val();
-    if(isBlankValue(itemBarcode)){
+    if(isBlankValue(itemBarcode) && !isBlankValue(itemBarcode)){
         $('#itemBarcodeSearchError').show();
     }
     else{
@@ -650,9 +650,15 @@ function populateDeliveryLocations(){
     });
 }
 
-function NotesLengthValidation(o){
-    o.style.height = "1px";
-    o.style.height = (25+o.scrollHeight)+"px";
+function NotesLengthValidation(val){
+    val.style.height = "1px";
+    val.style.height = (25+val.scrollHeight)+"px";
+    var len = val.value.length;
+    if (len > 2000) {
+        val.value = val.value.substring(0, 2000);
+    } else {
+        $('#remainingCharacters').text(2000 - len);
+    }
     var notesLength = $('#requestNotesId').val().length;
     if (notesLength == 2000){
         $('#notesLengthErrMsg').show();
