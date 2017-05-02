@@ -355,7 +355,7 @@
                                                             <div class="col-sm-8 padding-left-0">
                                                                 <textarea class="form-control themed-input" name="CGDChangeNotes" id="CGDChangeNotes" th:field="${collectionForm.cgdChangeNotes}" th:if="${!collectionForm.submitted}" th:onkeyup="'javascript:toggleCgdNotesValidation(this)'" maxlength="2000"></textarea>
                                                                 <span id="cgdNotesErrorMessage" style="color: red;">Please enter CGD change notes.</span>
-                                                                <p>Remaining Characters : <span id="cgdNotesRemainingCharacters">2000</span></p>
+                                                                <p id="cgdRemainingCharacter">Remaining Characters : <span id="cgdNotesRemainingCharacters">2000</span></p>
                                                                 <div class="form-group">
                                                                     <span id="CGDNoteReadOnly" th:if="${collectionForm.submitted}" th:text="${collectionForm.cgdChangeNotes}"></span>
                                                                 </div>
@@ -416,7 +416,7 @@
                                                             <div class="col-sm-8 padding-left-0 padding-top-10">
                                                                 <textarea class="form-control themed-input" name="DeaccessionNotes" id="DeaccessionNotes" th:field="${collectionForm.deaccessionNotes}" th:if="${!collectionForm.submitted}" th:onkeyup="'javascript:toggleDeaccessionNotesValidation(this)'" maxlength="2000"></textarea>
                                                                 <span id="deaccessionNotesErrorMessage" style="color: red;">Please enter deaccession notes.</span>
-                                                                <p>Remaining Characters : <span id="deaccessionNotesRemainingCharacters">2000</span></p>
+                                                                <p id="deaccessionRemainingCharacters">Remaining Characters : <span id="deaccessionNotesRemainingCharacters">2000</span></p>
                                                                 <span th:if="${collectionForm.submitted}" th:text="${collectionForm.deaccessionNotes}"></span>
                                                             </div>
                                                         </div>

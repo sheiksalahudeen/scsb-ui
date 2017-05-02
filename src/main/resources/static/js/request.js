@@ -376,6 +376,7 @@ function createRequest() {
                 $('#createRequestSection').unblock();
                 $('#createRequestSection').html(response);
                 $("#textField").hide();
+                $("#requestNotesRemainingCharacters").hide();
             }
         });
     }
