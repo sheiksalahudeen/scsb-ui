@@ -143,12 +143,14 @@ function collectionUpdate() {
                     $('#cgdNotesErrorMessage').hide();
                     $('#locationErrorMessage').hide();
                     $('#deaccessionNotesErrorMessage').hide();
+                    $('#cgdRemainingCharacter').hide();
                 } else if (deaccession) {
                     $('#editCDG-section').hide();
                     $('#cgdErrorMessage').hide();
                     $('#locationErrorMessage').hide();
                     $('#deaccessionNotesErrorMessage').hide();
                     $('#cgdNotesErrorMessage').hide();
+                    $('#deaccessionRemainingCharacters').hide();
                 }
             }
         });
