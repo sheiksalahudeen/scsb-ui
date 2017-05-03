@@ -277,7 +277,7 @@ public class RequestControllerUT extends BaseControllerUT {
         when(requestController.populateItem(requestForm, bindingResult, model,request)).thenCallRealMethod();
         String response = requestController.populateItem(requestForm, bindingResult, model,request);
         assertNotNull(response);
-        assertTrue(response.contains("User is not permitted to request private item(s)"));
+        assertTrue(response.contains("User is not permitted to request private item(s) from other partners"));
     }
 
     @Test
