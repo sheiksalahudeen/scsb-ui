@@ -490,11 +490,11 @@
                                                         </tr>
                                                         <tr class="border-style-bottom bgcolored large-font fontcolor-dark border-style-top-white">
                                                             <td class="fontcolor-dark large-font text-right">Subtotal</td>
-                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.accessionPrivatePulCount + reportsForm.accessionSharedPulCount + reportsForm.accessionPrivatePulCount,0,'COMMA')}"></span>
+                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.accessionPrivatePulCount + reportsForm.accessionSharedPulCount + reportsForm.accessionOpenPulCount,0,'COMMA')}"></span>
                                                             </td>
-                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.accessionPrivateCulCount + reportsForm.accessionSharedCulCount + reportsForm.accessionPrivateCulCount,0,'COMMA')}"></span>
+                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.accessionPrivateCulCount + reportsForm.accessionSharedCulCount + reportsForm.accessionOpenCulCount,0,'COMMA')}"></span>
                                                             </td>
-                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.accessionPrivateNyplCount + reportsForm.accessionSharedNyplCount + reportsForm.accessionPrivateNyplCount,0,'COMMA')}"></span>
+                                                            <td><span th:text="${#numbers.formatInteger(reportsForm.accessionPrivateNyplCount + reportsForm.accessionSharedNyplCount + reportsForm.accessionOpenNyplCount,0,'COMMA')}"></span>
                                                             </td>
                                                         </tr>
                                                         <tr>
