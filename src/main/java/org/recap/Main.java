@@ -47,12 +47,7 @@ public class Main {
 	public FilterRegistrationBean getFileterRegisteredBean(){
 		FilterRegistrationBean filterRegistrationBean= new FilterRegistrationBean();
 		Set<String> urlPatterns=new HashSet<>();
-		urlPatterns.add("/search");
-		urlPatterns.add("/request");
-		urlPatterns.add("/collection");
-		urlPatterns.add("/reports");
-		urlPatterns.add("/roles");
-		urlPatterns.add("/userRoles");
+		urlPatterns.add("/*");
 		filterRegistrationBean.setUrlPatterns(urlPatterns);
 		filterRegistrationBean.setFilter(new SessionFilter());
 		return filterRegistrationBean;

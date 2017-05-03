@@ -165,17 +165,21 @@ public class ReCAPExceptionTranslationFilter extends GenericFilterBean {
         requestCache.saveRequest(request, response);
         logger.debug("Calling Authentication entry point.");
         String institution = HelperUtil.getInstitutionFromRequest(request);
-        if(StringUtils.equals(institution, RecapConstants.NYPL)) {
-            this.authenticationEntryPoint.commence(request,response,reason);
-        } else {
-            String urlProperty = RecapConstants.CAS + institution + RecapConstants.SERVICE_LOGIN;
-            String url = HelperUtil.getBean(PropertyValueProvider.class).getProperty(urlProperty);
+        if (StringUtils.isNotBlank(institution)) {
+            if(StringUtils.equals(institution, RecapConstants.NYPL)) {
+                this.authenticationEntryPoint.commence(request,response,reason);
+            } else {
+                String urlProperty = RecapConstants.CAS + institution + RecapConstants.SERVICE_LOGIN;
+                String url = HelperUtil.getBean(PropertyValueProvider.class).getProperty(urlProperty);
 
-            //Calling cas entry point based on institution type.
-            CasAuthenticationEntryPoint casAuthenticationEntryPoint = new CasAuthenticationEntryPoint();
-            casAuthenticationEntryPoint.setLoginUrl(url);
-            casAuthenticationEntryPoint.setServiceProperties(casPropertyProvider.getServiceProperties());
-            casAuthenticationEntryPoint.commence(request, response, reason);
+                //Calling cas entry point based on institution type.
+                CasAuthenticationEntryPoint casAuthenticationEntryPoint = new CasAuthenticationEntryPoint();
+                casAuthenticationEntryPoint.setLoginUrl(url);
+                casAuthenticationEntryPoint.setServiceProperties(casPropertyProvider.getServiceProperties());
+                casAuthenticationEntryPoint.commence(request, response, reason);
+            }
+        } else {
+            response.sendRedirect("/");
         }
 
     }
