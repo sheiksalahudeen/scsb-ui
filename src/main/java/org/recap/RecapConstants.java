@@ -221,7 +221,7 @@ public class RecapConstants {
     public static final String REQUEST_FORM="requestForm";
 
     public static final String REQUEST_ID = "requestId";
-    public static final String REQUEST_PRIVATE_ERROR_USER_NOT_PERMITTED = "User is not permitted to request private item(s)";
+    public static final String REQUEST_PRIVATE_ERROR_USER_NOT_PERMITTED = "User is not permitted to request private item(s) from other partners";
     public static final String REQUEST_ERROR_USER_NOT_PERMITTED = "User is not permitted to request item(s)";
 
     public static final String SEARCH_RESULT_ERROR_NO_RECORDS_FOUND="No search results found. Please refine search conditions.";
