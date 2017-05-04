@@ -71,7 +71,7 @@ function loadCreateRequestForSamePatron() {
             $('#patronBarcodeId').val(patronBarcode);
             $('#patronEmailId').val(patronEmailId);
             $('#requestingInstitutionId').val(requestingInstitutionId);
-            $('.EDDdetails-section').hide();
+            $("#EDD").hide();
             $('#deliverylocation_request').show();
             $('#deliveryLocationId').empty();
         }
@@ -263,19 +263,6 @@ function populateItemDetails() {
     }
 }
 
-/***Request Tab Create Request Form Selecrt EDD Section Show/Hide ***/
-$(function() {
-    $('#requestTypeId').change(function(){
-        $('.EDDdetails-section').hide();
-        $('#' + $(this).val()).show();
-        if ($(this).find(':selected').val() === 'EDD') {
-            $('#deliverylocation_request').hide();
-        } else {
-            $('#deliverylocation_request').show();
-        }
-    });
-});
-
 function isValidInputs() {
     var isValid = true;
 
@@ -360,6 +347,7 @@ function isValidInputs() {
 }
 
 function createRequest() {
+    var requestType = $('#requestTypeId').val();
     if (isValidInputs()) {
         var $form = $('#request-form');
         var url = $form.attr('action') + "?action=createRequest";
@@ -373,10 +361,21 @@ function createRequest() {
                 });
             },
             success: function (response) {
-                $('#createRequestSection').unblock();
-                $('#createRequestSection').html(response);
-                $("#textField").hide();
-                $("#requestNotesRemainingCharacters").hide();
+                if(requestType == 'EDD'){
+                    $('#createRequestSection').unblock();
+                    $('#createRequestSection').html(response);
+                    $("#textField").hide();
+                    $("#requestNotesRemainingCharacters").hide();
+                    $("#emailMandatory").show();
+                    $('#deliverylocation_request').hide();
+                    $("#EDD").css("display", "");
+                }
+                else {
+                    $('#createRequestSection').unblock();
+                    $('#createRequestSection').html(response);
+                    $("#textField").hide();
+                    $("#requestNotesRemainingCharacters").hide();
+                }
             }
         });
     }
@@ -472,7 +471,7 @@ function toggleDeliveryLocationValidation() {
 
 function toggleStartPageValidation() {
     var startPage = $('#StartPage').val();
-    if (isBlankValue(startPage)) {
+    if (isBlankValue(startPage) && !isBlankValue(startPage)) {
         $('#startPageErrorMessage').show();
     } else {
         $('#startPageErrorMessage').hide();
@@ -481,7 +480,7 @@ function toggleStartPageValidation() {
 
 function toggleEndPageValidation() {
     var endPage = $('#EndPage').val();
-    if (isBlankValue(endPage)) {
+    if (isBlankValue(endPage) && !isBlankValue(endPage)) {
         $('#endPageErrorMessage').show();
     } else {
         $('#endPageErrorMessage').hide();
@@ -490,7 +489,7 @@ function toggleEndPageValidation() {
 
 function toggleArticleTitleValidation() {
     var articleTitle = $('#ArticleChapterTitle').val();
-    if (isBlankValue(articleTitle)) {
+    if (isBlankValue(articleTitle) && !isBlankValue(articleTitle)) {
         $('#articleTitleErrorMessage').show();
     } else {
         $('#articleTitleErrorMessage').hide();
@@ -512,7 +511,7 @@ function createRequestSamePatron() {
     $('#patronBarcodeId').val($('#patronBarcodeInRequest').html());
     $('#patronEmailId').val($('#patronEmailAddress').html());
     $('#requestingInstitutionId').val($('#requestingInstitution').html());
-    $('.EDDdetails-section').hide();
+    $("#EDD").hide();
     $('#deliverylocation_request').show();
     $('#deliveryLocationId').empty();
 }
@@ -583,7 +582,7 @@ function toggleEmailAddress(){
     var requestType = $('#requestTypeId').val();
     if(requestType == 'EDD') {
         var patronEmailId = $('#patronEmailId').val();
-        if (isBlankValue(patronEmailId)) {
+        if (isBlankValue(patronEmailId) && !isBlankValue(patronEmailId)) {
             $('#patronEmailIdErrorMessage').hide();
             $('#EmailMandatoryErrorMessage').show();
         }
@@ -595,10 +594,15 @@ function toggleEmailAddress(){
 
 function emailMandatory(){
     var requestType = $('#requestTypeId').val();
-    if(requestType == 'EDD'){
+    $("#EDD").hide();
+    $("#EDD").css("display","none");
+    if (requestType === 'EDD') {
+        $("#EDD").css("display","");
+        $('#deliverylocation_request').hide();
+        $('#deliveryLocationId').val("");
         $('#emailMandatory').show();
-    }
-    else {
+    } else {
+        $('#deliverylocation_request').show();
         $('#emailMandatory').hide();
         $('#EmailMandatoryErrorMessage').hide();
     }
