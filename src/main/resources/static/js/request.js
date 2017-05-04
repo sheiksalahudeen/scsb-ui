@@ -71,7 +71,7 @@ function loadCreateRequestForSamePatron() {
             $('#patronBarcodeId').val(patronBarcode);
             $('#patronEmailId').val(patronEmailId);
             $('#requestingInstitutionId').val(requestingInstitutionId);
-            $('.EDDdetails-section').hide();
+            $("#EDD").hide();
             $('#deliverylocation_request').show();
             $('#deliveryLocationId').empty();
         }
@@ -511,7 +511,7 @@ function createRequestSamePatron() {
     $('#patronBarcodeId').val($('#patronBarcodeInRequest').html());
     $('#patronEmailId').val($('#patronEmailAddress').html());
     $('#requestingInstitutionId').val($('#requestingInstitution').html());
-    $('.EDDdetails-section').hide();
+    $("#EDD").hide();
     $('#deliverylocation_request').show();
     $('#deliveryLocationId').empty();
 }
@@ -594,7 +594,7 @@ function toggleEmailAddress(){
 
 function emailMandatory(){
     var requestType = $('#requestTypeId').val();
-    $('.EDDdetails-section').hide();
+    $("#EDD").hide();
     $("#EDD").css("display","none");
     if (requestType === 'EDD') {
         $("#EDD").css("display","");
