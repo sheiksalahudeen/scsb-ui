@@ -44,12 +44,12 @@
                                         <td>
                                             <input type="hidden" data-th-id="'scheduleJobsRowLastExecutedTime-'+ ${jobStat.index}"
                                                    th:field="${scheduleJobsForm.jobEntities[__${jobStat.index}__].lastExecutedTime}"/>
-                                            <span th:text="${job.lastExecutedTime}"></span>
+                                            <span th:text="${job.lastExecutedTime} ? ${#dates.format(job.lastExecutedTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
                                         </td>
                                         <td>
                                             <input type="hidden" data-th-id="'scheduleJobsRowNextRunTime-'+ ${jobStat.index}"
                                                    th:field="${scheduleJobsForm.jobEntities[__${jobStat.index}__].nextRunTime}"/>
-                                            <span th:text="${job.nextRunTime}"></span>
+                                            <span th:text="${job.nextRunTime} ? ${#dates.format(job.nextRunTime, 'yyyy-MM-dd HH:mm:ss')}"></span>
                                         </td>
                                         <td>
                                             <input type="hidden" data-th-id="'scheduleJobsRowCronExpression-'+ ${jobStat.index}"
