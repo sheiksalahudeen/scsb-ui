@@ -342,8 +342,9 @@
                                             <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].availability}"/>
                                             <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].leaderMaterialType}"/>
                                             <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].showItems}"/>
+                                            <input type="hidden" th:value="false" data-th-id="'showItemsInput-'+ ${searchResultStat.index}" name="showItemsInput" />
                                             <td data-th-id="'searchResultsDataPlus-'+ ${searchResultStat.index}" align="center">
-                                                <div class="checkbox table-body-checkbox">
+                                                <div class="checkbox table-body-checkbox" th:unless="${searchResult.showItems}">
                                                     <label>
                                                         <input type="checkbox" id="selected" name="selected" class="selectOuterCBClass"
                                                                th:unless="${searchResult.showItems}"
@@ -353,6 +354,11 @@
                                                         <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                                                         </input>
                                                     </label>
+                                                </div>
+                                                <div>
+                                                    <a style="margin-left: 20px;" class="btn" th:if="${searchResult.showItems}" data-toggle="collapse" th:attr="data-target='.row' + ${searchResultStat.index}" th:onclick="'javascript:showItems('+${searchResultStat.index}+')'">
+                                                        <i data-th-id="'showItemsIcon-'+ ${searchResultStat.index}" name="showItemsIcon" class="fa fa-plus-circle" aria-hidden="true" style="font-size: 25px;"></i>
+                                                    </a>
                                                 </div>
                                             </td>
                                             <td data-th-id="'searchResultsDataTitle-'+ ${searchResultStat.index}">
@@ -394,10 +400,6 @@
                                                 <span data-th-id="'searchResultsDataURS-'+ ${searchResultStat.index}" th:text="${searchResult.useRestriction == 'No Restrictions'} ? '' : ${searchResult.useRestriction}"></span>
                                             </td>
                                             <td th:if="${!barcodeRestricted}" data-th-id="'searchResultsDataBar-'+ ${searchResultStat.index}">
-                                                <input data-th-id="'showItemsInput-'+ ${searchResultStat.index}" name="showItemsInput" type="hidden" th:value="false"/>
-                                                <a class="btn" th:if="${searchResult.showItems}" data-toggle="collapse" th:attr="data-target='.row' + ${searchResultStat.index}" th:onclick="'javascript:showItems('+${searchResultStat.index}+')'">
-                                                    <i data-th-id="'showItemsIcon-'+ ${searchResultStat.index}" name="showItemsIcon" class="fa fa-plus-circle" aria-hidden="true" style="font-size: 25px;"></i>
-                                                </a>
                                                 <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].barcode}"/>
                                                 <span data-th-id="'searchResultsDataBarS-'+ ${searchResultStat.index}" th:text="${searchResult.barcode}"></span>
                                             </td>
@@ -427,7 +429,7 @@
                                             <th data-th-id="'searchItemResultsCCHead-' + ${searchResultStat.index}" th:title="'Customer Code'" style="background-color: grey; color: white;">CC</th>
                                             <th data-th-id="'searchItemResultsCGDHead-' + ${searchResultStat.index}" th:title="'Collection Group Designation'" style="background-color: grey; color: white;">CGD</th>
                                             <th data-th-id="'searchItemResultsURHead-' + ${searchResultStat.index}" th:title="'Use Restriction'" style="background-color: grey; color: white;">Use Restriction</th>
-                                            <th data-th-id="'searchItemResultsBarHead-' + ${searchResultStat.index}" th:title="'Barcode'" style="background-color: grey; color: white;">Barcode</th>
+                                            <th th:if="${!session.isBarcodeRestricted}" data-th-id="'searchItemResultsBarHead-' + ${searchResultStat.index}" th:title="'Barcode'" style="background-color: grey; color: white;">Barcode</th>
                                         </tr>
                                         <tr data-th-if="${searchResult.showItems}" data-th-id="'searchItemResultsRow-' + ${searchResultStat.index} + '-' + ${searchItemResultStat.index}" th:each="searchItemResult,searchItemResultStat : ${searchResult.searchItemResultRows}" class="collapse childRow" th:classappend="'row' + ${searchResultStat.index}">
                                             <td></td>
@@ -469,7 +471,7 @@
                                                 <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].searchItemResultRows[__${searchItemResultStat.index}__].useRestriction}"/>
                                                 <span data-th-id="'searchItemResultsDataURS-' + ${searchResultStat.index} + '-' + ${searchItemResultStat.index}" th:text="${searchItemResult.useRestriction == 'No Restrictions'} ? '' : ${searchItemResult.useRestriction}"></span>
                                             </td>
-                                            <td data-th-id="'searchItemResultsDataBar-' + ${searchResultStat.index} + '-' + ${searchItemResultStat.index}">
+                                            <td th:if="${!session.isBarcodeRestricted}" data-th-id="'searchItemResultsDataBar-' + ${searchResultStat.index} + '-' + ${searchItemResultStat.index}">
                                                 <input type="hidden" th:field="*{searchResultRows[__${searchResultStat.index}__].searchItemResultRows[__${searchItemResultStat.index}__].barcode}"/>
                                                 <span data-th-id="'searchItemResultsDataBarS-' + ${searchResultStat.index} + '-' + ${searchItemResultStat.index}" th:text="${searchItemResult.barcode}"></span>
                                             </td>
