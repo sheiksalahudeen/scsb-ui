@@ -277,8 +277,11 @@
                                                 <div class="inline-box margin-right-10">
                                                     <img class="status" src="images/inRecap.png" alt="In ReCAP" style="width:20px;height:25px;"/><span class="align-middle padding-5">In ReCAP</span>
                                                 </div>
-                                                <div class="inline-box">
+                                                <div class="inline-box margin-right-10">
                                                     <img class="status" src="images/out.png" alt="Out" style="width:20px;height:25px;"/><span class="align-middle padding-5">OUT</span>
+                                                </div>
+                                                <div class="inline-box margin-right-10">
+                                                    <img class="status" src="images/mixed.png" alt="Partial Availability" style="width:20px;height:20px"/><span class="align-middle padding-5">Partial Availability</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -366,6 +369,7 @@
                                                 <span class="status1">
                                                     <img src="images/inRecap.png" alt="In ReCAP" style="width:20px;height:25px;" th:if="${searchResult.availability == 'Available'}"/>
                                                     <img src="images/out.png" alt="Out" style="width:20px;height:25px;" th:if="${searchResult.availability == 'Not Available'}"/>
+                                                    <img src="images/mixed.png" alt="mixed" style="width:20px;height:20px;" th:if="${searchResult.availability == 'MixedStatus'}"/>
                                                 </span>
                                                 <span class="title_text">
                                                     <a th:href="@{/openMarcRecord(bibId=${searchResult.bibId})}" target="_blank" data-th-id="'searchResultsDataTitleS-'+ ${searchResultStat.index}" th:text="${searchResult.title}"></a>
