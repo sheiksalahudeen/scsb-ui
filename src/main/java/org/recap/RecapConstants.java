@@ -487,6 +487,8 @@ public class RecapConstants {
 
     public static final String LOGGED_IN_INSTITUTION= "loggedInInstitution";
 
+    public static final String PROCESSING_STATUS= "PROCESSING ...";
+
     private RecapConstants(){
         //Do nothing
     }
