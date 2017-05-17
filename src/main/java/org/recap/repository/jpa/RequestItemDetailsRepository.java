@@ -110,4 +110,6 @@ public interface RequestItemDetailsRepository extends JpaRepository<RequestItemE
 
     @Query(value = "select request from RequestItemEntity request inner join  request.requestStatusEntity status where request.requestingInstitutionId = :institutionId and status.requestStatusDescription = :status")
     Page<RequestItemEntity> findByStatusAndInstitution(Pageable pageable, @Param("status") String status,@Param("institutionId")Integer institutionId);
+
+    List<RequestItemEntity> findByRequestIdIn(List<Integer> requestId);
 }

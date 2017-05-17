@@ -119,6 +119,7 @@ function goToSearchRequest(patronBarcodeInRequest){
                 $('#noteAll').hide();
                 $('#noteActive').hide();
             }
+            statusChange();
         }
     });
 
@@ -161,7 +162,6 @@ function clearRequests() {
     $('#notesLengthErrMsg').hide();
 }
 
-
 function searchRequestsByAction(action) {
     var $form = $('#request-form');
     var url = $form.attr('action') + "?action=" + action;
@@ -186,8 +186,37 @@ function searchRequestsByAction(action) {
                 $('#noteAll').hide();
                 $('#noteActive').hide();
             }
+            statusChange();
         }
     });
+}
+
+function statusChange(){
+    var status = [];
+    $("[name='statusChange']").each(function( index ) {
+        var statusVar = $( this ).val();
+        status.push(statusVar);
+    });
+    if (status.length != 0){
+        $.ajax({
+            url: "/request/refreshStatus",
+            type: 'get',
+            data: {status:status},
+            success: function(response){
+                var jsonResponse = JSON.parse(response);
+                var changeStatus = jsonResponse['status'];
+                if(changeStatus != null && changeStatus != ''){
+                    $.each(changeStatus, function (key, value) {
+                        $("#status-" + key).html(value);
+                        $('#refreshIcon-'+key).hide();
+                        $('#removeName-'+key).removeAttr("name");
+
+                    });
+                }
+                statusChange();
+            }
+        });
+    }
 }
 
 function requestsFirstPage() {

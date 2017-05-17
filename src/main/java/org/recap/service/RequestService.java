@@ -2,15 +2,21 @@ package org.recap.service;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+import org.recap.RecapConstants;
 import org.recap.model.jpa.CustomerCodeEntity;
 import org.recap.model.jpa.DeliveryRestrictionEntity;
 import org.recap.model.jpa.ItemEntity;
+import org.recap.model.jpa.RequestItemEntity;
 import org.recap.model.search.RequestForm;
 import org.recap.model.usermanagement.UserDetailsForm;
 import org.recap.repository.jpa.CustomerCodeDetailsRepository;
+import org.recap.repository.jpa.RequestItemDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
@@ -21,6 +27,9 @@ public class RequestService {
 
     @Autowired
     CustomerCodeDetailsRepository customerCodeDetailsRepository;
+
+    @Autowired
+    RequestItemDetailsRepository requestItemDetailsRepository;
 
 
     public void processCustomerAndDeliveryCodes(RequestForm requestForm, Map<String, String> deliveryLocationsMap, UserDetailsForm userDetailsForm, ItemEntity itemEntity, Integer institutionId) {
@@ -96,6 +105,32 @@ public class RequestService {
             sortedDeliverLocationMap.put(mapping.getKey(), mapping.getValue());
         }
         return sortedDeliverLocationMap;
+    }
+
+    public String getRefreshedStatus(HttpServletRequest request) {
+        JSONObject jsonObject = new JSONObject();
+        Map<Integer,Integer> map = new HashMap<>();
+        Map<String,String> responseMap =  new HashMap<>();
+        List<Integer> requestIdList = new ArrayList<>();
+        String[] parameterValues = request.getParameterValues("status[]");
+        for (String parameterValue : parameterValues) {
+            String[] split = StringUtils.split(parameterValue, "-");
+            map.put(Integer.valueOf(split[0]),Integer.valueOf(split[1]));
+            requestIdList.add(Integer.valueOf(split[0]));
+        }
+        List<RequestItemEntity> requestItemEntityList = requestItemDetailsRepository.findByRequestIdIn(requestIdList);
+        for (RequestItemEntity requestItemEntity : requestItemEntityList) {
+            Integer rowUpdateNum = map.get(requestItemEntity.getRequestId());
+            if (!RecapConstants.PROCESSING_STATUS.equals(requestItemEntity.getRequestStatusEntity().getRequestStatusDescription())){
+                responseMap.put(String.valueOf(rowUpdateNum),requestItemEntity.getRequestStatusEntity().getRequestStatusDescription());
+            }
+        }
+        try {
+            jsonObject.put("status",responseMap);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject.toString();
     }
 
 }

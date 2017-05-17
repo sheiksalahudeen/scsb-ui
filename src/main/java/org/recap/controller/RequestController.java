@@ -685,4 +685,11 @@ public class RequestController {
         }
         return deliveryLocationsMap;
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/request/refreshStatus", method = RequestMethod.GET)
+    public String refreshStatus(HttpServletRequest request) {
+        return requestService.getRefreshedStatus(request);
+    }
+
 }
