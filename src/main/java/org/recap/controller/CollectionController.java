@@ -136,25 +136,34 @@ public class CollectionController {
                                        BindingResult result,
                                        Model model) throws Exception {
         String itemBarcode = collectionForm.getBarcode();
+        String warningMessage = null;
         RequestItemEntity activeRetrievalRequest = getRequestItemDetailsRepository().findByItemBarcodeAndRequestStaCode(itemBarcode, RecapConstants.REQUEST_STATUS_RETRIEVAL_ORDER_PLACED);
         RequestItemEntity activeRecallRequest = getRequestItemDetailsRepository().findByItemBarcodeAndRequestStaCode(itemBarcode, RecapConstants.REQUEST_STATUS_RECALLED);
         if (null != activeRetrievalRequest && null != activeRecallRequest) {
-            collectionForm.setWarningMessage(RecapConstants.WARNING_MESSAGE_REQUEST_BORROWED_ITEM);
+            warningMessage = RecapConstants.WARNING_MESSAGE_REQUEST_BORROWED_ITEM;
         } else if (null != activeRetrievalRequest && null == activeRecallRequest) {
             String itemOwningInstitution = activeRetrievalRequest.getItemEntity().getInstitutionEntity().getInstitutionCode();
             String retrievalRequestingInstitution = activeRetrievalRequest.getInstitutionEntity().getInstitutionCode();
             if (!itemOwningInstitution.equalsIgnoreCase(retrievalRequestingInstitution)) {
-                collectionForm.setWarningMessage(RecapConstants.WARNING_MESSAGE_RETRIEVAL_CROSS_BORROWED_ITEM);
+                warningMessage = RecapConstants.WARNING_MESSAGE_RETRIEVAL_CROSS_BORROWED_ITEM;
             } else {
-                collectionForm.setWarningMessage(RecapConstants.WARNING_MESSAGE_RETRIEVAL_BORROWED_ITEM);
+                warningMessage = RecapConstants.WARNING_MESSAGE_RETRIEVAL_BORROWED_ITEM;
             }
         } else if (null == activeRetrievalRequest && null != activeRecallRequest) {
             String itemOwningInstitution = activeRecallRequest.getItemEntity().getInstitutionEntity().getInstitutionCode();
-            String recallRequestingInstitution = activeRetrievalRequest.getInstitutionEntity().getInstitutionCode();
+            String recallRequestingInstitution = activeRecallRequest.getInstitutionEntity().getInstitutionCode();
             if (!itemOwningInstitution.equalsIgnoreCase(recallRequestingInstitution)) {
-                collectionForm.setWarningMessage(RecapConstants.WARNING_MESSAGE_RECALL_CROSS_BORROWED_ITEM);
+                warningMessage = RecapConstants.WARNING_MESSAGE_RECALL_CROSS_BORROWED_ITEM;
             } else {
-                collectionForm.setWarningMessage(RecapConstants.WARNING_MESSAGE_RECALL_BORROWED_ITEM);
+                warningMessage = RecapConstants.WARNING_MESSAGE_RECALL_BORROWED_ITEM;
+            }
+        }
+
+        if (StringUtils.isNotBlank(warningMessage)) {
+            if (RecapConstants.UPDATE_CGD.equalsIgnoreCase(collectionForm.getCollectionAction())) {
+                collectionForm.setWarningMessage(warningMessage);
+            } else if (RecapConstants.DEACCESSION.equalsIgnoreCase(collectionForm.getCollectionAction())) {
+                collectionForm.setWarningMessage(warningMessage + " " + RecapConstants.WARNING_MESSAGE_DEACCESSION_REQUEST_BORROWED_ITEM);
             }
         }
         return new ModelAndView("collection :: #itemDetailsSection", RecapConstants.COLLECTION_FORM, collectionForm);

@@ -9,46 +9,69 @@ jQuery(document).ready(function ($) {
         $("#clearSearchText").hide();
     }
 
-    if ($("#fieldValue").val().length > 0) {
-        document.getElementById("resetSearch").disabled = false;
-    } else {
+    if (isBlankValue($("#fieldValue").val()) && isBlankValue($('#fieldName').val()) && isBlankValue(getUncheckedFacets())) {
         document.getElementById("resetSearch").disabled = true;
+    } else {
+        document.getElementById("resetSearch").disabled = false;
     }
 
     $("#fieldValue").keyup(function() {
         if ($("#fieldValue").val().length > 0) {
             $("#clearSearchText").show();
+            document.getElementById("resetSearch").disabled = false;
         } else {
             $("#clearSearchText").hide();
+            if (isBlankValue(getUncheckedFacets()) && isBlankValue($('#fieldName').val())) {
+                document.getElementById("resetSearch").disabled = true;
+            } else {
+                document.getElementById("resetSearch").disabled = false;
+            }
         }
     });
-
-    $("#fieldValue").keyup(function() {
-        if ($("#fieldValue").val().length > 0) {
-            document.getElementById("resetSearch").disabled = false;
-        } else {
-            document.getElementById("resetSearch").disabled = true;
-        }
-    });
-
-
-    $('#fieldValue').on('input change',function () {
-        if ($("#fieldValue").val().length > 0) {
-            document.getElementById("resetSearch").disabled = false;
-        } else {
-            document.getElementById("resetSearch").disabled = true;
-        }
-    });
-    
-    toggleFacets();
 
     $("#fieldValue").addClear({
-        onClear: function(){
-            document.getElementById("resetSearch").disabled = true;
+        onClear: function() {
+            if (isBlankValue(getUncheckedFacets()) && isBlankValue($('#fieldName').val())) {
+                document.getElementById("resetSearch").disabled = true;
+            } else {
+                document.getElementById("resetSearch").disabled = false;
+            }
         }
     });
 
+    $('#fieldName').change(function() {
+        if (!isBlankValue($('#fieldName').val())) {
+            document.getElementById("resetSearch").disabled = false;
+        } else {
+            if (isBlankValue(getUncheckedFacets()) && isBlankValue($('#fieldValue').val())) {
+                document.getElementById("resetSearch").disabled = true;
+            } else {
+                document.getElementById("resetSearch").disabled = false;
+            }
+        }
+    });
+
+    $('input.facetCheckBox').on('change', function() {
+        if (!isBlankValue(getUncheckedFacets())) {
+            document.getElementById("resetSearch").disabled = false;
+        } else {
+            if (isBlankValue($("#fieldValue").val()) && isBlankValue($('#fieldName').val())) {
+                document.getElementById("resetSearch").disabled = true;
+            } else {
+                document.getElementById("resetSearch").disabled = false;
+            }
+        }
+    });
+
+    toggleFacets();
+
 });
+
+function getUncheckedFacets() {
+    return $('.facetCheckBox:checkbox:not(:checked)').map(function() {
+        return this.value;
+    }).get();
+}
 
 function clearSearchText() {
     $("#fieldValue").val('');
@@ -184,5 +207,12 @@ function toggleFacets() {
         $("#moreFacetsText").show();
         $("#hideFacetsText").hide();
     }
+}
+
+function isBlankValue(value) {
+    if (value == null || value == '') {
+        return true;
+    }
+    return false;
 }
 
