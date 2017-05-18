@@ -5,13 +5,13 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
 import org.recap.model.usermanagement.LoginValidator;
 import org.recap.model.usermanagement.UserForm;
+import org.recap.security.UserInstitutionCache;
 import org.recap.util.HelperUtil;
 import org.recap.util.UserAuthUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -29,8 +29,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.net.ConnectException;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
 
 
@@ -51,6 +49,9 @@ public class LoginController {
     @Autowired
     private TokenStore tokenStore;
 
+    @Autowired
+    private UserInstitutionCache userInstitutionCache;
+
 
     @RequestMapping(value="/",method= RequestMethod.GET)
     public String loginScreen(HttpServletRequest request, Model model, @ModelAttribute UserForm userForm) {
@@ -69,6 +70,7 @@ public class LoginController {
 
     @RequestMapping(value = "/login-scsb", method = RequestMethod.GET)
     public String login(@Valid @ModelAttribute UserForm userForm, HttpServletRequest request, Model model, BindingResult error) {
+        HttpSession session = processSessionFixation(request);
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             String username = auth.getName();
@@ -95,7 +97,7 @@ public class LoginController {
                 logger.error(RecapConstants.LOG_ERROR + errorMessage);
                 return RecapConstants.VIEW_LOGIN;
             }
-            HttpSession session = request.getSession(false);
+
             session.setAttribute(RecapConstants.TOKEN, token);
             session.setAttribute(RecapConstants.USER_AUTH, resultMap);
             setValuesInSession(session, resultMap);
@@ -106,6 +108,20 @@ public class LoginController {
             return RecapConstants.VIEW_LOGIN;
         }
         return "redirect:/search";
+    }
+
+    private HttpSession processSessionFixation(HttpServletRequest request) {
+        String requestedSessionId = request.getRequestedSessionId();
+        String institutionCode = userInstitutionCache.getInstitutionForRequestSessionId(requestedSessionId);
+
+        userInstitutionCache.removeSessionId(requestedSessionId);
+
+        request.getSession(false).invalidate();
+        HttpSession session = request.getSession(true);
+
+        userInstitutionCache.addRequestSessionId(session.getId(), institutionCode);
+
+        return session;
     }
 
 
@@ -131,7 +147,7 @@ public class LoginController {
             {
                 throw new Exception("Subject Authtentication Failed");
             }
-            HttpSession session=request.getSession();
+            HttpSession session=request.getSession(false);
             session.setAttribute(RecapConstants.USER_TOKEN,token);
             session.setAttribute(RecapConstants.USER_AUTH,resultmap);
             setValuesInSession(session,resultmap);
@@ -163,7 +179,7 @@ public class LoginController {
         logger.info("Subject Logged out");
         HttpSession session=null;
         try{
-            session=request.getSession();
+            session=request.getSession(false);
             userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_LOGOUT_URL,(UsernamePasswordToken)session.getAttribute(RecapConstants.USER_TOKEN));
         }finally{
             if(session!=null) {

@@ -74,9 +74,9 @@ public class ReCAPInstitutionFilter extends OncePerRequestFilter {
     }
 
     private void forwardChaining(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain, UserInstitutionCache userInstitutionCache, String requestedSessionId) throws IOException, ServletException {
-        String institutionForCsrf = userInstitutionCache.getInstitutionForRequestSessionId(requestedSessionId);
-        if(StringUtils.isNotBlank(institutionForCsrf)) {
-            request.setAttribute(RecapConstants.RECAP_INSTITUTION_CODE, institutionForCsrf);
+        String institutionCode = userInstitutionCache.getInstitutionForRequestSessionId(requestedSessionId);
+        if(StringUtils.isNotBlank(institutionCode)) {
+            request.setAttribute(RecapConstants.RECAP_INSTITUTION_CODE, institutionCode);
         }
         filterChain.doFilter(request, response);
     }

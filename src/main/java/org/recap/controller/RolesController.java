@@ -56,7 +56,7 @@ public class RolesController {
 
     @RequestMapping("/roles")
     public String collection(Model model, HttpServletRequest request) {
-        HttpSession session=request.getSession();
+        HttpSession session=request.getSession(false);
         boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_ROLE_URL,(UsernamePasswordToken)session.getAttribute(RecapConstants.USER_TOKEN));
         if(authenticated)
         {
@@ -133,7 +133,7 @@ public class RolesController {
                                        @ModelAttribute("roleDescription") String roleDescription,
                                       HttpServletRequest request) {
         RolesForm rolesForm = new RolesForm();
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         rolesForm.setRoleId(roleId);
         rolesForm.setEditRoleName(roleName);
         rolesForm.setEditRoleDescription(roleDescription);
@@ -467,7 +467,7 @@ public class RolesController {
 
     public RoleEntity saveNewRoleToDB(RolesForm rolesForm){
         RoleEntity roleEntity = new RoleEntity();
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         roleEntity.setRoleName(rolesForm.getNewRoleName().trim());
         roleEntity.setRoleDescription(rolesForm.getNewRoleDescription());
         roleEntity.setCreatedDate(new Date());
