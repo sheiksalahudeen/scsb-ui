@@ -80,7 +80,7 @@
                                         <label>
                                             <input type="checkbox" id="selectAllFacets"
                                                    name="selectAllFacets" value="" th:field="*{selectAllFacets}"
-                                                   th:onclick="'javascript:selectOrDeselectFacets()'">
+                                                   th:onclick="'javascript:selectOrDeselectFacets()'" class="facetCheckBox">
                                             <span class="cr margin-top-15"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                                             </input>
                                             <span class="facet-text">Select / Unselect All Facets   </span>
@@ -100,7 +100,7 @@
                                                         <label>
                                                             <input type="checkbox" id="owningInstitutionNYPL"
                                                                    name="owningInstitutionNYPL" value="NYPL"
-                                                                   th:field="*{owningInstitutions}">
+                                                                   th:field="*{owningInstitutions}" class="facetCheckBox">
                                                             <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                                                             </input>
                                                             NYPL
@@ -110,7 +110,7 @@
                                                         <label>
                                                             <input type="checkbox" id="owningInstitutionCUL"
                                                                    name="owningInstitutionCUL" value="CUL"
-                                                                   th:field="*{owningInstitutions}">
+                                                                   th:field="*{owningInstitutions}" class="facetCheckBox">
                                                             <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                                                             </input>
                                                             Columbia
@@ -120,7 +120,7 @@
                                                         <label>
                                                             <input type="checkbox" id="owningInstitutionPUL"
                                                                    name="owningInstitutionPUL" value="PUL"
-                                                                   th:field="*{owningInstitutions}">
+                                                                   th:field="*{owningInstitutions}" class="facetCheckBox">
                                                             <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                                                             </input>
                                                             Princeton
@@ -133,7 +133,7 @@
                                                 <div class="checkbox">
                                                     <label>
                                                         <input type="checkbox" id="monograph" name="monograph"
-                                                               value="Monograph" th:field="*{materialTypes}">
+                                                               value="Monograph" th:field="*{materialTypes}" class="facetCheckBox">
                                                         <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                                                         </input>
                                                         Monograph
@@ -142,7 +142,7 @@
                                                 <div class="checkbox">
                                                     <label>
                                                         <input type="checkbox" id="serials" name="serials"
-                                                                   value="Serial" th:field="*{materialTypes}">
+                                                                   value="Serial" th:field="*{materialTypes}" class="facetCheckBox">
                                                         <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                                                         </input>
                                                         Serials
@@ -151,7 +151,7 @@
                                                 <div class="checkbox">
                                                     <label>
                                                         <input type="checkbox" id="others" name="others" value="Other"
-                                                                   th:field="*{materialTypes}">
+                                                                   th:field="*{materialTypes}" class="facetCheckBox">
                                                         <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                                                         </input>
                                                         Others
@@ -174,7 +174,7 @@
                                                 <div class="checkbox">
                                                     <label>
                                                         <input type="checkbox" id="shared" name="shared" value="Shared"
-                                                               th:field="*{collectionGroupDesignations}">
+                                                               th:field="*{collectionGroupDesignations}" class="facetCheckBox">
                                                         <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                                                         </input>
                                                         Shared
@@ -183,7 +183,7 @@
                                                 <div class="checkbox">
                                                     <label>
                                                         <input type="checkbox" id="private" name="private" value="Private"
-                                                               th:field="*{collectionGroupDesignations}">
+                                                               th:field="*{collectionGroupDesignations}" class="facetCheckBox">
                                                         <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                                                         </input>
                                                         Private
@@ -192,7 +192,7 @@
                                                 <div class="checkbox">
                                                     <label>
                                                         <input type="checkbox" id="open" name="open" value="Open"
-                                                               th:field="*{collectionGroupDesignations}">
+                                                               th:field="*{collectionGroupDesignations}" class="facetCheckBox">
                                                         <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                                                         </input>
                                                         Open
@@ -205,7 +205,7 @@
                                             <div class="checkbox">
                                                 <label>
                                                     <input type="checkbox" id="available" name="available"
-                                                           value="Available" th:field="*{availability}">
+                                                           value="Available" th:field="*{availability}" class="facetCheckBox">
                                                     <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                                                     </input>
                                                     In ReCAP
@@ -214,7 +214,7 @@
                                             <div class="checkbox">
                                                 <label>
                                                     <input type="checkbox" id="notAvailable" name="notAvailable"
-                                                           value="NotAvailable" th:field="*{availability}">
+                                                           value="NotAvailable" th:field="*{availability}" class="facetCheckBox">
                                                     <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                                                     </input>
                                                     Out
@@ -226,7 +226,7 @@
                                             <div class="checkbox">
                                                 <label>
                                                     <input type="checkbox" id="noRestriction" name="noRestriction"
-                                                           value="NoRestrictions" th:field="*{useRestrictions}">
+                                                           value="NoRestrictions" th:field="*{useRestrictions}" class="facetCheckBox">
                                                     <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                                                     </input>
                                                     No Restriction
@@ -235,7 +235,7 @@
                                             <div class="checkbox">
                                                 <label>
                                                     <input type="checkbox" id="inLibraryUse" name="inLibraryUse"
-                                                           value="InLibraryUse" th:field="*{useRestrictions}">
+                                                           value="InLibraryUse" th:field="*{useRestrictions}" class="facetCheckBox">
                                                     <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                                                     </input>
                                                     In Library Use
@@ -244,7 +244,7 @@
                                             <div class="checkbox">
                                                 <label>
                                                     <input type="checkbox" id="supervisedUse" name="supervisedUse"
-                                                           value="SupervisedUse" th:field="*{useRestrictions}">
+                                                           value="SupervisedUse" th:field="*{useRestrictions}" class="facetCheckBox">
                                                     <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                                                     </input>
                                                     Supervised Use
