@@ -67,7 +67,7 @@ public class ScheduleJobsController {
 
     @RequestMapping("/jobs")
     public String displayJobs(Model model, HttpServletRequest request) {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         ScheduleJobsForm scheduleJobsForm = new ScheduleJobsForm();
         UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(session, RecapConstants.BARCODE_RESTRICTED_PRIVILEGE);
         if (userDetailsForm.isSuperAdmin()) {

@@ -67,7 +67,7 @@ public class ReportsController {
 
     @RequestMapping("/reports")
     public String collection(Model model, HttpServletRequest request) {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REPORT_URL, (UsernamePasswordToken) session.getAttribute(RecapConstants.USER_TOKEN));
         if (authenticated) {
             ReportsForm reportsForm = new ReportsForm();

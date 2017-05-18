@@ -87,7 +87,7 @@ public class SearchRecordsController {
 
     @RequestMapping("/search")
     public String searchRecords(Model model, HttpServletRequest request) {
-        HttpSession session=request.getSession();
+        HttpSession session=request.getSession(false);
         boolean authenticated=getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_SEARCH_URL,(UsernamePasswordToken)session.getAttribute(RecapConstants.USER_TOKEN));
         if(authenticated)
         {
@@ -187,7 +187,7 @@ public class SearchRecordsController {
                                        Model model,
                                        HttpServletRequest request,
                                        RedirectAttributes redirectAttributes) {
-        UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(request.getSession(),RecapConstants.REQUEST_PRIVILEGE);
+        UserDetailsForm userDetailsForm = getUserAuthUtil().getUserDetails(request.getSession(false),RecapConstants.REQUEST_PRIVILEGE);
         processRequest(searchRecordsRequest, userDetailsForm, redirectAttributes);
         if (StringUtils.isNotBlank(searchRecordsRequest.getErrorMessage())) {
             searchRecordsRequest.setShowResults(true);

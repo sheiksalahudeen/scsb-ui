@@ -77,7 +77,7 @@ public class CollectionController {
 
     @RequestMapping("/collection")
     public String collection(Model model,HttpServletRequest request) {
-        HttpSession session=request.getSession();
+        HttpSession session=request.getSession(false);
         boolean authenticated=getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_COLLECTION_URL,(UsernamePasswordToken)session.getAttribute(RecapConstants.USER_TOKEN));
         if(authenticated)
         {
@@ -106,7 +106,7 @@ public class CollectionController {
                                      BindingResult result,
                                      Model model,HttpServletRequest request) throws Exception {
 
-        UserDetailsForm userDetailsForm=getUserAuthUtil().getUserDetails(request.getSession(),RecapConstants.BARCODE_RESTRICTED_PRIVILEGE);
+        UserDetailsForm userDetailsForm=getUserAuthUtil().getUserDetails(request.getSession(false),RecapConstants.BARCODE_RESTRICTED_PRIVILEGE);
         BibliographicMarcForm bibliographicMarcForm = getMarcRecordViewUtil().buildBibliographicMarcForm(collectionForm.getBibId(), collectionForm.getItemId(),userDetailsForm);
         populateCollectionForm(collectionForm, bibliographicMarcForm);
         model.addAttribute(RecapConstants.TEMPLATE, RecapConstants.COLLECTION);
@@ -118,7 +118,7 @@ public class CollectionController {
     public ModelAndView collectionUpdate(@Valid @ModelAttribute("collectionForm") CollectionForm collectionForm,
                                          BindingResult result,
                                          Model model, HttpServletRequest request) throws Exception {
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         String username = (String) session.getAttribute(RecapConstants.USER_NAME);
         collectionForm.setUsername(username);
         if (RecapConstants.UPDATE_CGD.equalsIgnoreCase(collectionForm.getCollectionAction())) {
