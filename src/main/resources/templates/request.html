@@ -168,6 +168,8 @@
                                                     </td>
                                                     <td width="">
                                                         <input type="hidden" th:field="${requestForm.searchResultRows[__${searchResultStat.index}__].status}"/>
+                                                        <img data-th-id="'refreshIcon-'+ ${searchResultStat.index}" src="images/refresh.gif" alt="Refreshing Status" style="width:20px;height:25px;" th:if="${searchResult.status == 'PROCESSING ...' }"/>
+                                                        <input th:if="${searchResult.status == 'PROCESSING ...' }" type="hidden" data-th-id="'removeName-'+ ${searchResultStat.index}" name="statusChange" th:value="${searchResult.requestId + '-' + searchResultStat.index}"/>
                                                         <span data-th-id="'status-' + ${searchResultStat.index}" th:text="${searchResult.status}"></span>
                                                     </td>
                                                     <td width="" style="text-align: center">
@@ -176,7 +178,7 @@
                                                         </button>
                                                     </td>
                                                     <td width="">
-                                                        <button th:if="${searchResult.status == 'RETRIEVAL ORDER PLACED' || searchResult.status == 'RECALL ORDER PLACED' || searchResult.status == 'EDD ORDER PLACED'}" th:title="'Cancel Request'" data-th-id="'cancelButton-' + ${searchResultStat.index}" type="button" class="btn btn-round" style="border-radius: 20px;background-color:white;border-color:black" name="action" th:onclick="'javascript:cancelRequest('+${searchResultStat.index}+')'">Cancel
+                                                        <button th:if="${searchResult.status == 'RETRIEVAL ORDER PLACED' || searchResult.status == 'RECALL ORDER PLACED' || searchResult.status == 'EDD ORDER PLACED'}" th:title="'Cancel Request'" data-th-id="'cancelButton-' + ${searchResultStat.index}" type="button" class="btn btn-round" style="background-color:transparent;box-shadow: none;outline: none;color: #337ab7;border-color:#337ab7" name="action" th:onclick="'javascript:cancelRequest('+${searchResultStat.index}+')'">Cancel
                                                         </button>
                                                     </td>
                                                 </tr>
@@ -479,7 +481,7 @@
                                         <div class="col-md-8 col-sm-12">
                                             <div class="form-group">
                                                 <div class="col-md-3 col-sm-2 text-right margin-top-15"><label for="requestNotesId" class="fontcolor-dark">Request Notes</label>
-                                                    <a href="#" tabindex="-1"><span id="noteToolTip" class="glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Maximum of only 2000 characters allowed"></span></a></div>
+                                                </div>
                                                 <div class="col-md-9 col-sm-10">
                                                     <textarea type="text"
                                                               th:disabled="${requestForm.submitted}"
@@ -558,7 +560,7 @@
                             <div class="modal-body">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <p id="requestNotesData" style="white-space: pre-wrap;"></p>
+                                        <p id="requestNotesData" style="white-space: pre-wrap;word-wrap: break-word;"></p>
                                     </div>
                                 </div>
                             </div>

@@ -431,11 +431,12 @@ public class RecapConstants {
     public static final String SEARCH_REQUEST_ACTIVE = "active";
     public static final String REQUEST_STATUS_RETRIEVAL_ORDER_PLACED = "RETRIEVAL_ORDER_PLACED";
     public static final String REQUEST_STATUS_RECALLED = "RECALL_ORDER_PLACED";
-    public static final String WARNING_MESSAGE_RETRIEVAL_CROSS_BORROWED_ITEM = "Warning : This item has an active retrieval request made by other institution. Deaccessioning the item will cancel the request.";
-    public static final String WARNING_MESSAGE_RECALL_CROSS_BORROWED_ITEM = "Warning : This item has an active recall request made by other institution. Deaccessioning the item will cancel the request.";
-    public static final String WARNING_MESSAGE_RETRIEVAL_BORROWED_ITEM = "Warning : This item has an active retrieval request. Deaccessioning the item will cancel the request.";
-    public static final String WARNING_MESSAGE_RECALL_BORROWED_ITEM = "Warning : This item has an active recall request. Deaccessioning the item will cancel the request.";
-    public static final String WARNING_MESSAGE_REQUEST_BORROWED_ITEM = "Warning : This item has an active retrieval request and recall request. Deaccessioning the item will cancel the request.";
+    public static final String WARNING_MESSAGE_RETRIEVAL_CROSS_BORROWED_ITEM = "Warning : This item has an active retrieval request made by other institution.";
+    public static final String WARNING_MESSAGE_RECALL_CROSS_BORROWED_ITEM = "Warning : This item has an active recall request made by other institution.";
+    public static final String WARNING_MESSAGE_RETRIEVAL_BORROWED_ITEM = "Warning : This item has an active retrieval request.";
+    public static final String WARNING_MESSAGE_RECALL_BORROWED_ITEM = "Warning : This item has an active recall request.";
+    public static final String WARNING_MESSAGE_REQUEST_BORROWED_ITEM = "Warning : This item has an active retrieval request and recall request.";
+    public static final String WARNING_MESSAGE_DEACCESSION_REQUEST_BORROWED_ITEM = "Deaccessioning the item will cancel the request.";
 
     public static final String PRIVATE = "Private";
 
@@ -486,6 +487,8 @@ public class RecapConstants {
     public static final String ERROR_CODE_ERROR_MESSAGE= "error.code.exception";
 
     public static final String LOGGED_IN_INSTITUTION= "loggedInInstitution";
+
+    public static final String PROCESSING_STATUS= "PROCESSING ...";
 
     private RecapConstants(){
         //Do nothing

@@ -34,22 +34,9 @@ function showAndHideDefaults() {
     }
 }
 function editCgdcontrol() {
-    $('#editCDG-section').show();
-    $('#cgdErrorMessage').hide();
-    $('#cgdNotesErrorMessage').hide();
-    $('#Deaccession-section').hide();
-    $('#locationErrorMessage').hide();
-    $('#deaccessionNotesErrorMessage').hide();
-    $('#collectionUpdateMessage').hide();
-    $('#collectionUpdateErrorMessage').hide();
-    $('#collectionUpdateWarningMessage').hide();
+    checkCrossBorrowedItem();
 }
 function deaccessioncontrol() {
-    $('#editCDG-section').hide();
-    $('#cgdErrorMessage').hide();
-    $('#cgdNotesErrorMessage').hide();
-    $('#locationErrorMessage').hide();
-    $('#deaccessionNotesErrorMessage').hide();
     checkCrossBorrowedItem();
 }
 
@@ -66,19 +53,22 @@ function checkCrossBorrowedItem() {
             var deaccession = $('#deaccesionclick').is(':checked');
             $('#itemDetailsSection').html(response);
             if (editCgd) {
-                $('#Deaccession-section').hide();
                 $('#cgdErrorMessage').hide();
                 $('#cgdNotesErrorMessage').hide();
+                $('#Deaccession-section').hide();
                 $('#locationErrorMessage').hide();
                 $('#deaccessionNotesErrorMessage').hide();
+                $('#collectionUpdateMessage').hide();
+                $('#collectionUpdateErrorMessage').hide();
+                $('#editCDG-section').show();
             } else if (deaccession) {
                 $('#editCDG-section').hide();
                 $('#cgdErrorMessage').hide();
+                $('#cgdNotesErrorMessage').hide();
                 $('#locationErrorMessage').hide();
                 $('#deaccessionNotesErrorMessage').hide();
-                $('#cgdNotesErrorMessage').hide();
+                $('#Deaccession-section').show();
             }
-            $('#Deaccession-section').show();
         }
     });
 }
