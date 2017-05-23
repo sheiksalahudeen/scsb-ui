@@ -193,7 +193,7 @@ function searchRequestsByAction(action) {
 
 function statusChange(){
     var status = [];
-    $("[name='statusChange']").each(function( index ) {
+    $("[name='statusChange']").each(function( ) {
         var statusVar = $( this ).val();
         status.push(statusVar);
     });
@@ -258,6 +258,14 @@ function populateItemDetails() {
                 var notAvailableErrorMessage = jsonResponse['notAvailableErrorMessage'];
                 var noPermissionErrorMessage = jsonResponse['noPermissionErrorMessage'];
                 var deliveryLocation = jsonResponse['deliveryLocation'];
+                var requestTypes = jsonResponse['requestTypes'];
+                $('#requestTypeId').empty();
+                $.each(requestTypes,function (index,value) {
+                    $('#requestTypeId').append($("<option/>", {
+                        value: value,
+                        text: value
+                    }));
+                });
                 if (deliveryLocation != null && deliveryLocation != '') {
                     $('#deliveryLocationId').empty();
                     $('#deliveryLocationId').append($("<option/>", {
@@ -271,6 +279,10 @@ function populateItemDetails() {
                         }));
                     });
                 }
+                $("#EDD").hide();
+                $('#deliverylocation_request').show();
+                $('#deliveryLocationId').val("");
+                $('#emailMandatory').hide();
                 $('#itemBarcodeErrorMessage').hide();
                 if (errorMessage != null && errorMessage != '' && notAvailableErrorMessage != null && notAvailableErrorMessage != '') {
                     $('#itemBarcodeNotFoundErrorMessage').html(errorMessage + "<br>" + notAvailableErrorMessage);
@@ -301,7 +313,7 @@ function isValidInputs() {
     var deliveryLocation = $('#deliveryLocationId').val();
     var requestingInstitution = $('#requestingInstitutionId').val();
     var notesLength = $('#requestNotesId').val().length;
-    if (notesLength  == 2000){
+    if (notesLength  == 1000){
         $('#notesLengthErrMsg').show();
     }else {
         $('#notesLengthErrMsg').hide();
@@ -688,13 +700,13 @@ function NotesLengthValidation(val){
     val.style.height = "1px";
     val.style.height = (25+val.scrollHeight)+"px";
     var len = val.value.length;
-    if (len > 2000) {
-        val.value = val.value.substring(0, 2000);
+    if (len > 1000) {
+        val.value = val.value.substring(0, 1000);
     } else {
-        $('#remainingCharacters').text(2000 - len);
+        $('#remainingCharacters').text(1000 - len);
     }
     var notesLength = $('#requestNotesId').val().length;
-    if (notesLength == 2000){
+    if (notesLength == 1000){
         $('#notesLengthErrMsg').show();
     }else {
         $('#notesLengthErrMsg').hide();
