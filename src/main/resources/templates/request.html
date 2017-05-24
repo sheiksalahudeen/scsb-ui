@@ -419,7 +419,7 @@
                                                     <div class="form-group">
                                                         <div class="col-md-6 col-sm-4 margin-top-15"><label for="StartPage" class="fontcolor-dark">Start Page <span class="error-color">*</span></label></div>
                                                         <div class="col-md-6 col-sm-8">
-                                                            <input type="text" th:disabled="${requestForm.submitted}" class="form-control themed-input" id="StartPage" name="StartPage" th:field="${requestForm.startPage}" th:onkeyup="'javascript:toggleStartPageValidation()'"/>
+                                                            <input type="text" maxlength="20" th:disabled="${requestForm.submitted}" class="form-control themed-input" id="StartPage" name="StartPage" th:field="${requestForm.startPage}" th:onkeyup="'javascript:toggleStartPageValidation()'"/>
                                                             <span id="startPageErrorMessage" style="color: red;">Start page is required.</span>
                                                         </div>
                                                     </div>
@@ -428,7 +428,7 @@
                                                     <div class="form-group">
                                                         <div class="col-md-6 col-sm-4 text-right margin-top-15"><label for="EndPage" class="fontcolor-dark">End Page <span class="error-color">*</span></label></div>
                                                         <div class="col-md-6 col-sm-8">
-                                                            <input type="text" th:disabled="${requestForm.submitted}" class="form-control themed-input" id="EndPage" name="EndPage" th:field="${requestForm.endPage}" th:onkeyup="'javascript:toggleEndPageValidation()'"/>
+                                                            <input type="text" maxlength="20" th:disabled="${requestForm.submitted}" class="form-control themed-input" id="EndPage" name="EndPage" th:field="${requestForm.endPage}" th:onkeyup="'javascript:toggleEndPageValidation()'"/>
                                                             <span id="endPageErrorMessage" style="color: red;">End page is required.</span>
                                                         </div>
                                                     </div>
@@ -438,7 +438,7 @@
                                                     <div class="form-group">
                                                         <div class="col-md-6 col-sm-4 text-right margin-top-15"><label for="VolumeNumber" class="fontcolor-dark">Volume Number</label></div>
                                                         <div class="col-md-6 col-sm-8">
-                                                            <input type="text" th:disabled="${requestForm.submitted}" class="form-control themed-input" id="VolumeNumber" name="VolumeNumber" th:field="${requestForm.volumeNumber}"/>
+                                                            <input type="text" maxlength="20" th:disabled="${requestForm.submitted}" class="form-control themed-input" id="VolumeNumber" name="VolumeNumber" th:field="${requestForm.volumeNumber}"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -448,7 +448,7 @@
                                                     <div class="form-group">
                                                         <div class="col-md-6 col-sm-4 margin-top-15"><label for="Issue" class="fontcolor-dark">Issue</label></div>
                                                         <div class="col-md-6 col-sm-8">
-                                                            <input th:disabled="${requestForm.submitted}" type="text" class="form-control themed-input" id="Issue" name="Issue" th:field="${requestForm.issue}"/>
+                                                            <input maxlength="20" th:disabled="${requestForm.submitted}" type="text" class="form-control themed-input" id="Issue" name="Issue" th:field="${requestForm.issue}"/>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -456,7 +456,7 @@
                                                     <div class="form-group">
                                                         <div class="col-md-3 col-sm-4 text-right margin-top-15"><label for="ArticleAuthor" class="fontcolor-dark">Article Author</label></div>
                                                         <div class="col-md-9 col-sm-8">
-                                                            <input type="text" th:disabled="${requestForm.submitted}" class="form-control themed-input" id="ArticleAuthor" name="ArticleAuthor" th:field="${requestForm.articleAuthor}"/>
+                                                            <input type="text" maxlength="150" th:disabled="${requestForm.submitted}" class="form-control themed-input" id="ArticleAuthor" name="ArticleAuthor" th:field="${requestForm.articleAuthor}"/>
                                                         </div>
                                                     </div>
 
@@ -469,7 +469,7 @@
                                                         <div class="col-md-2 col-sm-4 margin-top-15"><label for="ArticleChapterTitle" class="fontcolor-dark">Article /
                                                             Chapter Title <span class="error-color">*</span></label></div>
                                                         <div class="col-md-10 col-sm-8">
-                                                            <input th:disabled="${requestForm.submitted}" type="text" class="form-control themed-input" id="ArticleChapterTitle" th:field="${requestForm.articleTitle}" th:onkeyup="'javascript:toggleArticleTitleValidation()'"/>
+                                                            <input th:disabled="${requestForm.submitted}" maxlength="150" type="text" class="form-control themed-input" id="ArticleChapterTitle" th:field="${requestForm.articleTitle}" th:onkeyup="'javascript:toggleArticleTitleValidation()'"/>
                                                             <span id="articleTitleErrorMessage" style="color: red;">Article / Chapter title is required.</span>
                                                         </div>
                                                     </div>
@@ -492,10 +492,10 @@
                                                               onkeyup="NotesLengthValidation(this)"
                                                               style="overflow:hidden"
                                                               rows="5"
-                                                              maxlength="2000">
+                                                              maxlength="1000">
                                                     </textarea>
-                                                    <span id="notesLengthErrMsg" style="color: red;display: none">Only 2000 characters are allowed.</span>
-                                                    <p id="requestNotesRemainingCharacters">Remaining Characters : <span id="remainingCharacters">2000</span></p>
+                                                    <span id="notesLengthErrMsg" style="color: red;display: none">Only 1000 characters are allowed.</span>
+                                                    <p id="requestNotesRemainingCharacters">Remaining Characters : <span id="remainingCharacters">1000</span></p>
                                                 </div>
                                             </div>
                                         </div>

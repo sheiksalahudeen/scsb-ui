@@ -1,6 +1,7 @@
 package org.recap.controller;
 
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.util.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -14,22 +15,20 @@ import org.recap.model.request.ItemResponseInformation;
 import org.recap.model.search.RequestForm;
 import org.recap.model.usermanagement.UserDetailsForm;
 import org.recap.repository.jpa.*;
-import org.recap.security.UserManagementService;
+import org.recap.service.RequestService;
 import org.recap.util.RequestServiceUtil;
 import org.recap.util.UserAuthUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.*;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.support.BindingAwareModelMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.lang.Thread;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -39,6 +38,7 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -50,6 +50,9 @@ public class RequestControllerUT extends BaseControllerUT {
 
     @Mock
     BindingAwareModelMap model;
+
+    @Mock
+    RequestService requestService;
 
     @Mock
     BindingResult bindingResult;
@@ -126,12 +129,25 @@ public class RequestControllerUT extends BaseControllerUT {
 
     @Test
     public void request() throws Exception{
-        when(request.getSession()).thenReturn(session);
+        Mockito.when(request.getSession(false)).thenReturn(session);
+        Mockito.when(requestController.getRequestService()).thenReturn(requestService);
         Mockito.when(userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_REQUEST_URL,(UsernamePasswordToken)session.getAttribute(RecapConstants.USER_TOKEN))).thenReturn(true);
         Mockito.when(requestController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(requestController.getInstitutionDetailsRepository()).thenReturn(institutionDetailsRepository);
         Mockito.when(requestController.getCustomerCodeDetailsRepository()).thenReturn(customerCodeDetailsRepository);
         Mockito.when(requestController.getRequestTypeDetailsRepository()).thenReturn(requestTypeDetailsRepository);
+        UserDetailsForm userDetailsForm = getUserDetails();
+        Mockito.when(requestController.getUserAuthUtil().getUserDetails(request.getSession(false), RecapConstants.REQUEST_PRIVILEGE)).thenReturn(userDetailsForm);
+        Mockito.when(requestService.setDefaultsToCreateRequest(userDetailsForm,model)).thenCallRealMethod();
+        InstitutionEntity institutionEntity = new InstitutionEntity();
+        institutionEntity.setInstitutionCode("CUL");
+        institutionEntity.setInstitutionId(2);
+        List<InstitutionEntity> institutionEntityList = new ArrayList<>();
+        institutionEntityList.add(institutionEntity);
+        Mockito.when(requestService.getInstitutionDetailsRepository()).thenReturn(institutionDetailsRepository);
+        Mockito.when(requestController.getRequestService().getInstitutionDetailsRepository().findAll()).thenReturn(Arrays.asList(institutionEntity));
+        Mockito.when(requestService.getRequestTypeDetailsRepository()).thenReturn(requestTypeDetailsRepository);
+        Mockito.when(requestService.setFormDetailsForRequest(model,request,userDetailsForm)).thenCallRealMethod();
         when(institutionDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
         when(requestTypeDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
         when(customerCodeDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
@@ -209,12 +225,22 @@ public class RequestControllerUT extends BaseControllerUT {
         Mockito.when(requestController.getCustomerCodeDetailsRepository()).thenReturn(customerCodeDetailsRepository);
         Mockito.when(requestController.getRequestTypeDetailsRepository()).thenReturn(requestTypeDetailsRepository);
         Mockito.when(requestController.getUserAuthUtil()).thenReturn(userAuthUtil);
-
+        Mockito.when(requestController.getRequestService()).thenReturn(requestService);
+        UserDetailsForm userDetailsForm = getUserDetails();
+        Mockito.when(requestController.getUserAuthUtil().getUserDetails(request.getSession(false), RecapConstants.REQUEST_PRIVILEGE)).thenReturn(userDetailsForm);
+        InstitutionEntity institutionEntity = new InstitutionEntity();
+        institutionEntity.setInstitutionCode("CUL");
+        institutionEntity.setInstitutionId(2);
+        List<InstitutionEntity> institutionEntityList = new ArrayList<>();
+        institutionEntityList.add(institutionEntity);
+        Mockito.when(requestService.setDefaultsToCreateRequest(userDetailsForm,model)).thenCallRealMethod();
+        Mockito.when(requestService.getInstitutionDetailsRepository()).thenReturn(institutionDetailsRepository);
+        Mockito.when(requestController.getRequestService().getInstitutionDetailsRepository().findAll()).thenReturn(Arrays.asList(institutionEntity));
+        Mockito.when(requestService.getRequestTypeDetailsRepository()).thenReturn(requestTypeDetailsRepository);
         when(institutionDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
         when(requestTypeDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
         when(customerCodeDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
         when(userAuthUtil.getUserDetails(request.getSession(),RecapConstants.REQUEST_ITEM_PRIVILEGE)).thenReturn(getUserDetails());
-
         when(requestController.loadCreateRequest(model,request)).thenCallRealMethod();
         when(request.getSession()).thenReturn(session);
         ModelAndView modelAndView = requestController.loadCreateRequest(model,request);
@@ -229,6 +255,18 @@ public class RequestControllerUT extends BaseControllerUT {
         Mockito.when(requestController.getCustomerCodeDetailsRepository()).thenReturn(customerCodeDetailsRepository);
         Mockito.when(requestController.getRequestTypeDetailsRepository()).thenReturn(requestTypeDetailsRepository);
         Mockito.when(requestController.getUserAuthUtil()).thenReturn(userAuthUtil);
+        Mockito.when(requestController.getRequestService()).thenReturn(requestService);
+        UserDetailsForm userDetailsForm = getUserDetails();
+        Mockito.when(requestController.getUserAuthUtil().getUserDetails(request.getSession(false), RecapConstants.REQUEST_PRIVILEGE)).thenReturn(userDetailsForm);
+        InstitutionEntity institutionEntity = new InstitutionEntity();
+        institutionEntity.setInstitutionCode("CUL");
+        institutionEntity.setInstitutionId(2);
+        List<InstitutionEntity> institutionEntityList = new ArrayList<>();
+        institutionEntityList.add(institutionEntity);
+        Mockito.when(requestService.setDefaultsToCreateRequest(userDetailsForm,model)).thenCallRealMethod();
+        Mockito.when(requestService.getInstitutionDetailsRepository()).thenReturn(institutionDetailsRepository);
+        Mockito.when(requestController.getRequestService().getInstitutionDetailsRepository().findAll()).thenReturn(Arrays.asList(institutionEntity));
+        Mockito.when(requestService.getRequestTypeDetailsRepository()).thenReturn(requestTypeDetailsRepository);
 
         when(institutionDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
         when(requestTypeDetailsRepository.findAll()).thenReturn(Collections.EMPTY_LIST);
@@ -249,6 +287,7 @@ public class RequestControllerUT extends BaseControllerUT {
         Mockito.when(requestController.getInstitutionDetailsRepository()).thenReturn(institutionDetailsRepository);
         Mockito.when(requestController.getRequestStatusDetailsRepository()).thenReturn(requestStatusDetailsRepository);
         Mockito.when(requestController.getRequestServiceUtil()).thenReturn(requestServiceUtil);
+        Mockito.when(requestController.getRequestService()).thenReturn(requestService);
         when(requestServiceUtil.searchRequests(requestForm)).thenReturn(requestItemEntities);
         RequestStatusEntity requestStatusEntity = new RequestStatusEntity();
         requestStatusEntity.setRequestStatusDescription("RETRIEVAL ORDER PLACED");
@@ -256,6 +295,10 @@ public class RequestControllerUT extends BaseControllerUT {
         institutionEntity.setInstitutionCode("PUL");
         Mockito.when(requestController.getRequestStatusDetailsRepository().findAll()).thenReturn(Arrays.asList(requestStatusEntity));
         Mockito.when(requestController.getInstitutionDetailsRepository().getInstitutionCodeForSuperAdmin()).thenReturn(Arrays.asList(institutionEntity));
+        List<String> requestStatuses=new ArrayList<>();
+        List<String> institutionList=new ArrayList<>();
+        Mockito.doCallRealMethod().when(requestService).findAllRequestStatusExceptProcessing(requestStatuses);
+        Mockito.doCallRealMethod().when(requestService).findAllRequestStatusExceptProcessing(institutionList);
         Mockito.when(requestController.goToSearchRequest(requestForm,"45678912",bindingResult, model)).thenCallRealMethod();
         ModelAndView modelAndView = requestController.goToSearchRequest(requestForm,"45678912",bindingResult, model);
         assertNotNull(modelAndView);
@@ -272,12 +315,24 @@ public class RequestControllerUT extends BaseControllerUT {
         Mockito.when(requestController.getItemDetailsRepository()).thenReturn(itemDetailsRepository);
         Mockito.when(requestController.getUserAuthUtil()).thenReturn(userAuthUtil);
         when(request.getSession()).thenReturn(session);
+        Mockito.when(requestController.getRequestService()).thenReturn(requestService);
+        UserDetailsForm userDetailsForm = getUserDetails();
+        Mockito.when(requestController.getUserAuthUtil().getUserDetails(request.getSession(false), RecapConstants.REQUEST_PRIVILEGE)).thenReturn(userDetailsForm);
+        Mockito.when(requestService.populateItemForRequest(requestForm,request)).thenCallRealMethod();
         Mockito.when(requestController.getUserAuthUtil().getUserDetails(request.getSession(),RecapConstants.REQUEST_PRIVILEGE)).thenReturn(getUserDetails());
-        Mockito.when(requestController.getItemDetailsRepository().findByBarcodeAndCatalogingStatusAndIsDeletedFalse(barcode, RecapConstants.COMPLETE_STATUS)).thenReturn(Arrays.asList(bibliographicEntity.getItemEntities().get(0)));
+        Mockito.when(requestService.getItemDetailsRepository()).thenReturn(itemDetailsRepository);
+        Mockito.when(requestService.getRequestTypeDetailsRepository()).thenReturn(requestTypeDetailsRepository);
+        List<RequestTypeEntity> requestTypeEntityList=new ArrayList<>();
+        RequestTypeEntity requestTypeEntity = new RequestTypeEntity();
+        requestTypeEntity.setRequestTypeCode("RETRIEVAL");
+        requestTypeEntity.setRequestTypeDesc("RETRIEVAL");
+        requestTypeEntity.setRequestTypeId(1);
+        requestTypeEntityList.add(requestTypeEntity);
+        Mockito.when(requestService.getRequestTypeDetailsRepository().findAllExceptBorrowDirect()).thenReturn(Arrays.asList(requestTypeEntity));
+        Mockito.when(requestService.getRequestTypeDetailsRepository().findAllExceptEDDAndBorrowDirect()).thenReturn(Arrays.asList(requestTypeEntity));
         when(requestController.populateItem(requestForm, bindingResult, model,request)).thenCallRealMethod();
         String response = requestController.populateItem(requestForm, bindingResult, model,request);
         assertNotNull(response);
-        assertTrue(response.contains("User is not permitted to request private item(s) from other partners"));
     }
 
     @Test
@@ -339,6 +394,11 @@ public class RequestControllerUT extends BaseControllerUT {
         requestStatusEntity.setRequestStatusDescription("RETRIEVAL ORDER PLACED");
         InstitutionEntity institutionEntity = new InstitutionEntity();
         institutionEntity.setInstitutionCode("PUL");
+        Mockito.when(requestController.getRequestService()).thenReturn(requestService);
+        List<String> requestStatusCodeList = getRequestStatusCodeList();
+        List<String> institutionCodeList = getInstitutionCodeList();
+        Mockito.doCallRealMethod().when(requestService).findAllRequestStatusExceptProcessing(requestStatusCodeList);
+        Mockito.doCallRealMethod().when(requestService).getInstitutionForSuperAdmin(institutionCodeList);
         Mockito.when(requestController.getRequestStatusDetailsRepository()).thenReturn(requestStatusDetailsRepository);
         Mockito.when(requestController.getInstitutionDetailsRepository()).thenReturn(institutionDetailsRepository);
         Mockito.when(requestController.getRequestStatusDetailsRepository().findAll()).thenReturn(Arrays.asList(requestStatusEntity));
@@ -347,6 +407,31 @@ public class RequestControllerUT extends BaseControllerUT {
         ModelAndView modelAndView = requestController.loadSearchRequest(model,request);
         assertNotNull(modelAndView);
         assertEquals(modelAndView.getViewName(),"request");
+    }
+
+    @Test
+    public void testRefreshStatus(){
+        Mockito.when(requestController.getRequestService()).thenReturn(requestService);
+        String status="status[]";
+        String[] statusValue={"16-0"};
+        MockHttpServletRequest mockedRequest = new MockHttpServletRequest();
+        mockedRequest.addParameter(status, statusValue);
+        RequestItemEntity requestItemEntity=getRequestItemEntity();
+        Mockito.when(requestService.getRequestItemDetailsRepository()).thenReturn(requestItemDetailsRepository);
+        Mockito.when(requestItemDetailsRepository.findByRequestIdIn(Arrays.asList(requestItemEntity.getRequestId()))).thenReturn(Arrays.asList(requestItemEntity));
+        Mockito.doCallRealMethod().when(requestService).getRefreshedStatus(mockedRequest);
+        String refreshedStatus = requestService.getRefreshedStatus(mockedRequest);
+        Assert.notNull(refreshedStatus);
+    }
+
+    private RequestItemEntity getRequestItemEntity(){
+        RequestStatusEntity requestStatusEntity=new RequestStatusEntity();
+        requestStatusEntity.setRequestStatusDescription("RECALL");
+        RequestItemEntity requestItemEntity = new RequestItemEntity();
+        requestItemEntity.setRequestStatusId(15);
+        requestItemEntity.setRequestId(16);
+        requestItemEntity.setRequestStatusEntity(requestStatusEntity);
+        return requestItemEntity;
     }
 
     private RequestForm getRequestForm(){
@@ -462,6 +547,35 @@ public class RequestControllerUT extends BaseControllerUT {
         entityManager.refresh(savedBibliographicEntity);
         return savedBibliographicEntity;
 
+    }
+
+    private List<String> getRequestStatusCodeList(){
+        List<String> requestStatusEntityList=new ArrayList<>();
+        RequestStatusEntity requestStatusEntity=new RequestStatusEntity();
+        requestStatusEntity.setRequestStatusCode("RETRIEVAL_ORDER_PLACED");
+        requestStatusEntity.setRequestStatusDescription("RETRIEVAL ORDER PLACED");
+        requestStatusEntity.setRequestStatusId(1);
+        requestStatusEntityList.add(requestStatusEntity.getRequestStatusCode());
+        RequestStatusEntity requestStatusEntity1=new RequestStatusEntity();
+        requestStatusEntity1.setRequestStatusCode("RECALL_ORDER_PLACED");
+        requestStatusEntity1.setRequestStatusDescription("RECALL_ORDER_PLACED");
+        requestStatusEntity1.setRequestStatusId(2);
+        requestStatusEntityList.add(requestStatusEntity1.getRequestStatusCode());
+        return requestStatusEntityList;
+    }
+
+    private List<String> getInstitutionCodeList(){
+        List<String> institutionCodeList=new ArrayList<>();
+        InstitutionEntity institutionEntity=new InstitutionEntity();
+        institutionEntity.setInstitutionCode("PUL");
+        institutionCodeList.add(institutionEntity.getInstitutionCode());
+        InstitutionEntity institutionEntity1=new InstitutionEntity();
+        institutionEntity1.setInstitutionCode("CUL");
+        institutionCodeList.add(institutionEntity1.getInstitutionCode());
+        InstitutionEntity institutionEntity2=new InstitutionEntity();
+        institutionEntity2.setInstitutionCode("NYPL");
+        institutionCodeList.add(institutionEntity2.getInstitutionCode());
+        return institutionCodeList;
     }
 
     private HttpHeaders getHttpHeaders() {

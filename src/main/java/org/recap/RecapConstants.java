@@ -219,6 +219,7 @@ public class RecapConstants {
 
     //Request
     public static final String REQUEST_FORM="requestForm";
+    public static final String CREATE_REQUEST_SECTION="request :: #createRequestSection";
 
     public static final String REQUEST_ID = "requestId";
     public static final String REQUEST_PRIVATE_ERROR_USER_NOT_PERMITTED = "User is not permitted to request private item(s) from other partners";
@@ -311,6 +312,10 @@ public class RecapConstants {
     public static final String BIBLIOGRAPHICENTITY = "bibliographicEntity";
     public static final String REPORTENTITIES = "reportEntities";
     public static final String DUMMY_CALL_NUMBER = "dummycallnumbertype";
+
+    public static final String REQUEST_TYPES = "requestTypes";
+    public static final String SHOW_EDD = "showEDD";
+    public static final String MULTIPLE_BARCODES = "multipleBarcodes";
 
     //solr
     public static final String DATE_FORMAT_YYYYMMDDHHMM = "yyyy-MM-dd HH:mm";
@@ -490,6 +495,17 @@ public class RecapConstants {
 
     public static final String PROCESSING_STATUS= "PROCESSING ...";
 
+    public static final String SCHEDULE_JOBS = "scheduleJobs";
+    public static final String SCHEDULE_JOBS_FORM = "scheduleJobsForm";
+    public static final String URL_SCHEDULE_JOBS= "scheduleService/scheduleJob";
+    public static final String UNSCHEDULE= "Unschedule";
+    public static final String UNSCHEDULED= "Unscheduled";
+    public static final String SCHEDULED= "Scheduled";
+    public static final String PURGE_EXCEPTION_REQUESTS = "PurgeExceptionRequests";
+
+    public static final String REQUESTED_ITEM_AVAILABILITY="requestedItemAvailabilty";
+    public static final String LAS_REJECTED = "LAS has rejected";
+
     private RecapConstants(){
         //Do nothing
     }
@@ -501,14 +517,4 @@ public class RecapConstants {
         return headers;
     }
 
-    public static final String SCHEDULE_JOBS = "scheduleJobs";
-    public static final String SCHEDULE_JOBS_FORM = "scheduleJobsForm";
-    public static final String URL_SCHEDULE_JOBS= "scheduleService/scheduleJob";
-    public static final String UNSCHEDULE= "Unschedule";
-    public static final String UNSCHEDULED= "Unscheduled";
-    public static final String SCHEDULED= "Scheduled";
-    public static final String PURGE_EXCEPTION_REQUESTS = "PurgeExceptionRequests";
-
-    public static final String REQUESTED_ITEM_AVAILABILITY="requestedItemAvailabilty";
-    public static final String LAS_REJECTED = "LAS has rejected";
 }
