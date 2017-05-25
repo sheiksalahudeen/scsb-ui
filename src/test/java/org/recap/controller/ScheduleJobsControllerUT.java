@@ -72,7 +72,7 @@ public class ScheduleJobsControllerUT extends BaseControllerUT {
 
     @Test
     public void testDisplayJobs() throws Exception {
-        when(request.getSession()).thenReturn(session);
+        when(request.getSession(false)).thenReturn(session);
         Mockito.when(getUserAuthUtil().getUserDetails(session, RecapConstants.BARCODE_RESTRICTED_PRIVILEGE)).thenReturn(new UserDetailsForm());
         Mockito.when(scheduleJobsController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(scheduleJobsController.displayJobs(model, request)).thenCallRealMethod();

@@ -83,7 +83,7 @@ public class ReportsControllerUT extends BaseControllerUT {
 
     @Test
     public void reports() throws Exception{
-        when(request.getSession()).thenReturn(session);
+        when(request.getSession(false)).thenReturn(session);
         Mockito.when(getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REPORT_URL,(UsernamePasswordToken)session.getAttribute(RecapConstants.USER_TOKEN))).thenReturn(true);
         Mockito.when(reportsController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(reportsController.collection(model,request)).thenCallRealMethod();

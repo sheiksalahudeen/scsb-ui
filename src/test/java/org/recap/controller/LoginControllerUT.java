@@ -5,19 +5,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.recap.RecapConstants;
 import org.recap.model.usermanagement.UserForm;
-import org.recap.security.UserManagementService;
 import org.recap.util.UserAuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import javax.servlet.http.HttpSession;
 
-import org.recap.RecapConstants;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 /**
@@ -42,6 +42,9 @@ public class LoginControllerUT extends BaseControllerUT{
 
     @Mock
     BindingResult error;
+
+    @Mock
+    private Authentication auth;
 
     @Before
     public void setUp() {
@@ -74,6 +77,9 @@ public class LoginControllerUT extends BaseControllerUT{
 
     @Test
     public void testLogin(){
+        when(request.getSession(false)).thenReturn(session);
+        when(request.getSession(true)).thenReturn(session);
+        when(auth.getName()).thenReturn("Test");
         UserForm userForm = new UserForm();
         userForm.setInstitution("PUL");
         userForm.setUsername("test");

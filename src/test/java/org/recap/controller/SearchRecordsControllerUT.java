@@ -92,7 +92,7 @@ public class SearchRecordsControllerUT extends BaseControllerUT{
 
     @Test
     public void searchRecords() throws Exception{
-        when(request.getSession()).thenReturn(session);
+        when(request.getSession(false)).thenReturn(session);
         SearchRecordsResponse searchRecordsResponse=new SearchRecordsResponse();
         when(userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_SEARCH_URL,(UsernamePasswordToken)session.getAttribute(RecapConstants.USER_TOKEN))).thenReturn(true);
         when(searchUtil.requestSearchResults(searchRecordsRequest)).thenReturn(searchRecordsResponse);

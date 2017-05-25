@@ -51,9 +51,6 @@ public class RolesController {
     @Autowired
     private UserAuthUtil userAuthUtil;
 
-    @Autowired
-    HttpServletRequest request;
-
     @RequestMapping("/roles")
     public String collection(Model model, HttpServletRequest request) {
         HttpSession session=request.getSession(false);
@@ -91,14 +88,16 @@ public class RolesController {
     @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=loadCreateRole")
     public ModelAndView newRole(@Valid @ModelAttribute("rolesForm") RolesForm rolesForm,
-                                Model model) {
+                                Model model, HttpServletRequest request) {
         boolean specialCharacterCheck = isSpecialCharacterCheck(rolesForm.getNewRoleName());
         if(!specialCharacterCheck){
             rolesForm.setErrorMessage(RecapConstants.SPECIAL_CHARACTERS_NOT_ALLOWED_CREATE);
             rolesForm.setSelectedPermissionNames(getSeletedPermissionNames(rolesForm.getNewPermissionNames()));
         }
         else{
-            RoleEntity roleEntity = saveNewRoleToDB(rolesForm);
+            HttpSession session = request.getSession(false);
+            String username = (String) session.getAttribute(RecapConstants.USER_NAME);
+            RoleEntity roleEntity = saveNewRoleToDB(rolesForm, username);
             if(null != roleEntity){
                 rolesForm.setMessage(rolesForm.getNewRoleName()+RecapConstants.ADDED_SUCCESSFULLY);
             }else{
@@ -465,15 +464,14 @@ public class RolesController {
 
     }
 
-    public RoleEntity saveNewRoleToDB(RolesForm rolesForm){
+    public RoleEntity saveNewRoleToDB(RolesForm rolesForm, String username){
         RoleEntity roleEntity = new RoleEntity();
-        HttpSession session = request.getSession(false);
         roleEntity.setRoleName(rolesForm.getNewRoleName().trim());
         roleEntity.setRoleDescription(rolesForm.getNewRoleDescription());
         roleEntity.setCreatedDate(new Date());
-        roleEntity.setCreatedBy(String.valueOf(session.getAttribute(RecapConstants.USER_NAME)));
+        roleEntity.setCreatedBy(username);
         roleEntity.setLastUpdatedDate(new Date());
-        roleEntity.setLastUpdatedBy(String.valueOf(session.getAttribute(RecapConstants.USER_NAME)));
+        roleEntity.setLastUpdatedBy(username);
         List<String> permissionNameList = splitStringAndGetList(rolesForm.getNewPermissionNames());
         return saveRoleEntity(roleEntity, permissionNameList);
     }
