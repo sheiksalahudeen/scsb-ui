@@ -95,6 +95,7 @@ public class UserRoleControllerUT extends BaseTestCase {
         userDetailsForm.setLoginInstitutionId(1);
         List<Object> roles = new ArrayList<>();
         List<Object> institution = new ArrayList<>();
+        Mockito.when(request.getSession(false)).thenReturn(session);
         Mockito.when(mockedUserRoleController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(mockedUserRoleController.getUserRoleService()).thenReturn(userRoleService);
         Mockito.when(mockedUserRoleController.getUserManagementService()).thenReturn(userManagementService);
@@ -116,6 +117,7 @@ public class UserRoleControllerUT extends BaseTestCase {
         usersSessionAttributes();
         Page<UsersEntity> usersEntityPage = getPage();
         boolean superAdmin = true;
+        Mockito.when(request.getSession(false)).thenReturn(session);
         Mockito.when(mockedUserRoleController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(mockedUserRoleController.getUserRoleService()).thenReturn(userRoleService);
         Mockito.when(mockedUserRoleController.getLogger()).thenReturn(logger);
@@ -145,6 +147,7 @@ public class UserRoleControllerUT extends BaseTestCase {
         Integer userId = 3;
         List<Object> roles = new ArrayList<>();
         List<Object> institution = new ArrayList<>();
+        Mockito.when(request.getSession(false)).thenReturn(session);
         Mockito.when(mockedUserRoleController.getUserManagementService()).thenReturn(userManagementService);
         Mockito.when(mockedUserRoleController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(mockedUserRoleController.getUserRoleService()).thenReturn(userRoleService);
@@ -166,6 +169,7 @@ public class UserRoleControllerUT extends BaseTestCase {
         UserRoleForm userRoleForm = new UserRoleForm();
         userRoleForm.setSearchNetworkId("smith");
         usersSessionAttributes();
+        Mockito.when(request.getSession(false)).thenReturn(session);
         Mockito.when(mockedUserRoleController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(mockedUserRoleController.getUserRoleService()).thenReturn(userRoleService);
         Mockito.when(mockedUserRoleController.getLogger()).thenReturn(logger);
@@ -191,6 +195,7 @@ public class UserRoleControllerUT extends BaseTestCase {
         UserDetailsForm userDetailsForm = new UserDetailsForm();
         userDetailsForm.setSuperAdmin(true);
         userDetailsForm.setLoginInstitutionId(1);
+        Mockito.when(request.getSession(false)).thenReturn(session);
         Mockito.when(mockedUserRoleController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(mockedUserRoleController.getUserRoleService()).thenReturn(userRoleService);
         Mockito.when(mockedUserRoleController.getUserManagementService()).thenReturn(userManagementService);
@@ -215,6 +220,7 @@ public class UserRoleControllerUT extends BaseTestCase {
         userRoleForm.setSearchNetworkId("smith");
         userRoleForm.setPageSize(10);
         userRoleForm.setPageNumber(1);
+        Mockito.when(request.getSession(false)).thenReturn(session);
         Mockito.when(mockedUserRoleController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(mockedUserRoleController.getUserRoleService()).thenReturn(userRoleService);
         Mockito.when(mockedUserRoleController.getLogger()).thenReturn(logger);
@@ -235,6 +241,7 @@ public class UserRoleControllerUT extends BaseTestCase {
         userRoleForm.setSearchNetworkId("smith");
         userRoleForm.setPageSize(10);
         userRoleForm.setPageNumber(1);
+        Mockito.when(request.getSession(false)).thenReturn(session);
         Mockito.when(mockedUserRoleController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(mockedUserRoleController.getUserRoleService()).thenReturn(userRoleService);
         Mockito.when(mockedUserRoleController.getLogger()).thenReturn(logger);
@@ -254,6 +261,7 @@ public class UserRoleControllerUT extends BaseTestCase {
         userRoleForm.setSearchNetworkId("smith");
         userRoleForm.setPageSize(10);
         userRoleForm.setPageNumber(1);
+        Mockito.when(request.getSession(false)).thenReturn(session);
         Mockito.when(mockedUserRoleController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(mockedUserRoleController.getUserRoleService()).thenReturn(userRoleService);
         Mockito.when(mockedUserRoleController.getLogger()).thenReturn(logger);
@@ -283,6 +291,7 @@ public class UserRoleControllerUT extends BaseTestCase {
         userDetailsForm.setLoginInstitutionId(1);
         List<Object> roles = new ArrayList<>();
         List<Object> institution = new ArrayList<>();
+        Mockito.when(request.getSession(false)).thenReturn(session);
         Mockito.when(mockedUserRoleController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(mockedUserRoleController.getUserRoleService()).thenReturn(userRoleService);
         Mockito.when(mockedUserRoleController.getUserManagementService()).thenReturn(userManagementService);
@@ -317,6 +326,7 @@ public class UserRoleControllerUT extends BaseTestCase {
         List<Object> roles = new ArrayList<>();
         List<Object> institution = new ArrayList<>();
         Integer userId = 3;
+        Mockito.when(request.getSession(false)).thenReturn(session);
         Mockito.when(mockedUserRoleController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(mockedUserRoleController.getUserRoleService()).thenReturn(userRoleService);
         Mockito.when(mockedUserRoleController.getUserManagementService()).thenReturn(userManagementService);
@@ -365,6 +375,7 @@ public class UserRoleControllerUT extends BaseTestCase {
         Integer institutionId = 1;
         List<Integer> roleIds = role;
         String userEmailId = "test@mail.com";
+        Mockito.when(request.getSession(false)).thenReturn(session);
         Mockito.when(mockedUserRoleController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(mockedUserRoleController.getUserRoleService()).thenReturn(userRoleService);
         Mockito.when(mockedUserRoleController.getUserManagementService()).thenReturn(userManagementService);
@@ -402,6 +413,7 @@ public class UserRoleControllerUT extends BaseTestCase {
         List<Integer> role = new ArrayList<>();
         role.add(2);
         userRoleForm.setSelectedForCreate(role);
+        Mockito.when(request.getSession(false)).thenReturn(session);
         Mockito.when(mockedUserRoleController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(mockedUserRoleController.getUserRoleService()).thenReturn(userRoleService);
         Mockito.when(mockedUserRoleController.getUserManagementService()).thenReturn(userManagementService);

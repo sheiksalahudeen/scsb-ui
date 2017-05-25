@@ -29,9 +29,6 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
 
     @Test
     public void checkGetPhysicalPrivateRequestCountsForPUL() throws Exception{
-        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 3, "PUL");
-        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        saveRequestEntity(itemEntity.getItemId(),1,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -39,16 +36,18 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         List<Integer> cgdIdList = new ArrayList<>(Arrays.asList(cgdId));
         String[] requestTypeId = {"RETRIEVAL", "RECALL", "EDD"};
         List<String> requestTypeIdList = new ArrayList<>(Arrays.asList(requestTypeId));
-        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(1),cgdIdList,requestTypeIdList);
-        assertNotNull(count);
-        assertEquals(1,count);
+        long countBefore = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(1),cgdIdList,requestTypeIdList);
+        assertNotNull(countBefore);
+        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 3, "PUL");
+        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
+        saveRequestEntity(itemEntity.getItemId(),1,2,String.valueOf(new Random().nextInt()));
+        long countAfter = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(1),cgdIdList,requestTypeIdList);
+        assertNotNull(countAfter);
+        assertEquals(countBefore+1,countAfter);
     }
 
     @Test
     public void checkGetPhysicalSharedAndOpenRequestCountsForPUL() throws Exception{
-        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 1, "PUL");
-        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        saveRequestEntity(itemEntity.getItemId(),1,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -56,9 +55,14 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         List<Integer> cgdIdList = new ArrayList<>(Arrays.asList(cgdId));
         String[] requestTypeId = {"RETRIEVAL", "RECALL", "BORROW DIRECT"};
         List<String> requestTypeIdList = new ArrayList<>(Arrays.asList(requestTypeId));
-        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(1),cgdIdList,requestTypeIdList);
-        assertNotNull(count);
-        assertEquals(1,count);
+        long countBefore = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(1),cgdIdList,requestTypeIdList);
+        assertNotNull(countBefore);
+        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 1, "PUL");
+        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
+        saveRequestEntity(itemEntity.getItemId(),1,2,String.valueOf(new Random().nextInt()));
+        long countAfter = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(1),cgdIdList,requestTypeIdList);
+        assertNotNull(countAfter);
+        assertEquals(countBefore+1,countAfter);
     }
 
     @Test
@@ -115,9 +119,6 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
 
     @Test
     public void checkGetPhysicalSharedAndOpenRequestCountsForNYPL() throws Exception{
-        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 3, 1, "NYPL");
-        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        saveRequestEntity(itemEntity.getItemId(),1,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -125,17 +126,19 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         List<Integer> cgdIdList = new ArrayList<>(Arrays.asList(cgdId));
         String[] requestTypeId = {"RETRIEVAL", "RECALL", "BORROW DIRECT"};
         List<String> requestTypeIdList = new ArrayList<>(Arrays.asList(requestTypeId));
-        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(3),cgdIdList,requestTypeIdList);
-        assertNotNull(count);
-        assertEquals(1,count);
+        long countBefore = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(3),cgdIdList,requestTypeIdList);
+        assertNotNull(countBefore);
+        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 3, 1, "NYPL");
+        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
+        saveRequestEntity(itemEntity.getItemId(),1,2,String.valueOf(new Random().nextInt()));
+        long countAfter = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(3),cgdIdList,requestTypeIdList);
+        assertNotNull(countAfter);
+        assertEquals(countBefore+1,countAfter);
     }
 
     // Test for Edd Requests
     @Test
     public void checkGetEDDPrivateRequestCountsForPUL() throws Exception{
-        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 3, "PUL");
-        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        saveRequestEntity(itemEntity.getItemId(),3,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -143,9 +146,14 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         List<Integer> cgdIdList = new ArrayList<>(Arrays.asList(cgdId));
         String[] requestTypeId = {"EDD"};
         List<String> requestTypeIdList = new ArrayList<>(Arrays.asList(requestTypeId));
-        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(1),cgdIdList,requestTypeIdList);
-        assertNotNull(count);
-        assertEquals(1,count);
+        long countBefore = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(1),cgdIdList,requestTypeIdList);
+        assertNotNull(countBefore);
+        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 3, "PUL");
+        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
+        saveRequestEntity(itemEntity.getItemId(),3,2,String.valueOf(new Random().nextInt()));
+        long countAfter = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(1),cgdIdList,requestTypeIdList);
+        assertNotNull(countAfter);
+        assertEquals(countBefore+1,countAfter);
     }
 
     @Test
@@ -222,9 +230,6 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
 
     @Test
     public void checkGetEDDSharedAndOpenRequestCountsForNYPL() throws Exception{
-        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 3, 1, "NYPL");
-        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        saveRequestEntity(itemEntity.getItemId(),3,1,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
@@ -232,24 +237,31 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
         List<Integer> cgdIdList = new ArrayList<>(Arrays.asList(cgdId));
         String[] requestTypeId = {"EDD"};
         List<String> requestTypeIdList = new ArrayList<>(Arrays.asList(requestTypeId));
-        long count = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(3),cgdIdList,requestTypeIdList);
-        assertNotNull(count);
-        assertEquals(1,count);
+        long countBefore = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(3),cgdIdList,requestTypeIdList);
+        assertNotNull(countBefore);
+        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 3, 1, "NYPL");
+        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
+        saveRequestEntity(itemEntity.getItemId(),3,1,String.valueOf(new Random().nextInt()));
+        long countAfter = requestItemDetailsRepository.getPhysicalAndEDDCounts(fromDate,toDate,Arrays.asList(3),cgdIdList,requestTypeIdList);
+        assertNotNull(countAfter);
+        assertEquals(countBefore+1,countAfter);
     }
 
     // Recall Requests
 
     @Test
     public void checkGetRecallRequestCountsForPUL() throws Exception{
-        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 1, "PUL");
-        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        saveRequestEntity(itemEntity.getItemId(),2,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
-        long count = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,1, RecapConstants.RECALL);
-        assertNotNull(count);
-        assertEquals(1,count);
+        long countBefore = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,1, RecapConstants.RECALL);
+        assertNotNull(countBefore);
+        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 1, "PUL");
+        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
+        saveRequestEntity(itemEntity.getItemId(),2,2,String.valueOf(new Random().nextInt()));
+        long countAfter = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,1, RecapConstants.RECALL);
+        assertNotNull(countAfter);
+        assertEquals(countBefore+1,countAfter);
     }
 
     @Test
@@ -269,55 +281,63 @@ public class RequestItemDetailsRepositoryUT extends BaseTestCase {
 
     @Test
     public void checkGetRecallRequestCountsForNYPL() throws Exception{
-        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 3, 1, "NYPL");
-        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        saveRequestEntity(itemEntity.getItemId(),2,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
-        long count = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,3, RecapConstants.RECALL);
-        assertNotNull(count);
-        assertEquals(1,count);
+        long countBefore = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,3, RecapConstants.RECALL);
+        assertNotNull(countBefore);
+        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 3, 1, "NYPL");
+        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
+        saveRequestEntity(itemEntity.getItemId(),2,2,String.valueOf(new Random().nextInt()));
+        long countAfter = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,3, RecapConstants.RECALL);
+        assertNotNull(countAfter);
+        assertEquals(countBefore+1,countAfter);
     }
 
     // Test for Retrieval Requests
     @Test
     public void checkGetRetrievalRequestCountsForPUL() throws Exception{
-        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 1, "PUL");
-        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        saveRequestEntity(itemEntity.getItemId(),1,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
-        long count = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,1, RecapConstants.RETRIEVAL);
-        assertNotNull(count);
-        assertEquals(1,count);
+        long countBefore = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,1, RecapConstants.RETRIEVAL);
+        assertNotNull(countBefore);
+        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 1, 1, "PUL");
+        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
+        saveRequestEntity(itemEntity.getItemId(),1,2,String.valueOf(new Random().nextInt()));
+        long countAfter = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,1, RecapConstants.RETRIEVAL);
+        assertNotNull(countAfter);
+        assertEquals(countBefore+1,countAfter);
     }
 
     @Test
     public void checkGetRetrievalRequestCountsForCUL() throws Exception{
-        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 2, 1, "CUL");
-        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        saveRequestEntity(itemEntity.getItemId(),1,1,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
-        long count = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,2, RecapConstants.RETRIEVAL);
-        assertNotNull(count);
-        assertEquals(1,count);
+        long countBefore = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,2, RecapConstants.RETRIEVAL);
+        assertNotNull(countBefore);
+        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 2, 1, "CUL");
+        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
+        saveRequestEntity(itemEntity.getItemId(),1,1,String.valueOf(new Random().nextInt()));
+        long countAfter = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,2, RecapConstants.RETRIEVAL);
+        assertNotNull(countAfter);
+        assertEquals(countBefore+1,countAfter);
     }
 
     @Test
     public void checkGetRetrievalRequestCountsForNYPL() throws Exception{
-        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 3, 1, "NYPL");
-        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
-        saveRequestEntity(itemEntity.getItemId(),1,2,String.valueOf(new Random().nextInt()));
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
-        long count = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,3, RecapConstants.RETRIEVAL);
-        assertNotNull(count);
-        assertEquals(1,count);
+        long countBefore = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,3, RecapConstants.RETRIEVAL);
+        assertNotNull(countBefore);
+        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(50000, 3, 1, "NYPL");
+        ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
+        saveRequestEntity(itemEntity.getItemId(),1,2,String.valueOf(new Random().nextInt()));
+        long countAfter = requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(fromDate,toDate,3, RecapConstants.RETRIEVAL);
+        assertNotNull(countAfter);
+        assertEquals(countBefore+1,countAfter);
     }
 
     // Test for saving Bib , Holding , Item , RequestItem and Patron Entities
