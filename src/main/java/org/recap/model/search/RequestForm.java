@@ -26,7 +26,7 @@ public class RequestForm {
     private String requestNotes;
     private String startPage;
     private String endPage;
-    private Integer volumeNumber;
+    private String volumeNumber;
     private String issue;
     private String articleAuthor;
     private String articleTitle;
@@ -178,11 +178,11 @@ public class RequestForm {
         this.endPage = endPage;
     }
 
-    public Integer getVolumeNumber() {
+    public String getVolumeNumber() {
         return volumeNumber;
     }
 
-    public void setVolumeNumber(Integer volumeNumber) {
+    public void setVolumeNumber(String volumeNumber) {
         this.volumeNumber = volumeNumber;
     }
 

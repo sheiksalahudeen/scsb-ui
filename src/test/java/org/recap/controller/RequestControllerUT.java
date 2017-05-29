@@ -442,7 +442,7 @@ public class RequestControllerUT extends BaseControllerUT {
         requestForm.setItemBarcode("3324545547568535");
         requestForm.setStatus("Success");
         requestForm.setDeliveryLocation("PB");
-        requestForm.setVolumeNumber(1);
+        requestForm.setVolumeNumber("1");
         requestForm.setMessage("testing");
         requestForm.setErrorMessage("testing");
         requestForm.setIssue("test");
