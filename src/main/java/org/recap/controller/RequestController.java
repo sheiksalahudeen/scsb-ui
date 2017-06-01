@@ -54,9 +54,6 @@ public class RequestController {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestController.class);
 
-    @Value("${server.protocol}")
-    String serverProtocol;
-
     @Value("${scsb.url}")
     String scsbUrl;
 
@@ -112,10 +109,6 @@ public class RequestController {
 
     public ItemDetailsRepository getItemDetailsRepository() {
         return itemDetailsRepository;
-    }
-
-    public String getServerProtocol() {
-        return serverProtocol;
     }
 
     public String getScsbShiro() {
@@ -351,7 +344,7 @@ public class RequestController {
                 }
             }
 
-            String requestItemUrl = getServerProtocol() + getScsbUrl() + RecapConstants.REQUEST_ITEM_URL;
+            String requestItemUrl = getScsbUrl() + RecapConstants.REQUEST_ITEM_URL;
 
             ItemRequestInformation itemRequestInformation = getItemRequestInformation();
             itemRequestInformation.setUsername(username);
@@ -418,7 +411,7 @@ public class RequestController {
         String requestStatus = null;
         try {
             HttpEntity requestEntity = new HttpEntity<>(getHttpHeaders());
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getServerProtocol() + getScsbUrl() + RecapConstants.URL_REQUEST_CANCEL).queryParam(RecapConstants.REQUEST_ID, requestForm.getRequestId());
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getScsbUrl() + RecapConstants.URL_REQUEST_CANCEL).queryParam(RecapConstants.REQUEST_ID, requestForm.getRequestId());
             HttpEntity<CancelRequestResponse> responseEntity = getRestTemplate().exchange(builder.build().encode().toUri(), HttpMethod.POST, requestEntity, CancelRequestResponse.class);
             CancelRequestResponse cancelRequestResponse = responseEntity.getBody();
             jsonObject.put(RecapConstants.MESSAGE, cancelRequestResponse.getScreenMessage());

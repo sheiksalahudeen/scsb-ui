@@ -74,9 +74,6 @@ public class CollectionServiceUtilUT extends BaseTestCase {
     @Mock
     private CustomerCodeDetailsRepository customerCodeDetailsRepository;
 
-    @Value("${server.protocol}")
-    String serverProtocol;
-
     @Value("${scsb.url}")
     String scsbUrl;
 
@@ -115,7 +112,7 @@ public class CollectionServiceUtilUT extends BaseTestCase {
         bibliographicMarcForm.setCgdChangeNotes("Notes for updating CGD");
         HttpEntity requestEntity = new HttpEntity<>(getHttpHeaders());
         ResponseEntity responseEntity = new ResponseEntity("Success", HttpStatus.OK);
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(serverProtocol + scsbUrl + RecapConstants.SCSB_UPDATE_CGD_URL)
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(scsbUrl + RecapConstants.SCSB_UPDATE_CGD_URL)
                 .queryParam(RecapConstants.CGD_UPDATE_ITEM_BARCODE, bibliographicMarcForm.getBarcode())
                 .queryParam(RecapConstants.OWNING_INSTITUTION, bibliographicMarcForm.getOwningInstitution())
                 .queryParam(RecapConstants.OLD_CGD, bibliographicMarcForm.getCollectionGroupDesignation())
@@ -123,7 +120,6 @@ public class CollectionServiceUtilUT extends BaseTestCase {
                 .queryParam(RecapConstants.CGD_CHANGE_NOTES, bibliographicMarcForm.getCgdChangeNotes());
         collectionServiceUtil = Mockito.mock(CollectionServiceUtil.class);
         Mockito.when(collectionServiceUtil.getRestTemplate()).thenReturn(restTemplate);
-        Mockito.when(collectionServiceUtil.getServerProtocol()).thenReturn(serverProtocol);
         Mockito.when(collectionServiceUtil.getScsbUrl()).thenReturn(scsbUrl);
         Mockito.when(restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, requestEntity, String.class)).thenReturn(responseEntity);
         Mockito.doCallRealMethod().when(collectionServiceUtil).updateCGDForItem(bibliographicMarcForm);
@@ -206,12 +202,11 @@ public class CollectionServiceUtilUT extends BaseTestCase {
         Mockito.when(collectionServiceUtil.getCustomerCodeDetailsRepository().findByDescription(bibliographicMarcForm.getDeliveryLocation())).thenReturn(customerCodeEntity);
         HttpEntity<DeAccessionRequest> requestEntity = new HttpEntity<>(deAccessionRequest, getHttpHeaders());
         Mockito.when(collectionServiceUtil.getRestTemplate()).thenReturn(restTemplate);
-        Mockito.when(collectionServiceUtil.getServerProtocol()).thenReturn(serverProtocol);
         Mockito.when(collectionServiceUtil.getScsbUrl()).thenReturn(scsbUrl);
         Mockito.when(collectionServiceUtil.getItemDetailsRepository()).thenReturn(mockedItemDetailsRepository);
         Mockito.when(collectionServiceUtil.getItemDetailsRepository().findByBarcode(itemBarcode)).thenReturn(Arrays.asList(fetchedItemEntity));
         Mockito.when(collectionServiceUtil.getItemChangeLogDetailsRepository()).thenReturn(mockedItemChangeLogDetailsRepository);
-        Mockito.when(restTemplate.postForObject(serverProtocol + scsbUrl + RecapConstants.SCSB_DEACCESSION_URL, requestEntity, Map.class)).thenReturn(map);
+        Mockito.when(restTemplate.postForObject(scsbUrl + RecapConstants.SCSB_DEACCESSION_URL, requestEntity, Map.class)).thenReturn(map);
         Mockito.doCallRealMethod().when(collectionServiceUtil).deAccessionItem(bibliographicMarcForm);
         collectionServiceUtil.deAccessionItem(bibliographicMarcForm);
 

@@ -41,9 +41,6 @@ public class ScheduleJobsController {
 
     private static final Logger logger = LoggerFactory.getLogger(ScheduleJobsController.class);
 
-    @Value("${server.protocol}")
-    String serverProtocol;
-
     @Value("${scsb.url}")
     String scsbUrl;
 
@@ -96,7 +93,7 @@ public class ScheduleJobsController {
             scheduleJobRequest.setScheduleType(scheduleJobsForm.getScheduleType());
             HttpEntity<ScheduleJobRequest> httpEntity = new HttpEntity<>(scheduleJobRequest, RecapConstants.getHttpHeaders());
 
-            ResponseEntity<ScheduleJobResponse> responseEntity = getRestTemplate().exchange(serverProtocol + scsbUrl + RecapConstants.URL_SCHEDULE_JOBS, HttpMethod.POST, httpEntity, ScheduleJobResponse.class);
+            ResponseEntity<ScheduleJobResponse> responseEntity = getRestTemplate().exchange(scsbUrl + RecapConstants.URL_SCHEDULE_JOBS, HttpMethod.POST, httpEntity, ScheduleJobResponse.class);
             scheduleJobResponse = responseEntity.getBody();
             String message = scheduleJobResponse.getMessage();
             if (StringUtils.containsIgnoreCase(message, RecapConstants.SUCCESS)) {

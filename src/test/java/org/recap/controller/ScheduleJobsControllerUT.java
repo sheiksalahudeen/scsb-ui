@@ -25,9 +25,6 @@ import static org.mockito.Mockito.when;
  */
 public class ScheduleJobsControllerUT extends BaseControllerUT {
 
-    @Value("${server.protocol}")
-    String serverProtocol;
-
     @Value("${scsb.url}")
     String scsbUrl;
 
@@ -45,14 +42,6 @@ public class ScheduleJobsControllerUT extends BaseControllerUT {
 
     @Mock
     private UserAuthUtil userAuthUtil;
-
-    public String getServerProtocol() {
-        return serverProtocol;
-    }
-
-    public void setServerProtocol(String serverProtocol) {
-        this.serverProtocol = serverProtocol;
-    }
 
     public String getScsbUrl() {
         return scsbUrl;

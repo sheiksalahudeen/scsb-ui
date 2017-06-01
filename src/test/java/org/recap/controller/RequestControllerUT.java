@@ -90,9 +90,6 @@ public class RequestControllerUT extends BaseControllerUT {
     @Mock
     RestTemplate restTemplate;
 
-    @Value("${server.protocol}")
-    String serverProtocol;
-
     @Value("${scsb.url}")
     String scsbUrl;
 
@@ -113,10 +110,6 @@ public class RequestControllerUT extends BaseControllerUT {
 
     public BindingAwareModelMap getModel() {
         return model;
-    }
-
-    public String getServerProtocol() {
-        return serverProtocol;
     }
 
     public String getScsbUrl() {
@@ -343,14 +336,13 @@ public class RequestControllerUT extends BaseControllerUT {
         when(request.getSession()).thenReturn(session);
         ItemRequestInformation itemRequestInformation = getItemRequestInformation();
         HttpEntity<ItemRequestInformation> requestEntity = new HttpEntity<>(itemRequestInformation, getHttpHeaders());
-        String validateRequestItemUrl = getServerProtocol() + getScsbUrl() + RecapConstants.VALIDATE_REQUEST_ITEM_URL;
-        String requestItemUrl = serverProtocol + scsbUrl + RecapConstants.REQUEST_ITEM_URL;
+        String validateRequestItemUrl = getScsbUrl() + RecapConstants.VALIDATE_REQUEST_ITEM_URL;
+        String requestItemUrl = scsbUrl + RecapConstants.REQUEST_ITEM_URL;
         CustomerCodeEntity customerCodeEntity = new CustomerCodeEntity();
         customerCodeEntity.setCustomerCode("PB");
         Mockito.when(requestController.getItemRequestInformation()).thenReturn(itemRequestInformation);
         Mockito.when((String) session.getAttribute(RecapConstants.USER_NAME)).thenReturn("Admin");
         Mockito.when(requestController.getRestTemplate()).thenReturn(restTemplate);
-        Mockito.when(requestController.getServerProtocol()).thenReturn(serverProtocol);
         Mockito.when(requestController.getScsbShiro()).thenReturn(scsbShiro);
         Mockito.when(requestController.getScsbUrl()).thenReturn(scsbUrl);
         Mockito.when(requestController.getCustomerCodeDetailsRepository()).thenReturn(customerCodeDetailsRepository);
@@ -366,7 +358,7 @@ public class RequestControllerUT extends BaseControllerUT {
     public void testCancelRequest() throws Exception {
         RequestForm requestForm = getRequestForm();
         HttpEntity requestEntity = new HttpEntity<>(getHttpHeaders());
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(serverProtocol + scsbUrl + RecapConstants.URL_REQUEST_CANCEL).queryParam(RecapConstants.REQUEST_ID, requestForm.getRequestId());
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(scsbUrl + RecapConstants.URL_REQUEST_CANCEL).queryParam(RecapConstants.REQUEST_ID, requestForm.getRequestId());
         CancelRequestResponse cancelRequestResponse = new CancelRequestResponse();
         cancelRequestResponse.setSuccess(true);
         cancelRequestResponse.setScreenMessage("Request cancelled.");
@@ -376,7 +368,6 @@ public class RequestControllerUT extends BaseControllerUT {
         requestStatusEntity.setRequestStatusDescription("Cancelled");
         requestItemEntity.setRequestStatusEntity(requestStatusEntity);
         Mockito.when(requestController.getRestTemplate()).thenReturn(restTemplate);
-        Mockito.when(requestController.getServerProtocol()).thenReturn(serverProtocol);
         Mockito.when(requestController.getScsbShiro()).thenReturn(scsbShiro);
         Mockito.when(requestController.getScsbUrl()).thenReturn(scsbUrl);
         Mockito.when(requestController.getRequestItemDetailsRepository()).thenReturn(requestItemDetailsRepository);

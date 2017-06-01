@@ -39,19 +39,8 @@ import static org.mockito.Mockito.when;
  */
 public class CollectionControllerUT extends BaseControllerUT {
 
-    @Value("${server.protocol}")
-    String serverProtocol;
-
     @Value("${scsb.shiro}")
     String scsbShiro;
-
-    public String getServerProtocol() {
-        return serverProtocol;
-    }
-
-    public void setServerProtocol(String serverProtocol) {
-        this.serverProtocol = serverProtocol;
-    }
 
     public String getScsbShiro() {
         return scsbShiro;
