@@ -363,7 +363,7 @@ public class RequestController {
             itemRequestInformation.setChapterTitle(requestForm.getArticleTitle());
             itemRequestInformation.setIssue(requestForm.getIssue());
             if (requestForm.getVolumeNumber() != null) {
-                itemRequestInformation.setVolume(requestForm.getVolumeNumber().toString());
+                itemRequestInformation.setVolume(requestForm.getVolumeNumber());
             } else {
                 itemRequestInformation.setVolume("");
             }

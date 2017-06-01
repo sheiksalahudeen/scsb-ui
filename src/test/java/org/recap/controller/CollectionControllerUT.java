@@ -109,7 +109,7 @@ public class CollectionControllerUT extends BaseControllerUT {
 
     @Test
     public void collection() throws Exception{
-        when(request.getSession()).thenReturn(session);
+        when(request.getSession(false)).thenReturn(session);
         Mockito.when(getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_COLLECTION_URL,(UsernamePasswordToken)session.getAttribute(RecapConstants.USER_TOKEN))).thenReturn(true);
         Mockito.when(getCollectionController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(getCollectionController.collection(model,request)).thenCallRealMethod();
@@ -135,9 +135,9 @@ public class CollectionControllerUT extends BaseControllerUT {
         userDetailsForm.setSuperAdmin(false);
         userDetailsForm.setLoginInstitutionId(2);
         userDetailsForm.setRecapUser(false);
-        when(request.getSession()).thenReturn(session);
+        when(request.getSession(false)).thenReturn(session);
         usersSessionAttributes();
-        Mockito.when(getUserAuthUtil().getUserDetails(request.getSession(),RecapConstants.BARCODE_RESTRICTED_PRIVILEGE)).thenReturn(userDetailsForm);
+        Mockito.when(getUserAuthUtil().getUserDetails(request.getSession(false),RecapConstants.BARCODE_RESTRICTED_PRIVILEGE)).thenReturn(userDetailsForm);
         Mockito.when(getCollectionController.getUserAuthUtil()).thenReturn(userAuthUtil);
         Mockito.when(getCollectionController.getMarcRecordViewUtil()).thenReturn(marcRecordViewUtil);
         Mockito.when(getCollectionController.openMarcView(collectionForm, bindingResult, model,request)).thenCallRealMethod();
@@ -150,7 +150,7 @@ public class CollectionControllerUT extends BaseControllerUT {
     @Test
     public void collectionUpdate() throws Exception {
         CollectionForm collectionForm = new CollectionForm();
-        when(request.getSession()).thenReturn(session);
+        when(request.getSession(false)).thenReturn(session);
         usersSessionAttributes();
         Mockito.when(getCollectionController.getCollectionServiceUtil()).thenReturn(collectionServiceUtil);
         Mockito.when(getCollectionController.collectionUpdate(collectionForm, bindingResult, model, request)).thenCallRealMethod();

@@ -39,9 +39,25 @@ public class ReportsUtilUT extends BaseTestCase {
     @Test
     public void populatePartnersCountForRequest() throws Exception {
         ReportsForm reportsForm = new ReportsForm();
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
+
+        reportsUtil.populatePartnersCountForRequest(reportsForm, fromDate, toDate);
+
+        long beforePhysicalPrivatePulCount = reportsForm.getPhysicalPrivatePulCount();
+        long beforePhysicalPrivateCulCount = reportsForm.getPhysicalPrivateCulCount();
+        long beforePhysicalPrivateNyplCount = reportsForm.getPhysicalPrivateNyplCount();
+        long beforePhysicalSharedPulCount = reportsForm.getPhysicalSharedPulCount();
+        long beforePhysicalSharedCulCount = reportsForm.getPhysicalSharedCulCount();
+        long beforePhysicalSharedNyplCount = reportsForm.getPhysicalSharedNyplCount();
+        long beforeEddPrivatePulCount = reportsForm.getEddPrivatePulCount();
+        long beforeEddPrivateCulCount = reportsForm.getEddPrivateCulCount();
+        long beforeEddPrivateNyplCount = reportsForm.getEddPrivateNyplCount();
+        long beforeEddSharedPulCount = reportsForm.getEddSharedOpenPulCount();
+        long beforeEddSharedCulCount = reportsForm.getEddSharedOpenCulCount();
+        long beforeEddSharedNyplCount = reportsForm.getEddSharedOpenNyplCount();
 
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(1, 3, false);
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
@@ -92,17 +108,32 @@ public class ReportsUtilUT extends BaseTestCase {
         saveRequestEntity(itemEntity11.getItemId(), 3, 1, String.valueOf(new Random().nextInt()));
 
         reportsUtil.populatePartnersCountForRequest(reportsForm, fromDate, toDate);
-        assertEquals(1, reportsForm.getPhysicalPrivatePulCount());
-        assertEquals(1, reportsForm.getPhysicalPrivateCulCount());
-        assertEquals(1, reportsForm.getPhysicalPrivateNyplCount());
-        assertEquals(1, reportsForm.getPhysicalSharedPulCount());
-        assertEquals(1, reportsForm.getPhysicalSharedCulCount());
-        assertEquals(1, reportsForm.getEddPrivatePulCount());
-        assertEquals(1, reportsForm.getEddPrivateCulCount());
-        assertEquals(1, reportsForm.getEddPrivateNyplCount());
-        assertEquals(1, reportsForm.getEddSharedOpenPulCount());
-        assertEquals(1, reportsForm.getEddSharedOpenCulCount());
-        assertEquals(1, reportsForm.getEddSharedOpenNyplCount());
+
+        long afterPhysicalPrivatePulCount = reportsForm.getPhysicalPrivatePulCount();
+        long afterPhysicalPrivateCulCount = reportsForm.getPhysicalPrivateCulCount();
+        long afterPhysicalPrivateNyplCount = reportsForm.getPhysicalPrivateNyplCount();
+        long afterPhysicalSharedPulCount = reportsForm.getPhysicalSharedPulCount();
+        long afterPhysicalSharedCulCount = reportsForm.getPhysicalSharedCulCount();
+        long afterPhysicalSharedNyplCount = reportsForm.getPhysicalSharedNyplCount();
+        long afterEddPrivatePulCount = reportsForm.getEddPrivatePulCount();
+        long afterEddPrivateCulCount = reportsForm.getEddPrivateCulCount();
+        long afterEddPrivateNyplCount = reportsForm.getEddPrivateNyplCount();
+        long afterEddSharedPulCount = reportsForm.getEddSharedOpenPulCount();
+        long afterEddSharedCulCount = reportsForm.getEddSharedOpenCulCount();
+        long afterEddSharedNyplCount = reportsForm.getEddSharedOpenNyplCount();
+
+        assertEquals(beforePhysicalPrivatePulCount+1, afterPhysicalPrivatePulCount);
+        assertEquals(beforePhysicalPrivateCulCount+1, afterPhysicalPrivateCulCount);
+        assertEquals(beforePhysicalPrivateNyplCount+1, afterPhysicalPrivateNyplCount);
+        assertEquals(beforePhysicalSharedPulCount+1, afterPhysicalSharedPulCount);
+        assertEquals(beforePhysicalSharedCulCount+1, afterPhysicalSharedCulCount);
+        assertEquals(beforePhysicalSharedNyplCount+1, afterPhysicalSharedNyplCount);
+        assertEquals(beforeEddPrivatePulCount+1, afterEddPrivatePulCount);
+        assertEquals(beforeEddPrivateCulCount+1, afterEddPrivateCulCount);
+        assertEquals(beforeEddPrivateNyplCount+1, afterEddPrivateNyplCount);
+        assertEquals(beforeEddSharedPulCount+1, afterEddSharedPulCount);
+        assertEquals(beforeEddSharedCulCount+1, afterEddSharedCulCount);
+        assertEquals(beforeEddSharedNyplCount+1, afterEddSharedNyplCount);
 
     }
 
@@ -113,6 +144,15 @@ public class ReportsUtilUT extends BaseTestCase {
         Date fromDate = simpleDateFormat.parse("2016-12-30 00:00:00");
         Date toDate = simpleDateFormat.parse("2020-12-31 23:59:59");
         reportsForm.setReportRequestType(Arrays.asList("Retrieval"));
+
+        reportsUtil.populateRequestTypeInformation(reportsForm, fromDate, toDate);
+        long beforeCountRetrievalPul = reportsForm.getRetrievalRequestPulCount();
+        long beforeCountRetrievalCul = reportsForm.getRetrievalRequestCulCount();
+        long beforeCountRetrievalNypl = reportsForm.getRetrievalRequestNyplCount();
+
+        long beforeCountRecallPul = reportsForm.getRecallRequestPulCount();
+        long beforeCountRecallCul = reportsForm.getRecallRequestCulCount();
+        long beforeCountRecallNypl = reportsForm.getRecallRequestNyplCount();
 
         BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(1, 1, false);
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
@@ -127,9 +167,12 @@ public class ReportsUtilUT extends BaseTestCase {
         saveRequestEntity(itemEntity2.getItemId(), 1, 2, String.valueOf(new Random().nextInt()));
 
         reportsUtil.populateRequestTypeInformation(reportsForm, fromDate, toDate);
-        assertEquals(1, reportsForm.getRetrievalRequestPulCount());
-        assertEquals(1, reportsForm.getRetrievalRequestCulCount());
-        assertEquals(1, reportsForm.getRetrievalRequestNyplCount());
+        long afterCountRetrievalPul = reportsForm.getRetrievalRequestPulCount();
+        long afterCountRetrievalCul = reportsForm.getRetrievalRequestCulCount();
+        long afterCountRetrievalNypl = reportsForm.getRetrievalRequestNyplCount();
+        assertEquals(beforeCountRetrievalPul+1, afterCountRetrievalPul);
+        assertEquals(beforeCountRetrievalCul+1, afterCountRetrievalCul);
+        assertEquals(beforeCountRetrievalNypl+1, afterCountRetrievalNypl);
 
         reportsForm.setReportRequestType(Arrays.asList("Recall"));
         BibliographicEntity bibliographicEntity3 = saveBibHoldingItemEntity(1, 1, false);
@@ -145,9 +188,13 @@ public class ReportsUtilUT extends BaseTestCase {
         saveRequestEntity(itemEntity5.getItemId(), 2, 2, String.valueOf(new Random().nextInt()));
         reportsUtil.populateRequestTypeInformation(reportsForm, fromDate, toDate);
 
-        assertEquals(1, reportsForm.getRecallRequestPulCount());
-        assertEquals(1, reportsForm.getRecallRequestCulCount());
-        assertEquals(1, reportsForm.getRecallRequestNyplCount());
+        long afterCountRecallPul = reportsForm.getRecallRequestPulCount();
+        long afterCountRecallCul = reportsForm.getRecallRequestCulCount();
+        long afterCountRecallNypl = reportsForm.getRecallRequestNyplCount();
+
+        assertEquals(beforeCountRecallPul+1, afterCountRecallPul);
+        assertEquals(beforeCountRecallCul+1, afterCountRecallCul);
+        assertEquals(beforeCountRecallNypl+1, afterCountRecallNypl);
     }
 
 
