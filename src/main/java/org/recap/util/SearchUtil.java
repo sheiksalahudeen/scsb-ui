@@ -21,9 +21,6 @@ public class SearchUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(SearchUtil.class);
 
-    @Value("${server.protocol}")
-    String serverProtocol;
-
     @Value("${scsb.url}")
     String scsbUrl;
 
@@ -36,7 +33,7 @@ public class SearchUtil {
             headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
             HttpEntity<SearchRecordsRequest> httpEntity = new HttpEntity<>(searchRecordsRequest, headers);
 
-            ResponseEntity<SearchRecordsResponse> responseEntity = restTemplate.exchange(serverProtocol + scsbUrl + RecapConstants.SCSB_SEARCH_SERVICE_URL, HttpMethod.POST, httpEntity, SearchRecordsResponse.class);
+            ResponseEntity<SearchRecordsResponse> responseEntity = restTemplate.exchange(scsbUrl + RecapConstants.SCSB_SEARCH_SERVICE_URL, HttpMethod.POST, httpEntity, SearchRecordsResponse.class);
             searchRecordsResponse = responseEntity.getBody();
             return searchRecordsResponse;
         } catch (Exception e) {

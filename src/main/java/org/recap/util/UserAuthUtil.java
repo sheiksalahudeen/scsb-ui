@@ -22,9 +22,6 @@ public class UserAuthUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(UserAuthUtil.class);
 
-    @Value("${server.protocol}")
-    String serverProtocol;
-
     @Value("${scsb.shiro}")
     String scsbShiro;
 
@@ -32,7 +29,7 @@ public class UserAuthUtil {
     public Map<String,Object> doAuthentication(UsernamePasswordToken token) throws Exception{
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<UsernamePasswordToken> requestEntity = new HttpEntity<>(token, RecapConstants.getHttpHeaders());
-            return restTemplate.postForObject(serverProtocol + scsbShiro + RecapConstants.SCSB_SHIRO_AUTHENTICATE_URL, requestEntity, HashMap.class);
+            return restTemplate.postForObject(scsbShiro + RecapConstants.SCSB_SHIRO_AUTHENTICATE_URL, requestEntity, HashMap.class);
     }
 
     public Boolean authorizedUser(String serviceURL, UsernamePasswordToken token)
@@ -43,7 +40,7 @@ public class UserAuthUtil {
 
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<UsernamePasswordToken> requestEntity = new HttpEntity<>(token, RecapConstants.getHttpHeaders());
-            statusResponse = restTemplate.postForObject(serverProtocol + scsbShiro + serviceURL, requestEntity, Boolean.class);
+            statusResponse = restTemplate.postForObject(scsbShiro + serviceURL, requestEntity, Boolean.class);
         } catch (Exception e) {
             logger.error(RecapConstants.LOG_ERROR,e);
         }

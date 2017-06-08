@@ -33,9 +33,6 @@ public class CollectionServiceUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(CollectionServiceUtil.class);
 
-    @Value("${server.protocol}")
-    String serverProtocol;
-
     @Value("${scsb.url}")
     String scsbUrl;
 
@@ -47,10 +44,6 @@ public class CollectionServiceUtil {
 
     @Autowired
     private ItemDetailsRepository itemDetailsRepository;
-
-    public String getServerProtocol() {
-        return serverProtocol;
-    }
 
     public String getScsbUrl() {
         return scsbUrl;
@@ -81,7 +74,7 @@ public class CollectionServiceUtil {
         try {
             HttpEntity requestEntity = new HttpEntity<>(getHttpHeaders());
 
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getServerProtocol() + getScsbUrl() + RecapConstants.SCSB_UPDATE_CGD_URL)
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getScsbUrl() + RecapConstants.SCSB_UPDATE_CGD_URL)
                     .queryParam(RecapConstants.CGD_UPDATE_ITEM_BARCODE, bibliographicMarcForm.getBarcode())
                     .queryParam(RecapConstants.OWNING_INSTITUTION, bibliographicMarcForm.getOwningInstitution())
                     .queryParam(RecapConstants.OLD_CGD, bibliographicMarcForm.getCollectionGroupDesignation())
@@ -118,7 +111,7 @@ public class CollectionServiceUtil {
             deAccessionRequest.setDeAccessionItems(Arrays.asList(deAccessionItem));
             deAccessionRequest.setUsername(userName);
             HttpEntity<DeAccessionRequest> requestEntity = new HttpEntity<>(deAccessionRequest, getHttpHeaders());
-            Map<String, String> resultMap = getRestTemplate().postForObject(getServerProtocol() + getScsbUrl() + RecapConstants.SCSB_DEACCESSION_URL, requestEntity, Map.class);
+            Map<String, String> resultMap = getRestTemplate().postForObject(getScsbUrl() + RecapConstants.SCSB_DEACCESSION_URL, requestEntity, Map.class);
             String resultMessage = resultMap.get(itemBarcode);
             if (StringUtils.isNotBlank(resultMessage)) {
                 if (resultMessage.contains(RecapConstants.SUCCESS)) {

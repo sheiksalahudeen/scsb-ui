@@ -22,9 +22,6 @@ public class ReportsServiceUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(SearchUtil.class);
 
-    @Value("${server.protocol}")
-    String serverProtocol;
-
     @Value("${scsb.url}")
     String scsbUrl;
 
@@ -41,7 +38,7 @@ public class ReportsServiceUtil {
             headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
             HttpEntity<ReportsRequest> httpEntity = new HttpEntity<>(reportsRequest, headers);
 
-            ResponseEntity<ReportsResponse> responseEntity = restTemplate.exchange(serverProtocol + scsbUrl + RecapConstants.SCSB_REPORTS_ACCESSION_DEACCESSION_COUNTS_URL, HttpMethod.POST, httpEntity, ReportsResponse.class);
+            ResponseEntity<ReportsResponse> responseEntity = restTemplate.exchange(scsbUrl + RecapConstants.SCSB_REPORTS_ACCESSION_DEACCESSION_COUNTS_URL, HttpMethod.POST, httpEntity, ReportsResponse.class);
             reportsResponse = responseEntity.getBody();
             return reportsResponse;
         } catch (Exception e) {
@@ -62,7 +59,7 @@ public class ReportsServiceUtil {
             headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
             HttpEntity<ReportsRequest> httpEntity = new HttpEntity<>(reportsRequest, headers);
 
-            ResponseEntity<ReportsResponse> responseEntity = restTemplate.exchange(serverProtocol + scsbUrl + RecapConstants.SCSB_REPORTS_CGD_ITEM_COUNTS_URL, HttpMethod.POST, httpEntity, ReportsResponse.class);
+            ResponseEntity<ReportsResponse> responseEntity = restTemplate.exchange(scsbUrl + RecapConstants.SCSB_REPORTS_CGD_ITEM_COUNTS_URL, HttpMethod.POST, httpEntity, ReportsResponse.class);
             reportsResponse = responseEntity.getBody();
             return reportsResponse;
         } catch (Exception e) {
@@ -87,7 +84,7 @@ public class ReportsServiceUtil {
             headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
             HttpEntity<ReportsRequest> httpEntity = new HttpEntity<>(reportsRequest, headers);
 
-            ResponseEntity<ReportsResponse> responseEntity = restTemplate.exchange(serverProtocol + scsbUrl + RecapConstants.SCSB_REPORTS_DEACCESSION_RESULTS_URL, HttpMethod.POST, httpEntity, ReportsResponse.class);
+            ResponseEntity<ReportsResponse> responseEntity = restTemplate.exchange(scsbUrl + RecapConstants.SCSB_REPORTS_DEACCESSION_RESULTS_URL, HttpMethod.POST, httpEntity, ReportsResponse.class);
             reportsResponse = responseEntity.getBody();
             return reportsResponse;
         } catch (Exception e) {
@@ -109,7 +106,7 @@ public class ReportsServiceUtil {
             HttpHeaders headers = new HttpHeaders();
             headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
             HttpEntity<ReportsRequest> httpEntity = new HttpEntity<>(reportsRequest, headers);
-            ResponseEntity<ReportsResponse> responseEntity = restTemplate.exchange(serverProtocol + scsbUrl + RecapConstants.SCSB_REPORTS_INCOMPLETE_RESULTS_URL, HttpMethod.POST, httpEntity, ReportsResponse.class);
+            ResponseEntity<ReportsResponse> responseEntity = restTemplate.exchange(scsbUrl + RecapConstants.SCSB_REPORTS_INCOMPLETE_RESULTS_URL, HttpMethod.POST, httpEntity, ReportsResponse.class);
             reportsResponse = responseEntity.getBody();
             return reportsResponse;
         } catch (Exception e) {

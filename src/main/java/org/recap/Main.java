@@ -24,9 +24,6 @@ import java.util.Set;
 @SpringBootApplication
 public class Main {
 
-	@Value("${server.protocol}")
-	String serverProtocol;
-
 	@Value("${tomcat.maxParameterCount}")
 	Integer tomcatMaxParameterCount;
 
