@@ -181,6 +181,7 @@ public class RequestService {
         JSONObject jsonObject = new JSONObject();
         Map<Integer,Integer> map = new HashMap<>();
         Map<String,String> responseMap =  new HashMap<>();
+        Map<String,String> responseMapForNotes =  new HashMap<>();
         List<Integer> requestIdList = new ArrayList<>();
         String[] parameterValues = request.getParameterValues("status[]");
         for (String parameterValue : parameterValues) {
@@ -193,10 +194,12 @@ public class RequestService {
             Integer rowUpdateNum = map.get(requestItemEntity.getRequestId());
             if (!RecapConstants.PROCESSING_STATUS.equals(requestItemEntity.getRequestStatusEntity().getRequestStatusDescription())){
                 responseMap.put(String.valueOf(rowUpdateNum),requestItemEntity.getRequestStatusEntity().getRequestStatusDescription());
+                responseMapForNotes.put(String.valueOf(rowUpdateNum),requestItemEntity.getNotes());
             }
         }
         try {
-            jsonObject.put("status",responseMap);
+            jsonObject.put(RecapConstants.STATUS,responseMap);
+            jsonObject.put(RecapConstants.NOTES,responseMapForNotes);
         } catch (JSONException e) {
             logger.error(RecapConstants.LOG_ERROR,e);
         }
