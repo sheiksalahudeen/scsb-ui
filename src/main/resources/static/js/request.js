@@ -119,7 +119,10 @@ function goToSearchRequest(patronBarcodeInRequest){
                 $('#noteAll').hide();
                 $('#noteActive').hide();
             }
-            statusChange();
+            var refreshStatus = statusChange();
+            if(refreshStatus) {
+                var interval = setInterval(statusChange,3000);
+            }
         }
     });
 
@@ -186,37 +189,47 @@ function searchRequestsByAction(action) {
                 $('#noteAll').hide();
                 $('#noteActive').hide();
             }
-            statusChange();
+            var refreshStatus = statusChange();
+            if(refreshStatus) {
+                var interval = setInterval(statusChange,3000);
+            }
         }
     });
 }
 
 function statusChange(){
+    var refreshStatus = false;
     var status = [];
     $("[name='statusChange']").each(function( ) {
         var statusVar = $( this ).val();
         status.push(statusVar);
     });
     if (status.length != 0){
+        refreshStatus=true;
         $.ajax({
             url: "/request/refreshStatus",
             type: 'get',
             data: {status:status},
             success: function(response){
                 var jsonResponse = JSON.parse(response);
-                var changeStatus = jsonResponse['status'];
-                if(changeStatus != null && changeStatus != ''){
+                var changeStatus = jsonResponse['Status'];
+                var changeNotes = jsonResponse['Notes'];
+                if(changeStatus != null && changeStatus != '' && changeNotes != null && changeNotes != ''){
                     $.each(changeStatus, function (key, value) {
                         $("#status-" + key).html(value);
                         $('#refreshIcon-'+key).hide();
                         $('#removeName-'+key).removeAttr("name");
-
+                        if(value == "RETRIEVAL ORDER PLACED" ||  value == "RECALL ORDER PLACED" || value == "EDD ORDER PLACED") {
+                            $('#showCancelButton-' + key).css("display", "block");}
+                            $.each(changeNotes,function (key,value) {
+                                $("#notes-" + key).val(value);
+                            })
                     });
                 }
-                statusChange();
             }
         });
     }
+    return refreshStatus;
 }
 
 function requestsFirstPage() {
@@ -585,6 +598,7 @@ function cancelRequestItem(index) {
                 $("#cancelStatus").html("Request canceled successfully");
                 $("#status-" + index).html(requestStatus);
                 $("#cancelButton-" + index).hide();
+                $("#showCancelButton-" + index).hide();
             } else {
                 $("#cancelStatus").html("Request cancelation failed. " + message);
             }
