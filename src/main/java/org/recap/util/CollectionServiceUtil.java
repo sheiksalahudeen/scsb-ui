@@ -34,7 +34,7 @@ public class CollectionServiceUtil {
     private static final Logger logger = LoggerFactory.getLogger(CollectionServiceUtil.class);
 
     @Value("${scsb.url}")
-    String scsbUrl;
+    private String scsbUrl;
 
     @Autowired
     private ItemChangeLogDetailsRepository itemChangeLogDetailsRepository;
@@ -45,30 +45,65 @@ public class CollectionServiceUtil {
     @Autowired
     private ItemDetailsRepository itemDetailsRepository;
 
+    /**
+     * Gets scsb url.
+     *
+     * @return the scsb url
+     */
     public String getScsbUrl() {
         return scsbUrl;
     }
 
+    /**
+     * Get rest template rest template.
+     *
+     * @return the rest template
+     */
     public RestTemplate getRestTemplate(){
         return new RestTemplate();
     }
 
+    /**
+     * Gets logger.
+     *
+     * @return the logger
+     */
     public static Logger getLogger() {
         return logger;
     }
 
+    /**
+     * Gets customer code details repository.
+     *
+     * @return the customer code details repository
+     */
     public CustomerCodeDetailsRepository getCustomerCodeDetailsRepository() {
         return customerCodeDetailsRepository;
     }
 
+    /**
+     * Gets item details repository.
+     *
+     * @return the item details repository
+     */
     public ItemDetailsRepository getItemDetailsRepository() {
         return itemDetailsRepository;
     }
 
+    /**
+     * Gets item change log details repository.
+     *
+     * @return the item change log details repository
+     */
     public ItemChangeLogDetailsRepository getItemChangeLogDetailsRepository() {
         return itemChangeLogDetailsRepository;
     }
 
+    /**
+     * This method will call scsb microservice and passes the item information in bibliographic marc form  to update collection group designation for that item in scsb.
+     *
+     * @param bibliographicMarcForm the bibliographic marc form
+     */
     public void updateCGDForItem(BibliographicMarcForm bibliographicMarcForm) {
         String statusResponse = null;
         try {
@@ -95,10 +130,20 @@ public class CollectionServiceUtil {
         }
     }
 
+    /**
+     * Get de-accession request de-accession request.
+     *
+     * @return the de accession request
+     */
     public DeAccessionRequest getDeAccessionRequest(){
         return new DeAccessionRequest();
     }
 
+    /**
+     * This method will call scsb microservice passes the item information in bibliographic marc form to deaccession that item in scsb.
+     *
+     * @param bibliographicMarcForm the bibliographic marc form
+     */
     public void deAccessionItem(BibliographicMarcForm bibliographicMarcForm) {
         try {
             String itemBarcode = bibliographicMarcForm.getBarcode();

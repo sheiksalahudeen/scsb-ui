@@ -20,13 +20,18 @@ public class AppUserDetails implements UserDetails {
 
     private List<String> roles;
 
+    /**
+     * Instantiates a new AppUserDetails object.
+     */
     public AppUserDetails() {
         super();
     }
 
     /**
-     * @param userid
-     * @param authorities
+     * Instantiates a new AppUserDetails object with arguments.
+     *
+     * @param userid      the userid
+     * @param authorities the authorities
      */
     public AppUserDetails(String userid, Collection<? extends GrantedAuthority> authorities) {
         super();
@@ -38,6 +43,11 @@ public class AppUserDetails implements UserDetails {
         }
     }
 
+    /**
+     * Gets userid.
+     *
+     * @return the userid
+     */
     public String getUserid() {
         return userid;
     }

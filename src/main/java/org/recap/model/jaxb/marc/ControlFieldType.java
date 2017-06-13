@@ -9,11 +9,11 @@ import java.io.Serializable;
 
 /**
  * MARC21 Fields 001-009
- * <p/>
+ * <p>
  * <p>Java class for controlFieldType complex type.
- * <p/>
+ * <p>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * <p/>
+ * <p>
  * <pre>
  * &lt;complexType name="controlFieldType">
  *   &lt;simpleContent>
@@ -43,8 +43,7 @@ public class ControlFieldType implements Serializable {
     /**
      * Gets the value of the value property.
      *
-     * @return possible object is
-     * {@link String }
+     * @return possible object is {@link String }
      */
     public String getValue() {
         return value;
@@ -53,8 +52,7 @@ public class ControlFieldType implements Serializable {
     /**
      * Sets the value of the value property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is              {@link String }
      */
     public void setValue(String value) {
         this.value = value;
@@ -63,8 +61,7 @@ public class ControlFieldType implements Serializable {
     /**
      * Gets the value of the id property.
      *
-     * @return possible object is
-     * {@link String }
+     * @return possible object is {@link String }
      */
     public String getId() {
         return id;
@@ -73,8 +70,7 @@ public class ControlFieldType implements Serializable {
     /**
      * Sets the value of the id property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is              {@link String }
      */
     public void setId(String value) {
         this.id = value;
@@ -83,8 +79,7 @@ public class ControlFieldType implements Serializable {
     /**
      * Gets the value of the tag property.
      *
-     * @return possible object is
-     * {@link String }
+     * @return possible object is {@link String }
      */
     public String getTag() {
         return tag;
@@ -93,8 +88,7 @@ public class ControlFieldType implements Serializable {
     /**
      * Sets the value of the tag property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is              {@link String }
      */
     public void setTag(String value) {
         this.tag = value;

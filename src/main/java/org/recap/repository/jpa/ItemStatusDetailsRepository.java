@@ -11,7 +11,19 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(collectionResourceRel = "itemStatus", path = "itemStatus")
 public interface ItemStatusDetailsRepository extends PagingAndSortingRepository<ItemStatusEntity, Integer> {
 
+    /**
+     * To get the item status entity for the given status code.
+     *
+     * @param statusCode the status code
+     * @return the item status entity
+     */
     ItemStatusEntity findByStatusCode(String statusCode);
 
+    /**
+     * To get the item status entity for the given item status id.
+     *
+     * @param itemStatusId the item status id
+     * @return the item status entity
+     */
     ItemStatusEntity findByItemStatusId(@Param("itemStatusId") Integer itemStatusId);
 }
