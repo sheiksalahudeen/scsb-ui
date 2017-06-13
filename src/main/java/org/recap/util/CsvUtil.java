@@ -23,10 +23,11 @@ public class CsvUtil {
     private static final Logger logger = LoggerFactory.getLogger(CsvUtil.class);
 
     /**
-     * Generates a csv file for the selected search result rows.
-     * @param searchResultRows
-     * @param fileNameWithExtension
-     * @return
+     * Exports the selected search result rows into a csv file in the search UI page.
+     *
+     * @param searchResultRows      the search result rows
+     * @param fileNameWithExtension the file name with extension
+     * @return file
      */
     public File writeSearchResultsToCsv(List<SearchResultRow> searchResultRows, String fileNameWithExtension) {
         File file = new File(fileNameWithExtension);

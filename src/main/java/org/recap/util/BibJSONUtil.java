@@ -13,6 +13,12 @@ import java.util.*;
  */
 public class BibJSONUtil extends MarcUtil {
 
+    /**
+     * Gets publisher value from the marc record.
+     *
+     * @param record the record
+     * @return the publisher value
+     */
     public String getPublisherValue(Record record) {
         String publisherValue;
         List<String> publisherDataFields = Arrays.asList("260", "261", "262", "264");
@@ -37,6 +43,12 @@ public class BibJSONUtil extends MarcUtil {
         return null;
     }
 
+    /**
+     * Gets publication date value from marc record.
+     *
+     * @param record the record
+     * @return the publication date value
+     */
     public String getPublicationDateValue(Record record) {
         String publicationDateValue;
         List<String> publicationDateDataFields = Arrays.asList("260", "261", "262", "264");
@@ -49,6 +61,12 @@ public class BibJSONUtil extends MarcUtil {
         return null;
     }
 
+    /**
+     * Gets lccn value from marc record.
+     *
+     * @param record the record
+     * @return the lccn value
+     */
     public String getLCCNValue(Record record) {
         String lccnValue = getDataFieldValue(record, "010", null, null, "a");
         if (lccnValue != null) {
@@ -80,6 +98,12 @@ public class BibJSONUtil extends MarcUtil {
         return oclcNumbers;
     }
 
+    /**
+     * Get isbn number from the marc record.
+     *
+     * @param record the record
+     * @return the list
+     */
     public List<String> getISBNNumber(Record record){
         List<String> isbnNumbers = new ArrayList<>();
         List<String> isbnNumberList = getMultiDataFieldValues(record,"020", null, null, "a");
@@ -89,6 +113,12 @@ public class BibJSONUtil extends MarcUtil {
         return isbnNumbers;
     }
 
+    /**
+     * Get issn number from the marc record.
+     *
+     * @param record the record
+     * @return the list
+     */
     public List<String> getISSNNumber(Record record){
         List<String> issnNumbers = new ArrayList<>();
         List<String> issnNumberList = getMultiDataFieldValues(record,"022", null, null, "a");
@@ -98,6 +128,12 @@ public class BibJSONUtil extends MarcUtil {
         return issnNumbers;
     }
 
+    /**
+     * Gets leader material type from the marc record.
+     *
+     * @param leader the leader
+     * @return the leader material type
+     */
     public String getLeaderMaterialType(Leader leader) {
         String leaderMaterialType = null;
         String leaderFieldValue = leader != null ? leader.toString() : null;
@@ -114,6 +150,12 @@ public class BibJSONUtil extends MarcUtil {
         return leaderMaterialType;
     }
 
+    /**
+     * Gets title from the marc record.
+     *
+     * @param marcRecord the marc record
+     * @return the title
+     */
     public String getTitle(Record marcRecord) {
         StringBuilder title=new StringBuilder();
         title.append(getDataFieldValueStartsWith(marcRecord, "245", Arrays.asList('a', 'b','n','p')) + " ");
@@ -135,12 +177,24 @@ public class BibJSONUtil extends MarcUtil {
         return titleStartsWith;
     }
 
+    /**
+     * Gets title display from the marc record.
+     *
+     * @param marcRecord the marc record
+     * @return the title display
+     */
     public String getTitleDisplay(Record marcRecord) {
         StringBuilder titleDisplay = new StringBuilder();
         titleDisplay.append(getDataFieldValueStartsWith(marcRecord, "245", Arrays.asList('a', 'b', 'c', 'f', 'g', 'h', 'k', 'n', 'p', 's')));
         return titleDisplay.toString();
     }
 
+    /**
+     * Gets author display value from the marc record.
+     *
+     * @param marcRecord the marc record
+     * @return the author display value
+     */
     public String getAuthorDisplayValue(Record marcRecord) {
         StringBuilder author = new StringBuilder();
         author.append(getDataFieldValueStartsWith(marcRecord, "100", Arrays.asList('a','b','c','d','e','f','g','j','k','l','n','p','q','t','u')) + " ");
@@ -151,6 +205,12 @@ public class BibJSONUtil extends MarcUtil {
         return author.toString();
     }
 
+    /**
+     * Gets author search value from the marc record.
+     *
+     * @param marcRecord the marc record
+     * @return the author search value
+     */
     public List<String> getAuthorSearchValue(Record marcRecord) {
         List<String> authorSearchValues = new ArrayList<>();
         List<String> fieldValues;
@@ -173,10 +233,23 @@ public class BibJSONUtil extends MarcUtil {
         return authorSearchValues;
     }
 
+    /**
+     * Gets leader from the marc record.
+     *
+     * @param marcRecord the marc record
+     * @return the leader
+     */
     public String getLeader(Record marcRecord) {
         return marcRecord.getLeader() != null ? marcRecord.getLeader().toString() : null;
     }
 
+    /**
+     * Gets title sort from the marc record.
+     *
+     * @param marcRecord   the marc record
+     * @param titleDisplay the title display
+     * @return the title sort
+     */
     public String getTitleSort(Record marcRecord, String titleDisplay) {
         Integer secondIndicatorForDataField = getSecondIndicatorForDataField(marcRecord, "245");
         if (StringUtils.isNotBlank(titleDisplay) && titleDisplay.length() >= secondIndicatorForDataField) {

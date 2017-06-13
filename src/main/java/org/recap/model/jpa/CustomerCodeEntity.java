@@ -7,7 +7,6 @@ import java.util.List;
 /**
  * Created by rajeshbabuk on 18/10/16.
  */
-
 @Entity
 @Table(name = "customer_code_t", schema = "recap", catalog = "")
 public class CustomerCodeEntity implements Serializable, Comparable<CustomerCodeEntity> {
@@ -48,50 +47,110 @@ public class CustomerCodeEntity implements Serializable, Comparable<CustomerCode
     private List<DeliveryRestrictionEntity> deliveryRestrictionEntityList;
 
 
+    /**
+     * Gets customer code id.
+     *
+     * @return the customer code id
+     */
     public Integer getCustomerCodeId() {
         return customerCodeId;
     }
 
+    /**
+     * Sets customer code id.
+     *
+     * @param customerCodeId the customer code id
+     */
     public void setCustomerCodeId(Integer customerCodeId) {
         this.customerCodeId = customerCodeId;
     }
 
+    /**
+     * Gets customer code.
+     *
+     * @return the customer code
+     */
     public String getCustomerCode() {
         return customerCode;
     }
 
+    /**
+     * Sets customer code.
+     *
+     * @param customerCode the customer code
+     */
     public void setCustomerCode(String customerCode) {
         this.customerCode = customerCode;
     }
 
+    /**
+     * Gets description.
+     *
+     * @return the description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets description.
+     *
+     * @param description the description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Gets owning institution id.
+     *
+     * @return the owning institution id
+     */
     public Integer getOwningInstitutionId() {
         return owningInstitutionId;
     }
 
+    /**
+     * Sets owning institution id.
+     *
+     * @param owningInstitutionId the owning institution id
+     */
     public void setOwningInstitutionId(Integer owningInstitutionId) {
         this.owningInstitutionId = owningInstitutionId;
     }
 
+    /**
+     * Gets delivery restrictions.
+     *
+     * @return the delivery restrictions
+     */
     public String getDeliveryRestrictions() {
         return deliveryRestrictions;
     }
 
+    /**
+     * Sets delivery restrictions.
+     *
+     * @param deliveryRestrictions the delivery restrictions
+     */
     public void setDeliveryRestrictions(String deliveryRestrictions) {
         this.deliveryRestrictions = deliveryRestrictions;
     }
 
+    /**
+     * Gets institution entity.
+     *
+     * @return the institution entity
+     */
     public InstitutionEntity getInstitutionEntity() {
         return institutionEntity;
     }
 
+    /**
+     * Sets institution entity.
+     *
+     * @param institutionEntity the institution entity
+     */
     public void setInstitutionEntity(InstitutionEntity institutionEntity) {
         this.institutionEntity = institutionEntity;
     }
@@ -132,26 +191,56 @@ public class CustomerCodeEntity implements Serializable, Comparable<CustomerCode
         return result;
     }
 
+    /**
+     * Gets delivery restriction entity list.
+     *
+     * @return the delivery restriction entity list
+     */
     public List<DeliveryRestrictionEntity> getDeliveryRestrictionEntityList() {
         return deliveryRestrictionEntityList;
     }
 
+    /**
+     * Sets delivery restriction entity list.
+     *
+     * @param deliveryRestrictionEntityList the delivery restriction entity list
+     */
     public void setDeliveryRestrictionEntityList(List<DeliveryRestrictionEntity> deliveryRestrictionEntityList) {
         this.deliveryRestrictionEntityList = deliveryRestrictionEntityList;
     }
 
+    /**
+     * Gets pwd delivery restrictions.
+     *
+     * @return the pwd delivery restrictions
+     */
     public String getPwdDeliveryRestrictions() {
         return pwdDeliveryRestrictions;
     }
 
+    /**
+     * Sets pwd delivery restrictions.
+     *
+     * @param pwdDeliveryRestrictions the pwd delivery restrictions
+     */
     public void setPwdDeliveryRestrictions(String pwdDeliveryRestrictions) {
         this.pwdDeliveryRestrictions = pwdDeliveryRestrictions;
     }
 
+    /**
+     * Gets recap delivery restrictions.
+     *
+     * @return the recap delivery restrictions
+     */
     public String getRecapDeliveryRestrictions() {
         return recapDeliveryRestrictions;
     }
 
+    /**
+     * Sets recap delivery restrictions.
+     *
+     * @param recapDeliveryRestrictions the recap delivery restrictions
+     */
     public void setRecapDeliveryRestrictions(String recapDeliveryRestrictions) {
         this.recapDeliveryRestrictions = recapDeliveryRestrictions;
     }

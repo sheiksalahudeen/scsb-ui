@@ -33,48 +33,79 @@ import java.util.*;
 /**
  * Created by rajeshbabuk on 12/10/16.
  */
-
 @Controller
 public class CollectionController {
 
     private static final Logger logger = LoggerFactory.getLogger(CollectionController.class);
 
     @Autowired
-    SearchUtil searchUtil;
+    private SearchUtil searchUtil;
 
     @Autowired
-    MarcRecordViewUtil marcRecordViewUtil;
+    private MarcRecordViewUtil marcRecordViewUtil;
 
     @Autowired
-    CollectionServiceUtil collectionServiceUtil;
+    private CollectionServiceUtil collectionServiceUtil;
 
     @Autowired
     private UserAuthUtil userAuthUtil;
 
     @Autowired
-    RequestItemDetailsRepository requestItemDetailsRepository;
+    private RequestItemDetailsRepository requestItemDetailsRepository;
 
+    /**
+     * Gets marc record view util.
+     *
+     * @return the marc record view util
+     */
     public MarcRecordViewUtil getMarcRecordViewUtil() {
         return marcRecordViewUtil;
     }
 
+    /**
+     * Gets user auth util.
+     *
+     * @return the user auth util
+     */
     public UserAuthUtil getUserAuthUtil() {
         return userAuthUtil;
     }
 
+    /**
+     * Sets user auth util.
+     *
+     * @param userAuthUtil the user auth util
+     */
     public void setUserAuthUtil(UserAuthUtil userAuthUtil) {
         this.userAuthUtil = userAuthUtil;
     }
 
+    /**
+     * Gets collection service util.
+     *
+     * @return the collection service util
+     */
     public CollectionServiceUtil getCollectionServiceUtil() {
         return collectionServiceUtil;
     }
 
+    /**
+     * Gets request item details repository.
+     *
+     * @return the request item details repository
+     */
     public RequestItemDetailsRepository getRequestItemDetailsRepository() {
         return requestItemDetailsRepository;
     }
 
 
+    /**
+     * Render the collection UI page for the scsb application.
+     *
+     * @param model   the model
+     * @param request the request
+     * @return the string
+     */
     @RequestMapping("/collection")
     public String collection(Model model,HttpServletRequest request) {
         HttpSession session=request.getSession(false);
@@ -90,6 +121,15 @@ public class CollectionController {
         }
     }
 
+    /**
+     * Perform search on solr based on the item barcodes and returns the results as rows to get displayed in the collection UI page.
+     *
+     * @param collectionForm the collection form
+     * @param result         the result
+     * @param model          the model
+     * @return the model and view
+     * @throws Exception the exception
+     */
     @ResponseBody
     @RequestMapping(value = "/collection", method = RequestMethod.POST, params = "action=displayRecords")
     public ModelAndView displayRecords(@Valid @ModelAttribute("collectionForm") CollectionForm collectionForm,
@@ -100,6 +140,16 @@ public class CollectionController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.COLLECTION_FORM, collectionForm);
     }
 
+    /**
+     * Upon click on the title in the search result row in collection UI page, a popup box is opened with marc information as well as to perform collection updates.
+     *
+     * @param collectionForm the collection form
+     * @param result         the result
+     * @param model          the model
+     * @param request        the request
+     * @return the model and view
+     * @throws Exception the exception
+     */
     @ResponseBody
     @RequestMapping(value = "/collection", method = RequestMethod.POST, params = "action=openMarcView")
     public ModelAndView openMarcView(@Valid @ModelAttribute("collectionForm") CollectionForm collectionForm,
@@ -113,6 +163,16 @@ public class CollectionController {
         return new ModelAndView("collection :: #collectionUpdateModal", RecapConstants.COLLECTION_FORM, collectionForm);
     }
 
+    /**
+     * To perform operations update cgd or deaccession for the selected item in the collection UI page.
+     *
+     * @param collectionForm the collection form
+     * @param result         the result
+     * @param model          the model
+     * @param request        the request
+     * @return the model and view
+     * @throws Exception the exception
+     */
     @ResponseBody
     @RequestMapping(value = "/collection", method = RequestMethod.POST, params = "action=collectionUpdate")
     public ModelAndView collectionUpdate(@Valid @ModelAttribute("collectionForm") CollectionForm collectionForm,
@@ -130,6 +190,15 @@ public class CollectionController {
         return new ModelAndView("collection :: #itemDetailsSection", RecapConstants.COLLECTION_FORM, collectionForm);
     }
 
+    /**
+     * This method is to check whether the item is cross instituion borrowed while performing collection update.
+     *
+     * @param collectionForm the collection form
+     * @param result         the result
+     * @param model          the model
+     * @return the model and view
+     * @throws Exception the exception
+     */
     @ResponseBody
     @RequestMapping(value = "/collection", method = RequestMethod.POST, params = "action=checkCrossInstitutionBorrowed")
     public ModelAndView checkCrossInstitutionBorrowed(@Valid @ModelAttribute("collectionForm") CollectionForm collectionForm,

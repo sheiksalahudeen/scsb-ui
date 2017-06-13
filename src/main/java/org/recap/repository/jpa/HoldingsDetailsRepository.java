@@ -11,5 +11,11 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(collectionResourceRel = "holdings", path = "holdings")
 public interface HoldingsDetailsRepository extends JpaRepository<HoldingsEntity, HoldingsPK> {
 
+    /**
+     * To get the holdings entity for the given holdings id.
+     *
+     * @param holdingsId the holdings id
+     * @return the holdings entity
+     */
     HoldingsEntity findByHoldingsId(Integer holdingsId);
 }
