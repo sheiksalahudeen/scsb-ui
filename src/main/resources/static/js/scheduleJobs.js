@@ -18,9 +18,7 @@ function showRescheduleJob(index) {
 
 function showUnscheduleJob(index) {
     showScheduleJobView(index, 'Unschedule');
-    $("#cronExpressionId").css('readonly', true);
     $('#cronExpressionId').attr('readonly', true);
-    $('#cronExpressionId').prop('readonly', true);
     $("#scheduleJobButtonId").hide();
     $("#rescheduleJobButtonId").hide();
     $("#unscheduleJobButtonId").show();

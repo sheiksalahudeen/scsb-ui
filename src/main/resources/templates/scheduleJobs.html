@@ -155,6 +155,7 @@
                                                                id="cronExpressionId"
                                                                name="roleName"
                                                                class="form-control themed-input"
+                                                               th:readonly="${(scheduleJobsForm.message ne null &amp;&amp;  scheduleJobsForm.message ne '') || #strings.equals(scheduleJobsForm.getScheduleType(), 'Unschedule')}"
                                                                th:field="${scheduleJobsForm.cronExpression}">
                                                         </input>
                                                     </div>
@@ -164,10 +165,10 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 text-center">
-                                            <button type="button" name="action" value="scheduleJob" class="btn btn-default themed-button btn-primary" id="scheduleJobButtonId" onclick="invokeScheduleJob('Schedule')">Schedule Job</button>
-                                            <button type="button" name="action" value="scheduleJob" class="btn btn-default themed-button btn-primary" id="rescheduleJobButtonId" onclick="invokeScheduleJob('Reschedule')">Reschedule Job</button>
-                                            <button type="button" name="action" value="scheduleJob" class="btn btn-default themed-button btn-primary" id="unscheduleJobButtonId" onclick="invokeScheduleJob('Unschedule')">Unschedule Job</button>
-                                            <button type="cancel" class="btn btn-default themed-button themed-button-cancel" id="cancelJobButtonId">Cancel</button>
+                                            <button data-th-if="${scheduleJobsForm.message eq null || scheduleJobsForm.message eq ''}" type="button" name="action" value="scheduleJob" class="btn btn-default themed-button btn-primary" id="scheduleJobButtonId" onclick="invokeScheduleJob('Schedule')">Schedule Job</button>
+                                            <button data-th-if="${scheduleJobsForm.message eq null || scheduleJobsForm.message eq ''}" type="button" name="action" value="scheduleJob" class="btn btn-default themed-button btn-primary" id="rescheduleJobButtonId" onclick="invokeScheduleJob('Reschedule')">Reschedule Job</button>
+                                            <button data-th-if="${scheduleJobsForm.message eq null || scheduleJobsForm.message eq ''}" type="button" name="action" value="scheduleJob" class="btn btn-default themed-button btn-primary" id="unscheduleJobButtonId" onclick="invokeScheduleJob('Unschedule')">Unschedule Job</button>
+                                            <button type="cancel" class="btn btn-default themed-button themed-button-cancel" id="cancelJobButtonId">Close</button>
                                         </div>
                                     </div>
                                 </div>
