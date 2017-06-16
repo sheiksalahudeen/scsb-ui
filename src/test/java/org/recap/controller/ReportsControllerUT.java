@@ -86,8 +86,8 @@ public class ReportsControllerUT extends BaseControllerUT {
         when(request.getSession(false)).thenReturn(session);
         Mockito.when(getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REPORT_URL,(UsernamePasswordToken)session.getAttribute(RecapConstants.USER_TOKEN))).thenReturn(true);
         Mockito.when(reportsController.getUserAuthUtil()).thenReturn(userAuthUtil);
-        Mockito.when(reportsController.collection(model,request)).thenCallRealMethod();
-        String response = reportsController.collection(model,request);
+        Mockito.when(reportsController.reports(model,request)).thenCallRealMethod();
+        String response = reportsController.reports(model,request);
         assertNotNull(response);
         assertEquals("searchRecords",response);
     }

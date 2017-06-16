@@ -11,11 +11,27 @@ import java.util.List;
  */
 public interface RequestTypeDetailsRepository extends JpaRepository<RequestTypeEntity, Integer> {
 
+    /**
+     * To get the request type entity for the given request type code.
+     *
+     * @param requestTypeCode the request type code
+     * @return the request type entity
+     */
     RequestTypeEntity findByRequestTypeCode(String requestTypeCode);
 
+    /**
+     * To get all the request type entities in scsb expect edd and borrow direct request type.
+     *
+     * @return the list
+     */
     @Query(value="select requestType from RequestTypeEntity requestType where requestType.requestTypeCode NOT IN ('EDD','BORROW DIRECT')")
     List<RequestTypeEntity> findAllExceptEDDAndBorrowDirect();
 
+    /**
+     *To get all the request type entities in scsb expect borrow direct request type.
+     *
+     * @return the list
+     */
     @Query(value="select requestType from RequestTypeEntity requestType where requestType.requestTypeCode NOT IN ('BORROW DIRECT')")
     List<RequestTypeEntity> findAllExceptBorrowDirect();
 }

@@ -29,6 +29,11 @@ public class JAXBHandler {
 
     }
 
+    /**
+     * Gets JAXBHandler instance.
+     *
+     * @return the instance
+     */
     public static JAXBHandler getInstance() {
         if (null == jaxbHandler) {
             jaxbHandler = new JAXBHandler();
@@ -36,6 +41,12 @@ public class JAXBHandler {
         return jaxbHandler;
     }
 
+    /**
+     * Marshal the given object.
+     *
+     * @param object the object
+     * @return the string
+     */
     public String marshal(Object object) {
         StringWriter stringWriter = new StringWriter();
         try {
@@ -59,6 +70,14 @@ public class JAXBHandler {
         return getMarshallerMap().get(cl.getName());
     }
 
+    /**
+     * Unmarshal the given object.
+     *
+     * @param content the content
+     * @param cl      the cl
+     * @return the object
+     * @throws JAXBException the jaxb exception
+     */
     public synchronized Object unmarshal(String content, Class cl) throws JAXBException  {
         Object object;
         Unmarshaller unmarshaller = getUnmarshaller(cl);
@@ -77,6 +96,11 @@ public class JAXBHandler {
         return getUnmarshallerMap().get(cl.getName());
     }
 
+    /**
+     * Gets unmarshaller map.
+     *
+     * @return the unmarshaller map
+     */
     public Map<String, Unmarshaller> getUnmarshallerMap() {
         if (null == unmarshallerMap) {
             unmarshallerMap = new HashMap<>();
@@ -84,10 +108,20 @@ public class JAXBHandler {
         return unmarshallerMap;
     }
 
+    /**
+     * Sets unmarshaller map.
+     *
+     * @param unmarshallerMap the unmarshaller map
+     */
     public void setUnmarshallerMap(Map<String, Unmarshaller> unmarshallerMap) {
         this.unmarshallerMap = unmarshallerMap;
     }
 
+    /**
+     * Gets marshaller map.
+     *
+     * @return the marshaller map
+     */
     public Map<String, Marshaller> getMarshallerMap() {
         if (marshallerMap == null) {
             marshallerMap = new HashMap<>();
@@ -95,6 +129,11 @@ public class JAXBHandler {
         return marshallerMap;
     }
 
+    /**
+     * Sets marshaller map.
+     *
+     * @param marshallerMap the marshaller map
+     */
     public void setMarshallerMap(Map<String, Marshaller> marshallerMap) {
         this.marshallerMap = marshallerMap;
     }

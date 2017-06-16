@@ -27,6 +27,12 @@ import java.util.List;
 @Service
 public class MarcUtil {
 
+    /**
+     *This method converts marc xml to record list.
+     *
+     * @param marcXml the marc xml
+     * @return the list
+     */
     public List<Record> convertMarcXmlToRecord(String marcXml) {
         List<Record> records = new ArrayList<>();
         MarcReader reader = new MarcXmlReader(IOUtils.toInputStream(marcXml));
@@ -37,6 +43,13 @@ public class MarcUtil {
         return records;
     }
 
+    /**
+     * This method gets data field value for the given data fields tag starts with.
+     *
+     * @param record            the record
+     * @param dataFieldStartTag the data field start tag
+     * @return the data field value starts with
+     */
     public String getDataFieldValueStartsWith(Record record, String dataFieldStartTag) {
         StringBuilder fieldValue = new StringBuilder();
         if (record != null) {
@@ -59,6 +72,14 @@ public class MarcUtil {
         return fieldValue.toString().trim();
     }
 
+    /**
+     *This method gets data field value for the given data field tag starts with and list of subfield tags from the marc record.
+     *
+     * @param record            the record
+     * @param dataFieldStartTag the data field start tag
+     * @param subFieldTags      the sub field tags
+     * @return the data field value starts with
+     */
     public String getDataFieldValueStartsWith(Record record, String dataFieldStartTag, List<Character> subFieldTags) {
         StringBuilder fieldValue = new StringBuilder();
         if (record != null) {
@@ -82,6 +103,14 @@ public class MarcUtil {
         return fieldValue.toString().trim();
     }
 
+    /**
+     * This method gets list of data field values for the given data field tag starts with and list of subfield tags.
+     *
+     * @param record            the record
+     * @param dataFieldStartTag the data field start tag
+     * @param subFieldTags      the sub field tags
+     * @return the list of data field values starts with
+     */
     public List<String> getListOfDataFieldValuesStartsWith(Record record, String dataFieldStartTag, List<Character> subFieldTags) {
         List<String> fieldValues = new ArrayList<>();
         if (record != null) {
@@ -107,11 +136,31 @@ public class MarcUtil {
         return fieldValues;
     }
 
+    /**
+     * Gets data field value.
+     *
+     * @param marcRecord the marc record
+     * @param field      the field
+     * @param ind1       the ind 1
+     * @param ind2       the ind 2
+     * @param subField   the sub field
+     * @return the data field value
+     */
     public String getDataFieldValue(Record marcRecord, String field, String ind1, String ind2, String subField) {
         List<String> strings = resolveValue(marcRecord, field, ind1, ind2, subField);
         return CollectionUtils.isEmpty(strings)? "" : strings.get(0);
     }
 
+    /**
+     * This method gets data field value for the given input fields from marc record.
+     *
+     * @param marcRecord the marc record
+     * @param field      the field
+     * @param ind1       the ind 1
+     * @param ind2       the ind 2
+     * @param subField   the sub field
+     * @return the multi data field values
+     */
     public List<String> getMultiDataFieldValues(Record marcRecord, String field, String ind1, String ind2, String subField) {
         return resolveValue(marcRecord, field, ind1, ind2, subField);
     }
@@ -151,6 +200,13 @@ public class MarcUtil {
         return result;
     }
 
+    /**
+     * This method gets control field value from the marRecord.
+     *
+     * @param marcRecord the marc record
+     * @param field      the field
+     * @return the control field value
+     */
     public String getControlFieldValue(Record marcRecord, String field) {
         List<VariableField> variableFields = marcRecord.getVariableFields(field);
         for (Iterator<VariableField> variableFieldIterator = variableFields.iterator(); variableFieldIterator.hasNext(); ) {
@@ -162,6 +218,13 @@ public class MarcUtil {
         return null;
     }
 
+    /**
+     * This method gets second indicator for data field.
+     *
+     * @param marcRecord the marc record
+     * @param field      the field
+     * @return the second indicator for data field
+     */
     public Integer getSecondIndicatorForDataField(Record marcRecord, String field) {
         List<VariableField> dataFields = marcRecord.getVariableFields(field);
         if (!CollectionUtils.isEmpty(dataFields)) {
@@ -174,6 +237,12 @@ public class MarcUtil {
         return 0;
     }
 
+    /**
+     *  This method reads marc xml and gives back the list of record.
+     *
+     * @param marcXmlString the marc xml string
+     * @return the list
+     */
     public List<Record> readMarcXml(String marcXmlString) {
         List<Record> recordList = new ArrayList<>();
         InputStream in = new ByteArrayInputStream(marcXmlString.getBytes());
@@ -185,6 +254,14 @@ public class MarcUtil {
         return recordList;
     }
 
+    /**
+     * This method gets data field value for the given data field and sub field.
+     *
+     * @param record   the record
+     * @param field    the field
+     * @param subField the sub field
+     * @return the data field value
+     */
     public String getDataFieldValue(Record record, String field, char subField) {
         DataField dataField = getDataField(record, field);
         if (dataField != null) {
@@ -204,6 +281,13 @@ public class MarcUtil {
         return null;
     }
 
+    /**
+     * This method is used to check whether sub field exists.
+     *
+     * @param record the record
+     * @param field  the field
+     * @return the boolean
+     */
     public boolean isSubFieldExists(Record record, String field) {
         DataField dataField = getDataField(record, field);
         if (dataField != null) {
@@ -220,6 +304,13 @@ public class MarcUtil {
         return false;
     }
 
+    /**
+     *  This method gets data field.
+     *
+     * @param record the record
+     * @param field  the field
+     * @return the data field
+     */
     public DataField getDataField(Record record, String field) {
         VariableField variableField = record.getVariableField(field);
         if (variableField != null) {
@@ -231,6 +322,14 @@ public class MarcUtil {
         return null;
     }
 
+    /**
+     * This method gets ind 1 for the given data field and subfield.
+     *
+     * @param record   the record
+     * @param field    the field
+     * @param subField the sub field
+     * @return the ind 1
+     */
     public Character getInd1(Record record, String field, char subField) {
         DataField dataField = getDataField(record, field);
         if (dataField != null) {
@@ -242,6 +341,12 @@ public class MarcUtil {
         return null;
     }
 
+    /**
+     * This method builds bib marc record for the given record.
+     *
+     * @param record the record
+     * @return the bib marc record
+     */
     public BibMarcRecord buildBibMarcRecord(Record record) {
         Record bibRecord = record;
         List<VariableField> holdingsVariableFields = new ArrayList<>();
@@ -300,6 +405,12 @@ public class MarcUtil {
         return bibMarcRecord;
     }
 
+    /**
+     * This method converst marc record to marc xml content.
+     *
+     * @param record the record
+     * @return the string
+     */
     public String writeMarcXml(Record record) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         MarcWriter marcWriter = new MarcXmlWriter(byteArrayOutputStream, true);

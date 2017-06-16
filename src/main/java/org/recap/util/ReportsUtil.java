@@ -28,17 +28,25 @@ import java.util.List;
 public class ReportsUtil {
 
     @Autowired
-    ReportsServiceUtil reportsServiceUtil;
+    private ReportsServiceUtil reportsServiceUtil;
 
     @Autowired
-    RequestItemDetailsRepository requestItemDetailsRepository;
+    private RequestItemDetailsRepository requestItemDetailsRepository;
 
     @Autowired
-    ItemChangeLogDetailsRepository itemChangeLogDetailsRepository;
+    private ItemChangeLogDetailsRepository itemChangeLogDetailsRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(ReportsUtil.class);
 
 
+    /**
+     * To get the item count for the physical and edd request report from the scsb database and
+     * set those values to the reports form to get displayed in the request reports UI page.
+     *
+     * @param reportsForm     the reports form
+     * @param requestFromDate the request from date
+     * @param requestToDate   the request to date
+     */
     public void populatePartnersCountForRequest(ReportsForm reportsForm, Date requestFromDate, Date requestToDate) {
         reportsForm.setPhysicalPrivatePulCount(requestItemDetailsRepository.getPhysicalAndEDDCounts(requestFromDate, requestToDate, Arrays.asList(RecapConstants.PUL_INST_ID), Arrays.asList(RecapConstants.CGD_PRIVATE), Arrays.asList(RecapConstants.RETRIEVAL, RecapConstants.RECALL, RecapConstants.BORROW_DIRECT)));
         reportsForm.setPhysicalPrivateCulCount(requestItemDetailsRepository.getPhysicalAndEDDCounts(requestFromDate, requestToDate, Arrays.asList(RecapConstants.CUL_INST_ID), Arrays.asList(RecapConstants.CGD_PRIVATE), Arrays.asList(RecapConstants.RETRIEVAL, RecapConstants.RECALL, RecapConstants.BORROW_DIRECT)));
@@ -65,6 +73,13 @@ public class ReportsUtil {
     }
 
 
+    /**
+     *To get the item count for the retrieval, recall and edd request report from the scsb database and
+     * set those values to the reports form to get displayed in the request reports UI page.
+     * @param reportsForm     the reports form
+     * @param requestFromDate the request from date
+     * @param requestToDate   the request to date
+     */
     public void populateRequestTypeInformation(ReportsForm reportsForm, Date requestFromDate, Date requestToDate) {
         reportsForm.setRetrievalRequestPulCount(requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(requestFromDate, requestToDate, RecapConstants.PUL_INST_ID, RecapConstants.RETRIEVAL));
         reportsForm.setRetrievalRequestCulCount(requestItemDetailsRepository.getBDHoldRecallRetrievalRequestCounts(requestFromDate, requestToDate, RecapConstants.CUL_INST_ID, RecapConstants.RETRIEVAL));
@@ -81,6 +96,14 @@ public class ReportsUtil {
         reportsForm.setShowRequestTypeTable(true);
         reportsForm.setShowNoteRequestType(true);
     }
+
+    /**
+     * Gets the response from the requestAccessionDeaccessionCounts method under ReportsServiceUtil class and
+     * sets that response to the reports form to get displayed in the accession/deaccession reports UI page.
+     *
+     * @param reportsForm the reports form
+     * @throws Exception the exception
+     */
     public void populateAccessionDeaccessionItemCounts(ReportsForm reportsForm) throws Exception {
         ReportsResponse reportsResponse = reportsServiceUtil.requestAccessionDeaccessionCounts(reportsForm);
         reportsForm.setAccessionPrivatePulCount(reportsResponse.getAccessionPrivatePulCount());
@@ -111,6 +134,13 @@ public class ReportsUtil {
     }
 
 
+    /**
+     * Gets the response from the requestCgdItemCounts method under ReportsServiceUtil class and
+     * sets that response to the reports form to get displayed in the collection group designation reports UI page.
+     *
+     * @param reportsForm the reports form
+     * @throws Exception the exception
+     */
     public void populateCGDItemCounts(ReportsForm reportsForm) throws Exception {
         ReportsResponse reportsResponse = reportsServiceUtil.requestCgdItemCounts(reportsForm);
         reportsForm.setOpenPulCgdCount(reportsResponse.getOpenPulCgdCount());
@@ -126,6 +156,13 @@ public class ReportsUtil {
         reportsForm.setPrivateNyplCgdCount(reportsResponse.getPrivateNyplCgdCount());
     }
 
+    /**
+     * Passes the reports form to reports service util class and supports pagination for the deaccession reports.
+     *
+     * @param reportsForm the reports form
+     * @return the list
+     * @throws Exception the exception
+     */
     public List<DeaccessionItemResultsRow> deaccessionReportFieldsInformation(ReportsForm reportsForm) throws Exception {
         ReportsResponse reportsResponse = reportsServiceUtil.requestDeaccessionResults(reportsForm);
         reportsForm.setTotalPageCount(reportsResponse.getTotalPageCount());
@@ -133,6 +170,13 @@ public class ReportsUtil {
         return reportsResponse.getDeaccessionItemResultsRows();
     }
 
+    /**
+     * Passes the reports form to reports service util class and supports pagination for the incomplete reports.
+     *
+     * @param reportsForm the reports form
+     * @return the list
+     * @throws Exception the exception
+     */
     public List<IncompleteReportResultsRow> incompleteRecordsReportFieldsInformation(ReportsForm reportsForm) throws Exception {
         ReportsResponse reportsResponse = reportsServiceUtil.requestIncompleteRecords(reportsForm);
         if(!reportsForm.isExport()){
@@ -144,6 +188,13 @@ public class ReportsUtil {
         return reportsResponse.getIncompleteReportResultsRows();
     }
 
+    /**
+     * Export incomplete report search results to a csv file.
+     *
+     * @param incompleteReportResultsRows the incomplete report results rows
+     * @param fileNameWithExtension       the file name with extension
+     * @return the file
+     */
     public File exportIncompleteRecords(List<IncompleteReportResultsRow> incompleteReportResultsRows, String fileNameWithExtension) {
         File file = new File(fileNameWithExtension);
         CsvWriter csvOutput = null;

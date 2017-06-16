@@ -11,9 +11,9 @@ import java.util.List;
 
 /**
  * <p>Java class for recordType complex type.
- * <p/>
+ * <p>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * <p/>
+ * <p>
  * <pre>
  * &lt;complexType name="recordType">
  *   &lt;complexContent>
@@ -51,8 +51,7 @@ public class RecordType implements Serializable {
     /**
      * Gets the value of the leader property.
      *
-     * @return possible object is
-     * {@link LeaderFieldType }
+     * @return possible object is {@link LeaderFieldType }
      */
     public LeaderFieldType getLeader() {
         return leader;
@@ -61,8 +60,7 @@ public class RecordType implements Serializable {
     /**
      * Sets the value of the leader property.
      *
-     * @param value allowed object is
-     *              {@link LeaderFieldType }
+     * @param value allowed object is              {@link LeaderFieldType }
      */
     public void setLeader(LeaderFieldType value) {
         this.leader = value;
@@ -70,23 +68,25 @@ public class RecordType implements Serializable {
 
     /**
      * Gets the value of the controlfield property.
-     * <p/>
-     * <p/>
+     * <p>
+     * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
      * This is why there is not a <CODE>set</CODE> method for the controlfield property.
-     * <p/>
-     * <p/>
+     * <p>
+     * <p>
      * For example, to add a new item, do as follows:
      * <pre>
      *    getControlfield().add(newItem);
      * </pre>
-     * <p/>
-     * <p/>
-     * <p/>
+     * <p>
+     * <p>
+     * <p>
      * Objects of the following type(s) are allowed in the list
      * {@link ControlFieldType }
+     *
+     * @return the controlfield
      */
     public List<ControlFieldType> getControlfield() {
         if (controlfield == null) {
@@ -97,23 +97,25 @@ public class RecordType implements Serializable {
 
     /**
      * Gets the value of the datafield property.
-     * <p/>
-     * <p/>
+     * <p>
+     * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
      * This is why there is not a <CODE>set</CODE> method for the datafield property.
-     * <p/>
-     * <p/>
+     * <p>
+     * <p>
      * For example, to add a new item, do as follows:
      * <pre>
      *    getDatafield().add(newItem);
      * </pre>
-     * <p/>
-     * <p/>
-     * <p/>
+     * <p>
+     * <p>
+     * <p>
      * Objects of the following type(s) are allowed in the list
      * {@link DataFieldType }
+     *
+     * @return the datafield
      */
     public List<DataFieldType> getDatafield() {
         if (datafield == null) {
@@ -122,6 +124,11 @@ public class RecordType implements Serializable {
         return this.datafield;
     }
 
+    /**
+     * Sets datafield.
+     *
+     * @param datafield the datafield
+     */
     public void setDatafield(List<DataFieldType> datafield) {
         this.datafield = datafield;
     }
@@ -129,8 +136,7 @@ public class RecordType implements Serializable {
     /**
      * Gets the value of the type property.
      *
-     * @return possible object is
-     * {@link RecordTypeType }
+     * @return possible object is {@link RecordTypeType }
      */
     public RecordTypeType getType() {
         return type;
@@ -139,8 +145,7 @@ public class RecordType implements Serializable {
     /**
      * Sets the value of the type property.
      *
-     * @param value allowed object is
-     *              {@link RecordTypeType }
+     * @param value allowed object is              {@link RecordTypeType }
      */
     public void setType(RecordTypeType value) {
         this.type = value;
@@ -149,8 +154,7 @@ public class RecordType implements Serializable {
     /**
      * Gets the value of the id property.
      *
-     * @return possible object is
-     * {@link String }
+     * @return possible object is {@link String }
      */
     public String getId() {
         return id;
@@ -159,8 +163,7 @@ public class RecordType implements Serializable {
     /**
      * Sets the value of the id property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is              {@link String }
      */
     public void setId(String value) {
         this.id = value;

@@ -197,33 +197,6 @@ public class RolesControllerUT extends BaseTestCase {
     }
 
     @Test
-    public void clearPage() {
-        RolesForm rolesForm = new RolesForm();
-        rolesForm.setNewRoleName("");
-        rolesForm.setNewRoleDescription("");
-        rolesForm.setNewPermissionNames("");
-        rolesForm.setEditRoleName("");
-        rolesForm.setEditRoleDescription("");
-        rolesForm.setEditPermissionNames("");
-        rolesForm.setErrorMessage("");
-        rolesForm.setMessage("");
-        rolesForm.setRoleDescription("testing");
-        rolesForm.setNewRole(true);
-        rolesForm.setEditPermissionNames("Admin");
-        rolesForm.setPermissionNamesForDelete("admin");
-        rolesForm.setEditPermissionName(Arrays.asList("admin"));
-        rolesForm.setSelectedPermissionNames(new ArrayList<String>());
-        ModelAndView modelAndView = rolesController.clearPage(rolesForm,model);
-        assertNotNull(modelAndView);
-        assertEquals("roles",modelAndView.getViewName());
-        assertNotNull(rolesForm.isNewRole());
-        assertNotNull(rolesForm.getEditPermissionNames());
-        assertNotNull(rolesForm.getPermissionNamesForDelete());
-        assertNotNull(rolesForm.getEditPermissionName());
-        rolesForm.reset();
-    }
-
-    @Test
     public void onPageSizeChange() throws Exception{
         RolesForm rolesForm = new RolesForm();
         rolesForm.setRoleName("Admin");
