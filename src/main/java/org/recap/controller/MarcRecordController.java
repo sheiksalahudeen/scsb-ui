@@ -18,8 +18,15 @@ import javax.validation.Valid;
 public class MarcRecordController {
 
     @Autowired
-    MarcRecordViewUtil marcRecordViewUtil;
+    private MarcRecordViewUtil marcRecordViewUtil;
 
+    /**
+     * Renders the marc record view UI page for the scsb application.
+     *
+     * @param bibId the bib id
+     * @param model the model
+     * @return the string
+     */
     @RequestMapping("/openMarcRecord")
     public String openMarcRecord(@Valid @ModelAttribute("bibId") Integer bibId, Model model) {
         BibliographicMarcForm bibliographicMarcForm = marcRecordViewUtil.buildBibliographicMarcForm(bibId, null,null);

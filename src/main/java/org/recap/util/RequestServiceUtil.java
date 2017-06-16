@@ -21,11 +21,17 @@ import org.springframework.stereotype.Service;
 public class RequestServiceUtil {
 
     @Autowired
-    RequestItemDetailsRepository requestItemDetailsRepository;
+    private RequestItemDetailsRepository requestItemDetailsRepository;
 
     @Autowired
-    InstitutionDetailsRepository institutionDetailsRepository;
+    private InstitutionDetailsRepository institutionDetailsRepository;
 
+    /**
+     * Based on the given search criteria in the request search UI page, this method builds the request search results to show them as rows in the request search UI page.
+     *
+     * @param requestForm the request form
+     * @return the page
+     */
     public Page<RequestItemEntity> searchRequests(RequestForm requestForm) {
         String patronBarcode = StringUtils.isNotBlank(requestForm.getPatronBarcode()) ? requestForm.getPatronBarcode().trim() : requestForm.getPatronBarcode();
         String itemBarcode = StringUtils.isNotBlank(requestForm.getItemBarcode()) ? requestForm.getItemBarcode().trim() : requestForm.getItemBarcode();

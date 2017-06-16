@@ -38,35 +38,56 @@ import java.util.List;
 /**
  * Created by rajeshbabuk on 13/10/16.
  */
-
 @Controller
 public class ReportsController {
 
     private static final Logger logger = LoggerFactory.getLogger(ReportsController.class);
 
     @Autowired
-    ReportsUtil reportsUtil;
+    private ReportsUtil reportsUtil;
 
     @Autowired
     private UserAuthUtil userAuthUtil;
 
     @Autowired
-    InstitutionDetailsRepository institutionDetailsRepository;
+    private InstitutionDetailsRepository institutionDetailsRepository;
 
+    /**
+     * Gets user auth util.
+     *
+     * @return the user auth util
+     */
     public UserAuthUtil getUserAuthUtil() {
         return userAuthUtil;
     }
 
+    /**
+     * Sets user auth util.
+     *
+     * @param userAuthUtil the user auth util
+     */
     public void setUserAuthUtil(UserAuthUtil userAuthUtil) {
         this.userAuthUtil = userAuthUtil;
     }
 
+    /**
+     * Gets reports util.
+     *
+     * @return the reports util
+     */
     public ReportsUtil getReportsUtil() {
         return reportsUtil;
     }
 
+    /**
+     *Render the reports UI page for the scsb application.
+     *
+     * @param model   the model
+     * @param request the request
+     * @return the string
+     */
     @RequestMapping("/reports")
-    public String collection(Model model, HttpServletRequest request) {
+    public String reports(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         boolean authenticated = getUserAuthUtil().authorizedUser(RecapConstants.SCSB_SHIRO_REPORT_URL, (UsernamePasswordToken) session.getAttribute(RecapConstants.USER_TOKEN));
         if (authenticated) {
@@ -80,6 +101,14 @@ public class ReportsController {
 
     }
 
+    /**
+     * Get the item count for requested, accessioned and deaccessioned report.
+     *
+     * @param reportsForm the reports form
+     * @param model       the model
+     * @return the model and view
+     * @throws Exception the exception
+     */
     @ResponseBody
     @RequestMapping(value = "/reports/submit", method = RequestMethod.POST)
     public ModelAndView reportCounts(@Valid @ModelAttribute("reportsForm") ReportsForm reportsForm,
@@ -105,6 +134,14 @@ public class ReportsController {
         return new ModelAndView("reports", "reportsForm", reportsForm);
     }
 
+    /**
+     * Get the item count for collection group designation report.
+     *
+     * @param reportsForm the reports form
+     * @param model       the model
+     * @return the model and view
+     * @throws Exception the exception
+     */
     @ResponseBody
     @RequestMapping(value = "/reports/collectionGroupDesignation", method = RequestMethod.GET)
     public ModelAndView cgdCounts(@Valid @ModelAttribute("reportsForm") ReportsForm reportsForm,
@@ -115,6 +152,14 @@ public class ReportsController {
 
     }
 
+    /**
+     * Get deaccessioned item results from scsb solr and display them as rows in the deaccession report UI page.
+     *
+     * @param reportsForm the reports form
+     * @param model       the model
+     * @return the model and view
+     * @throws Exception the exception
+     */
     @ResponseBody
     @RequestMapping(value = "/reports/deaccessionInformation", method = RequestMethod.GET)
     public ModelAndView deaccessionInformation(ReportsForm reportsForm,
@@ -127,6 +172,14 @@ public class ReportsController {
     }
 
 
+    /**
+     *Get first page deaccessioned or incomplete item results from scsb solr and display them as rows in the deaccession report or incomplete report.
+     *
+     * @param reportsForm the reports form
+     * @param model       the model
+     * @return the model and view
+     * @throws Exception the exception
+     */
     @ResponseBody
     @RequestMapping(value = "/reports/first", method = RequestMethod.POST)
     public ModelAndView searchFirst(@Valid ReportsForm reportsForm,
@@ -143,6 +196,14 @@ public class ReportsController {
         }
     }
 
+    /**
+     *Get previous page deaccessioned or incomplete item results from scsb solr and display them as rows in the deaccession report or incomplete report.
+     *
+     * @param reportsForm the reports form
+     * @param model       the model
+     * @return the model and view
+     * @throws Exception the exception
+     */
     @ResponseBody
     @RequestMapping(value = "/reports/previous", method = RequestMethod.POST)
     public ModelAndView searchPrevious(@Valid ReportsForm reportsForm,
@@ -158,6 +219,14 @@ public class ReportsController {
     }
 
 
+    /**
+     *Get next page deaccessioned or incomplete item results from scsb solr and display them as rows in the deaccession report or incomplete report.
+     *
+     * @param reportsForm the reports form
+     * @param model       the model
+     * @return the model and view
+     * @throws Exception the exception
+     */
     @ResponseBody
     @RequestMapping(value = "/reports/next", method = RequestMethod.POST)
     public ModelAndView searchNext(@Valid ReportsForm reportsForm,
@@ -173,6 +242,14 @@ public class ReportsController {
     }
 
 
+    /**
+     *Get last page deaccessioned or incomplete item results from scsb solr and display them as rows in the deaccession report or incomplete report.
+     *
+     * @param reportsForm the reports form
+     * @param model       the model
+     * @return the model and view
+     * @throws Exception the exception
+     */
     @ResponseBody
     @RequestMapping(value = "/reports/last", method = RequestMethod.POST)
     public ModelAndView searchLast(@Valid ReportsForm reportsForm,
@@ -189,6 +266,14 @@ public class ReportsController {
         }
     }
 
+    /**
+     *Get incomplete item results from scsb solr and display them as rows in the incomplete report UI page.
+     *
+     * @param reportsForm the reports form
+     * @param model       the model
+     * @return the model and view
+     * @throws Exception the exception
+     */
     @ResponseBody
     @RequestMapping(value = "/reports/incompleteRecords", method = RequestMethod.POST)
     public ModelAndView incompleteRecordsReport(ReportsForm reportsForm,
@@ -198,6 +283,13 @@ public class ReportsController {
 
     }
 
+    /**
+     * To generate institution drop down values in the incomplete report UI page.
+     *
+     * @param request     the request
+     * @param reportsForm the reports form
+     * @return the institution for incompletereport
+     */
     @RequestMapping(value = "/reports/getInstitutions", method = RequestMethod.GET)
     public ModelAndView getInstitutionForIncompletereport(HttpServletRequest request, ReportsForm reportsForm) {
             List<String> instList = new ArrayList<>();
@@ -210,6 +302,15 @@ public class ReportsController {
     }
 
 
+    /**
+     * To export the incomplete report results to a csv file.
+     *
+     * @param reportsForm the reports form
+     * @param response    the response
+     * @param model       the model
+     * @return the byte [ ]
+     * @throws Exception the exception
+     */
     @ResponseBody
     @RequestMapping(value = "/reports/export", method = RequestMethod.POST)
     public byte[] exportIncompleteRecords(ReportsForm reportsForm, HttpServletResponse response, Model model) throws Exception {
@@ -225,6 +326,14 @@ public class ReportsController {
         return fileContent;
     }
 
+    /**
+     * Based on the selected page size search results will display the results in the incomplete report UI page.
+     *
+     * @param reportsForm the reports form
+     * @param model       the model
+     * @return the model and view
+     * @throws Exception the exception
+     */
     @ResponseBody
     @RequestMapping(value = "/reports/incompleteReportPageSizeChange", method = RequestMethod.POST)
     public ModelAndView incompleteReportPageSizeChange(ReportsForm reportsForm,
@@ -247,6 +356,12 @@ public class ReportsController {
         return new ModelAndView(RecapConstants.REPORTS_INCOMPLETE_RECORDS_VIEW, RecapConstants.REPORTS_FORM, reportsForm);
     }
 
+    /**
+     * For the given date this method will add the start time of the day.
+     *
+     * @param createdDate the created date
+     * @return the from date
+     */
     public Date getFromDate(Date createdDate) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(createdDate);
@@ -256,6 +371,12 @@ public class ReportsController {
         return  cal.getTime();
     }
 
+    /**
+     *For the given date this method will add the end time of the day.
+     *
+     * @param createdDate the created date
+     * @return the to date
+     */
     public Date getToDate(Date createdDate) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(createdDate);

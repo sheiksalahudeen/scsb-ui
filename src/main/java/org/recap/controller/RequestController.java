@@ -55,86 +55,154 @@ public class RequestController {
     private static final Logger logger = LoggerFactory.getLogger(RequestController.class);
 
     @Value("${scsb.url}")
-    String scsbUrl;
+    private String scsbUrl;
 
     @Value("${scsb.shiro}")
-    String scsbShiro;
+    private String scsbShiro;
 
     @Autowired
-    RequestServiceUtil requestServiceUtil;
+    private RequestServiceUtil requestServiceUtil;
 
     @Autowired
-    InstitutionDetailsRepository institutionDetailsRepository;
+    private InstitutionDetailsRepository institutionDetailsRepository;
 
     @Autowired
-    RequestTypeDetailsRepository requestTypeDetailsRepository;
+    private RequestTypeDetailsRepository requestTypeDetailsRepository;
 
     @Autowired
-    CustomerCodeDetailsRepository customerCodeDetailsRepository;
+    private CustomerCodeDetailsRepository customerCodeDetailsRepository;
 
     @Autowired
-    ItemDetailsRepository itemDetailsRepository;
+    private ItemDetailsRepository itemDetailsRepository;
 
     @Autowired
-    RequestStatusDetailsRepository requestStatusDetailsRepository;
+    private RequestStatusDetailsRepository requestStatusDetailsRepository;
 
     @Autowired
-    RequestItemDetailsRepository requestItemDetailsRepository;
+    private RequestItemDetailsRepository requestItemDetailsRepository;
 
     @Autowired
     private UserAuthUtil userAuthUtil;
 
     @Autowired
-    RequestService requestService;
+    private RequestService requestService;
 
+    /**
+     * Gets request service util.
+     *
+     * @return the request service util
+     */
     public RequestServiceUtil getRequestServiceUtil() {
         return requestServiceUtil;
     }
 
+    /**
+     * Gets user auth util.
+     *
+     * @return the user auth util
+     */
     public UserAuthUtil getUserAuthUtil() {
         return userAuthUtil;
     }
 
+    /**
+     * Gets institution details repository.
+     *
+     * @return the institution details repository
+     */
     public InstitutionDetailsRepository getInstitutionDetailsRepository() {
         return institutionDetailsRepository;
     }
 
+    /**
+     * Gets request type details repository.
+     *
+     * @return the request type details repository
+     */
     public RequestTypeDetailsRepository getRequestTypeDetailsRepository() {
         return requestTypeDetailsRepository;
     }
 
+    /**
+     * Gets customer code details repository.
+     *
+     * @return the customer code details repository
+     */
     public CustomerCodeDetailsRepository getCustomerCodeDetailsRepository() {
         return customerCodeDetailsRepository;
     }
 
+    /**
+     * Gets item details repository.
+     *
+     * @return the item details repository
+     */
     public ItemDetailsRepository getItemDetailsRepository() {
         return itemDetailsRepository;
     }
 
+    /**
+     * Gets scsb shiro.
+     *
+     * @return the scsb shiro
+     */
     public String getScsbShiro() {
         return scsbShiro;
     }
 
+    /**
+     * Gets scsb url.
+     *
+     * @return the scsb url
+     */
     public String getScsbUrl() {
         return scsbUrl;
     }
 
+    /**
+     * Gets request item details repository.
+     *
+     * @return the request item details repository
+     */
     public RequestItemDetailsRepository getRequestItemDetailsRepository() {
         return requestItemDetailsRepository;
     }
 
+    /**
+     * Gets rest template.
+     *
+     * @return the rest template
+     */
     public RestTemplate getRestTemplate() {
         return new RestTemplate();
     }
 
+    /**
+     * Gets request status details repository.
+     *
+     * @return the request status details repository
+     */
     public RequestStatusDetailsRepository getRequestStatusDetailsRepository() {
         return requestStatusDetailsRepository;
     }
 
+    /**
+     * Gets request service.
+     *
+     * @return the request service
+     */
     public RequestService getRequestService() {
         return requestService;
     }
 
+    /**
+     * Render the request UI page for the scsb application.
+     *
+     * @param model   the model
+     * @param request the request
+     * @return the string
+     * @throws JSONException the json exception
+     */
     @RequestMapping("/request")
     public String request(Model model, HttpServletRequest request) throws JSONException {
         HttpSession session = request.getSession(false);
@@ -150,6 +218,14 @@ public class RequestController {
         }
     }
 
+    /**
+     * Get results from scsb database and display them as row based on the search conditions provided in the search request UI page.
+     *
+     * @param requestForm the request form
+     * @param result      the result
+     * @param model       the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=searchRequests")
     public ModelAndView searchRequests(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
@@ -166,6 +242,15 @@ public class RequestController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_REQUESTS_SECTION, RecapConstants.REQUEST_FORM, requestForm);
     }
 
+    /**
+     *To know the request information of an item once the request is placed through the create request UI page.
+     *
+     * @param requestForm            the request form
+     * @param patronBarcodeInRequest the patron barcode in request
+     * @param result                 the result
+     * @param model                  the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/request/goToSearchRequest", method = RequestMethod.GET)
     public ModelAndView goToSearchRequest(@Valid @ModelAttribute("requestForm") RequestForm requestForm,String patronBarcodeInRequest,
@@ -190,6 +275,14 @@ public class RequestController {
         return new ModelAndView("request :: #requestContentId", RecapConstants.REQUEST_FORM, requestForm);
     }
 
+    /**
+     * Get first page results from scsb database and display them as row in the search request UI page.
+     *
+     * @param requestForm the request form
+     * @param result      the result
+     * @param model       the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=first")
     public ModelAndView searchFirst(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
@@ -201,6 +294,14 @@ public class RequestController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_REQUESTS_SECTION, RecapConstants.REQUEST_FORM, requestForm);
     }
 
+    /**
+     * Get last page results from scsb database and display them as row in the search request UI page.
+     *
+     * @param requestForm the request form
+     * @param result      the result
+     * @param model       the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=last")
     public ModelAndView searchLast(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
@@ -212,6 +313,14 @@ public class RequestController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_REQUESTS_SECTION, RecapConstants.REQUEST_FORM, requestForm);
     }
 
+    /**
+     * Get previous page results from scsb database and display them as rows in the search request UI page.
+     *
+     * @param requestForm the request form
+     * @param result      the result
+     * @param model       the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=previous")
     public ModelAndView searchPrevious(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
@@ -222,6 +331,14 @@ public class RequestController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_REQUESTS_SECTION, RecapConstants.REQUEST_FORM, requestForm);
     }
 
+    /**
+     * Get next page results from scsb database and display them as rows in the search request UI page.
+     *
+     * @param requestForm the request form
+     * @param result      the result
+     * @param model       the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=next")
     public ModelAndView searchNext(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
@@ -232,6 +349,14 @@ public class RequestController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_REQUESTS_SECTION, RecapConstants.REQUEST_FORM, requestForm);
     }
 
+    /**
+     *Based on the selected page size value that many request search results will be displayed in the search request UI page.
+     *
+     * @param requestForm the request form
+     * @param result      the result
+     * @param model       the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=requestPageSizeChange")
     public ModelAndView onRequestPageSizeChange(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
@@ -243,6 +368,13 @@ public class RequestController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_REQUESTS_SECTION, RecapConstants.REQUEST_FORM, requestForm);
     }
 
+    /**
+     *Populate default values to the request type and requesting institution drop downs in the create request UI page.
+     *
+     * @param model   the model
+     * @param request the request
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=loadCreateRequest")
     public ModelAndView loadCreateRequest(Model model, HttpServletRequest request) {
@@ -253,6 +385,13 @@ public class RequestController {
         return new ModelAndView(RecapConstants.REQUEST, RecapConstants.REQUEST_FORM, requestForm);
     }
 
+    /**
+     *Retains patron's barcode , patron email address and requesting institution values in the create request UI page when request is going to be placed for the same patron.
+     *
+     * @param model   the model
+     * @param request the request
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=loadCreateRequestForSamePatron")
     public ModelAndView loadCreateRequestForSamePatron(Model model, HttpServletRequest request) {
@@ -264,6 +403,13 @@ public class RequestController {
         return new ModelAndView(RecapConstants.REQUEST, RecapConstants.REQUEST_FORM, requestForm);
     }
 
+    /**
+     * Populate default values to the status and institution drop downs in search request UI page.
+     *
+     * @param model   the model
+     * @param request the request
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=loadSearchRequest")
     public ModelAndView loadSearchRequest(Model model, HttpServletRequest request) {
@@ -280,7 +426,16 @@ public class RequestController {
     }
 
 
-
+    /**
+     * Based on the given barcode, this method gets the item information from scsb database to display it in the create request UI page.
+     *
+     * @param requestForm the request form
+     * @param result      the result
+     * @param model       the model
+     * @param request     the request
+     * @return the string
+     * @throws JSONException the json exception
+     */
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=populateItem")
     public String populateItem(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
@@ -290,7 +445,16 @@ public class RequestController {
     }
 
 
-
+    /**
+     * This method passes information about the requesting item to the scsb-circ micro service to place a request in scsb.
+     *
+     * @param requestForm the request form
+     * @param result      the result
+     * @param model       the model
+     * @param request     the request
+     * @return the model and view
+     * @throws JSONException the json exception
+     */
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=createRequest")
     public ModelAndView createRequest(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
@@ -402,6 +566,15 @@ public class RequestController {
         }
         return new ModelAndView(RecapConstants.CREATE_REQUEST_SECTION, RecapConstants.REQUEST_FORM, requestForm);
     }
+
+    /**
+     * Cancel the request which is placed in scsb.
+     *
+     * @param requestForm the request form
+     * @param result      the result
+     * @param model       the model
+     * @return the string
+     */
     @ResponseBody
     @RequestMapping(value = "/request", method = RequestMethod.POST, params = "action=cancelRequest")
     public String cancelRequest(@Valid @ModelAttribute("requestForm") RequestForm requestForm,
@@ -493,10 +666,21 @@ public class RequestController {
         return pageNumber;
     }
 
+    /**
+     * Gets item request information.
+     *
+     * @return the item request information
+     */
     public ItemRequestInformation getItemRequestInformation() {
         return new ItemRequestInformation();
     }
 
+    /**
+     * To change the status information of requested item asynchronously in the search request UI page.
+     *
+     * @param request the request
+     * @return the string
+     */
     @ResponseBody
     @RequestMapping(value = "/request/refreshStatus", method = RequestMethod.GET)
     public String refreshStatus(HttpServletRequest request) {

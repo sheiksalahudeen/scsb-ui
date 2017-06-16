@@ -35,73 +35,128 @@ public class RequestService {
     private static final Logger logger = LoggerFactory.getLogger(RequestService.class);
 
     @Autowired
-    RequestServiceUtil requestServiceUtil;
+    private RequestServiceUtil requestServiceUtil;
 
     @Autowired
-    InstitutionDetailsRepository institutionDetailsRepository;
+    private InstitutionDetailsRepository institutionDetailsRepository;
 
     @Autowired
-    RequestTypeDetailsRepository requestTypeDetailsRepository;
+    private RequestTypeDetailsRepository requestTypeDetailsRepository;
 
     @Autowired
-    CustomerCodeDetailsRepository customerCodeDetailsRepository;
+    private CustomerCodeDetailsRepository customerCodeDetailsRepository;
 
     @Autowired
-    ItemDetailsRepository itemDetailsRepository;
+    private ItemDetailsRepository itemDetailsRepository;
 
     @Autowired
-    RequestStatusDetailsRepository requestStatusDetailsRepository;
+    private RequestStatusDetailsRepository requestStatusDetailsRepository;
 
     @Autowired
-    RequestItemDetailsRepository requestItemDetailsRepository;
+    private RequestItemDetailsRepository requestItemDetailsRepository;
 
     @Autowired
     private UserAuthUtil userAuthUtil;
 
     @Autowired
-    RequestService requestService;
+    private RequestService requestService;
 
+    /**
+     * Gets request item details repository.
+     *
+     * @return the request item details repository
+     */
     public RequestItemDetailsRepository getRequestItemDetailsRepository() {
         return requestItemDetailsRepository;
     }
 
+    /**
+     * Gets request service util.
+     *
+     * @return the request service util
+     */
     public RequestServiceUtil getRequestServiceUtil() {
         return requestServiceUtil;
     }
 
 
+    /**
+     * Gets user auth util.
+     *
+     * @return the user auth util
+     */
     public UserAuthUtil getUserAuthUtil() {
         return userAuthUtil;
     }
 
+    /**
+     * Gets institution details repository.
+     *
+     * @return the institution details repository
+     */
     public InstitutionDetailsRepository getInstitutionDetailsRepository() {
         return institutionDetailsRepository;
     }
 
 
+    /**
+     * Gets request type details repository.
+     *
+     * @return the request type details repository
+     */
     public RequestTypeDetailsRepository getRequestTypeDetailsRepository() {
         return requestTypeDetailsRepository;
     }
 
 
+    /**
+     * Gets customer code details repository.
+     *
+     * @return the customer code details repository
+     */
     public CustomerCodeDetailsRepository getCustomerCodeDetailsRepository() {
         return customerCodeDetailsRepository;
     }
 
 
+    /**
+     * Gets item details repository.
+     *
+     * @return the item details repository
+     */
     public ItemDetailsRepository getItemDetailsRepository() {
         return itemDetailsRepository;
     }
 
+    /**
+     * Gets request service.
+     *
+     * @return the request service
+     */
     public RequestService getRequestService() {
         return requestService;
     }
 
+    /**
+     * Gets request status details repository.
+     *
+     * @return the request status details repository
+     */
     public RequestStatusDetailsRepository getRequestStatusDetailsRepository() {
         return requestStatusDetailsRepository;
     }
 
 
+    /**
+     * Get delivery locations from scsb database for the given customer code and
+     * populate those values to get displayed in the request UI page for delivery locations drop down.
+     *
+     * @param requestForm          the request form
+     * @param deliveryLocationsMap the delivery locations map
+     * @param userDetailsForm      the user details form
+     * @param itemEntity           the item entity
+     * @param institutionId        the institution id
+     */
     public void processCustomerAndDeliveryCodes(RequestForm requestForm, Map<String, String> deliveryLocationsMap, UserDetailsForm userDetailsForm, ItemEntity itemEntity, Integer institutionId) {
         String customerCode = itemEntity.getCustomerCode();
         CustomerCodeEntity customerCodeEntity = customerCodeDetailsRepository.findByCustomerCodeAndOwningInstitutionId(customerCode, institutionId);
@@ -156,6 +211,12 @@ public class RequestService {
         }
     }
 
+    /**
+     * Sort the given delivery locations in natural order.
+     *
+     * @param deliveryLocationsMap the delivery locations map
+     * @return the map
+     */
     public Map<String,String> sortDeliveryLocations(Map<String, String> deliveryLocationsMap){
         LinkedHashMap<String,String> sortedDeliverLocationMap = new LinkedHashMap<>();
         Set<Map.Entry<String, String>> entries = deliveryLocationsMap.entrySet();
@@ -177,6 +238,14 @@ public class RequestService {
         return sortedDeliverLocationMap;
     }
 
+    /**
+     *This method is called asynchronously whenever there is a processing status for an item in request search UI page and
+     * fetch the status from the scsb database for that requested item and
+     * update that status value for that requested item in the request search UI page.
+     *
+     * @param request the request
+     * @return the refreshed status
+     */
     public String getRefreshedStatus(HttpServletRequest request) {
         JSONObject jsonObject = new JSONObject();
         Map<Integer,Integer> map = new HashMap<>();
@@ -209,6 +278,14 @@ public class RequestService {
         return jsonObject.toString();
     }
 
+    /**
+     * When an item barcode is submitted to place a request in the request UI page , this method populates the information about that item in the request UI page.
+     *
+     * @param requestForm the request form
+     * @param request     the request
+     * @return the string
+     * @throws JSONException the json exception
+     */
     public String populateItemForRequest(@Valid @ModelAttribute("requestForm") RequestForm requestForm, HttpServletRequest request) throws JSONException {
         JSONObject jsonObject = new JSONObject();
         Boolean multipleItemBarcodes= false;
@@ -323,6 +400,15 @@ public class RequestService {
         return deliveryLocationsMap;
     }
 
+    /**
+     * When requesting a item in search UI page, this method populates information about that item in the request UI page.
+     *
+     * @param model           the model
+     * @param request         the request
+     * @param userDetailsForm the user details form
+     * @return the form details for request
+     * @throws JSONException the json exception
+     */
     public RequestForm setFormDetailsForRequest(Model model, HttpServletRequest request, UserDetailsForm userDetailsForm) throws JSONException {
         RequestForm requestForm = setDefaultsToCreateRequest(userDetailsForm,model);
         Object requestedBarcode = ((BindingAwareModelMap) model).get(RecapConstants.REQUESTED_BARCODE);
@@ -365,6 +451,14 @@ public class RequestService {
         return requestForm;
     }
 
+    /**
+     * When the request UI page is loaded, this method populates default values to request type drop down and
+     * based on the logged in user it populates value to the requesting institution drop down.
+     *
+     * @param userDetailsForm the user details form
+     * @param model           the model
+     * @return the defaults to create request
+     */
     public RequestForm setDefaultsToCreateRequest(UserDetailsForm userDetailsForm,Model model) {
         RequestForm requestForm = new RequestForm();
         Boolean addOnlyRecall = false;
@@ -425,6 +519,11 @@ public class RequestService {
         return requestForm;
     }
 
+    /**
+     * Adds all the request status description in scsb into the request statuses list.
+     *
+     * @param requestStatuses the request statuses
+     */
     public void findAllRequestStatusExceptProcessing(List<String> requestStatuses) {
         Iterable<RequestStatusEntity> requestStatusEntities = getRequestStatusDetailsRepository().findAllExceptProcessing();
         for (Iterator iterator = requestStatusEntities.iterator(); iterator.hasNext(); ) {
@@ -433,6 +532,11 @@ public class RequestService {
         }
     }
 
+    /**
+     * Adds the institution code into the institution list for super admin role.
+     *
+     * @param institutionList the institution list
+     */
     public void getInstitutionForSuperAdmin(List<String> institutionList) {
         Iterable<InstitutionEntity> institutionEntities = getInstitutionDetailsRepository().getInstitutionCodeForSuperAdmin();
         for (Iterator iterator = institutionEntities.iterator(); iterator.hasNext();) {

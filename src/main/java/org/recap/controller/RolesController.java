@@ -43,16 +43,23 @@ public class RolesController {
     private static final Logger logger = LoggerFactory.getLogger(RolesController.class);
 
     @Autowired
-    RolesDetailsRepositorty rolesDetailsRepositorty;
+    private RolesDetailsRepositorty rolesDetailsRepositorty;
 
     @Autowired
-    PermissionsDetailsRepository permissionsRepository;
+    private PermissionsDetailsRepository permissionsRepository;
 
     @Autowired
     private UserAuthUtil userAuthUtil;
 
+    /**
+     * Render the roles UI page for the scsb application.
+     *
+     * @param model   the model
+     * @param request the request
+     * @return the string
+     */
     @RequestMapping("/roles")
-    public String collection(Model model, HttpServletRequest request) {
+    public String roles(Model model, HttpServletRequest request) {
         HttpSession session=request.getSession(false);
         boolean authenticated=userAuthUtil.authorizedUser(RecapConstants.SCSB_SHIRO_ROLE_URL,(UsernamePasswordToken)session.getAttribute(RecapConstants.USER_TOKEN));
         if(authenticated)
@@ -66,6 +73,13 @@ public class RolesController {
         }
     }
 
+    /**
+     * Gets role search results from scsb database and display them as rows in the roles UI page.
+     *
+     * @param rolesForm the roles form
+     * @param model     the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=searchRoles")
     public ModelAndView search(@Valid @ModelAttribute("rolesForm") RolesForm rolesForm,
@@ -76,6 +90,12 @@ public class RolesController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.ROLES_FORM, rolesForm);
     }
 
+    /**
+     * Populate permission names that are available in scsb to the permission names drop down.
+     *
+     * @param model the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=populatePermissionName")
     public ModelAndView populatePermissionNames(Model model) {
@@ -85,6 +105,14 @@ public class RolesController {
         return new ModelAndView(RecapConstants.ROLES, RecapConstants.ROLES_FORM, rolesForm);
     }
 
+    /**
+     * This is used to add a new role in scsb.
+     *
+     * @param rolesForm the roles form
+     * @param model     the model
+     * @param request   the request
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=loadCreateRole")
     public ModelAndView newRole(@Valid @ModelAttribute("rolesForm") RolesForm rolesForm,
@@ -111,6 +139,15 @@ public class RolesController {
         return new ModelAndView(RecapConstants.ROLES, RecapConstants.ROLES_FORM, rolesForm);
     }
 
+    /**
+     * Provide information about the role which has been selected to edit in scsb.
+     *
+     * @param roleId          the role id
+     * @param roleName        the role name
+     * @param roleDescription the role description
+     * @param permissionName  the permission name
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.GET, params = "action=editRole")
     public ModelAndView editRole(Integer roleId, String roleName, String roleDescription, String permissionName) {
@@ -125,6 +162,15 @@ public class RolesController {
         return new ModelAndView(RecapConstants.ROLES, RecapConstants.ROLES_FORM, rolesForm);
     }
 
+    /**
+     * To save the edited role details in scsb.
+     *
+     * @param roleId          the role id
+     * @param roleName        the role name
+     * @param roleDescription the role description
+     * @param request         the request
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.GET, params = "action=saveEditedRole")
     public ModelAndView saveEditedRole(@ModelAttribute("roleId") Integer roleId,
@@ -157,6 +203,18 @@ public class RolesController {
         return new ModelAndView(RecapConstants.ROLES, RecapConstants.ROLES_FORM, rolesForm);
     }
 
+    /**
+     *Provide information about the role which has been selected to delete in scsb.
+     *
+     * @param roleId          the role id
+     * @param roleName        the role name
+     * @param roleDescription the role description
+     * @param permissionName  the permission name
+     * @param pageSize        the page size
+     * @param pageNumber      the page number
+     * @param totalPageCount  the total page count
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.GET, params = "action=deleteRole")
     public ModelAndView deleteRole(Integer roleId, String roleName, String roleDescription, String permissionName,
@@ -178,6 +236,13 @@ public class RolesController {
         return new ModelAndView(RecapConstants.ROLES, RecapConstants.ROLES_FORM, rolesForm);
     }
 
+    /**
+     * To delete the role permanently in scsb.
+     *
+     * @param rolesForm the roles form
+     * @param model     the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.GET, params = "action=delete")
     public ModelAndView delete(@Valid @ModelAttribute("rolesForm") RolesForm rolesForm,
@@ -201,6 +266,13 @@ public class RolesController {
         return new ModelAndView(RecapConstants.ROLES, RecapConstants.ROLES_FORM, rolesForm);
     }
 
+    /**
+     *Gets previous page role search results from scsb database and display them as rows in the roles UI page.
+     *
+     * @param rolesForm the roles form
+     * @param model     the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=previous")
     public ModelAndView searchPrevious(@Valid @ModelAttribute("rolesForm") RolesForm rolesForm,
@@ -211,6 +283,13 @@ public class RolesController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.ROLES_FORM, rolesForm);
     }
 
+    /**
+     * Gets next page role search results from scsb database and display them as rows in the roles UI page.
+     *
+     * @param rolesForm the roles form
+     * @param model     the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=next")
     public ModelAndView searchNext(@Valid @ModelAttribute("rolesForm") RolesForm rolesForm,
@@ -221,6 +300,13 @@ public class RolesController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.ROLES_FORM, rolesForm);
     }
 
+    /**
+     * Gets first page role search results from scsb database and display them as rows in the roles UI page.
+     *
+     * @param rolesForm the roles form
+     * @param model     the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=first")
     public ModelAndView searchFirst(@Valid @ModelAttribute("rolesForm") RolesForm rolesForm,
@@ -232,6 +318,13 @@ public class RolesController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.ROLES_FORM, rolesForm);
     }
 
+    /**
+     * Gets last page role search results from scsb database and display them as rows in the roles UI page.
+     *
+     * @param rolesForm the roles form
+     * @param model     the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=last")
     public ModelAndView searchLast(@Valid @ModelAttribute("rolesForm") RolesForm rolesForm,
@@ -243,24 +336,14 @@ public class RolesController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.ROLES_FORM, rolesForm);
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=clearPage")
-    public ModelAndView clearPage(@Valid @ModelAttribute("rolesForm") RolesForm rolesForm,
-                                  Model model) {
-        rolesForm.setNewRoleName("");
-        rolesForm.setNewRoleDescription("");
-        rolesForm.setNewPermissionNames("");
-        rolesForm.setEditRoleName("");
-        rolesForm.setEditRoleDescription("");
-        rolesForm.setEditPermissionNames("");
-        rolesForm.setPermissionNameList(getAllPermissionNames().getPermissionNameList());
-        rolesForm.setErrorMessage("");
-        rolesForm.setMessage("");
-        rolesForm.setSelectedPermissionNames(new ArrayList<String>());
-        rolesForm.setShowIntial(false);
-        return new ModelAndView(RecapConstants.ROLES, RecapConstants.ROLES_FORM, rolesForm);
-    }
-
+    /**
+     * Based on the selected page size the roles will be displayed in the roles UI page.
+     *
+     * @param rolesForm the roles form
+     * @param model     the model
+     * @return the model and view
+     * @throws Exception the exception
+     */
     @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=pageSizeChange")
     public ModelAndView onPageSizeChange(@Valid @ModelAttribute("rolesForm") RolesForm rolesForm,
@@ -272,6 +355,13 @@ public class RolesController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.ROLES_FORM, rolesForm);
     }
 
+    /**
+     * Get back to the role search page from edit, delete and create roles UI pages.
+     *
+     * @param rolesForm the roles form
+     * @param model     the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/roles", method = RequestMethod.POST, params = "action=goBack")
     public ModelAndView goBack(RolesForm rolesForm,Model model){
@@ -279,6 +369,11 @@ public class RolesController {
         return new ModelAndView("roles", "rolesForm", rolesForm);
     }
 
+    /**
+     * Gets role entities result set from scsb database based on the search condition given in the search roles UI page.
+     *
+     * @param rolesForm the roles form
+     */
     public void setRolesFormSearchResults(RolesForm rolesForm) {
         List<RolesSearchResult> rolesSearchResults = new ArrayList<>();
         rolesForm.reset();
@@ -406,6 +501,12 @@ public class RolesController {
     }
 
 
+    /**
+     * Get values from role entity and assign those values to the role search result.
+     *
+     * @param roleEntity the role entity
+     * @return the roles search result
+     */
     public RolesSearchResult getRolesSearchResult(RoleEntity roleEntity){
         StringBuilder permission = new StringBuilder();
         RolesSearchResult rolesSearchResult = new RolesSearchResult();
@@ -428,6 +529,11 @@ public class RolesController {
         return matcher.matches();
     }
 
+    /**
+     *This method is used to paginate the role search results.
+     *
+     * @param rolesForm the roles form
+     */
     public void findByPagination(RolesForm rolesForm){
         List<RolesSearchResult> rolesSearchResults = new ArrayList<>();
         Pageable pageable = new PageRequest(rolesForm.getPageNumber(), rolesForm.getPageSize());
@@ -464,6 +570,13 @@ public class RolesController {
 
     }
 
+    /**
+     * Save a new role entity in the scsb database.
+     *
+     * @param rolesForm the roles form
+     * @param username  the username
+     * @return the role entity
+     */
     public RoleEntity saveNewRoleToDB(RolesForm rolesForm, String username){
         RoleEntity roleEntity = new RoleEntity();
         roleEntity.setRoleName(rolesForm.getNewRoleName().trim());

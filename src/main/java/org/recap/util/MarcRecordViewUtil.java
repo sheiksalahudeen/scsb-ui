@@ -24,11 +24,20 @@ import java.util.*;
 public class MarcRecordViewUtil {
 
     @Autowired
-    BibliographicDetailsRepository bibliographicDetailsRepository;
+    private BibliographicDetailsRepository bibliographicDetailsRepository;
 
     @Autowired
-    CustomerCodeDetailsRepository customerCodeDetailsRepository;
+    private CustomerCodeDetailsRepository customerCodeDetailsRepository;
 
+    /**
+     * This method used to get information about the item or bib from the scsb database for the given bib id or item id and
+     * build that information in the bibliographic marc form.
+     *
+     * @param bibId           the bib id
+     * @param itemId          the item id
+     * @param userDetailsForm the user details form
+     * @return the bibliographic marc form
+     */
     public BibliographicMarcForm buildBibliographicMarcForm(Integer bibId, Integer itemId,UserDetailsForm userDetailsForm) {
         BibliographicMarcForm bibliographicMarcForm = new BibliographicMarcForm();
         bibliographicMarcForm.setCollectionAction(RecapConstants.UPDATE_CGD);

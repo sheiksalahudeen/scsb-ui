@@ -12,6 +12,11 @@ public class RecapErrorPageController implements ErrorController {
 
     private static final String PATH = "/error";
 
+    /**
+     * Render the error UI page for the scsb application.
+     *
+     * @return the string
+     */
     @RequestMapping(value = PATH)
     public String recapErrorPage() {
         return "error";

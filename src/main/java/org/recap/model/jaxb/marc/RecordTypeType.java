@@ -9,9 +9,9 @@ import java.io.Serializable;
 
 /**
  * <p>Java class for recordTypeType.
- * <p/>
+ * <p>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * <p/>
+ * <p>
  * <pre>
  * &lt;simpleType name="recordTypeType">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}NMTOKEN">
@@ -44,10 +44,21 @@ public enum RecordTypeType implements Serializable {
         value = v;
     }
 
+    /**
+     * Gets the value.
+     *
+     * @return the string
+     */
     public String value() {
         return value;
     }
 
+    /**
+     * Gets record type from given value.
+     *
+     * @param v the v
+     * @return the record type type
+     */
     public static RecordTypeType fromValue(String v) {
         for (RecordTypeType c : RecordTypeType.values()) {
             if (c.value.equals(v)) {
