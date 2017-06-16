@@ -51,11 +51,10 @@ public class SearchRecordsController {
     private static final Logger logger = LoggerFactory.getLogger(SearchRecordsController.class);
 
     @Value("${scsb.shiro}")
-    String scsbShiro;
-
+    private String scsbShiro;
 
     @Autowired
-    SearchUtil searchUtil;
+    private SearchUtil searchUtil;
 
     @Autowired
     private CsvUtil csvUtil;
@@ -64,24 +63,51 @@ public class SearchRecordsController {
     private UserAuthUtil userAuthUtil;
 
     @Autowired
-    InstitutionDetailsRepository institutionDetailsRepository;
+    private InstitutionDetailsRepository institutionDetailsRepository;
 
+    /**
+     * Gets search util.
+     *
+     * @return the search util
+     */
     public SearchUtil getSearchUtil() {
         return searchUtil;
     }
 
+    /**
+     * Gets user auth util.
+     *
+     * @return the user auth util
+     */
     public UserAuthUtil getUserAuthUtil() {
         return userAuthUtil;
     }
 
+    /**
+     * Sets user auth util.
+     *
+     * @param userAuthUtil the user auth util
+     */
     public void setUserAuthUtil(UserAuthUtil userAuthUtil) {
         this.userAuthUtil = userAuthUtil;
     }
 
+    /**
+     * Gets institution details repository.
+     *
+     * @return the institution details repository
+     */
     public InstitutionDetailsRepository getInstitutionDetailsRepository() {
         return institutionDetailsRepository;
     }
 
+    /**
+     * Render the search UI page for the scsb application.
+     *
+     * @param model   the model
+     * @param request the request
+     * @return the string
+     */
     @RequestMapping("/search")
     public String searchRecords(Model model, HttpServletRequest request) {
         HttpSession session=request.getSession(false);
@@ -98,6 +124,14 @@ public class SearchRecordsController {
 
     }
 
+    /**
+     * Performs search on solr and returns the results as rows to get displayed in the search UI page.
+     *
+     * @param searchRecordsRequest the search records request
+     * @param result               the result
+     * @param model                the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/search", method = RequestMethod.POST, params = "action=search")
     public ModelAndView search(@Valid @ModelAttribute("searchRecordsRequest") SearchRecordsRequest searchRecordsRequest,
@@ -109,6 +143,14 @@ public class SearchRecordsController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.VIEW_SEARCH_RECORDS_REQUEST, searchRecordsRequest);
     }
 
+    /**
+     * Performs search on solr and returns the previous page results as rows to get displayed in the search UI page.
+     *
+     * @param searchRecordsRequest the search records request
+     * @param result               the result
+     * @param model                the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/search", method = RequestMethod.POST, params = "action=previous")
     public ModelAndView searchPrevious(@Valid @ModelAttribute("searchRecordsRequest") SearchRecordsRequest searchRecordsRequest,
@@ -119,6 +161,14 @@ public class SearchRecordsController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.VIEW_SEARCH_RECORDS_REQUEST, searchRecordsRequest);
     }
 
+    /**
+     *  Performs search on solr and returns the next page results as rows to get displayed in the search UI page.
+     *
+     * @param searchRecordsRequest the search records request
+     * @param result               the result
+     * @param model                the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/search", method = RequestMethod.POST, params = "action=next")
     public ModelAndView searchNext(@Valid @ModelAttribute("searchRecordsRequest") SearchRecordsRequest searchRecordsRequest,
@@ -129,6 +179,14 @@ public class SearchRecordsController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.VIEW_SEARCH_RECORDS_REQUEST, searchRecordsRequest);
     }
 
+    /**
+     * Performs search on solr and returns the first page results as rows to get displayed in the search UI page.
+     *
+     * @param searchRecordsRequest the search records request
+     * @param result               the result
+     * @param model                the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/search", method = RequestMethod.POST, params = "action=first")
     public ModelAndView searchFirst(@Valid @ModelAttribute("searchRecordsRequest") SearchRecordsRequest searchRecordsRequest,
@@ -140,6 +198,14 @@ public class SearchRecordsController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.VIEW_SEARCH_RECORDS_REQUEST, searchRecordsRequest);
     }
 
+    /**
+     * Performs search on solr and returns the last page results as rows to get displayed in the search UI page.
+     *
+     * @param searchRecordsRequest the search records request
+     * @param result               the result
+     * @param model                the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/search", method = RequestMethod.POST, params = "action=last")
     public ModelAndView searchLast(@Valid @ModelAttribute("searchRecordsRequest") SearchRecordsRequest searchRecordsRequest,
@@ -168,6 +234,12 @@ public class SearchRecordsController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS);
     }
 
+    /**
+     *Clear all the input fields and the search result rows in the search UI page.
+     *
+     * @param model the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/search", method = RequestMethod.POST, params = "action=newSearch")
     public ModelAndView newSearch(Model model) {
@@ -177,6 +249,16 @@ public class SearchRecordsController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS);
     }
 
+    /**
+     * This method redirects to request UI page with the selected items information in the search results.
+     *
+     * @param searchRecordsRequest   the search records request
+     * @param result                 the result
+     * @param model                  the model
+     * @param request                the request
+     * @param redirectAttributes     the redirect attributes
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/search", method = RequestMethod.POST, params = "action=request")
     public ModelAndView requestRecords(@Valid @ModelAttribute("searchRecordsRequest") SearchRecordsRequest searchRecordsRequest,
@@ -197,6 +279,16 @@ public class SearchRecordsController {
     }
 
 
+    /**
+     * Selected items in the search UI page will be exported to a csv file.
+     *
+     * @param searchRecordsRequest the search records request
+     * @param response             the response
+     * @param result               the result
+     * @param model                the model
+     * @return the byte [ ]
+     * @throws Exception the exception
+     */
     @ResponseBody
     @RequestMapping(value = "/search", method = RequestMethod.POST, params = "action=export")
     public byte[] exportRecords(@Valid @ModelAttribute("searchRecordsRequest") SearchRecordsRequest searchRecordsRequest, HttpServletResponse response,
@@ -212,6 +304,15 @@ public class SearchRecordsController {
         return fileContent;
     }
 
+    /**
+     * Performs search on solr on changing the page size. The number of results returned will be equal to the selected page size.
+     *
+     * @param searchRecordsRequest the search records request
+     * @param result               the result
+     * @param model                the model
+     * @return the model and view
+     * @throws Exception the exception
+     */
     @ResponseBody
     @RequestMapping(value = "/search", method = RequestMethod.POST, params = "action=pageSizeChange")
     public ModelAndView onPageSizeChange(@Valid @ModelAttribute("searchRecordsRequest") SearchRecordsRequest searchRecordsRequest,
@@ -223,6 +324,12 @@ public class SearchRecordsController {
         return new ModelAndView(RecapConstants.VIEW_SEARCH_RECORDS, RecapConstants.VIEW_SEARCH_RECORDS_REQUEST, searchRecordsRequest);
     }
 
+    /**
+     * To get the page number based on the total number of records in result set and the selected page size.
+     *
+     * @param searchRecordsRequest the search records request
+     * @return the integer
+     */
     public Integer getPageNumberOnPageSizeChange(SearchRecordsRequest searchRecordsRequest) {
         int totalRecordsCount;
         Integer pageNumber = searchRecordsRequest.getPageNumber();
@@ -364,6 +471,11 @@ public class SearchRecordsController {
     }
 
 
+    /**
+     * Add up for srring thymeleaf and spring binding.
+     *
+     * @param binder the binder
+     */
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.setAutoGrowCollectionLimit(1048576);
