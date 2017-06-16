@@ -42,7 +42,7 @@ public class ScheduleJobsController {
     private static final Logger logger = LoggerFactory.getLogger(ScheduleJobsController.class);
 
     @Value("${scsb.url}")
-    String scsbUrl;
+    private String scsbUrl;
 
     @Autowired
     private UserAuthUtil userAuthUtil;
@@ -50,18 +50,40 @@ public class ScheduleJobsController {
     @Autowired
     private JobDetailsRepository jobDetailsRepository;
 
+    /**
+     * Gets user auth util.
+     *
+     * @return the user auth util
+     */
     public UserAuthUtil getUserAuthUtil() {
         return userAuthUtil;
     }
 
+    /**
+     * Sets user auth util.
+     *
+     * @param userAuthUtil the user auth util
+     */
     public void setUserAuthUtil(UserAuthUtil userAuthUtil) {
         this.userAuthUtil = userAuthUtil;
     }
 
+    /**
+     * Gets rest template.
+     *
+     * @return the rest template
+     */
     public RestTemplate getRestTemplate() {
         return new RestTemplate();
     }
 
+    /**
+     * Gets all the jobs information from scsb database and display them as rows in the jobs UI page.
+     *
+     * @param model   the model
+     * @param request the request
+     * @return the string
+     */
     @RequestMapping("/jobs")
     public String displayJobs(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -78,6 +100,14 @@ public class ScheduleJobsController {
         return RecapConstants.VIEW_SEARCH_RECORDS;
     }
 
+    /**
+     * Passes information to the scsb-batch-scheduler microservice about the job whether to be schedule or unschedule.
+     *
+     * @param scheduleJobsForm the schedule jobs form
+     * @param result           the result
+     * @param model            the model
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/jobs", method = RequestMethod.POST, params = "action=scheduleJob")
     public ModelAndView scheduleJob(@Valid @ModelAttribute("scheduleJobsForm") ScheduleJobsForm scheduleJobsForm,
