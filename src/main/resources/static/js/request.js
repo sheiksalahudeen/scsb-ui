@@ -217,9 +217,12 @@ function statusChange(){
                 if(changeStatus != null && changeStatus != '' && changeNotes != null && changeNotes != ''){
                     $.each(changeStatus, function (key, value) {
                         $("#status-" + key).html(value);
-                        $('#refreshIcon-'+key).hide();
-                        $('#removeName-'+key).removeAttr("name");
-                        if(value == "RETRIEVAL ORDER PLACED" ||  value == "RECALL ORDER PLACED" || value == "EDD ORDER PLACED") {
+                        var reqStatus = value;
+                        if(value =! "PROCESSING ..." ||  value != "PENDING") {
+                            $('#refreshIcon-' + key).hide();
+                            $('#removeName-' + key).removeAttr("name");
+                        }
+                        if(reqStatus == "RETRIEVAL ORDER PLACED" ||  reqStatus == "RECALL ORDER PLACED" || reqStatus == "EDD ORDER PLACED") {
                             $('#showCancelButton-' + key).css("display", "block");}
                             $.each(changeNotes,function (key,value) {
                                 $("#notes-" + key).val(value);

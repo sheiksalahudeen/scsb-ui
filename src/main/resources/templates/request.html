@@ -168,8 +168,8 @@
                                                     </td>
                                                     <td width="">
                                                         <input type="hidden" th:field="${requestForm.searchResultRows[__${searchResultStat.index}__].status}"/>
-                                                        <img data-th-id="'refreshIcon-'+ ${searchResultStat.index}" src="images/refresh.gif" alt="Refreshing Status" style="width:20px;height:25px;" th:if="${searchResult.status == 'PROCESSING ...' }"/>
-                                                        <input th:if="${searchResult.status == 'PROCESSING ...' }" type="hidden" data-th-id="'removeName-'+ ${searchResultStat.index}" name="statusChange" th:value="${searchResult.requestId + '-' + searchResultStat.index}"/>
+                                                        <img data-th-id="'refreshIcon-'+ ${searchResultStat.index}" src="images/refresh.gif" alt="Refreshing Status" style="width:20px;height:25px;" th:if="${searchResult.status == 'PROCESSING ...' || searchResult.status == 'PENDING'}"/>
+                                                        <input th:if="${searchResult.status == 'PROCESSING ...'  || searchResult.status == 'PENDING'}" type="hidden" data-th-id="'removeName-'+ ${searchResultStat.index}" name="statusChange" th:value="${searchResult.requestId + '-' + searchResultStat.index}"/>
                                                         <span data-th-id="'status-' + ${searchResultStat.index}" th:text="${searchResult.status}"></span>
                                                     </td>
                                                     <td width="" style="text-align: center">

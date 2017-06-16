@@ -493,8 +493,6 @@ public class RecapConstants {
 
     public static final String LOGGED_IN_INSTITUTION= "loggedInInstitution";
 
-    public static final String PROCESSING_STATUS= "PROCESSING ...";
-
     public static final String SCHEDULE_JOBS = "scheduleJobs";
     public static final String SCHEDULE_JOBS_FORM = "scheduleJobsForm";
     public static final String URL_SCHEDULE_JOBS= "scheduleService/scheduleJob";

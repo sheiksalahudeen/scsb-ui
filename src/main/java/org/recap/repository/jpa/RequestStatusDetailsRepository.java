@@ -12,5 +12,8 @@ import java.util.List;
 public interface RequestStatusDetailsRepository extends JpaRepository<RequestStatusEntity, Integer> {
     @Query(value="select requestStatus from RequestStatusEntity requestStatus where requestStatus.requestStatusDescription NOT IN ('PROCESSING ...')")
     List<RequestStatusEntity> findAllExceptProcessing();
+
+    @Query(value="select requestStatusDescription from RequestStatusEntity requestStatus where requestStatus.requestStatusDescription NOT IN ('PROCESSING ...')")
+    List<String> findAllRequestStatusDescExceptProcessing();
 }
 

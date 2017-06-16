@@ -183,6 +183,7 @@ public class RequestService {
         Map<String,String> responseMap =  new HashMap<>();
         Map<String,String> responseMapForNotes =  new HashMap<>();
         List<Integer> requestIdList = new ArrayList<>();
+        List<String> listOfRequestStatusDesc = requestStatusDetailsRepository.findAllRequestStatusDescExceptProcessing();
         String[] parameterValues = request.getParameterValues("status[]");
         for (String parameterValue : parameterValues) {
             String[] split = StringUtils.split(parameterValue, "-");
@@ -192,9 +193,11 @@ public class RequestService {
         List<RequestItemEntity> requestItemEntityList = getRequestItemDetailsRepository().findByRequestIdIn(requestIdList);
         for (RequestItemEntity requestItemEntity : requestItemEntityList) {
             Integer rowUpdateNum = map.get(requestItemEntity.getRequestId());
-            if (!RecapConstants.PROCESSING_STATUS.equals(requestItemEntity.getRequestStatusEntity().getRequestStatusDescription())){
-                responseMap.put(String.valueOf(rowUpdateNum),requestItemEntity.getRequestStatusEntity().getRequestStatusDescription());
-                responseMapForNotes.put(String.valueOf(rowUpdateNum),requestItemEntity.getNotes());
+            for(String requestStatusDescription : listOfRequestStatusDesc) {
+                if (requestStatusDescription.equals(requestItemEntity.getRequestStatusEntity().getRequestStatusDescription())) {
+                    responseMap.put(String.valueOf(rowUpdateNum), requestItemEntity.getRequestStatusEntity().getRequestStatusDescription());
+                    responseMapForNotes.put(String.valueOf(rowUpdateNum), requestItemEntity.getNotes());
+                }
             }
         }
         try {
