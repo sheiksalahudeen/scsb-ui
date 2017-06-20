@@ -23,6 +23,7 @@
                                         <th>Cron Expression</th>
                                         <th>Status</th>
                                         <th>Actions</th>
+                                        <th>Executions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -84,6 +85,9 @@
                                                     th:onclick="'javascript:showUnscheduleJob('+${jobStat.index}+')'">
                                                 Unschedule
                                             </button>
+                                        </td>
+                                        <td>
+                                            <a data-th-if="${job.jobInstanceId}" th:href="${@environment.getProperty('scsb.batch.schedule.url')} + 'jobs/' + ${job.jobName} + '/' + ${job.jobInstanceId}" target="_blank">Details</a>
                                         </td>
                                     </tr>
                                     </tbody>
