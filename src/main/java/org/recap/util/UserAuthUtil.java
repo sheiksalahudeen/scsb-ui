@@ -23,7 +23,7 @@ public class UserAuthUtil {
     private static final Logger logger = LoggerFactory.getLogger(UserAuthUtil.class);
 
     @Value("${scsb.shiro}")
-    String scsbShiro;
+    private String scsbShiro;
 
 
     public Map<String,Object> doAuthentication(UsernamePasswordToken token) throws Exception{

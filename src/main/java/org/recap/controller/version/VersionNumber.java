@@ -13,12 +13,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class VersionNumber {
 
     @Value("${version.number}")
-    String versionNumberService;
+    private String versionNumberService;
 
+    /**
+     * Sets version number service.
+     *
+     * @param versionNumberService the version number service
+     */
     public void setVersionNumberService(String versionNumberService) {
         this.versionNumberService = versionNumberService;
     }
 
+    /**
+     * Gets the version number for scsb application which is configured in external application properties file.
+     *
+     * @return the version number service
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/getVersionNumberService")
     @ResponseBody
     public String getVersionNumberService() {

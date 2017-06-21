@@ -9,9 +9,9 @@ import java.io.Serializable;
 
 /**
  * <p>Java class for subfieldatafieldType complex type.
- * <p/>
+ * <p>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * <p/>
+ * <p>
  * <pre>
  * &lt;complexType name="subfieldatafieldType">
  *   &lt;simpleContent>
@@ -41,8 +41,7 @@ public class SubfieldatafieldType implements Serializable {
     /**
      * Gets the value of the value property.
      *
-     * @return possible object is
-     * {@link String }
+     * @return possible object is {@link String }
      */
     public String getValue() {
         return value;
@@ -51,8 +50,7 @@ public class SubfieldatafieldType implements Serializable {
     /**
      * Sets the value of the value property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is              {@link String }
      */
     public void setValue(String value) {
         this.value = value;
@@ -61,8 +59,7 @@ public class SubfieldatafieldType implements Serializable {
     /**
      * Gets the value of the id property.
      *
-     * @return possible object is
-     * {@link String }
+     * @return possible object is {@link String }
      */
     public String getId() {
         return id;
@@ -71,8 +68,7 @@ public class SubfieldatafieldType implements Serializable {
     /**
      * Sets the value of the id property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is              {@link String }
      */
     public void setId(String value) {
         this.id = value;
@@ -81,8 +77,7 @@ public class SubfieldatafieldType implements Serializable {
     /**
      * Gets the value of the code property.
      *
-     * @return possible object is
-     * {@link String }
+     * @return possible object is {@link String }
      */
     public String getCode() {
         return code;
@@ -91,8 +86,7 @@ public class SubfieldatafieldType implements Serializable {
     /**
      * Sets the value of the code property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is              {@link String }
      */
     public void setCode(String value) {
         this.code = value;

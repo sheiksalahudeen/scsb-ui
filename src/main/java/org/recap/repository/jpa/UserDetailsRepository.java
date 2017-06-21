@@ -18,36 +18,115 @@ import org.springframework.stereotype.Repository;
 public interface UserDetailsRepository extends JpaRepository<UsersEntity,Integer>,JpaSpecificationExecutor {
 
 
-
+    /**
+     * To get the user entity for the given login id.
+     *
+     * @param loginId the login id
+     * @return the users entity
+     */
     UsersEntity findByLoginId(String loginId);
 
+    /**
+     * To get the user entity for the given login id and institution.
+     *
+     * @param loginId       the login id
+     * @param institutionId the institution id
+     * @return the users entity
+     */
     UsersEntity findByLoginIdAndInstitutionEntity(String loginId, InstitutionEntity institutionId);
 
+    /**
+     * To get the user entity for the given user id.
+     *
+     * @param userId the user id
+     * @return the users entity
+     */
     UsersEntity findByUserId(Integer userId);
 
-    @Query(value = "select userT.passwrd from user_master_t userT where userT.login_id=:loginId",nativeQuery = true)
-    String validateUser(@Param("loginId") String loginId);
-
-    @Query(value="select roleT.role_name from role_master_t roleT,user_master_t userT where userT.user_role_id=roleT.role_id",nativeQuery = true)
-    RoleEntity userRole(@Param("loginId") String loginId);
-
+    /**
+     *To get pageable users entities.
+     *
+     *@param pageable the pageable
+     * @return the page
+     */
     Page<UsersEntity> findAll(Pageable pageable);
 
+    /**
+     * To get the pageable users entities for the given institution.
+     *
+     * @param institutionId the institution id
+     * @param pageable      the pageable
+     * @return the page
+     */
     @Query(value = "select distinct users from UsersEntity users inner join users.userRole role where users.institutionId = :institutionId and role.roleName not in ('Super Admin')")
     Page<UsersEntity> findByInstitutionEntity(@Param("institutionId") Integer institutionId, Pageable pageable);
 
+    /**
+     * To get the pageable users entities for the given login id.
+     *
+     * @param loginId  the login id
+     * @param pageable the pageable
+     * @return the page
+     */
     Page<UsersEntity> findByLoginId(String loginId, Pageable pageable);
 
+    /**
+     * To get the pageable users entities for the given login id and institution.
+     *
+     * @param loginId       the login id
+     * @param institutionId the institution id
+     * @param pageable      the pageable
+     * @return the page
+     */
     @Query(value = "select distinct users from UsersEntity users inner join users.userRole role where users.loginId = :loginId and users.institutionId = :institutionId and role.roleName not in ('Super Admin')")
     Page<UsersEntity> findByLoginIdAndInstitutionEntity(@Param("loginId") String loginId, @Param("institutionId") Integer institutionId, Pageable pageable);
 
+    /**
+     * To get the users entity for the given network id and institution.
+     *
+     * @param networkLoginId the network login id
+     * @param institutionId  the institution id
+     * @return the users entity
+     */
     UsersEntity findByLoginIdAndInstitutionId(String networkLoginId, Integer institutionId);
 
+    /**
+     * To get the pageable users entities for the given email id.
+     *
+     * @param userEmailId the user email id
+     * @param pageable    the pageable
+     * @return the page
+     */
     Page<UsersEntity> findByEmailId(String userEmailId, Pageable pageable);
 
+    /**
+     * To get the pageable user entities for the given email id and institution.
+     *
+     * @param userEmailId       the user email id
+     * @param institutionEntity the institution entity
+     * @param pageable          the pageable
+     * @return the page
+     */
     Page<UsersEntity> findByEmailIdAndInstitutionEntity(String userEmailId, InstitutionEntity institutionEntity, Pageable pageable);
 
+    /**
+     * To get the pageable users entities for the given network id and email id.
+     *
+     * @param searchNetworkId the search network id
+     * @param userEmailId     the user email id
+     * @param pageable        the pageable
+     * @return the page
+     */
     Page<UsersEntity> findByLoginIdAndEmailId(String searchNetworkId, String userEmailId, Pageable pageable);
 
+    /**
+     * To get the pageable users entities for the given login id, email id and institution.
+     *
+     * @param searchNetworkId   the search network id
+     * @param userEmailId       the user email id
+     * @param institutionEntity the institution entity
+     * @param pageable          the pageable
+     * @return the page
+     */
     Page<UsersEntity> findByLoginIdAndEmailIdAndInstitutionEntity(String searchNetworkId, String userEmailId, InstitutionEntity institutionEntity, Pageable pageable);
 }
