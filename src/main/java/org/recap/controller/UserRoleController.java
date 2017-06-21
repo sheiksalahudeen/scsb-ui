@@ -59,27 +59,59 @@ public class UserRoleController {
     @Autowired
     private UserManagementService userManagementService;
 
+    /**
+     * Gets logger.
+     *
+     * @return the logger
+     */
     public Logger getLogger() {
         return logger;
     }
 
+    /**
+     * Gets user auth util.
+     *
+     * @return the user auth util
+     */
     public UserAuthUtil getUserAuthUtil() {
         return userAuthUtil;
     }
 
+    /**
+     * Gets user role service.
+     *
+     * @return the user role service
+     */
     public UserRoleService getUserRoleService() {
         return userRoleService;
     }
 
+    /**
+     * Gets user details repository.
+     *
+     * @return the user details repository
+     */
     public UserDetailsRepository getUserDetailsRepository() {
         return userDetailsRepository;
     }
 
 
+    /**
+     * Gets user management service.
+     *
+     * @return the user management service
+     */
     public UserManagementService getUserManagementService() {
         return userManagementService;
     }
 
+    /**
+     * Render the users UI page for the scsb application.
+     *
+     * @param model   the model
+     * @param request the request
+     * @return the string
+     */
     @RequestMapping(value = "/userRoles")
     public String showUserRoles(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -107,7 +139,14 @@ public class UserRoleController {
         userRoleForm.setInstitutions(institutions);
     }
 
-    //Search
+    /**
+     * Gets user search results from scsb database and display them as rows in the search user UI page.
+     *
+     * @param userRoleForm the user role form
+     * @param model        the model
+     * @param request      the request
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/userRoles/searchUsers", method = RequestMethod.POST)
     public ModelAndView searchUserRole(@Valid @ModelAttribute("userRoleForm") UserRoleForm userRoleForm, Model model, HttpServletRequest request) {
@@ -130,7 +169,17 @@ public class UserRoleController {
     }
 
 
-    //DeleteUser Screen
+    /**
+     *Provide information about the user which has been selected to delete in scsb.
+     *
+     * @param networkLoginId the network login id
+     * @param userId         the user id
+     * @param request        the request
+     * @param pagesize       the pagesize
+     * @param pageNumber     the page number
+     * @param totalPageCount the total page count
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/userRoles/deleteUser", method = RequestMethod.GET)
     public ModelAndView deleteUserRole(String networkLoginId, Integer userId, HttpServletRequest request, Integer pagesize, Integer pageNumber, Integer totalPageCount) {
@@ -170,7 +219,19 @@ public class UserRoleController {
     }
 
 
-    //DeleteUser On Confirm
+    /**
+     * To delete the user permanently in scsb.
+     *
+     * @param userRoleForm   the user role form
+     * @param model          the model
+     * @param userId         the user id
+     * @param networkLoginId the network login id
+     * @param pageNumber     the page number
+     * @param totalPageCount the total page count
+     * @param pageSize       the page size
+     * @param request        the request
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/userRoles/delete", method = RequestMethod.GET)
     public ModelAndView deleteUser(@Valid @ModelAttribute("userRoleForm") UserRoleForm userRoleForm, Model model, Integer userId, String networkLoginId, Integer pageNumber, Integer totalPageCount, Integer pageSize, HttpServletRequest request) {
@@ -200,6 +261,14 @@ public class UserRoleController {
         }
     }
 
+    /**
+     * Gets first page user search results from scsb database and display them as rows in the search user UI page.
+     *
+     * @param userRoleForm the user role form
+     * @param model        the model
+     * @param request      the request
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/userRoles/first", method = RequestMethod.POST)
     public ModelAndView searchFirstPage(@ModelAttribute("userForm") UserRoleForm userRoleForm, Model model, HttpServletRequest request) {
@@ -216,6 +285,14 @@ public class UserRoleController {
         }
     }
 
+    /**
+     * Gets next page user search results from scsb database and display them as rows in the search user UI page.
+     *
+     * @param userRoleForm the user role form
+     * @param model        the model
+     * @param request      the request
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/userRoles/next", method = RequestMethod.POST)
     public ModelAndView searchNextPage(@ModelAttribute("userForm") UserRoleForm userRoleForm, Model model, HttpServletRequest request) {
@@ -223,6 +300,14 @@ public class UserRoleController {
         return getPaginatioinModelAndView(userRoleForm, model, request);
     }
 
+    /**
+     * Gets previous page user search results from scsb database and display them as rows in the search user UI page.
+     *
+     * @param userRoleForm the user role form
+     * @param model        the model
+     * @param request      the request
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/userRoles/previous", method = RequestMethod.POST)
     public ModelAndView searchPreviousPage(@ModelAttribute("userForm") UserRoleForm userRoleForm, Model model, HttpServletRequest request) {
@@ -230,6 +315,14 @@ public class UserRoleController {
         return getPaginatioinModelAndView(userRoleForm, model, request);
     }
 
+    /**
+     * Gets last page user search results from scsb database and display them as rows in the search user UI page.
+     *
+     * @param userRoleForm the user role form
+     * @param model        the model
+     * @param request      the request
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/userRoles/last", method = RequestMethod.POST)
     public ModelAndView searchLastPage(@ModelAttribute("userForm") UserRoleForm userRoleForm, Model model, HttpServletRequest request) {
@@ -237,6 +330,13 @@ public class UserRoleController {
         return getPaginatioinModelAndView(userRoleForm, model, request);
     }
 
+    /**
+     * To create a new user in the scsb.
+     *
+     * @param userRoleForm the user role form
+     * @param request      the request
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/userRoles/createUser", method = RequestMethod.POST)
     public ModelAndView createUserRequest(@ModelAttribute("userRoleForm") UserRoleForm userRoleForm, HttpServletRequest request) {
@@ -260,7 +360,14 @@ public class UserRoleController {
         }
     }
 
-    //Edit User
+    /**
+     * Provide information about the user which has been selected to edit in scsb.
+     *
+     * @param userId         the user id
+     * @param networkLoginId the network login id
+     * @param request        the request
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/userRoles/editUser", method = RequestMethod.GET)
     public ModelAndView editUser(@ModelAttribute("userId") Integer userId, @ModelAttribute("networkLoginId") String networkLoginId, HttpServletRequest request) {
@@ -296,7 +403,17 @@ public class UserRoleController {
         }
     }
 
-    //Save Edited User
+    /**
+     * To save the edited user details in scsb.
+     *
+     * @param userId          the user id
+     * @param networkLoginId  the network login id
+     * @param userDescription the user description
+     * @param institutionId   the institution id
+     * @param userEmailId     the user email id
+     * @param request         the request
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/userRoles/saveEditUserDetails", method = RequestMethod.GET)
     public ModelAndView saveEditUserDetails(@ModelAttribute("userId") Integer userId, @ModelAttribute("networkLoginId") String networkLoginId,
@@ -354,6 +471,13 @@ public class UserRoleController {
         }
     }
 
+    /**
+     *Get back to the user search UI page from edit, delete and create user UI pages.
+     *
+     * @param userRoleForm the user role form
+     * @param request      the request
+     * @return the model and view
+     */
     @ResponseBody
     @RequestMapping(value = "/userRoles", method = RequestMethod.POST, params = "action=goBack")
     public ModelAndView goBack(@ModelAttribute("userRoleForm") UserRoleForm userRoleForm,HttpServletRequest request){

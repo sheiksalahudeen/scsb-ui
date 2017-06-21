@@ -22,8 +22,14 @@ public class SearchUtil {
     private static final Logger logger = LoggerFactory.getLogger(SearchUtil.class);
 
     @Value("${scsb.url}")
-    String scsbUrl;
+    private String scsbUrl;
 
+    /**
+     *  This method makes a call to scsb microservice to get search results response for the given search criteria in the search UI page.
+     *
+     * @param searchRecordsRequest the search records request
+     * @return the search records response
+     */
     public SearchRecordsResponse requestSearchResults(SearchRecordsRequest searchRecordsRequest) {
         SearchRecordsResponse searchRecordsResponse = new SearchRecordsResponse();
         try {
