@@ -131,7 +131,6 @@ public class ScheduleJobsController {
                 if (null != jobEntity) {
                     if (RecapConstants.UNSCHEDULE.equals(scheduleJobsForm.getScheduleType())) {
                         jobEntity.setStatus(RecapConstants.UNSCHEDULED);
-                        jobEntity.setCronExpression(null);
                         jobEntity.setNextRunTime(null);
                     } else {
                         jobEntity.setStatus(RecapConstants.SCHEDULED);
