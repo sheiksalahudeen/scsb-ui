@@ -18,15 +18,35 @@ import java.util.Iterator;
  */
 public class HelperUtil {
 
+    /**
+     * Gets attribute value from request.
+     *
+     * @param request the request
+     * @param key     the key
+     * @return the attribute value of the given key
+     */
     public static String getAttributeValueFromRequest(HttpServletRequest request, String key) {
         return (String) request.getAttribute(key);
     }
 
+    /**
+     * Gets bean for the given type.
+     *
+     * @param <T>          the type parameter
+     * @param requiredType the required type
+     * @return the bean
+     */
     public static <T> T getBean(Class<T> requiredType) {
         ApplicationContext applicationContext = ApplicationContextProvider.getInstance().getApplicationContext();
         return applicationContext.getBean(requiredType);
     }
 
+    /**
+     * Gets institution from request.
+     *
+     * @param request the request
+     * @return the institution
+     */
     public static String getInstitutionFromRequest(HttpServletRequest request) {
         String institution = request.getParameter("institution");
         if(StringUtils.isBlank(institution)) {
@@ -35,6 +55,12 @@ public class HelperUtil {
         return institution;
     }
 
+    /**
+     * Gets logout url based on the loggined in institution.
+     *
+     * @param institutionCode the institution code
+     * @return the logout url
+     */
     public static String getLogoutUrl(String institutionCode) {
         String casLogoutUrl;
         if (StringUtils.equals(institutionCode, RecapConstants.NYPL)) {
@@ -49,6 +75,11 @@ public class HelperUtil {
         return casLogoutUrl;
     }
 
+    /**
+     * Logout from shiro.
+     *
+     * @param attribute the attribute
+     */
     public static void logoutFromShiro(Object attribute) {
         if (null != attribute) {
             try{
@@ -60,6 +91,12 @@ public class HelperUtil {
         }
     }
 
+    /**
+     * find ss anonymous user logged in.
+     *
+     * @param auth the auth
+     * @return the boolean
+     */
     public static boolean isAnonymousUser(Authentication auth) {
         if(StringUtils.equals(auth.getName(), RecapConstants.ANONYMOUS_USER)) {
             Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();

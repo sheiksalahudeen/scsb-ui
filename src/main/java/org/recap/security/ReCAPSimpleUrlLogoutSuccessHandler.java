@@ -26,6 +26,11 @@ public class ReCAPSimpleUrlLogoutSuccessHandler extends SimpleUrlLogoutSuccessHa
 
     private UserAuthUtil userAuthUtil;
 
+    /**
+     * Instantiates a new ReCAPSimpleUrlLogoutSuccessHandler.
+     *
+     * @param userAuthUtil the user auth util
+     */
     public ReCAPSimpleUrlLogoutSuccessHandler(UserAuthUtil userAuthUtil) {
         this.userAuthUtil = userAuthUtil;
     }

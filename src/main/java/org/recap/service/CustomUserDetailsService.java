@@ -24,10 +24,18 @@ public class CustomUserDetailsService implements AuthenticationUserDetailsServic
 
     private Set<String> admins;
 
+    /**
+     * Instantiates a new CustomUserDetailsService.
+     */
     public CustomUserDetailsService() {
         super();
     }
 
+    /**
+     * Instantiates a new CustomUserDetailsService.
+     *
+     * @param admins the admins
+     */
     public CustomUserDetailsService(Set<String> admins) {
         super();
         this.admins = admins;

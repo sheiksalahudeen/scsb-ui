@@ -16,22 +16,47 @@ public class CASPropertyProvider {
     @Value("${app.service.home}")
     private String home;
 
+    /**
+     * Gets security.
+     *
+     * @return the security
+     */
     public String getSecurity() {
         return security;
     }
 
+    /**
+     * Sets security.
+     *
+     * @param security the security
+     */
     public void setSecurity(String security) {
         this.security = security;
     }
 
+    /**
+     * Gets home.
+     *
+     * @return the home
+     */
     public String getHome() {
         return home;
     }
 
+    /**
+     * Sets home.
+     *
+     * @param home the home
+     */
     public void setHome(String home) {
         this.home = home;
     }
 
+    /**
+     * Gets service properties.
+     *
+     * @return the service properties
+     */
     public ServiceProperties getServiceProperties() {
         ServiceProperties serviceProperties = new ServiceProperties();
         serviceProperties.setService(home + "/" + security);

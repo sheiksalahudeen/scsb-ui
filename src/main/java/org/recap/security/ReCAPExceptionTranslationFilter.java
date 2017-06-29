@@ -45,11 +45,23 @@ public class ReCAPExceptionTranslationFilter extends GenericFilterBean {
 
     private RequestCache requestCache = new HttpSessionRequestCache();
 
+    /**
+     * Instantiates a new ReCAPExceptionTranslationFilter.
+     *
+     * @param casPropertyProvider      the cas property provider
+     * @param authenticationEntryPoint the authentication entry point
+     */
     public ReCAPExceptionTranslationFilter(CASPropertyProvider casPropertyProvider, AuthenticationEntryPoint authenticationEntryPoint) {
         this(authenticationEntryPoint, new HttpSessionRequestCache());
         this.casPropertyProvider = casPropertyProvider;
     }
 
+    /**
+     * Instantiates a ReCAPExceptionTranslationFilter.
+     *
+     * @param authenticationEntryPoint the authentication entry point
+     * @param requestCache             the request cache
+     */
     public ReCAPExceptionTranslationFilter(AuthenticationEntryPoint authenticationEntryPoint,
                                       RequestCache requestCache) {
         Assert.notNull(authenticationEntryPoint,
@@ -112,10 +124,20 @@ public class ReCAPExceptionTranslationFilter extends GenericFilterBean {
         }
     }
 
+    /**
+     * Gets authentication entry point.
+     *
+     * @return the authentication entry point
+     */
     public AuthenticationEntryPoint getAuthenticationEntryPoint() {
         return authenticationEntryPoint;
     }
 
+    /**
+     * Gets authentication trust resolver.
+     *
+     * @return the authentication trust resolver
+     */
     protected AuthenticationTrustResolver getAuthenticationTrustResolver() {
         return authenticationTrustResolver;
     }
@@ -156,6 +178,16 @@ public class ReCAPExceptionTranslationFilter extends GenericFilterBean {
         }
     }
 
+    /**
+     * Send start authentication. Default is OAuth (NYPL). CAS authentication will be decided based on the institution for PUL and CUL
+     *
+     * @param request  the request
+     * @param response the response
+     * @param chain    the chain
+     * @param reason   the reason
+     * @throws ServletException the servlet exception
+     * @throws IOException      the io exception
+     */
     protected void sendStartAuthentication(HttpServletRequest request,
                                            HttpServletResponse response, FilterChain chain,
                                            AuthenticationException reason) throws ServletException, IOException {
@@ -184,11 +216,21 @@ public class ReCAPExceptionTranslationFilter extends GenericFilterBean {
 
     }
 
+    /**
+     * Sets access denied handler.
+     *
+     * @param accessDeniedHandler the access denied handler
+     */
     public void setAccessDeniedHandler(AccessDeniedHandler accessDeniedHandler) {
         Assert.notNull(accessDeniedHandler, "AccessDeniedHandler required");
         this.accessDeniedHandler = accessDeniedHandler;
     }
 
+    /**
+     * Sets authentication trust resolver.
+     *
+     * @param authenticationTrustResolver the authentication trust resolver
+     */
     public void setAuthenticationTrustResolver(
             AuthenticationTrustResolver authenticationTrustResolver) {
         Assert.notNull(authenticationTrustResolver,
@@ -196,6 +238,11 @@ public class ReCAPExceptionTranslationFilter extends GenericFilterBean {
         this.authenticationTrustResolver = authenticationTrustResolver;
     }
 
+    /**
+     * Sets throwable analyzer.
+     *
+     * @param throwableAnalyzer the throwable analyzer
+     */
     public void setThrowableAnalyzer(ThrowableAnalyzer throwableAnalyzer) {
         Assert.notNull(throwableAnalyzer, "throwableAnalyzer must not be null");
         this.throwableAnalyzer = throwableAnalyzer;

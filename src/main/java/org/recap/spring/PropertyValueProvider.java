@@ -13,6 +13,12 @@ public class PropertyValueProvider {
     @Autowired
     private Environment env;
 
+    /**
+     * Get the value fo the given property key .
+     *
+     * @param key the key
+     * @return the property value
+     */
     public String getProperty(String key) {
         return env.getProperty(key);
     }
