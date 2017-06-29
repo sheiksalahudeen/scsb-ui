@@ -16,9 +16,20 @@ import javax.servlet.http.HttpSession;
 @Service
 public class UserManagementService {
 
+    /**
+     * The Roles details repositorty.
+     */
     @Autowired
     RolesDetailsRepositorty rolesDetailsRepositorty;
 
+    /**
+     * Un authorized logged-in user.
+     *
+     * @param session    the session
+     * @param moduleName the module name
+     * @param logger     the logger
+     * @return the string
+     */
     public static String unAuthorizedUser(HttpSession session, String moduleName, Logger logger)
     {
         final String loginScreen="redirect:/";
@@ -29,6 +40,11 @@ public class UserManagementService {
         return loginScreen;
     }
 
+    /**
+     * Get super admin role id integer.
+     *
+     * @return the integer
+     */
     public Integer getSuperAdminRoleId(){
         RoleEntity roleEntity=rolesDetailsRepositorty.findByRoleName("Super Admin");
         return roleEntity.getRoleId();

@@ -53,6 +53,14 @@ public class LoginController {
     private UserInstitutionCache userInstitutionCache;
 
 
+    /**
+     * Return either login or search view. Returns search view if user authenticated. If not it will return login view.
+     *
+     * @param request  the request
+     * @param model    the model
+     * @param userForm the user form
+     * @return the string
+     */
     @RequestMapping(value="/",method= RequestMethod.GET)
     public String loginScreen(HttpServletRequest request, Model model, @ModelAttribute UserForm userForm) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -63,11 +71,28 @@ public class LoginController {
         return RecapConstants.VIEW_LOGIN;
     }
 
+    /**
+     * Return home view.
+     *
+     * @param request  the request
+     * @param model    the model
+     * @param userForm the user form
+     * @return the string
+     */
     @RequestMapping(value="/home",method= RequestMethod.GET)
     public String home(HttpServletRequest request, Model model, @ModelAttribute UserForm userForm) {
         return RecapConstants.VIEW_LOGIN;
     }
 
+    /**
+     * Perform the SCSB authentication and authorization after user authenticated from partners IMS
+     *
+     * @param userForm the user form
+     * @param request  the request
+     * @param model    the model
+     * @param error    the error
+     * @return the view name
+     */
     @RequestMapping(value = "/login-scsb", method = RequestMethod.GET)
     public String login(@Valid @ModelAttribute UserForm userForm, HttpServletRequest request, Model model, BindingResult error) {
         HttpSession session = processSessionFixation(request);
@@ -125,6 +150,15 @@ public class LoginController {
     }
 
 
+    /**
+     * Create session for the user
+     *
+     * @param userForm the user form
+     * @param request  the request
+     * @param model    the model
+     * @param error    the error
+     * @return the view name
+     */
     @RequestMapping(value="/",method= RequestMethod.POST)
     public String createSession(@Valid @ModelAttribute UserForm userForm, HttpServletRequest request, Model model, BindingResult error){
         loginValidator.validate(userForm,error);
@@ -174,6 +208,12 @@ public class LoginController {
 
     }
 
+    /**
+     * Logout user from SCSB.
+     *
+     * @param request the request
+     * @return the string
+     */
     @RequestMapping("/logout")
     public String logoutUser(HttpServletRequest request){
         logger.info("Subject Logged out");

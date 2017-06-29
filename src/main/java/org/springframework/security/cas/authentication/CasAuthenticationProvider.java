@@ -48,6 +48,9 @@ public class CasAuthenticationProvider implements AuthenticationProvider,
     private AuthenticationUserDetailsService<CasAssertionAuthenticationToken> authenticationUserDetailsService;
 
     private final UserDetailsChecker userDetailsChecker = new AccountStatusUserDetailsChecker();
+    /**
+     * The Messages.
+     */
     protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
     private StatelessTicketCache statelessTicketCache = new NullStatelessTicketCache();
     private String key;
@@ -133,6 +136,12 @@ public class CasAuthenticationProvider implements AuthenticationProvider,
         return result;
     }
 
+    /**
+     * Authenticate the CAS users. CAS URL will be decided based on the user institution.
+     *
+     * @param authentication
+     * @return CasAuthenticationToken
+     */
     private CasAuthenticationToken authenticateNow(final Authentication authentication)
             throws AuthenticationException {
         try {
@@ -206,6 +215,11 @@ public class CasAuthenticationProvider implements AuthenticationProvider,
         return this.authenticationUserDetailsService.loadUserDetails(token);
     }
 
+    /**
+     * Sets user details service.
+     *
+     * @param userDetailsService the user details service
+     */
     @SuppressWarnings("unchecked")
     /**
      * Sets the UserDetailsService to use. This is a convenience method to invoke
@@ -215,27 +229,57 @@ public class CasAuthenticationProvider implements AuthenticationProvider,
                 userDetailsService);
     }
 
+    /**
+     * Sets authentication user details service.
+     *
+     * @param authenticationUserDetailsService the authentication user details service
+     */
     public void setAuthenticationUserDetailsService(
             final AuthenticationUserDetailsService<CasAssertionAuthenticationToken> authenticationUserDetailsService) {
         this.authenticationUserDetailsService = authenticationUserDetailsService;
     }
 
+    /**
+     * Sets service properties.
+     *
+     * @param serviceProperties the service properties
+     */
     public void setServiceProperties(final ServiceProperties serviceProperties) {
         this.serviceProperties = serviceProperties;
     }
 
+    /**
+     * Gets key.
+     *
+     * @return the key
+     */
     protected String getKey() {
         return key;
     }
 
+    /**
+     * Sets key.
+     *
+     * @param key the key
+     */
     public void setKey(String key) {
         this.key = key;
     }
 
+    /**
+     * Gets stateless ticket cache.
+     *
+     * @return the stateless ticket cache
+     */
     public StatelessTicketCache getStatelessTicketCache() {
         return statelessTicketCache;
     }
 
+    /**
+     * Gets ticket validator.
+     *
+     * @return the ticket validator
+     */
     protected TicketValidator getTicketValidator() {
         return ticketValidator;
     }
@@ -244,14 +288,29 @@ public class CasAuthenticationProvider implements AuthenticationProvider,
         this.messages = new MessageSourceAccessor(messageSource);
     }
 
+    /**
+     * Sets stateless ticket cache.
+     *
+     * @param statelessTicketCache the stateless ticket cache
+     */
     public void setStatelessTicketCache(final StatelessTicketCache statelessTicketCache) {
         this.statelessTicketCache = statelessTicketCache;
     }
 
+    /**
+     * Sets ticket validator.
+     *
+     * @param ticketValidator the ticket validator
+     */
     public void setTicketValidator(final TicketValidator ticketValidator) {
         this.ticketValidator = ticketValidator;
     }
 
+    /**
+     * Sets authorities mapper.
+     *
+     * @param authoritiesMapper the authorities mapper
+     */
     public void setAuthoritiesMapper(GrantedAuthoritiesMapper authoritiesMapper) {
         this.authoritiesMapper = authoritiesMapper;
     }

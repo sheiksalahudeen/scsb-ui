@@ -38,7 +38,6 @@ public class ReCAPCas20ServiceTicketValidator extends ReCAPAbstractCasProtocolUr
      * CAS server url prefix.
      *
      * @param casServerUrlPrefix the CAS Server URL prefix.
-     * @param urlFactory URL connection factory to use when communicating with the server
      */
     public ReCAPCas20ServiceTicketValidator(final String casServerUrlPrefix) {
         super(casServerUrlPrefix);

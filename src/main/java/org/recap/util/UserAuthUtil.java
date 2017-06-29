@@ -26,12 +26,26 @@ public class UserAuthUtil {
     private String scsbShiro;
 
 
+    /**
+     * Authenticate the used based on the UsernamePasswordToken.
+     *
+     * @param token the token
+     * @return the map of the authorization values
+     * @throws Exception the exception
+     */
     public Map<String,Object> doAuthentication(UsernamePasswordToken token) throws Exception{
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<UsernamePasswordToken> requestEntity = new HttpEntity<>(token, RecapConstants.getHttpHeaders());
             return restTemplate.postForObject(scsbShiro + RecapConstants.SCSB_SHIRO_AUTHENTICATE_URL, requestEntity, HashMap.class);
     }
 
+    /**
+     * Authorize the login user.
+     *
+     * @param serviceURL the service url
+     * @param token      the token
+     * @return the boolean
+     */
     public Boolean authorizedUser(String serviceURL, UsernamePasswordToken token)
     {
 
@@ -47,6 +61,13 @@ public class UserAuthUtil {
         return statusResponse;
     }
 
+    /**
+     * Gets logged-in user details.
+     *
+     * @param session         the session
+     * @param recapPermission the recap permission
+     * @return the user details
+     */
     public UserDetailsForm getUserDetails(HttpSession session,String recapPermission)
     {
         UserDetailsForm userDetailsForm=new UserDetailsForm();

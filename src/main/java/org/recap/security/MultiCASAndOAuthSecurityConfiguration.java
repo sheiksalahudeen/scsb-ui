@@ -79,7 +79,11 @@ public class MultiCASAndOAuthSecurityConfiguration extends WebSecurityConfigurer
     }
 
 
-
+    /**
+     * Register the CAS global logout filter.
+     *
+     * @return the LogoutFilter
+     */
     @Bean
     public LogoutFilter requestCasGlobalLogoutFilter() {
         String logoutSuccessUrl = casServiceLogout + "?service=" + appServiceLogout;
@@ -94,11 +98,22 @@ public class MultiCASAndOAuthSecurityConfiguration extends WebSecurityConfigurer
         return logoutFilter;
     }
 
+    /**
+     * Register the ReCAP logout filter.
+     *
+     * @return the ReCAPLogoutFilter
+     */
     @Bean
     public ReCAPLogoutFilter reCAPLogoutFilter() {
         return new ReCAPLogoutFilter();
     }
 
+    /**
+     * Cas authentication filter cas authentication filter.
+     *
+     * @return the cas authentication filter
+     * @throws Exception the exception
+     */
     @Bean
     public CasAuthenticationFilter casAuthenticationFilter() throws Exception {
         CasAuthenticationFilter casAuthenticationFilter = new CasAuthenticationFilter();
@@ -116,7 +131,11 @@ public class MultiCASAndOAuthSecurityConfiguration extends WebSecurityConfigurer
     }
 
 
-
+    /**
+     * Register CAS authentication provider and set properties
+     *
+     * @return the CasAuthenticationProvider
+     */
     @Bean
     public CasAuthenticationProvider casAuthenticationProvider() {
         CasAuthenticationProvider casAuthenticationProvider = new CasAuthenticationProvider();
@@ -127,12 +146,22 @@ public class MultiCASAndOAuthSecurityConfiguration extends WebSecurityConfigurer
         return casAuthenticationProvider;
     }
 
+    /**
+     * Register Authentication user details service .
+     *
+     * @return the AuthenticationUserDetailsService
+     */
     @Bean
     public AuthenticationUserDetailsService authenticationUserDetailsService() {
         return new CustomUserDetailsService();
     }
 
 
+    /**
+     * Register ReCAPCas20ServiceTicketValidator.
+     *
+     * @return the ReCAPCas20ServiceTicketValidator
+     */
     @Bean
     public ReCAPCas20ServiceTicketValidator cas20ServiceTicketValidator() {
         return new ReCAPCas20ServiceTicketValidator(casUrlPrefix);
@@ -145,6 +174,11 @@ public class MultiCASAndOAuthSecurityConfiguration extends WebSecurityConfigurer
                 .antMatchers("/css/**").antMatchers("/lib/**");
     }
 
+    /**
+     * Register Http session event publisher for SCSB.
+     *
+     * @return the ReCAPHttpSessionEventPublisher
+     */
     @Bean
     public ReCAPHttpSessionEventPublisher httpSessionEventPublisher() {
         return new ReCAPHttpSessionEventPublisher();
