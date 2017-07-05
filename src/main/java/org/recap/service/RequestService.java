@@ -252,7 +252,7 @@ public class RequestService {
         Map<String,String> responseMap =  new HashMap<>();
         Map<String,String> responseMapForNotes =  new HashMap<>();
         List<Integer> requestIdList = new ArrayList<>();
-        List<String> listOfRequestStatusDesc = requestStatusDetailsRepository.findAllRequestStatusDescExceptProcessing();
+        List<String> listOfRequestStatusDesc = getRequestStatusDetailsRepository().findAllRequestStatusDescExceptProcessing();
         String[] parameterValues = request.getParameterValues("status[]");
         for (String parameterValue : parameterValues) {
             String[] split = StringUtils.split(parameterValue, "-");

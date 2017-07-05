@@ -153,7 +153,9 @@ public class RequestServiceUT extends BaseTestCase {
         MockHttpServletRequest mockedRequest = new MockHttpServletRequest();
         mockedRequest.addParameter(status, statusValue);
         RequestItemEntity requestItemEntity=getRequestItemEntity();
+        Mockito.when(requestServiceMocked.getRequestStatusDetailsRepository()).thenReturn(requestStatusDetailsRepository);
         Mockito.when(requestServiceMocked.getRequestItemDetailsRepository()).thenReturn(requestItemDetailsRepository);
+        Mockito.when(requestServiceMocked.getRequestStatusDetailsRepository().findAllRequestStatusDescExceptProcessing()).thenReturn(Arrays.asList("RETRIEVAL ORDER PLACED","RECALL ORDER PLACED","EDD ORDER PLACED","REFILED","CANCELED","EXCEPTION","PENDING","INITIAL LOAD"));
         Mockito.when(requestItemDetailsRepository.findByRequestIdIn(Arrays.asList(requestItemEntity.getRequestId()))).thenReturn(Arrays.asList(requestItemEntity));
         Mockito.when(requestServiceMocked.getRefreshedStatus(mockedRequest)).thenCallRealMethod();
         String refreshedStatus = requestServiceMocked.getRefreshedStatus(mockedRequest);
