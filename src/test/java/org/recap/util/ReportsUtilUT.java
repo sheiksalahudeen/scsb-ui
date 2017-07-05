@@ -287,7 +287,7 @@ public class ReportsUtilUT extends BaseTestCase {
 
         ItemEntity itemEntity = new ItemEntity();
         itemEntity.setItemId(new Random().nextInt());
-        itemEntity.setBarcode("b3");
+        itemEntity.setBarcode(String.valueOf(new Random().nextInt()));
         itemEntity.setCustomerCode("c1");
         itemEntity.setCallNumber("cn1");
         itemEntity.setCallNumberType("ct1");

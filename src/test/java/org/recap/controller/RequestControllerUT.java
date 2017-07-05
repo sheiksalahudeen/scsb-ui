@@ -408,8 +408,10 @@ public class RequestControllerUT extends BaseControllerUT {
         MockHttpServletRequest mockedRequest = new MockHttpServletRequest();
         mockedRequest.addParameter(status, statusValue);
         RequestItemEntity requestItemEntity=getRequestItemEntity();
+        Mockito.when(requestService.getRequestStatusDetailsRepository()).thenReturn(requestStatusDetailsRepository);
         Mockito.when(requestService.getRequestItemDetailsRepository()).thenReturn(requestItemDetailsRepository);
         Mockito.when(requestItemDetailsRepository.findByRequestIdIn(Arrays.asList(requestItemEntity.getRequestId()))).thenReturn(Arrays.asList(requestItemEntity));
+        Mockito.when(requestService.getRequestStatusDetailsRepository().findAllRequestStatusDescExceptProcessing()).thenReturn(Arrays.asList("RETRIEVAL ORDER PLACED","RECALL ORDER PLACED","EDD ORDER PLACED","REFILED","CANCELED","EXCEPTION","PENDING","INITIAL LOAD"));
         Mockito.doCallRealMethod().when(requestService).getRefreshedStatus(mockedRequest);
         String refreshedStatus = requestService.getRefreshedStatus(mockedRequest);
         Assert.notNull(refreshedStatus);
