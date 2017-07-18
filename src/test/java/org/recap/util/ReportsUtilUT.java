@@ -59,51 +59,51 @@ public class ReportsUtilUT extends BaseTestCase {
         long beforeEddSharedCulCount = reportsForm.getEddSharedOpenCulCount();
         long beforeEddSharedNyplCount = reportsForm.getEddSharedOpenNyplCount();
 
-        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(1, 3, false);
+        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(1, 3, false,"010101");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
         saveRequestEntity(itemEntity.getItemId(), 1, 2, String.valueOf(new Random().nextInt()));
 
-        BibliographicEntity bibliographicEntity1 = saveBibHoldingItemEntity(1, 1, false);
+        BibliographicEntity bibliographicEntity1 = saveBibHoldingItemEntity(1, 1, false,"010102");
         ItemEntity itemEntity1 = bibliographicEntity1.getItemEntities().get(0);
         saveRequestEntity(itemEntity1.getItemId(), 1, 2, String.valueOf(new Random().nextInt()));
 
-        BibliographicEntity bibliographicEntity2 = saveBibHoldingItemEntity(2, 3, false);
+        BibliographicEntity bibliographicEntity2 = saveBibHoldingItemEntity(2, 3, false,"010103");
         ItemEntity itemEntity2 = bibliographicEntity2.getItemEntities().get(0);
         saveRequestEntity(itemEntity2.getItemId(), 1, 3, String.valueOf(new Random().nextInt()));
 
-        BibliographicEntity bibliographicEntity3 = saveBibHoldingItemEntity(2, 1, false);
+        BibliographicEntity bibliographicEntity3 = saveBibHoldingItemEntity(2, 1, false,"010104");
         ItemEntity itemEntity3 = bibliographicEntity3.getItemEntities().get(0);
         saveRequestEntity(itemEntity3.getItemId(), 1, 3, String.valueOf(new Random().nextInt()));
 
-        BibliographicEntity bibliographicEntity4 = saveBibHoldingItemEntity(3, 3, false);
+        BibliographicEntity bibliographicEntity4 = saveBibHoldingItemEntity(3, 3, false,"010105");
         ItemEntity itemEntity4 = bibliographicEntity4.getItemEntities().get(0);
         saveRequestEntity(itemEntity4.getItemId(), 1, 1, String.valueOf(new Random().nextInt()));
 
-        BibliographicEntity bibliographicEntity5 = saveBibHoldingItemEntity(3, 1, false);
+        BibliographicEntity bibliographicEntity5 = saveBibHoldingItemEntity(3, 1, false,"010106");
         ItemEntity itemEntity5 = bibliographicEntity5.getItemEntities().get(0);
         saveRequestEntity(itemEntity5.getItemId(), 1, 1, String.valueOf(new Random().nextInt()));
 
-        BibliographicEntity bibliographicEntity6 = saveBibHoldingItemEntity(1, 3, false);
+        BibliographicEntity bibliographicEntity6 = saveBibHoldingItemEntity(1, 3, false,"010107");
         ItemEntity itemEntity6 = bibliographicEntity6.getItemEntities().get(0);
         saveRequestEntity(itemEntity6.getItemId(), 3, 2, String.valueOf(new Random().nextInt()));
 
-        BibliographicEntity bibliographicEntity7 = saveBibHoldingItemEntity(1, 1, false);
+        BibliographicEntity bibliographicEntity7 = saveBibHoldingItemEntity(1, 1, false,"010108");
         ItemEntity itemEntity7 = bibliographicEntity7.getItemEntities().get(0);
         saveRequestEntity(itemEntity7.getItemId(), 3, 2, String.valueOf(new Random().nextInt()));
 
-        BibliographicEntity bibliographicEntity8 = saveBibHoldingItemEntity(2, 3, false);
+        BibliographicEntity bibliographicEntity8 = saveBibHoldingItemEntity(2, 3, false,"010109");
         ItemEntity itemEntity8 = bibliographicEntity8.getItemEntities().get(0);
         saveRequestEntity(itemEntity8.getItemId(), 3, 3, String.valueOf(new Random().nextInt()));
 
-        BibliographicEntity bibliographicEntity9 = saveBibHoldingItemEntity(2, 1, false);
+        BibliographicEntity bibliographicEntity9 = saveBibHoldingItemEntity(2, 1, false,"010110");
         ItemEntity itemEntity9 = bibliographicEntity9.getItemEntities().get(0);
         saveRequestEntity(itemEntity9.getItemId(), 3, 3, String.valueOf(new Random().nextInt()));
 
-        BibliographicEntity bibliographicEntity10 = saveBibHoldingItemEntity(3, 3, false);
+        BibliographicEntity bibliographicEntity10 = saveBibHoldingItemEntity(3, 3, false,"010111");
         ItemEntity itemEntity10 = bibliographicEntity10.getItemEntities().get(0);
         saveRequestEntity(itemEntity10.getItemId(), 3, 1, String.valueOf(new Random().nextInt()));
 
-        BibliographicEntity bibliographicEntity11 = saveBibHoldingItemEntity(3, 1, false);
+        BibliographicEntity bibliographicEntity11 = saveBibHoldingItemEntity(3, 1, false,"010112");
         ItemEntity itemEntity11 = bibliographicEntity11.getItemEntities().get(0);
         saveRequestEntity(itemEntity11.getItemId(), 3, 1, String.valueOf(new Random().nextInt()));
 
@@ -154,15 +154,15 @@ public class ReportsUtilUT extends BaseTestCase {
         long beforeCountRecallCul = reportsForm.getRecallRequestCulCount();
         long beforeCountRecallNypl = reportsForm.getRecallRequestNyplCount();
 
-        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(1, 1, false);
+        BibliographicEntity bibliographicEntity = saveBibHoldingItemEntity(1, 1, false,"010101");
         ItemEntity itemEntity = bibliographicEntity.getItemEntities().get(0);
         saveRequestEntity(itemEntity.getItemId(), 1, 3, String.valueOf(new Random().nextInt()));
 
-        BibliographicEntity bibliographicEntity1 = saveBibHoldingItemEntity(2, 1, false);
+        BibliographicEntity bibliographicEntity1 = saveBibHoldingItemEntity(2, 1, false,"010101");
         ItemEntity itemEntity1 = bibliographicEntity1.getItemEntities().get(0);
         saveRequestEntity(itemEntity1.getItemId(), 1, 1, String.valueOf(new Random().nextInt()));
 
-        BibliographicEntity bibliographicEntity2 = saveBibHoldingItemEntity(3, 1, false);
+        BibliographicEntity bibliographicEntity2 = saveBibHoldingItemEntity(3, 1, false,"010101");
         ItemEntity itemEntity2 = bibliographicEntity2.getItemEntities().get(0);
         saveRequestEntity(itemEntity2.getItemId(), 1, 2, String.valueOf(new Random().nextInt()));
 
@@ -175,15 +175,15 @@ public class ReportsUtilUT extends BaseTestCase {
         assertEquals(beforeCountRetrievalNypl+1, afterCountRetrievalNypl);
 
         reportsForm.setReportRequestType(Arrays.asList("Recall"));
-        BibliographicEntity bibliographicEntity3 = saveBibHoldingItemEntity(1, 1, false);
+        BibliographicEntity bibliographicEntity3 = saveBibHoldingItemEntity(1, 1, false,"01010101");
         ItemEntity itemEntity3 = bibliographicEntity3.getItemEntities().get(0);
         saveRequestEntity(itemEntity3.getItemId(), 2, 2, String.valueOf(new Random().nextInt()));
 
-        BibliographicEntity bibliographicEntity4 = saveBibHoldingItemEntity(2, 1, false);
+        BibliographicEntity bibliographicEntity4 = saveBibHoldingItemEntity(2, 1, false,"01010101");
         ItemEntity itemEntity4 = bibliographicEntity4.getItemEntities().get(0);
         saveRequestEntity(itemEntity4.getItemId(), 2, 1, String.valueOf(new Random().nextInt()));
 
-        BibliographicEntity bibliographicEntity5 = saveBibHoldingItemEntity(3, 1, false);
+        BibliographicEntity bibliographicEntity5 = saveBibHoldingItemEntity(3, 1, false,"01010101");
         ItemEntity itemEntity5 = bibliographicEntity5.getItemEntities().get(0);
         saveRequestEntity(itemEntity5.getItemId(), 2, 2, String.valueOf(new Random().nextInt()));
         reportsUtil.populateRequestTypeInformation(reportsForm, fromDate, toDate);
@@ -257,7 +257,7 @@ public class ReportsUtilUT extends BaseTestCase {
         assertNotNull(deaccessionItemResultsRowList);
     }
 
-    private BibliographicEntity saveBibHoldingItemEntity(Integer owningInstitutionId, Integer collectionGroupId, boolean isDeleted) throws Exception {
+    private BibliographicEntity saveBibHoldingItemEntity(Integer owningInstitutionId, Integer collectionGroupId, boolean isDeleted, String barcode) throws Exception {
         Random random = new Random();
 
         File bibContentFile = getBibContentFile();
@@ -287,7 +287,7 @@ public class ReportsUtilUT extends BaseTestCase {
 
         ItemEntity itemEntity = new ItemEntity();
         itemEntity.setItemId(new Random().nextInt());
-        itemEntity.setBarcode(String.valueOf(new Random().nextInt()));
+        itemEntity.setBarcode(barcode);
         itemEntity.setCustomerCode("c1");
         itemEntity.setCallNumber("cn1");
         itemEntity.setCallNumberType("ct1");

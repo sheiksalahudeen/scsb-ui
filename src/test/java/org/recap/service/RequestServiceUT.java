@@ -12,9 +12,8 @@ import org.recap.controller.RequestController;
 import org.recap.model.jpa.*;
 import org.recap.model.search.RequestForm;
 import org.recap.model.usermanagement.UserDetailsForm;
-import org.recap.repository.jpa.CustomerCodeDetailsRepository;
-import org.recap.repository.jpa.RequestItemDetailsRepository;
-import org.recap.repository.jpa.RequestStatusDetailsRepository;
+import org.recap.repository.jpa.*;
+import org.recap.util.RequestServiceUtil;
 import org.recap.util.UserAuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -26,9 +25,7 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 /**
@@ -58,6 +55,9 @@ public class RequestServiceUT extends BaseTestCase {
     BindingResult bindingResult;
 
     @Mock
+    RequestServiceUtil requestServiceUtil;
+
+    @Mock
     private UserAuthUtil userAuthUtil;
 
     @Mock
@@ -67,7 +67,19 @@ public class RequestServiceUT extends BaseTestCase {
     CustomerCodeDetailsRepository customerCodeDetailsRepository;
 
     @Mock
+    CustomerCodeDetailsRepository mockedCustomerCodeDetailsRepository;
+
+    @Mock
+    InstitutionDetailsRepository institutionDetailsRepository;
+
+    @Mock
     RequestItemDetailsRepository requestItemDetailsRepository;
+
+    @Mock
+    ItemDetailsRepository itemDetailsRepository;
+
+    @Mock
+    RequestTypeDetailsRepository requestTypeDetailsRepository;
 
     @Mock
     RequestStatusDetailsRepository requestStatusDetailsRepository;
@@ -92,6 +104,30 @@ public class RequestServiceUT extends BaseTestCase {
         String[] splitDeliveryLocation = StringUtils.split(deliveryRestrictions, ",");
         String[] deliveryRestrictionsArray = Arrays.stream(splitDeliveryLocation).map(String::trim).toArray(String[]::new);
         assertTrue(deliveryLocationList.containsAll(Arrays.asList(deliveryRestrictionsArray)) && Arrays.asList(deliveryRestrictionsArray).containsAll(deliveryLocationList));
+    }
+
+    @Test
+    public void checkGetterServices(){
+        Mockito.when(requestServiceMocked.getRequestItemDetailsRepository()).thenCallRealMethod();
+        Mockito.when(requestServiceMocked.getRequestServiceUtil()).thenCallRealMethod();
+        Mockito.when(requestServiceMocked.getUserAuthUtil()).thenCallRealMethod();
+        Mockito.when(requestServiceMocked.getInstitutionDetailsRepository()).thenCallRealMethod();
+        Mockito.when(requestServiceMocked.getRequestTypeDetailsRepository()).thenCallRealMethod();
+        Mockito.when(requestServiceMocked.getCustomerCodeDetailsRepository()).thenCallRealMethod();
+        Mockito.when(requestServiceMocked.getItemDetailsRepository()).thenCallRealMethod();
+        Mockito.when(requestServiceMocked.getRequestService()).thenCallRealMethod();
+        Mockito.when(requestServiceMocked.getRequestStatusDetailsRepository()).thenCallRealMethod();
+
+        assertNotEquals(requestServiceMocked.getRequestItemDetailsRepository(),requestItemDetailsRepository);
+        assertNotEquals(requestServiceMocked.getItemDetailsRepository(),itemDetailsRepository);
+        assertNotEquals(requestServiceMocked.getCustomerCodeDetailsRepository(),mockedCustomerCodeDetailsRepository);
+        assertNotEquals(requestServiceMocked.getRequestStatusDetailsRepository(),requestStatusDetailsRepository);
+        assertNotEquals(requestServiceMocked.getInstitutionDetailsRepository(),institutionDetailRepository);
+        assertNotEquals(requestServiceMocked.getRequestTypeDetailsRepository(),requestTypeDetailsRepository);
+        assertNotEquals(requestServiceMocked.getRequestService(),requestServiceMocked);
+        assertNotEquals(requestServiceMocked.getRequestServiceUtil(),requestServiceUtil);
+        assertNotEquals(requestServiceMocked.getUserAuthUtil(),userAuthUtil);
+
     }
 
     @Test
@@ -134,6 +170,7 @@ public class RequestServiceUT extends BaseTestCase {
         itemEntity.setCustomerCode("PA");
         itemEntityList.add(itemEntity);
         Mockito.when(requestServiceMocked.getRequestTypeDetailsRepository()).thenReturn(requestTypeDetailsRepository);
+        Mockito.when(requestServiceMocked.getCustomerCodeDetailsRepository()).thenReturn(mockedCustomerCodeDetailsRepository);
 
         List<RequestTypeEntity> requestTypeEntityList=new ArrayList<>();
         RequestTypeEntity requestTypeEntity = new RequestTypeEntity();
@@ -242,9 +279,7 @@ public class RequestServiceUT extends BaseTestCase {
         bibliographicEntity.setHoldingsEntities(Arrays.asList(holdingsEntity));
         bibliographicEntity.setItemEntities(Arrays.asList(itemEntity));
 
-        BibliographicEntity savedBibliographicEntity = bibliographicDetailsRepository.saveAndFlush(bibliographicEntity);
-        entityManager.refresh(savedBibliographicEntity);
-        return savedBibliographicEntity;
+        return bibliographicEntity;
 
     }
 

@@ -11,12 +11,14 @@ import org.recap.model.usermanagement.UserDetailsForm;
 import org.recap.util.UserAuthUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.Model;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
@@ -33,6 +35,9 @@ public class ScheduleJobsControllerUT extends BaseControllerUT {
 
     @Mock
     Model model;
+
+    @Mock
+    RestTemplate restTemplate;
 
     @Mock
     HttpServletRequest request;
@@ -67,5 +72,14 @@ public class ScheduleJobsControllerUT extends BaseControllerUT {
         Mockito.when(scheduleJobsController.displayJobs(model, request)).thenCallRealMethod();
         String viewName = scheduleJobsController.displayJobs(model, request);
         assertNotNull(viewName);
+    }
+
+    @Test
+    public void checkGetterMethod(){
+        Mockito.doCallRealMethod().when(scheduleJobsController).setUserAuthUtil(userAuthUtil);
+        Mockito.when(scheduleJobsController.getUserAuthUtil()).thenCallRealMethod();
+        Mockito.when(scheduleJobsController.getRestTemplate()).thenCallRealMethod();
+        assertNotEquals(scheduleJobsController.getUserAuthUtil(),userAuthUtil);
+        assertNotEquals(scheduleJobsController.getRestTemplate(),restTemplate);
     }
 }

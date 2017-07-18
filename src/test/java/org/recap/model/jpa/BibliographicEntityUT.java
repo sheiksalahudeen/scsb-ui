@@ -277,6 +277,12 @@ public class BibliographicEntityUT extends BaseTestCase {
 
     @Test
     public void saveBibSingleHoldingsSingleItem() throws Exception {
+        InstitutionEntity institutionEntity = new InstitutionEntity();
+        institutionEntity.setInstitutionCode("UC");
+        institutionEntity.setInstitutionName("University of Chicago");
+        InstitutionEntity entity = institutionDetailRepository.save(institutionEntity);
+        assertNotNull(entity);
+
         Random random = new Random();
         BibliographicEntity bibliographicEntity = new BibliographicEntity();
         bibliographicEntity.setContent("mock Content".getBytes());
@@ -284,9 +290,8 @@ public class BibliographicEntityUT extends BaseTestCase {
         bibliographicEntity.setLastUpdatedDate(new Date());
         bibliographicEntity.setCreatedBy("tst");
         bibliographicEntity.setLastUpdatedBy("tst");
-        bibliographicEntity.setOwningInstitutionId(1);
+        bibliographicEntity.setOwningInstitutionId(entity.getInstitutionId());
         bibliographicEntity.setOwningInstitutionBibId(String.valueOf(random.nextInt()));
-
         HoldingsEntity holdingsEntity = new HoldingsEntity();
         holdingsEntity.setContent("mock holdings".getBytes());
         holdingsEntity.setCreatedDate(new Date());
@@ -295,13 +300,12 @@ public class BibliographicEntityUT extends BaseTestCase {
         holdingsEntity.setLastUpdatedBy("tst");
         holdingsEntity.setOwningInstitutionId(1);
         holdingsEntity.setOwningInstitutionHoldingsId(String.valueOf(random.nextInt()));
-        holdingsEntity.setDeleted(false);
 
         ItemEntity itemEntity = new ItemEntity();
         itemEntity.setLastUpdatedDate(new Date());
         itemEntity.setOwningInstitutionItemId(String.valueOf(random.nextInt()));
         itemEntity.setOwningInstitutionId(1);
-        itemEntity.setBarcode("123");
+        itemEntity.setBarcode("0036");
         itemEntity.setCallNumber("x.12321");
         itemEntity.setCollectionGroupId(1);
         itemEntity.setCallNumberType("1");
@@ -312,7 +316,6 @@ public class BibliographicEntityUT extends BaseTestCase {
         itemEntity.setItemAvailabilityStatusId(1);
         itemEntity.setHoldingsEntities(Arrays.asList(holdingsEntity));
 
-        holdingsEntity.setBibliographicEntities(Arrays.asList(bibliographicEntity));
         bibliographicEntity.setHoldingsEntities(Arrays.asList(holdingsEntity));
         bibliographicEntity.setItemEntities(Arrays.asList(itemEntity));
 
@@ -321,7 +324,6 @@ public class BibliographicEntityUT extends BaseTestCase {
         assertNotNull(savedBibliographicEntity);
         assertNotNull(savedBibliographicEntity.getHoldingsEntities());
         assertNotNull(savedBibliographicEntity.getItemEntities());
-        assertNotNull(savedBibliographicEntity.getHoldingsEntities().get(0).isDeleted());
 
     }
 
