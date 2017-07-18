@@ -308,7 +308,7 @@ public class RequestService {
                     List<ItemEntity> itemEntities = getItemDetailsRepository().findByBarcodeAndCatalogingStatusAndIsDeletedFalse(barcode, RecapConstants.COMPLETE_STATUS);
                     if (CollectionUtils.isNotEmpty(itemEntities)) {
                         for (ItemEntity itemEntity : itemEntities) {
-                            CustomerCodeEntity customerCodeEntity = customerCodeDetailsRepository.findByCustomerCodeAndRecapDeliveryRestrictionLikeEDD(itemEntity.getCustomerCode());
+                            CustomerCodeEntity customerCodeEntity = getCustomerCodeDetailsRepository().findByCustomerCodeAndRecapDeliveryRestrictionLikeEDD(itemEntity.getCustomerCode());
                             if(customerCodeEntity!=null) {
                                 showEDD = true;
                             }

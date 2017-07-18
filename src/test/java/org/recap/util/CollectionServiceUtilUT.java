@@ -59,6 +59,9 @@ public class CollectionServiceUtilUT extends BaseTestCase {
     @Autowired
     private CollectionServiceUtil collectionServiceUtil;
 
+    @Mock
+    private CollectionServiceUtil mockedCollectionServiceUtil;
+
     @Autowired
     private WebApplicationContext webApplicationContext;
 
@@ -210,7 +213,6 @@ public class CollectionServiceUtilUT extends BaseTestCase {
         Mockito.doCallRealMethod().when(collectionServiceUtil).deAccessionItem(bibliographicMarcForm);
         collectionServiceUtil.deAccessionItem(bibliographicMarcForm);
 
-        //Mockito.when(mockedItemDetailsRepository.findByItemId(itemId)).thenReturn(getBibEntityWithHoldingsAndItem(1,true).getItemEntities().get(0));
         ItemEntity fetchedItemEntityAfterDeaccession = itemDetailsRepository.findByItemId(itemId);
         entityManager.refresh(fetchedItemEntityAfterDeaccession);
         assertNotNull(fetchedItemEntityAfterDeaccession);
@@ -220,8 +222,27 @@ public class CollectionServiceUtilUT extends BaseTestCase {
         assertNotNull(deAccessionItem.getItemBarcode());
         assertNotNull(deAccessionRequest.getUsername());
         assertNotNull(deAccessionRequest.getDeAccessionItems());
-        //assertEquals(Boolean.TRUE, fetchedItemEntityAfterDeaccession.isDeleted());
     }
+
+    @Test
+    public void checkGetterServices(){
+
+        Mockito.when(mockedCollectionServiceUtil.getScsbUrl()).thenCallRealMethod();
+        Mockito.when(mockedCollectionServiceUtil.getRestTemplate()).thenCallRealMethod();
+        Mockito.when(mockedCollectionServiceUtil.getCustomerCodeDetailsRepository()).thenCallRealMethod();
+        Mockito.when(mockedCollectionServiceUtil.getItemDetailsRepository()).thenCallRealMethod();
+        Mockito.when(mockedCollectionServiceUtil.getItemChangeLogDetailsRepository()).thenCallRealMethod();
+
+
+        assertNotEquals(mockedCollectionServiceUtil.getScsbUrl(),scsbUrl);
+        assertNotEquals(mockedCollectionServiceUtil.getRestTemplate(),restTemplate);
+        assertNotEquals(mockedCollectionServiceUtil.getCustomerCodeDetailsRepository(),customerCodeDetailsRepository);
+        assertNotEquals(mockedCollectionServiceUtil.getItemChangeLogDetailsRepository(),mockedItemChangeLogDetailsRepository);
+        assertNotEquals(mockedCollectionServiceUtil.getItemDetailsRepository(),mockedItemDetailsRepository);
+
+    }
+
+
 
     public BibliographicEntity getBibEntityWithHoldingsAndItem(int cgd,boolean isDelete) throws Exception {
         Random random = new Random();

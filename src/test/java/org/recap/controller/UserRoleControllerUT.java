@@ -34,6 +34,7 @@ import javax.servlet.http.HttpSession;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
@@ -128,6 +129,19 @@ public class UserRoleControllerUT extends BaseTestCase {
         ModelAndView modelAndView = mockedUserRoleController.searchUserRole(userRoleForm, model, request);
         assertNotNull(modelAndView);
         assertEquals("userRolesSearch :: #request-result-table",modelAndView.getViewName());
+    }
+
+    @Test
+    public void checkGetterServices(){
+        Mockito.when(mockedUserRoleController.getLogger()).thenCallRealMethod();
+        Mockito.when(mockedUserRoleController.getUserAuthUtil()).thenCallRealMethod();
+        Mockito.when(mockedUserRoleController.getUserRoleService()).thenCallRealMethod();
+        Mockito.when(mockedUserRoleController.getUserManagementService()).thenCallRealMethod();
+        Mockito.when(mockedUserRoleController.getUserDetailsRepository()).thenCallRealMethod();
+        assertNotEquals(mockedUserRoleController.getUserAuthUtil(),userAuthUtil);
+        assertNotEquals(mockedUserRoleController.getUserRoleService(),userRoleService);
+        assertNotEquals(mockedUserRoleController.getUserDetailsRepository(),userDetailsRepository);
+        assertNotEquals(mockedUserRoleController.getUserManagementService(),userManagementService);
     }
 
     @Test

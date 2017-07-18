@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
@@ -200,6 +201,16 @@ public class SearchRecordsControllerUT extends BaseControllerUT{
         ModelAndView modelAndView = searchRecordsController.requestRecords(searchRecordsRequest,bindingResult,model, request, redirectAttributes);
         assertNotNull(modelAndView);
         assertEquals("searchRecords",modelAndView.getViewName());
+    }
+
+    @Test
+    public void checkGetterServices(){
+        Mockito.when(searchRecordsController.getUserAuthUtil()).thenCallRealMethod();
+        Mockito.when(searchRecordsController.getInstitutionDetailsRepository()).thenCallRealMethod();
+        Mockito.when(searchRecordsController.getSearchUtil()).thenCallRealMethod();
+        Mockito.doCallRealMethod().when(searchRecordsController).setUserAuthUtil(userAuthUtil);
+        assertNotEquals(searchRecordsController.getUserAuthUtil(),userAuthUtil);
+        assertNotEquals(searchRecordsController.getInstitutionDetailsRepository(),institutionDetailsRepository);
     }
 
     @Test

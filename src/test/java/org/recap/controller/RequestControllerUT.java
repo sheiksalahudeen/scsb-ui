@@ -35,9 +35,7 @@ import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -329,6 +327,35 @@ public class RequestControllerUT extends BaseControllerUT {
     }
 
     @Test
+    public void checkGetterServices(){
+        Mockito.when(requestController.getRequestServiceUtil()).thenCallRealMethod();
+        Mockito.when(requestController.getUserAuthUtil()).thenCallRealMethod();
+        Mockito.when(requestController.getInstitutionDetailsRepository()).thenCallRealMethod();
+        Mockito.when(requestController.getRequestTypeDetailsRepository()).thenCallRealMethod();
+        Mockito.when(requestController.getCustomerCodeDetailsRepository()).thenCallRealMethod();
+        Mockito.when(requestController.getItemDetailsRepository()).thenCallRealMethod();
+        Mockito.when(requestController.getScsbShiro()).thenCallRealMethod();
+        Mockito.when(requestController.getScsbUrl()).thenCallRealMethod();
+        Mockito.when(requestController.getRequestItemDetailsRepository()).thenCallRealMethod();
+        Mockito.when(requestController.getRestTemplate()).thenCallRealMethod();
+        Mockito.when(requestController.getRequestStatusDetailsRepository()).thenCallRealMethod();
+        Mockito.when(requestController.getRequestService()).thenCallRealMethod();
+
+        assertNotEquals(requestController.getRequestServiceUtil(),requestServiceUtil);
+        assertNotEquals(requestController.getUserAuthUtil(),userAuthUtil);
+        assertNotEquals(requestController.getInstitutionDetailsRepository(),institutionDetailsRepository);
+        assertNotEquals(requestController.getRequestTypeDetailsRepository(),requestTypeDetailsRepository);
+        assertNotEquals(requestController.getCustomerCodeDetailsRepository(),requestServiceUtil);
+        assertNotEquals(requestController.getItemDetailsRepository(),itemDetailsRepository);
+        assertNotEquals(requestController.getScsbShiro(),requestServiceUtil);
+        assertNotEquals(requestController.getScsbUrl(),scsbUrl);
+        assertNotEquals(requestController.getRequestItemDetailsRepository(),requestItemDetailsRepository);
+        assertNotEquals(requestController.getRestTemplate(),restTemplate);
+        assertNotEquals(requestController.getRequestStatusDetailsRepository(),requestStatusDetailsRepository);
+        assertNotEquals(requestController.getRequestService(),requestService);
+    }
+
+    @Test
     public void testCreateRequest() throws Exception {
         RequestForm requestForm = getRequestForm();
         ResponseEntity responseEntity = new ResponseEntity(RecapConstants.VALID_REQUEST,HttpStatus.OK);
@@ -536,9 +563,9 @@ public class RequestControllerUT extends BaseControllerUT {
         bibliographicEntity.setHoldingsEntities(Arrays.asList(holdingsEntity));
         bibliographicEntity.setItemEntities(Arrays.asList(itemEntity));
 
-        BibliographicEntity savedBibliographicEntity = bibliographicDetailsRepository.saveAndFlush(bibliographicEntity);
-        entityManager.refresh(savedBibliographicEntity);
-        return savedBibliographicEntity;
+        /*BibliographicEntity savedBibliographicEntity = bibliographicDetailsRepository.saveAndFlush(bibliographicEntity);
+        entityManager.refresh(savedBibliographicEntity);*/
+        return bibliographicEntity;
 
     }
 
