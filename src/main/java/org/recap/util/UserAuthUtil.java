@@ -3,8 +3,10 @@ package org.recap.util;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.recap.RecapConstants;
 import org.recap.model.usermanagement.UserDetailsForm;
+import org.recap.service.RestHeaderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
@@ -25,7 +27,12 @@ public class UserAuthUtil {
     @Value("${scsb.shiro}")
     private String scsbShiro;
 
+    @Autowired
+    RestHeaderService restHeaderService;
 
+    public RestHeaderService getRestHeaderService(){
+        return restHeaderService;
+    }
     /**
      * Authenticate the used based on the UsernamePasswordToken.
      *
@@ -35,7 +42,7 @@ public class UserAuthUtil {
      */
     public Map<String,Object> doAuthentication(UsernamePasswordToken token) throws Exception{
             RestTemplate restTemplate = new RestTemplate();
-            HttpEntity<UsernamePasswordToken> requestEntity = new HttpEntity<>(token, RecapConstants.getHttpHeaders());
+            HttpEntity<UsernamePasswordToken> requestEntity = new HttpEntity<>(token, getRestHeaderService().getHttpHeaders());
             return restTemplate.postForObject(scsbShiro + RecapConstants.SCSB_SHIRO_AUTHENTICATE_URL, requestEntity, HashMap.class);
     }
 
@@ -53,7 +60,7 @@ public class UserAuthUtil {
         try {
 
             RestTemplate restTemplate = new RestTemplate();
-            HttpEntity<UsernamePasswordToken> requestEntity = new HttpEntity<>(token, RecapConstants.getHttpHeaders());
+            HttpEntity<UsernamePasswordToken> requestEntity = new HttpEntity<>(token,getRestHeaderService().getHttpHeaders());
             statusResponse = restTemplate.postForObject(scsbShiro + serviceURL, requestEntity, Boolean.class);
         } catch (Exception e) {
             logger.error(RecapConstants.LOG_ERROR,e);

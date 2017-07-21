@@ -16,8 +16,10 @@ import org.recap.model.search.RequestForm;
 import org.recap.model.usermanagement.UserDetailsForm;
 import org.recap.repository.jpa.*;
 import org.recap.service.RequestService;
+import org.recap.service.RestHeaderService;
 import org.recap.util.RequestServiceUtil;
 import org.recap.util.UserAuthUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -93,6 +95,9 @@ public class RequestControllerUT extends BaseControllerUT {
 
     @Value("${scsb.shiro}")
     String scsbShiro;
+
+    @Autowired
+    RestHeaderService restHeaderService;
 
     @Mock
     RequestItemDetailsRepository requestItemDetailsRepository;
@@ -362,7 +367,7 @@ public class RequestControllerUT extends BaseControllerUT {
         ResponseEntity responseEntity1 = new ResponseEntity<ItemResponseInformation>(getItemResponseInformation(),HttpStatus.OK);
         when(request.getSession()).thenReturn(session);
         ItemRequestInformation itemRequestInformation = getItemRequestInformation();
-        HttpEntity<ItemRequestInformation> requestEntity = new HttpEntity<>(itemRequestInformation, getHttpHeaders());
+        HttpEntity<ItemRequestInformation> requestEntity = new HttpEntity<>(itemRequestInformation, restHeaderService.getHttpHeaders());
         String validateRequestItemUrl = getScsbUrl() + RecapConstants.VALIDATE_REQUEST_ITEM_URL;
         String requestItemUrl = scsbUrl + RecapConstants.REQUEST_ITEM_URL;
         CustomerCodeEntity customerCodeEntity = new CustomerCodeEntity();
@@ -372,6 +377,7 @@ public class RequestControllerUT extends BaseControllerUT {
         Mockito.when(requestController.getRestTemplate()).thenReturn(restTemplate);
         Mockito.when(requestController.getScsbShiro()).thenReturn(scsbShiro);
         Mockito.when(requestController.getScsbUrl()).thenReturn(scsbUrl);
+        Mockito.when(requestController.getRestHeaderService()).thenReturn(restHeaderService);
         Mockito.when(requestController.getCustomerCodeDetailsRepository()).thenReturn(customerCodeDetailsRepository);
         Mockito.when(requestController.getCustomerCodeDetailsRepository().findByDescription(requestForm.getDeliveryLocationInRequest())).thenReturn(customerCodeEntity);
         Mockito.when(requestController.getRestTemplate().exchange(requestItemUrl, HttpMethod.POST, requestEntity, ItemResponseInformation.class)).thenReturn(responseEntity1);
@@ -384,7 +390,7 @@ public class RequestControllerUT extends BaseControllerUT {
     @Test
     public void testCancelRequest() throws Exception {
         RequestForm requestForm = getRequestForm();
-        HttpEntity requestEntity = new HttpEntity<>(getHttpHeaders());
+        HttpEntity requestEntity = new HttpEntity<>(restHeaderService.getHttpHeaders());
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(scsbUrl + RecapConstants.URL_REQUEST_CANCEL).queryParam(RecapConstants.REQUEST_ID, requestForm.getRequestId());
         CancelRequestResponse cancelRequestResponse = new CancelRequestResponse();
         cancelRequestResponse.setSuccess(true);
@@ -397,6 +403,7 @@ public class RequestControllerUT extends BaseControllerUT {
         Mockito.when(requestController.getRestTemplate()).thenReturn(restTemplate);
         Mockito.when(requestController.getScsbShiro()).thenReturn(scsbShiro);
         Mockito.when(requestController.getScsbUrl()).thenReturn(scsbUrl);
+        Mockito.when(requestController.getRestHeaderService()).thenReturn(restHeaderService);
         Mockito.when(requestController.getRequestItemDetailsRepository()).thenReturn(requestItemDetailsRepository);
         Mockito.when(requestController.getRequestItemDetailsRepository().findByRequestId(requestForm.getRequestId())).thenReturn(requestItemEntity);
         Mockito.when(requestController.getRestTemplate().exchange(builder.build().encode().toUri(), HttpMethod.POST, requestEntity, CancelRequestResponse.class)).thenReturn(responseEntity);
@@ -597,13 +604,5 @@ public class RequestControllerUT extends BaseControllerUT {
         institutionCodeList.add(institutionEntity2.getInstitutionCode());
         return institutionCodeList;
     }
-
-    private HttpHeaders getHttpHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
-        return headers;
-    }
-
 
 }

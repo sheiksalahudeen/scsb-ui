@@ -508,11 +508,4 @@ public class RecapConstants {
         //Do nothing
     }
 
-    public static HttpHeaders getHttpHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
-        return headers;
-    }
-
 }

@@ -11,6 +11,7 @@ import org.recap.model.search.BibliographicMarcForm;
 import org.recap.repository.jpa.CustomerCodeDetailsRepository;
 import org.recap.repository.jpa.ItemChangeLogDetailsRepository;
 import org.recap.repository.jpa.ItemDetailsRepository;
+import org.recap.service.RestHeaderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,12 @@ public class CollectionServiceUtil {
     @Autowired
     private ItemDetailsRepository itemDetailsRepository;
 
+    @Autowired
+    private RestHeaderService restHeaderService;
+
+    public RestHeaderService getRestHeaderService(){
+        return restHeaderService;
+    }
     /**
      * Gets scsb url.
      *
@@ -107,7 +114,7 @@ public class CollectionServiceUtil {
     public void updateCGDForItem(BibliographicMarcForm bibliographicMarcForm) {
         String statusResponse = null;
         try {
-            HttpEntity requestEntity = new HttpEntity<>(getHttpHeaders());
+            HttpEntity requestEntity = new HttpEntity<>(getRestHeaderService().getHttpHeaders());
 
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getScsbUrl() + RecapConstants.SCSB_UPDATE_CGD_URL)
                     .queryParam(RecapConstants.CGD_UPDATE_ITEM_BARCODE, bibliographicMarcForm.getBarcode())
@@ -155,7 +162,7 @@ public class CollectionServiceUtil {
             deAccessionItem.setDeliveryLocation(deliveryLocation);
             deAccessionRequest.setDeAccessionItems(Arrays.asList(deAccessionItem));
             deAccessionRequest.setUsername(userName);
-            HttpEntity<DeAccessionRequest> requestEntity = new HttpEntity<>(deAccessionRequest, getHttpHeaders());
+            HttpEntity<DeAccessionRequest> requestEntity = new HttpEntity<>(deAccessionRequest, getRestHeaderService().getHttpHeaders());
             Map<String, String> resultMap = getRestTemplate().postForObject(getScsbUrl() + RecapConstants.SCSB_DEACCESSION_URL, requestEntity, Map.class);
             String resultMessage = resultMap.get(itemBarcode);
             if (StringUtils.isNotBlank(resultMessage)) {
@@ -198,10 +205,4 @@ public class CollectionServiceUtil {
         }
     }
 
-    private HttpHeaders getHttpHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
-        return headers;
-    }
 }
