@@ -9,6 +9,7 @@ import org.recap.model.search.ScheduleJobsForm;
 import org.recap.model.usermanagement.UserDetailsForm;
 import org.recap.repository.jpa.JobDetailsRepository;
 import org.recap.security.UserManagementService;
+import org.recap.service.RestHeaderService;
 import org.recap.util.UserAuthUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,12 @@ public class ScheduleJobsController {
     @Autowired
     private JobDetailsRepository jobDetailsRepository;
 
+    @Autowired
+    RestHeaderService restHeaderService;
+
+    public RestHeaderService getRestHeaderService(){
+        return restHeaderService;
+    }
     /**
      * Gets user auth util.
      *
@@ -121,7 +128,7 @@ public class ScheduleJobsController {
             scheduleJobRequest.setJobName(scheduleJobsForm.getJobName());
             scheduleJobRequest.setCronExpression(scheduleJobsForm.getCronExpression());
             scheduleJobRequest.setScheduleType(scheduleJobsForm.getScheduleType());
-            HttpEntity<ScheduleJobRequest> httpEntity = new HttpEntity<>(scheduleJobRequest, RecapConstants.getHttpHeaders());
+            HttpEntity<ScheduleJobRequest> httpEntity = new HttpEntity<>(scheduleJobRequest, getRestHeaderService().getHttpHeaders());
 
             ResponseEntity<ScheduleJobResponse> responseEntity = getRestTemplate().exchange(scsbUrl + RecapConstants.URL_SCHEDULE_JOBS, HttpMethod.POST, httpEntity, ScheduleJobResponse.class);
             scheduleJobResponse = responseEntity.getBody();

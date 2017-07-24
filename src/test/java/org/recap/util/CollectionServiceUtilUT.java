@@ -19,6 +19,7 @@ import org.recap.repository.jpa.BibliographicDetailsRepository;
 import org.recap.repository.jpa.CustomerCodeDetailsRepository;
 import org.recap.repository.jpa.ItemChangeLogDetailsRepository;
 import org.recap.repository.jpa.ItemDetailsRepository;
+import org.recap.service.RestHeaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -58,6 +59,9 @@ public class CollectionServiceUtilUT extends BaseTestCase {
 
     @Autowired
     private CollectionServiceUtil collectionServiceUtil;
+
+    @Autowired
+    private RestHeaderService restHeaderService;
 
     @Mock
     private CollectionServiceUtil mockedCollectionServiceUtil;
@@ -113,7 +117,7 @@ public class CollectionServiceUtilUT extends BaseTestCase {
         bibliographicMarcForm.setCollectionGroupDesignation("Shared");
         bibliographicMarcForm.setNewCollectionGroupDesignation("Private");
         bibliographicMarcForm.setCgdChangeNotes("Notes for updating CGD");
-        HttpEntity requestEntity = new HttpEntity<>(getHttpHeaders());
+        HttpEntity requestEntity = new HttpEntity<>(restHeaderService.getHttpHeaders());
         ResponseEntity responseEntity = new ResponseEntity("Success", HttpStatus.OK);
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(scsbUrl + RecapConstants.SCSB_UPDATE_CGD_URL)
                 .queryParam(RecapConstants.CGD_UPDATE_ITEM_BARCODE, bibliographicMarcForm.getBarcode())
@@ -123,6 +127,7 @@ public class CollectionServiceUtilUT extends BaseTestCase {
                 .queryParam(RecapConstants.CGD_CHANGE_NOTES, bibliographicMarcForm.getCgdChangeNotes());
         collectionServiceUtil = Mockito.mock(CollectionServiceUtil.class);
         Mockito.when(collectionServiceUtil.getRestTemplate()).thenReturn(restTemplate);
+        Mockito.when(collectionServiceUtil.getRestHeaderService()).thenReturn(restHeaderService);
         Mockito.when(collectionServiceUtil.getScsbUrl()).thenReturn(scsbUrl);
         Mockito.when(restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, requestEntity, String.class)).thenReturn(responseEntity);
         Mockito.doCallRealMethod().when(collectionServiceUtil).updateCGDForItem(bibliographicMarcForm);
@@ -146,12 +151,6 @@ public class CollectionServiceUtilUT extends BaseTestCase {
         assertEquals(afterCountForChangeLog, beforeCountForChangeLog + 1);
     }
 
-    private HttpHeaders getHttpHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
-        return headers;
-    }
 
     @Test
     public void deaccessionItem() throws Exception {
@@ -203,9 +202,10 @@ public class CollectionServiceUtilUT extends BaseTestCase {
         Mockito.when(collectionServiceUtil.getDeAccessionRequest()).thenReturn(deAccessionRequest);
         Mockito.when(collectionServiceUtil.getCustomerCodeDetailsRepository()).thenReturn(customerCodeDetailsRepository);
         Mockito.when(collectionServiceUtil.getCustomerCodeDetailsRepository().findByDescription(bibliographicMarcForm.getDeliveryLocation())).thenReturn(customerCodeEntity);
-        HttpEntity<DeAccessionRequest> requestEntity = new HttpEntity<>(deAccessionRequest, getHttpHeaders());
+        HttpEntity<DeAccessionRequest> requestEntity = new HttpEntity<>(deAccessionRequest, restHeaderService.getHttpHeaders());
         Mockito.when(collectionServiceUtil.getRestTemplate()).thenReturn(restTemplate);
         Mockito.when(collectionServiceUtil.getScsbUrl()).thenReturn(scsbUrl);
+        Mockito.when(collectionServiceUtil.getRestHeaderService()).thenReturn(restHeaderService);
         Mockito.when(collectionServiceUtil.getItemDetailsRepository()).thenReturn(mockedItemDetailsRepository);
         Mockito.when(collectionServiceUtil.getItemDetailsRepository().findByBarcode(itemBarcode)).thenReturn(Arrays.asList(fetchedItemEntity));
         Mockito.when(collectionServiceUtil.getItemChangeLogDetailsRepository()).thenReturn(mockedItemChangeLogDetailsRepository);

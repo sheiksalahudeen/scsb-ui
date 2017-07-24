@@ -3,6 +3,7 @@ package org.recap.util;
 import org.recap.RecapConstants;
 import org.recap.model.search.SearchRecordsRequest;
 import org.recap.model.search.SearchRecordsResponse;
+import org.recap.spring.SwaggerAPIProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +37,7 @@ public class SearchUtil {
             RestTemplate restTemplate = new RestTemplate();
 
             HttpHeaders headers = new HttpHeaders();
-            headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
+            headers.set(RecapConstants.API_KEY, SwaggerAPIProvider.getInstance().getSwaggerApiKey());
             HttpEntity<SearchRecordsRequest> httpEntity = new HttpEntity<>(searchRecordsRequest, headers);
 
             ResponseEntity<SearchRecordsResponse> responseEntity = restTemplate.exchange(scsbUrl + RecapConstants.SCSB_SEARCH_SERVICE_URL, HttpMethod.POST, httpEntity, SearchRecordsResponse.class);

@@ -19,6 +19,7 @@ import org.recap.model.usermanagement.UserDetailsForm;
 import org.recap.repository.jpa.*;
 import org.recap.security.UserManagementService;
 import org.recap.service.RequestService;
+import org.recap.service.RestHeaderService;
 import org.recap.util.RequestServiceUtil;
 import org.recap.util.UserAuthUtil;
 import org.slf4j.Logger;
@@ -86,6 +87,11 @@ public class RequestController {
 
     @Autowired
     private RequestService requestService;
+
+    @Autowired
+    RestHeaderService restHeaderService;
+
+    public RestHeaderService getRestHeaderService(){return restHeaderService;}
 
     /**
      * Gets request service util.
@@ -539,7 +545,7 @@ public class RequestController {
                 }
             }
 
-            HttpEntity<ItemRequestInformation> requestEntity = new HttpEntity<>(itemRequestInformation, getHttpHeaders());
+            HttpEntity<ItemRequestInformation> requestEntity = new HttpEntity<>(itemRequestInformation, getRestHeaderService().getHttpHeaders());
             ResponseEntity<ItemResponseInformation> itemResponseEntity = getRestTemplate().exchange(requestItemUrl, HttpMethod.POST, requestEntity, ItemResponseInformation.class);
             ItemResponseInformation itemResponseInformation = itemResponseEntity.getBody();
             if (null != itemResponseInformation && !itemResponseInformation.isSuccess()) {
@@ -583,7 +589,7 @@ public class RequestController {
         JSONObject jsonObject = new JSONObject();
         String requestStatus = null;
         try {
-            HttpEntity requestEntity = new HttpEntity<>(getHttpHeaders());
+            HttpEntity requestEntity = new HttpEntity<>(getRestHeaderService().getHttpHeaders());
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getScsbUrl() + RecapConstants.URL_REQUEST_CANCEL).queryParam(RecapConstants.REQUEST_ID, requestForm.getRequestId());
             HttpEntity<CancelRequestResponse> responseEntity = getRestTemplate().exchange(builder.build().encode().toUri(), HttpMethod.POST, requestEntity, CancelRequestResponse.class);
             CancelRequestResponse cancelRequestResponse = responseEntity.getBody();
@@ -642,13 +648,6 @@ public class RequestController {
             return searchResultRows;
         }
         return Collections.emptyList();
-    }
-
-    private HttpHeaders getHttpHeaders() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(RecapConstants.API_KEY, RecapConstants.RECAP);
-        return headers;
     }
 
     private Integer getPageNumberOnPageSizeChange(RequestForm requestForm) {
