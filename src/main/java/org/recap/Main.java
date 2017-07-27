@@ -48,7 +48,7 @@ public class Main {
 
 
 	@Bean
-	public FilterRegistrationBean getFileterRegisteredBean(){
+	public FilterRegistrationBean getFilterRegisteredBean(){
 		FilterRegistrationBean filterRegistrationBean= new FilterRegistrationBean();
 		Set<String> urlPatterns=new HashSet<>();
 		urlPatterns.add("/*");
