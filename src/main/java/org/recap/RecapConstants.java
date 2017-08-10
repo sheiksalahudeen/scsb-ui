@@ -503,6 +503,7 @@ public class RecapConstants {
 
     public static final String REQUESTED_ITEM_AVAILABILITY="requestedItemAvailabilty";
     public static final String LAS_REJECTED = "LAS has rejected";
+    public static final String LAS_SERVER_NOT_REACHABLE = "LAS server is not reachable";
 
     private RecapConstants(){
         //Do nothing
