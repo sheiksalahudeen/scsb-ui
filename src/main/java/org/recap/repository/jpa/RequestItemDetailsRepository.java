@@ -155,7 +155,7 @@ public interface RequestItemDetailsRepository extends JpaRepository<RequestItemE
 
 
     /**
-     * To get the count of borrow direct, hold, recall and retrieval request counts for the given institution.
+     * To get the count of edd, recall and retrieval request counts for the given institution.
      *
      * @param fromDate         the from date
      * @param toDate           the to date
@@ -163,15 +163,14 @@ public interface RequestItemDetailsRepository extends JpaRepository<RequestItemE
      * @param requestTypeCode  the request type code
      * @return the bd hold recall retrieval request counts
      */
-    @Query(value = "SELECT COUNT(*) FROM REQUEST_ITEM_T ,REQUEST_TYPE_T, ITEM_T WHERE REQUEST_ITEM_T.REQUEST_TYPE_ID=REQUEST_TYPE_T.REQUEST_TYPE_ID " +
-            "AND REQUEST_ITEM_T.ITEM_ID=ITEM_T.ITEM_ID " +
+    @Query(value = "SELECT COUNT(*) FROM REQUEST_ITEM_T,ITEM_T WHERE REQUEST_ITEM_T.ITEM_ID=ITEM_T.ITEM_ID " +
             "AND REQUEST_ITEM_T.CREATED_DATE >= :fromDate AND REQUEST_ITEM_T.CREATED_DATE <= :toDate " +
-            "AND REQUEST_ITEM_T.REQUEST_TYPE_ID = (SELECT REQUEST_TYPE_ID FROM REQUEST_TYPE_T WHERE REQUEST_TYPE_CODE = :requestTypeCode) " +
+            "AND REQUEST_ITEM_T.REQUEST_STATUS_ID IN (SELECT REQUEST_STATUS_ID FROM REQUEST_ITEM_STATUS_T WHERE REQUEST_STATUS_CODE IN (:requestStatusCodes)) " +
             "AND ITEM_T.OWNING_INST_ID = :itemOwningInstId", nativeQuery = true)
-    long getBDHoldRecallRetrievalRequestCounts(@Param("fromDate") Date fromDate,
-                                               @Param("toDate") Date toDate,
-                                               @Param("itemOwningInstId") int itemOwningInstId,
-                                               @Param("requestTypeCode") String requestTypeCode);
+    long getEDDRecallRetrievalRequestCounts(@Param("fromDate") Date fromDate,
+                                            @Param("toDate") Date toDate,
+                                            @Param("itemOwningInstId") int itemOwningInstId,
+                                            @Param("requestStatusCodes") List<String> requestTypeCode);
 
     /**
      * To get the count of physical and edd requests for all the institutions.
@@ -180,20 +179,21 @@ public interface RequestItemDetailsRepository extends JpaRepository<RequestItemE
      * @param toDate             the to date
      * @param itemOwningInstId   the item owning inst id
      * @param collectionGroupIds the collection group ids
-     * @param requestTypeCodes   the request type codes
+     * @param requestStatusCodes   the request status codes
      * @return the physical and edd counts
      */
-    @Query(value = "SELECT COUNT(*) FROM REQUEST_ITEM_T , REQUEST_TYPE_T , ITEM_T WHERE REQUEST_ITEM_T.REQUEST_TYPE_ID=REQUEST_TYPE_T.REQUEST_TYPE_ID " +
-            "AND REQUEST_ITEM_T.ITEM_ID=ITEM_T.ITEM_ID " +
+    @Query(value = "SELECT COUNT(*) FROM REQUEST_ITEM_T,ITEM_T WHERE REQUEST_ITEM_T.ITEM_ID=ITEM_T.ITEM_ID " +
             "AND REQUEST_ITEM_T.CREATED_DATE >= :fromDate AND REQUEST_ITEM_T.CREATED_DATE <= :toDate " +
-            "AND REQUEST_ITEM_T.REQUEST_TYPE_ID IN (SELECT REQUEST_TYPE_ID FROM REQUEST_TYPE_T WHERE REQUEST_TYPE_CODE IN (:requestTypeCodes)) " +
+            "AND REQUEST_ITEM_T.REQUESTING_INST_ID NOT IN (:requestInstIds) " +
+            "AND REQUEST_ITEM_T.REQUEST_STATUS_ID IN (SELECT REQUEST_STATUS_ID FROM REQUEST_ITEM_STATUS_T WHERE REQUEST_STATUS_CODE IN (:requestStatusCodes)) " +
             "AND ITEM_T.COLLECTION_GROUP_ID IN (:collectionGroupIds) " +
             "AND ITEM_T.OWNING_INST_ID IN (:itemOwningInstId)", nativeQuery = true)
     long getPhysicalAndEDDCounts(@Param("fromDate") Date fromDate,
                                  @Param("toDate") Date toDate,
                                  @Param("itemOwningInstId") List<Integer> itemOwningInstId,
                                  @Param("collectionGroupIds") List<Integer> collectionGroupIds,
-                                 @Param("requestTypeCodes") List<String> requestTypeCodes);
+                                 @Param("requestInstIds") List<Integer> requestInstIds,
+                                 @Param("requestStatusCodes") List<String> requestStatusCodes);
 
     /**
      *To get the pageable request item entity for the given patron barcode, item barcode and institution.

@@ -505,6 +505,9 @@ public class RecapConstants {
     public static final String LAS_REJECTED = "LAS has rejected";
     public static final String LAS_SERVER_NOT_REACHABLE = "LAS server is not reachable";
 
+    public static final String REQUEST_STATUS_EDD = "EDD_ORDER_PLACED";
+    public static final String REQUEST_STATUS_INITIAL_LOAD = "INITIAL_LOAD";
+
     private RecapConstants(){
         //Do nothing
     }
